@@ -1,0 +1,130 @@
+.wrapper {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.wrapper-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer_heading {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.footer_list {
+  padding-left: 0;
+}
+
+.footer_list li {
+  list-style: none;
+  margin-bottom: 10px;
+  
+}
+
+.footer_list button {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  transition: color 0.3s ease;
+  
+}
+
+.footer_list button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  
+}
+
+.footer_list button:hover::after {
+  animation: slideUnderline 1s ease-in-out infinite;
+}
+
+
+.footer_form {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.input_search {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-family: 'Arial', sans-serif;
+}
+
+
+.btn_submit{
+  height: 40px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bolder;
+
+}
+
+.footer_social {
+  margin-top: 20px;
+}
+
+.social-button {
+  list-style: none;
+}
+
+.social-button button {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  margin-right: 10px;
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+
+
+
+/* dung de  */
+@keyframes slideUnderline {
+  0% {
+    width: 0;
+    left: 0;
+    right: auto;
+  }
+  50% {
+    width: 100%;
+    left: 0;
+    right: auto;
+  }
+  51% {
+    left: auto;
+    right: 0;
+  }
+  99% {
+    width: 0;
+    left: auto;
+    right: 0;
+  }
+  
+}
+
+
+
+
+
