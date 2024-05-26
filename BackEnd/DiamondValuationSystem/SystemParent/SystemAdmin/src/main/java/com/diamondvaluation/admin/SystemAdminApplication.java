@@ -33,7 +33,8 @@ public class SystemAdminApplication {
 	private void configureMappingForUser(ModelMapper mapper) {
 		mapper.typeMap(User.class, UserResponse.class)
 				.addMapping(src -> src.getPhoto(), 
-				(dest, value) -> dest.setImagePath(value+""));
+				(dest, value) -> dest.setPhoto(value+" "));
+		;
 	}
 
 

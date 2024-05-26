@@ -36,10 +36,10 @@ public class JwtUtils {
 		}
 
 		long expirationTimeInMillis = System.currentTimeMillis() + accessTokenExpiration * 60000;
-		String subject = String.format("%s,%s", user.getId(), user.getEmail());
+		String subject = String.format("%s,%s", user.getId(), user.getFullname());
 
 		return Jwts.builder().subject(subject).issuer(issuerName).issuedAt(new Date())
-				.expiration(new Date(expirationTimeInMillis)).claim("role", user.getRoles())
+				.expiration(new Date(expirationTimeInMillis)).claim("roles", user.getRolesName())
 				.signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), Jwts.SIG.HS512).compact();
 
 	}

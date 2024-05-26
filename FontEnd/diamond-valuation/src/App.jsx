@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from "react"
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import "/node_modules/bootstrap/dist/js/bootstrap.min.js"
+import 'bootstrap-icons/font/bootstrap-icons.css'
+import { BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom"
 import './App.css'
+import Login from "./components/auth/Login"
+import Home from "./components/home/Home"
+import NavBar from "./components/layout/NavBar"
+import Users from "./components/user/Users"
+import { AuthProvider } from "./components/auth/AuthProvider"
+import AddUser from "./components/user/AddUser"
+import EditUser from "./components/user/EditUser"
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    return (
+		<AuthProvider>
+            <main>
+        	    <Router>
+            	    <MainContent />
+        	    </Router>
+            </main>
+		</AuthProvider>
+    );
+};
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const MainContent = () => {
+    const location = useLocation();
+    const isLoginRoute = location.pathname === '/login';
 
-export default App
+    return (
+        <>
+            {!isLoginRoute && <NavBar />}
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Home />} />
+				<Route path="/users" element={<Users/>} />
+                <Route path="/users/new" element={<AddUser/>}/>
+                <Route path="/user/:userid" element={<EditUser/>}/>
+                {/* Thêm các Route khác cần NavBar tại đây */}
+            </Routes>
+        </>
+    );
+};
+
+export default App;

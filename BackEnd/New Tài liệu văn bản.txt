@@ -1,0 +1,12 @@
+Data Source=LAPTOP-0F38KECK;Initial Catalog=BookManagementDb;User ID=sa;Password=********;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
+ 
+dotnet ef dbcontext scaffold "Data Source=LAPTOP-0F38KECK;Initial Catalog=BookManagementDb;User ID=sa;Password=12345;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False" "Microsoft.EntityFrameworkCore.SqlServer" --output-dir "Entities"
+
+{
+  "ConnectionStrings": {
+    "DBDefault": "Data Source=LAPTOP-0F38KECK;Initial Catalog=BookManagementDb;User ID=sa;Password=********;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
+"
+  }
+}
+
+chemical tracking system
