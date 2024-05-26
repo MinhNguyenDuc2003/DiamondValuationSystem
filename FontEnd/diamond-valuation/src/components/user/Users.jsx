@@ -23,7 +23,7 @@ export const Users = () => {
 
       setTimeout(() => {
         setMessage("")
-      }, 1000)
+      }, 2000)
     },  [location.state?.message])
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export const Users = () => {
 			.catch((error) => {
 				setError(error.message)
 			})
-	}, [currentPage, filteredData, data])
+	}, [currentPage, filteredData])
 
   function debounce(func, timeout = 300){
     let timer;
@@ -63,7 +63,16 @@ const handleDelete = async (id) => {
     const result = await deleteUserById(id);
     if(result!== undefined){
       setMessage(`Delete user with id ${id}  successfully!`)
-
+      getUsersPerPage(currentPage, filteredData)
+			.then((data) => {
+				setData({
+          list_users : data.list_users,
+          total_page : data.total_page
+        })
+			})
+			.catch((error) => {
+				setError(error.message)
+			})
       setTimeout(() => {
         setMessage("")
       }, 1000)
