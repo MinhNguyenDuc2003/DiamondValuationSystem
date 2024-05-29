@@ -15,13 +15,47 @@
         background-color: white;
     }
 
-    &.menu-open {
-
-       
+    &.search-open {
         .logo {
 
             transform: scale(1);
             background: none;
+            border: none;
+            cursor: pointer;
+
+        }
+
+        .actions {
+            &.scrolled {
+                margin-top: 25px;
+                color: black;
+                transform: none
+                
+            }
+            
+        }
+        .search{
+            position: absolute;
+            top: 70px;
+            right:90px;
+            width: 650px;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+    &.menu-open {
+        
+      
+        .logo {
+
+            transform: scale(1);
+            
             border: none;
             cursor: pointer;
 
@@ -41,6 +75,7 @@
     }
 
     .contact {
+        cursor: pointer;
         visibility: hidden;
         margin-left: 50px;
 
@@ -84,14 +119,15 @@
     .actions {
         display: flex;
         align-items: center;
-
-        li {
-            margin-top: 95px;
-            list-style: none;
-            margin-left: 20px;
-
-            button {
-                background: none;
+        
+            
+            li {
+                margin-top: 95px;
+                list-style: none;
+                margin-left: 20px;
+                
+                button {
+                    background: none;
                 border: none;
                 cursor: pointer;
                 margin: 0 5px;
@@ -101,7 +137,8 @@
                 padding-left: 10px;
                 transform: translateY(20%);
                 transition: transform 0.5s ease;
-
+                
+                
                 &.scrolled {
                     margin-top: 25px;
                     color: black;
@@ -109,7 +146,8 @@
                     transition: transform 0.5s ease;
                 }
             }
-        }
+            }
+        
     }
 
     .menu {
@@ -200,4 +238,53 @@
 
         
     }
+    .actions {
+        /* Existing styles */
+        position: relative;
+    
+        .user-menu {
+            
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            width: 200px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+            transition: top 0.5s ease; 
+    
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+              
+                li {
+                    margin-top: 0;
+                    padding: 10px 20px;
+                    cursor: pointer;
+                  
+                  
+    
+                    button {
+                        margin-top: 0;
+                        color: #000;
+                        background: none;
+                        border: none;
+                        width: 100%;
+                        text-align: left;
+                        padding: 0;
+                        cursor: pointer;
+                    }
+                }
+            }
+    
+          
+        }
+    }
+    
+    
 }
