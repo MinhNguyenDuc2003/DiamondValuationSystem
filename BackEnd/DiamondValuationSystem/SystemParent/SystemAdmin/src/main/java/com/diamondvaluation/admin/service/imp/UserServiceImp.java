@@ -41,7 +41,9 @@ public class UserServiceImp implements UserService {
 		
 		if (isUpdatingUser) {
 			User existingUser = userRepository.findById(user.getId()).get();
-
+			if(!user.getEmail().equals(existingUser.getEmail())) {
+				throw new EmailIsAlreadyExistException("Email is already exist!");
+			}
 			if (user.getPassword().isEmpty()) {
 				user.setPassword(existingUser.getPassword());
 			} else {
@@ -50,7 +52,6 @@ public class UserServiceImp implements UserService {
 
 		} else {
 			if(isUsernameExist(user.getEmail())) {
-				System.out.println("abc");
 				throw new EmailIsAlreadyExistException("Email is already exist!");
 			}
 			encodePassword(user);

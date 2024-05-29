@@ -52,6 +52,8 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	
+	
 
 	public boolean hasRole(String roleName) {
 		Iterator<Role> iterator = roles.iterator();
@@ -96,6 +98,10 @@ public class User {
 	    }
 	    
 	    return listRole.toString();
+	}
+
+	public User(Integer id) {
+		this.id = id;
 	}
 
 }

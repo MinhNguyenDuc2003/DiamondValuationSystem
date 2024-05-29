@@ -41,8 +41,10 @@ public class AuthServiceImp implements AuthService {
 			Optional<User> userOptional = userRepository.findByUsername(authRequest.getEmail());
 			if (userOptional.isPresent()) {
 				User user = userOptional.get();
-				String token = jwtUtils.generateAccessToken(userOptional.get());
-				return new TokenResponse(token);
+				if (user.isEnabled()) {
+					String token = jwtUtils.generateAccessToken(user);
+					return new TokenResponse(token);
+				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

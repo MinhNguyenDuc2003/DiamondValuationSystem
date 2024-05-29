@@ -16,6 +16,6 @@ public interface UserRepository extends CrudRepository<User, Integer>, PagingAnd
 	Optional<User> findByUsername(String username);
 	
 	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ',"
-			+ " u.lastName) LIKE %?1%")
+			+ " u.lastName, ' ', u.phoneNumber) LIKE %?1%")
 	Page<User> findAll(String keyword, Pageable pageable);
 }

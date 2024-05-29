@@ -26,6 +26,6 @@ public class AuthResponse {
 		this.token = token;
 		this.roles = roles;
 		this.fullName = fullname;
-	}
+	}    
 
 }
