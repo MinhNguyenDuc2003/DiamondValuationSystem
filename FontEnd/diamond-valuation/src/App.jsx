@@ -12,6 +12,7 @@ import { AuthProvider } from "./components/auth/AuthProvider"
 import AddUser from "./scenes/users/AddUser"
 import EditUser from "./scenes/users/EditUser"
 import Customers from "./scenes/customer/Customers"
+import PrivateRoute from "./components/auth/PrivateRoute"
 
 const App = () => {
     return (
@@ -34,11 +35,11 @@ const MainContent = () => {
             {!isLoginRoute && <NavBar />}
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
-				<Route path="/users" element={<Users/>} />
-				<Route path="/customers" element={<Customers />} />
-                <Route path="/users/new" element={<AddUser/>}/>
-                <Route path="/users/:userid" element={<EditUser/>}/>
+                <Route path="/" element={<PrivateRoute> <Home /> </PrivateRoute>} />
+				<Route path="/users" element={<PrivateRoute> <Users /> </PrivateRoute>} />
+				<Route path="/customers" element={<PrivateRoute> <Customers /> </PrivateRoute>} />
+                <Route path="/users/new" element={<PrivateRoute> <AddUser /> </PrivateRoute>}/>
+                <Route path="/users/:userid" element={<PrivateRoute> <AddUser /> </PrivateRoute>}/>
                 {/* Thêm các Route khác cần NavBar tại đây */}
             </Routes>
         </>

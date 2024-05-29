@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom"
 import Paginator from '../../components/common/Paginator'
 import { useLocation } from 'react-router-dom'
 
-import { mockDataUser } from '../../data/mockData'
 import { Box, Button, IconButton, Typography, InputBase } from '@mui/material'
 import { DataGrid, GridToolbarExport, GridToolbarContainer} from '@mui/x-data-grid'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -188,8 +187,8 @@ export const Users = () => {
   const history = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [filteredData, setFilteredData] = useState("")
-  const [perPage, setPerPage] = useState()
   const [message, setMessage] = useState("")
+  const [error, setError] = useState('')
     
   const location = useLocation()   
 
@@ -202,19 +201,17 @@ export const Users = () => {
   },  [location.state?.message])
 
   useEffect(() => {
-     getUsersPerPage(currentPage, filteredData)
-       .then((data) => {
-        console.log(data)
-         setPerPage(data.per_page)
-         setData({
-           list_users : data.list_users,
-           total_page : data.total_page
-         })
-       })
-       .catch((error) => {
-         setError(error.message)
-       })
-	}, [currentPage, filteredData])
+    fetchUsers(currentPage, filteredData);
+  }, [currentPage, filteredData]);
+
+  const fetchUsers = async (page, filter) => {
+    try {
+      const data = await getUsersPerPage(page, filter);
+      setData({ list_users: data.list_users, total_page: data.total_page });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const columns = [
     {
@@ -229,13 +226,12 @@ export const Users = () => {
       headerName: "Email", 
       align: 'center',
       headerAlign: 'center',
-      flex: 1
+      flex: 1.5
     },
     {
       field: 'fullName',
       headerName: 'Full name',
-      flex: 1,
-
+      flex: 1.5,
       align: 'center',
       headerAlign: 'center',
       valueGetter: ({ row }) => `${row.last_name || ''} ${row.first_name || ''}`,
@@ -276,19 +272,32 @@ export const Users = () => {
       }
     },
     {
-      field: "role_ids", 
+      field: "role_names", 
       headerName: "Role", 
+      flex: 1,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: ({ row: {role_names} }) => {
+        return (
+          <Box display="flex" flexDirection="column" alignItems="center">
+            {role_names.split('/').map((role, index) => (
+                <Typography key={index}>{role.charAt(0).toUpperCase() + role.slice(1)}</Typography>
+            ))}
+          </Box>
+        );
+      }
+    },
+    {
+      field: 'action',
+      headerName: 'Actions',
       flex: 0.5,
       align: 'center',
       headerAlign: 'center',
-    },
-    {
-      flex: 1,
       renderCell: ({ row: {id} }) => {
         return (
           <Box>
             <IconButton
-              onClick={() => handleEdit(row)}
+              onClick={() => handleEdit(id)}
             >
               <EditIcon sx={{color: "#C5A773"}}/>
             </IconButton>
@@ -304,7 +313,7 @@ export const Users = () => {
   ]
 
   const handleEdit = (user) => {
-    history(`/users/${user.id}`)
+    history(`/users/${user}`)
   }
 
   const handleDelete = async (id) => {
@@ -349,8 +358,6 @@ export const Users = () => {
   };
 
   const processChange = debounce((e) => handleSearchChange(e));
-
-  console.log(perPage)
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
@@ -409,6 +416,7 @@ export const Users = () => {
         <DataGrid 
           rows={data.list_users}
           columns={columns}
+          getRowId={(row) => row?.id}
           hideFooter
           disableColumnFilter
           disableColumnMenu

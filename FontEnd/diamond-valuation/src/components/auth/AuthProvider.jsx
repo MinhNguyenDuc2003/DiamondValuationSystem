@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from "react"
 import { jwtDecode } from "jwt-decode";
+
 export const AuthContext = createContext({
 	user: null,
 	handleLogin: (token) => {},
@@ -10,11 +11,15 @@ export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null)
 
 	const handleLogin = (token) => {
-		const decodedUser = jwtDecode(token)
-        setSubject(decodedUser)
-		localStorage.setItem("userRoles", decodedUser.roles)
-		localStorage.setItem("token", token)
-		setUser(decodedUser)
+		try{
+			const decodedUser = jwtDecode(token)
+			setSubject(decodedUser)
+			localStorage.setItem("userRoles", decodedUser.roles)
+			localStorage.setItem("token", token)
+			setUser(decodedUser)
+		} catch (error) {
+			console.error("Failed to decode JWT: ", error)
+		}
 	}
 
     const setSubject = (decodedUser) => {
@@ -26,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 	const handleLogout = () => {
 		localStorage.removeItem("userId")
         localStorage.removeItem("userName")
-		localStorage.removeItem("userRole")
+		localStorage.removeItem("userRoles")
 		localStorage.removeItem("token")
 		setUser(null)
 	}
