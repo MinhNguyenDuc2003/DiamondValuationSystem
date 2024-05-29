@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { NavLink, Link } from "react-router-dom"
-import Logout from "../auth/Logout"
+import Logout from "../../components/auth/Logout"
 
 
 export const NavBar = () => {

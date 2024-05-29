@@ -5,12 +5,13 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import { BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom"
 import './App.css'
 import Login from "./components/auth/Login"
-import Home from "./components/home/Home"
-import NavBar from "./components/layout/NavBar"
-import Users from "./components/user/Users"
+import Home from "./scenes/home/Home"
+import NavBar from "./scenes/layout/NavBar"
+import Users from "./scenes/users/Users"
 import { AuthProvider } from "./components/auth/AuthProvider"
-import AddUser from "./components/user/AddUser"
-import EditUser from "./components/user/EditUser"
+import AddUser from "./scenes/users/AddUser"
+import EditUser from "./scenes/users/EditUser"
+import Customers from "./scenes/customer/Customers"
 
 const App = () => {
     return (
@@ -35,8 +36,9 @@ const MainContent = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
 				<Route path="/users" element={<Users/>} />
+				<Route path="/customers" element={<Customers />} />
                 <Route path="/users/new" element={<AddUser/>}/>
-                <Route path="/user/:userid" element={<EditUser/>}/>
+                <Route path="/users/:userid" element={<EditUser/>}/>
                 {/* Thêm các Route khác cần NavBar tại đây */}
             </Routes>
         </>

@@ -1,12 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { deleteUserById, getUsersPerPage } from '../utils/ApiFunctions'
+import { deleteUserById, getUsersPerPage } from '../../components/utils/ApiFunctions'
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
 import { Link } from "react-router-dom"
-import Paginator from '../common/Paginator'
+import Paginator from '../../components/common/Paginator'
 import { useLocation } from 'react-router-dom'
 
-export const Users = () => {
+export const Customers = () => {
     const [data, setData] = useState({
       list_users : [],
       total_page : 0
@@ -86,7 +86,7 @@ const handleDelete = async (id) => {
 
     <div className="container-fluid">
       <div className='ms-3 mt-3'>
-			  <h2 className='text-center'>Manage Users</h2>
+			  <h2 className='text-center'>Manage Customer</h2>
         <Link to={"/users/new"}>
           <i className="bi bi-person-add" style={{fontSize: "40px", color : "black"}}></i>
 				</Link>
@@ -166,4 +166,4 @@ const handleDelete = async (id) => {
   )
 }
 
-export default Users
+export default Customers

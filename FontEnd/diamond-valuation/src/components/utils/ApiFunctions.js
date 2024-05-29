@@ -73,6 +73,7 @@ export async function saveUser(user) {
 	formData.append("phone_number", user.phone_number)
 	formData.append("roles", user.role_ids)
 	formData.append("photo", user.photo)
+	formData.append("enabled", user.enabled)
 
 	try {
 		const response = await api.post("api/users/user/save", formData,{

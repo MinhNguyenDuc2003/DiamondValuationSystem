@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { getRoles, getUserById, saveUser } from '../utils/ApiFunctions'
-import { useNavigate, useParams } from 'react-router-dom'
+import { getRoles, saveUser } from '../../components/utils/ApiFunctions'
+import { useNavigate } from 'react-router-dom'
 
-export const EditUser = () => {
-    const {userid} = useParams()
+
+export const AddUser = () => {
     const [user, setUser] = useState({
 		id: "",
 		email: "",
@@ -16,8 +16,6 @@ export const EditUser = () => {
         photo: null,
         role_ids : []
 	})
-
-    
 
 
 	const [roles, setRoles] = useState([])
@@ -34,30 +32,6 @@ export const EditUser = () => {
 		}
 	}
 	fetchRoles()
-  }, [])
-
-  useEffect(() => {
-    
-	const fetchUser = async() => {
-		try {
-			const useredit = await getUserById(userid)
-            setUser({
-                id: useredit.id,
-		        email: useredit.email,
-		        first_name: useredit.first_name,
-                last_name: useredit.last_name,
-                password: "",
-                phone_number:useredit.phone_number,
-                enabled: useredit.enabled,
-                photo: useredit.photo,
-                role_ids : useredit.role_ids
-            });
-            setImagePreview(useredit.photo)
-		} catch (error) {
-			console.log(error)
-		}
-	}
-    fetchUser();
   }, [])
 
 
@@ -98,7 +72,7 @@ const handleSubmit = async (e) => {
 	try {
 		const result = await saveUser(user)
 		if (result.message !== undefined) {
-			navigate(redirectUrl, { state: { message: "Add/Update new User successfully" } })
+			navigate(redirectUrl, { state: { message: "Add new User successfully" } })
 		} else {
 			setErrorMessage("Your email is invalid")
 		}
@@ -126,7 +100,7 @@ const handleSubmit = async (e) => {
         <div className="form-group row mt-3">
 					<label htmlFor='email' className="col-sm-4 col-form-label">E-mail:</label>
 					<div className="col-sm-8">
-						<input value={user.email} onChange={(e) => handleInputChange(e)} type="email" id='email' name='email' className="form-control"
+						<input onChange={(e) => handleInputChange(e)} type="email" id='email' name='email' className="form-control"
 							required minLength={8}/>
 					</div>
 				</div>
@@ -134,7 +108,7 @@ const handleSubmit = async (e) => {
         <div className="form-group row mt-3">
 					<label htmlFor='first_name' className="col-sm-4 col-form-label">First Name:</label>
 					<div className="col-sm-8">
-						<input value={user.first_name} type="text" className="form-control" id='first_name' name='first_name'
+						<input type="text" className="form-control" id='first_name' name='first_name'
 							onChange={(e) => handleInputChange(e)}
 							required minLenght={2} maxLenght={45} />
 					</div>
@@ -143,7 +117,7 @@ const handleSubmit = async (e) => {
 				<div className="form-group row mt-3">
 					<label htmlFor='last_name' className="col-sm-4 col-form-label">Last Name:</label>
 					<div className="col-sm-8">
-						<input value={user.last_name} type="text" className="form-control" id='last_name' name='last_name'
+						<input type="text" className="form-control" id='last_name' name='last_name'
 							onChange={(e) => handleInputChange(e)}
 							required minLenght={2} maxLenght={45} />
 					</div>
@@ -152,8 +126,8 @@ const handleSubmit = async (e) => {
 				<div className="form-group row mt-3">
 					<label htmlFor='password' className="col-sm-4 col-form-label">Password:</label>
 					<div className="col-sm-8">
-						<input type="password" placeholder="If you don't want change your password leave it blank. "
-							className="form-control" id='password' name='password'
+						<input type="password"
+							className="form-control" required id='password' name='password'
 							onChange={(e) => handleInputChange(e)}
 							minLenght={5} maxLenght={20} />
 					</div>
@@ -162,7 +136,7 @@ const handleSubmit = async (e) => {
 				<div className="form-group row mt-3">
 					<label htmlFor='phone_number' className="col-sm-4 col-form-label">Phone Number:</label>
 					<div className="col-sm-8">
-						<input type="text" value={user.phone_number}
+						<input type="text"
 							className="form-control" required id='phone_number' name='phone_number'
 							onChange={(e) => handleInputChange(e)}
 							minLenght={10} maxLenght={10} />
@@ -172,7 +146,7 @@ const handleSubmit = async (e) => {
 				<div className="form-group row mt-3">
 					<label className="col-sm-4 col-form-label">Enabled:</label>
 					<div className="col-sm-8 mt-2">
-						<input onChange={(e) => handleEnabledChange(e)} type="checkbox" id='enabled' name='enabled' checked={user.enabled}/>
+						<input onChange={(e) => handleEnabledChange(e)} type="checkbox" id='enabled' name='enabled' />
 					</div>
 				</div>
 
@@ -186,8 +160,7 @@ const handleSubmit = async (e) => {
 				        id={role.id} 
 						value={role.id}
 				        name="role_ids" 
-				        className="m-2" 
-                        checked={user.role_ids.includes(role.id+"")}
+				        className="m-2"
  				     	/>
  				     	<small>{role.name} </small> - <small>{role.description}</small>
 				      	<br />
@@ -224,4 +197,4 @@ const handleSubmit = async (e) => {
   )
 }
 
-export default EditUser
+export default AddUser
