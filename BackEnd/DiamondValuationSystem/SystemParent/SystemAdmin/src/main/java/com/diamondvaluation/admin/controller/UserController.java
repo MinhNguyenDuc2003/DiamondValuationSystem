@@ -77,7 +77,7 @@ public class UserController {
 			}
 			return new ResponseEntity<>(new MessageResponse("Add/Update User successfully!"), HttpStatus.OK);
 		} catch (EmailIsAlreadyExistException e) {
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
 		}
 		
 	}
@@ -102,6 +102,7 @@ public class UserController {
 		String photoName = userResponse.getPhoto();
 		userResponse.setPhoto(AmazonS3Util.S3_BASE_URI+"/user-photos/"+user.getId()+"/"+photoName);
 		userResponse.setRoleIds(user.getListRoleIds());
+		userResponse.setRoleNames(user.getRolesName());
 		return userResponse;
 	}
 
@@ -137,7 +138,7 @@ public class UserController {
 	
 	@GetMapping("user/roles")
 	private ResponseEntity<List<Role>> listAllRoles(){
-		return new ResponseEntity(userService.getAllRoles(), HttpStatus.OK);
+		return new ResponseEntity<List<Role>>(userService.getAllRoles(), HttpStatus.OK);
 	}
 	
 	

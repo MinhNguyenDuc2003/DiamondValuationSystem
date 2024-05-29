@@ -34,7 +34,12 @@ export async function loginUser(login) {
 
 export async function getUsersPerPage(pageNum, keyword) {
 	try {
-		const result = await api.get(`/api/users/page/${pageNum}?keyword=${keyword}`,{}, {
+		let page = pageNum;  // Use 'let' to allow reassignment
+
+		if (keyword.length > 0 && page === 0) {  // Correct 'lenght' to 'length'
+    		page = 1;
+		}
+		const result = await api.get(`/api/users/page/${page}?keyword=${keyword}`,{}, {
 			headers: getHeader()
 		})
 		return result.data;
@@ -73,6 +78,7 @@ export async function saveUser(user) {
 	formData.append("phone_number", user.phone_number)
 	formData.append("roles", user.role_ids)
 	formData.append("photo", user.photo)
+	formData.append("enabled", user.enabled)
 
 	try {
 		const response = await api.post("api/users/user/save", formData,{
@@ -80,7 +86,10 @@ export async function saveUser(user) {
 				'Content-Type': 'multipart/form-data'
 			} }
 		)
-		return response.data
+		if (response.status >= 200 && response.status < 300) {
+            return response.data ;
+        } else 
+            return  response.status;
 	} catch (error) {
 		console.log(error.data);
 	}

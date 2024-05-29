@@ -1,12 +1,14 @@
 package com.diamondvaluation.common;
 
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,8 +42,18 @@ public class Customer {
 	@Column(name = "verification_code", length = 64)
 	private String verificationCode;
 	
-	@Column(name = "created_time")
+	@Column(name = "created_time", nullable =false, updatable = false)
 	private Date createdTime;
+	
+	@OneToMany
+	private List<Appoinment> appoinments;
 
 	private boolean enabled;
+
+	public Customer(Integer id) {
+		this.id = id;
+	}
+	
+	
+	
 }

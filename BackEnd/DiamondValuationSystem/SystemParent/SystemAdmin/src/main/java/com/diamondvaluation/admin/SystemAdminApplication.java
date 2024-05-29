@@ -34,7 +34,7 @@ public class SystemAdminApplication {
 		mapper.typeMap(User.class, UserResponse.class)
 				.addMapping(src -> src.getPhoto(), 
 				(dest, value) -> dest.setPhoto(value+" "));
-		;
+		
 	}
 
 
