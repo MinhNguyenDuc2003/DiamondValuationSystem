@@ -1,10 +1,11 @@
-import { memo } from "react"
+import { memo, useState } from "react"
 import { Input, Col, Row } from 'antd';
-import { FacebookOutlined, GoogleOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, FacebookOutlined, GoogleOutlined, PhoneOutlined ,WhatsAppOutlined ,EnvironmentOutlined } from '@ant-design/icons';
 import './Footer.scss'
 const Footer = () => {
+    const [menuContact , setMenuContact] = useState(false);
     const hanlde_Contact_Click = () => {
-
+        setMenuContact(!menuContact)
     }
     const hanlde_Question_Click = () => {
 
@@ -44,7 +45,7 @@ const Footer = () => {
     return (
         <>
             <div className="wrapper">
-                <div className="wrapper-content">
+                <div className={`wrapper-content ${menuContact ? 'menu-contact' : ''} `}>
                     <Row>
 
                         <Col span={6} className="footer_col_1">
@@ -92,6 +93,51 @@ const Footer = () => {
                         </Col>
                     </Row>
                 </div>
+                {menuContact && (
+                    <div className="wrapper-menu">
+                        <button onClick={hanlde_Contact_Click} className="close-button"><CloseCircleOutlined/></button>
+                        <div className="menu-content">
+                            <h2>CONTACT US </h2>
+                            <div className="col">
+                                <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <PhoneOutlined />
+                                <span>CALL US 099999999</span>
+                                </a>
+                                <p>
+                                Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).
+                                </p>
+                            </div>
+                            <div className="col">
+                                <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <WhatsAppOutlined />
+                                <span>WHATSAPP US</span>
+                                </a>
+                                <p>
+                                Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).
+                                </p>
+                            </div>
+                            <div className="col">
+                                <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FacebookOutlined />
+                                <span>facebook Us</span>
+                                </a>
+                                <p>
+                                Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).
+                                </p>
+                            </div>
+                            <div className="col">
+                                <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <EnvironmentOutlined />
+                                <span>Address US</span>
+                                </a>
+                                <p>
+                                Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {menuContact&& <div className="overlay" onClick={hanlde_Contact_Click}> </div>}
             </div>
         </>
     );

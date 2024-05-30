@@ -6,8 +6,12 @@ export const ROUTERS = {
         CONTACT: "Contact",
         SERVICE: "Service",
         BLOG: "Blog",
-        EDUCATION: "Education",
-        DIAMOND: "Diamond"
+        EDUCATION_CARAT: "education/carat",
+        EDUCATION_CUT: "Education/cut",
+        EDUCATION_COLOR: "Education/color",
+        EDUCATION_CLARITY: "Education/clarity",
+        EDUCATION_FLUORESCENCE: "Education/fluorescence",
+        DIAMOND: "Diamond",
     }
 }
 

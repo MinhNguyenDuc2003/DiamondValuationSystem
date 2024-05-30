@@ -1,22 +1,95 @@
+
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
 .home-page {
-    padding: 20px;
-}
+    margin-left: 10px;
+    width: 1450px;
+    background-color: #f9f9f9;
 
-.body-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
 
-.body-content h1 {
-    font-size: 36px;
-    color: #333;
-    margin-bottom: 20px;
-}
 
-.body-content p {
-    font-size: 18px;
-    line-height: 1.5;
-    color: #666;
-    margin-bottom: 20px;
+    .body-content {
+        max-width: 100%;
+        margin-left: 20px;
+        display: flex;
+
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .wrapper-banner {
+            width: 850px;
+
+            img {
+                width: 700px;
+                height: 100%;
+                background-color: white;
+                margin-left: 50px;
+            }
+
+        }
+
+    }
+
+    .body-content-2 {
+        margin: 10px;
+        .wrapper-icon {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            width: 100%;
+
+            img {
+                margin-top: 10px;
+                width: 25%;
+            }
+        }
+
+        
+
+        .custom-block{
+            margin-left: 40px;
+            background-color: white;
+            width: 80%;
+            height: 270px;
+            h1{
+                text-align: center;
+            }
+            p{
+                display: flex;
+                text-align: center;
+            }
+        }
+        .wrapper-content-icon{
+            display: flex;
+            .col{
+                justify-content: space-between;
+            }
+        }
+
+    }
+    .body-content-3{
+        border-top: #333 1px solid;
+        width: 70%;
+        margin-left: 250px;
+        text-align: center;
+        h1{
+            text-align: center;
+        }
+        p{
+           color: #666
+        }
+    }
 }
-    

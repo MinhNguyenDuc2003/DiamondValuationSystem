@@ -6,9 +6,13 @@ import MasterLayout from "./pages/user/MasterLayout";
 import HomePage from "./pages/user/Home/homePage";
 import ServiceBody from "./pages/user/Service/ServiceBody";
 import Blog from "./pages/user/Blog/Blog";
-import Education from "./pages/user/Education/Education";
+import EDUCATION_CARAT from "./pages/user/Education/Carat";
+import EDUCATION_CUT from "./pages/user/Education/Cut";
+import EDUCATION_FLUORESCENCE from "./pages/user/Education/Fluorescence";
+import EDUCATION_CLARITY from "./pages/user/Education/Clarity";
+import EDUCATION_COLOR from "./pages/user/Education/Color";
 import Diamond from "./pages/user/Diamond/Diamod";
-import Contact from "./pages/user/Diamond copy/Contact";
+import Contact from "./pages/user/Contact/Contact";
 import Sign from "./asset/user/sign/Sign";
 
 
@@ -38,8 +42,24 @@ const renderUserRouter = () => {
             component: <Blog/>
         },
         {
-            path : ROUTERS.USER.EDUCATION,
-            component: <Education/>
+            path : ROUTERS.USER.EDUCATION_CARAT,
+            component: <EDUCATION_CARAT/>
+        },
+        {
+            path : ROUTERS.USER.EDUCATION_CUT,
+            component: <EDUCATION_CUT/>
+        },
+        {
+            path : ROUTERS.USER.EDUCATION_COLOR,
+            component: <EDUCATION_COLOR/>
+        },
+        {
+            path : ROUTERS.USER.EDUCATION_CLARITY,
+            component: <EDUCATION_CLARITY/>
+        },
+        {
+            path : ROUTERS.USER.EDUCATION_FLUORESCENCE,
+            component: <EDUCATION_FLUORESCENCE/>
         },
         {
             path : ROUTERS.USER.DIAMOND,

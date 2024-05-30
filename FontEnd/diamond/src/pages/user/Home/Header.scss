@@ -17,27 +17,24 @@
 
     &.search-open {
         .logo {
-
             transform: scale(1);
             background: none;
             border: none;
             cursor: pointer;
-
         }
 
         .actions {
             &.scrolled {
                 margin-top: 25px;
                 color: black;
-                transform: none
-                
+                transform: none;
             }
-            
         }
-        .search{
+
+        .search {
             position: absolute;
             top: 70px;
-            right:90px;
+            right: 90px;
             width: 650px;
             height: 100%;
             background-color: white;
@@ -49,16 +46,12 @@
             align-items: flex-start;
         }
     }
-    &.menu-open {
-        
-      
-        .logo {
 
+    &.menu-open {
+        .logo {
             transform: scale(1);
-            
             border: none;
             cursor: pointer;
-
         }
 
         .contact {
@@ -68,10 +61,8 @@
 
             span {
                 color: black;
-
             }
         }
-
     }
 
     .contact {
@@ -102,8 +93,6 @@
 
         img {
             width: 150px;
-
-
         }
 
         &.scrolled {
@@ -112,22 +101,19 @@
             border: none;
             cursor: pointer;
         }
-
-
     }
 
     .actions {
         display: flex;
         align-items: center;
         
+        li {
+            margin-top: 95px;
+            list-style: none;
+            margin-left: 20px;
             
-            li {
-                margin-top: 95px;
-                list-style: none;
-                margin-left: 20px;
-                
-                button {
-                    background: none;
+            button {
+                background: none;
                 border: none;
                 cursor: pointer;
                 margin: 0 5px;
@@ -137,8 +123,7 @@
                 padding-left: 10px;
                 transform: translateY(20%);
                 transition: transform 0.5s ease;
-                
-                
+
                 &.scrolled {
                     margin-top: 25px;
                     color: black;
@@ -146,8 +131,7 @@
                     transition: transform 0.5s ease;
                 }
             }
-            }
-        
+        }
     }
 
     .menu {
@@ -171,61 +155,109 @@
         cursor: pointer;
         font-size: 48px;
         align-self: flex-end;
-        transform: scale(1) ;
+        transform: scale(1);
         transition: transform 0.6s ease;
-        &:hover{
-            transform: scale(0.8) ;
-        transition: transform 0.6s ease;
-            
+
+        &:hover {
+            transform: scale(0.8);
+            transition: transform 0.6s ease;
         }
-
-
     }
-    
-    
 
     .menu-content {
+        ul {
+            li {
+                list-style: none;
 
-
-
-        li {
-            list-style: none;
-
-
-            button {
-                position: relative;
-                font-size: 20px;
-                border: none;
-                background: none;
-                cursor: pointer;
-                padding-bottom: 1.5rem;
-                padding-top: 0px;
-                margin-left: 40px;
-                transition: color 0.3s ease;
-
-                .direct {
-                    position: absolute;
-                   padding-left: 5px;
-                    top: 6px;
-                    opacity: 0;
-                    transition: transform 0.5s ease, opacity 0.6s ease;
-                    font-size: 10px;
-                    
-                }
-
-                &:hover {
-                    color: #000; // Add desired hover color
+                button {
+                    position: relative;
+                    font-size: 20px;
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    padding-bottom: 1.5rem;
+                    padding-top: 0px;
+                    margin-left: 40px;
+                    transition: color 0.3s ease;
 
                     .direct {
-                        opacity: 1;
-                        transform: translateX(30%);
+                        position: absolute;
+                        padding-left: 5px;
+                        top: 6px;
+                        opacity: 0;
+                        transition: transform 0.5s ease, opacity 0.6s ease;
                         font-size: 10px;
+                    }
+
+                    &:hover {
+                        color: #000;
+
+                        .direct {
+                            opacity: 1;
+                            transform: translateX(30%);
+                            font-size: 10px;
+                        }
                     }
                 }
             }
         }
     }
 
+    .education-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 550px;
+        height: 100%;
+        background-color: white;
+        z-index: 1000;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .education-content {
+            ul {
+                li {
+                    list-style: none;
+                    padding: 10px 0;
+
+                    button {
+                        position: relative;
+                        font-size: 20px;
+                        border: none;
+                        background: none;
+                        cursor: pointer;
+                        padding-bottom: 1.5rem;
+                        padding-top: 0px;
+                        margin-left: 40px;
+                        transition: color 0.3s ease;
+    
+                        .direct {
+                            position: absolute;
+                            padding-left: 5px;
+                            top: 6px;
+                            opacity: 0;
+                            transition: transform 0.5s ease, opacity 0.6s ease;
+                            font-size: 10px;
+                        }
+    
+                        &:hover {
+                            color: #000;
+    
+                            .direct {
+                                opacity: 1;
+                                transform: translateX(30%);
+                                font-size: 10px;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
 
     .overlay {
         position: fixed;
@@ -235,15 +267,12 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.6);
         z-index: 999;
-
-        
     }
+
     .actions {
-        /* Existing styles */
         position: relative;
-    
+
         .user-menu {
-            
             position: absolute;
             top: 100%;
             right: 0;
@@ -255,22 +284,18 @@
             border-radius: 4px;
             overflow: hidden;
             margin-top: 10px;
-            transition: top 0.5s ease; 
-    
+            transition: top 0.5s ease;
+
             ul {
                 list-style: none;
                 margin: 0;
                 padding: 0;
-              
+
                 li {
-                    margin-top: 0;
                     padding: 10px 20px;
                     cursor: pointer;
-                  
-                  
-    
+
                     button {
-                        margin-top: 0;
                         color: #000;
                         background: none;
                         border: none;
@@ -281,10 +306,6 @@
                     }
                 }
             }
-    
-          
         }
     }
-    
-    
 }
