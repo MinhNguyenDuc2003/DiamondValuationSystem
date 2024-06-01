@@ -3,6 +3,7 @@ import { NavLink, Link } from "react-router-dom"
 import Logout from "../../components/auth/Logout"
 
 
+
 export const NavBar = () => {
     const [user, setUser] = useState({
         full_name : "",
@@ -29,8 +30,6 @@ export const NavBar = () => {
 	})
 	}, [])
 
-
-
 	return (
 		<nav className="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
 				<Link to={"/"} className="navbar-brand">
@@ -48,7 +47,7 @@ export const NavBar = () => {
 					<span className="navbar-toggler-icon"></span>
 				</button>
 
-				<div className="collapse navbar-collapse ms-5" id="navbarScroll">
+				<div className="collapse navbar-collapse ms-5" id="navbarScroll" >
 					<ul className="navbar-nav me-auto my-2 my-lg-2 navbar-nav-scroll">
 						<li className="nav-item">
 							<NavLink className="nav-link text-white" aria-current="page" to={"/users"}>

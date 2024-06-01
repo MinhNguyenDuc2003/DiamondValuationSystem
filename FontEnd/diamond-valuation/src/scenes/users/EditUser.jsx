@@ -136,7 +136,7 @@ const handleSubmit = async (e) => {
 					<div className="col-sm-8">
 						<input value={user.first_name} type="text" className="form-control" id='first_name' name='first_name'
 							onChange={(e) => handleInputChange(e)}
-							required minLenght={2} maxLenght={45} />
+							required minLength={2} maxLength={45} />
 					</div>
 				</div>
 
@@ -145,7 +145,7 @@ const handleSubmit = async (e) => {
 					<div className="col-sm-8">
 						<input value={user.last_name} type="text" className="form-control" id='last_name' name='last_name'
 							onChange={(e) => handleInputChange(e)}
-							required minLenght={2} maxLenght={45} />
+							required minLength={2} maxLength={45} />
 					</div>
 				</div>
 
@@ -155,7 +155,7 @@ const handleSubmit = async (e) => {
 						<input type="password" placeholder="If you don't want change your password leave it blank. "
 							className="form-control" id='password' name='password'
 							onChange={(e) => handleInputChange(e)}
-							minLenght={5} maxLenght={20} />
+							minLenght={5} maxLength={20} />
 					</div>
 				</div>
 
@@ -165,7 +165,7 @@ const handleSubmit = async (e) => {
 						<input type="text" value={user.phone_number}
 							className="form-control" required id='phone_number' name='phone_number'
 							onChange={(e) => handleInputChange(e)}
-							minLenght={10} maxLenght={10} />
+							minLenght={10} maxLength={10} />
 					</div>
 				</div>
 

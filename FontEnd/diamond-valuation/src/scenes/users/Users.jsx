@@ -1,22 +1,32 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { deleteUserById, getUsersPerPage } from '../../components/utils/ApiFunctions'
-import { FaEdit, FaTrashAlt } from "react-icons/fa"
-import { Link, useNavigate } from "react-router-dom"
-import Paginator from '../../components/common/Paginator'
-import { useLocation } from 'react-router-dom'
+import React from "react";
+import { useState, useEffect } from "react";
+import {
+  deleteUserById,
+  getUsersPerPage,
+} from "../../components/utils/ApiFunctions";
+import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { Box, Button, IconButton, Typography, InputBase } from '@mui/material'
-import { DataGrid, GridToolbarExport, GridToolbarContainer} from '@mui/x-data-grid'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Pagination from '@mui/material/Pagination';
-import SearchIcon from '@mui/icons-material/Search'
-
-
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  InputBase,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Pagination from "@mui/material/Pagination";
+import SearchIcon from "@mui/icons-material/Search";
 
 // export const Users = () => {
 //     const [data, setData] = useState({
@@ -26,11 +36,11 @@ import SearchIcon from '@mui/icons-material/Search'
 //     const [filteredData, setFilteredData] = useState("")
 //     const [currentPage, setCurrentPage] = useState(1)
 //     const [message, setMessage] = useState("")
-    
-//     const location = useLocation()   
+
+//     const location = useLocation()
 
 //     useEffect(() => {
-       
+
 //       setMessage(location.state?.message)
 
 //       setTimeout(() => {
@@ -60,7 +70,6 @@ import SearchIcon from '@mui/icons-material/Search'
 //     };
 //   }
 
- 
 //   const handleSearchChange = (e) => {
 //     let value = e.target.value;
 //     setFilteredData(value);
@@ -91,9 +100,6 @@ import SearchIcon from '@mui/icons-material/Search'
 //       }, 1000)
 //     }
 // }
-    
-
-    
 
 //   return (
 
@@ -105,8 +111,6 @@ import SearchIcon from '@mui/icons-material/Search'
 // 				</Link>
 // 		  </div>
 
-      
-        
 //       <div>
 //           <form onSubmit={(e) => {e.preventDefault()}} className="form-inline d-flex align-items-center m-3 col-3">
 //               <input type="search" name="keyword" className="form-control mr-2" onChange={processChange} id="keyword" required />
@@ -158,7 +162,6 @@ import SearchIcon from '@mui/icons-material/Search'
 // 											</button>
 // 								</td>
 
-
 //               </tr>
 //             )
 //             )
@@ -172,9 +175,9 @@ import SearchIcon from '@mui/icons-material/Search'
 // 						totalPages={data.total_page}
 //             onPageChange={handlePageChange}
 //           />
-//         </div> 
+//         </div>
 
-//       </div>    
+//       </div>
 //     </div>
 //   )
 // }
@@ -182,23 +185,39 @@ import SearchIcon from '@mui/icons-material/Search'
 export const Users = () => {
   const [data, setData] = useState({
     list_users: [],
-    total_page: 0
-  })
-  const history = useNavigate()
-  const [currentPage, setCurrentPage] = useState(1)
-  const [filteredData, setFilteredData] = useState("")
-  const [message, setMessage] = useState("")
-  const [error, setError] = useState('')
-    
-  const location = useLocation()   
+    total_page: 0,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
+  const handleOpenDialog = (user) => {
+    setUserToDelete(user);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setUserToDelete(null);
+  };
+
+  const location = useLocation();
 
   useEffect(() => {
-     
-    setMessage(location.state?.message)
-    setTimeout(() => {
-      setMessage("")
-    }, 2000)
-  },  [location.state?.message])
+    const successMessage = localStorage.getItem("successMessage");
+    if (successMessage) {
+      setMessage(successMessage);
+      localStorage.removeItem("successMessage");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    }
+  }, [location.state?.message]);
 
   useEffect(() => {
     fetchUsers(currentPage, filteredData);
@@ -215,143 +234,141 @@ export const Users = () => {
 
   const columns = [
     {
-      field: 'id', 
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       flex: 0.5,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
     },
     {
-      field: "email", 
-      headerName: "Email", 
-      align: 'center',
-      headerAlign: 'center',
-      flex: 1.5
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      flex: 1.5,
-      align: 'center',
-      headerAlign: 'center',
-      valueGetter: ({ row }) => `${row.last_name || ''} ${row.first_name || ''}`,
-    },
-    {
-      field: "phone_number", 
-      headerName: "Phone Number", 
-      flex: 1, 
-      align: 'center',
-      headerAlign: 'center',
-    },
-    { 
-      field: "photo", 
-      headerName: "Photo", 
+      field: "photo",
+      headerName: "Photo",
       flex: 1,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       renderCell: ({ row }) => {
         return (
           <Box display="flex" justifyContent="center">
-            <img src={row.avatar} alt={row.first_name} style={{ width: 50, height: 50, borderRadius: '50%' }} />
+            <img
+              src={row.avatar}
+              alt={row.first_name}
+              style={{ width: 50, height: 50, borderRadius: "50%" }}
+            />
           </Box>
         );
-      }
+      },
     },
     {
-      field: "enabled", 
-      headerName: "Enable", 
-      flex: 0.5,
-      align: 'center',
-      headerAlign: 'center',
-      renderCell: ({ row: {enabled } })  => {
-        return(
-          <>
-            {enabled ? <CheckCircleIcon sx={{color: 'green', fontSize: '35px'}}/> : <CheckCircleOutlineIcon sx={{fontSize: '35px'}}/>}
-          </>
-        )
-      }
+      field: "email",
+      headerName: "Email",
+      align: "center",
+      headerAlign: "center",
+      flex: 1.5,
     },
     {
-      field: "role_names", 
-      headerName: "Role", 
+      field: "fullName",
+      headerName: "Full name",
+      flex: 1.5,
+      align: "center",
+      headerAlign: "center",
+      valueGetter: ({ row }) =>
+        `${row.last_name || ""} ${row.first_name || ""}`,
+    },
+    {
+      field: "phone_number",
+      headerName: "Phone Number",
       flex: 1,
-      align: 'center',
-      headerAlign: 'center',
-      renderCell: ({ row: {role_names} }) => {
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "enabled",
+      headerName: "Enable",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row: { enabled } }) => {
+        return (
+          <>
+            {enabled ? (
+              <CheckCircleIcon sx={{ color: "green", fontSize: "35px" }} />
+            ) : (
+              <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+            )}
+          </>
+        );
+      },
+    },
+    {
+      field: "role_names",
+      headerName: "Role",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row: { role_names } }) => {
         return (
           <Box display="flex" flexDirection="column" alignItems="center">
-            {role_names.split('/').map((role, index) => (
-                <Typography key={index}>{role.charAt(0).toUpperCase() + role.slice(1)}</Typography>
+            {role_names.split("/").map((role, index) => (
+              <Typography key={index}>
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </Typography>
             ))}
           </Box>
         );
-      }
+      },
     },
     {
-      field: 'action',
-      headerName: 'Actions',
+      field: "action",
+      headerName: "Actions",
       flex: 0.5,
-      align: 'center',
-      headerAlign: 'center',
-      renderCell: ({ row: {id} }) => {
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row: { id } }) => {
         return (
           <Box>
-            <IconButton
-              onClick={() => handleEdit(id)}
-            >
-              <EditIcon sx={{color: "#C5A773"}}/>
+            <IconButton onClick={() => navigate(`/users/${id}`)}>
+              <EditIcon sx={{ color: "#C5A773" }} />
             </IconButton>
-            <IconButton
-              onClick={() => handleDelete(id)}
-            >
-              <DeleteIcon sx={{color: "#C5A773"}}/>
+            <IconButton onClick={() => handleOpenDialog(id)}>
+              <DeleteIcon sx={{ color: "#C5A773" }} />
             </IconButton>
           </Box>
         );
-      }
-    }
-  ]
+      },
+    },
+  ];
 
-  const handleEdit = (user) => {
-    history(`/users/${user}`)
-  }
-
-  const handleDelete = async (id) => {
-    const result = await deleteUserById(id);
-    if(result!== undefined){
-      setMessage(`Delete user with id ${id}  successfully!`)
+  const handleDelete = async () => {
+    const result = await deleteUserById(userToDelete);
+    if (result !== undefined) {
+      setMessage(`Delete user with id ${userToDelete}  successfully!`);
       getUsersPerPage(currentPage, filteredData)
-			.then((data) => {
-				setData({
-          list_users : data.list_users,
-          total_page : data.total_page
+        .then((data) => {
+          setData({
+            list_users: data.list_users,
+            total_page: data.total_page,
+          });
         })
-			})
-			.catch((error) => {
-				setError(error.message)
-			})
+        .catch((error) => {
+          setError(error.message);
+        });
+      handleCloseDialog();
       setTimeout(() => {
-        setMessage("")
-      }, 1000)
+        setMessage("");
+      }, 1000);
     }
-}
+  };
 
-  function debounce(func, timeout = 300){
+  function debounce(func, timeout = 300) {
     let timer;
     return (...args) => {
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
     };
   }
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer sx={{backgroundColor: 'white', border: 'none'}}>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
- 
   const handleSearchChange = (e) => {
     let value = e.target.value;
     setFilteredData(value);
@@ -363,57 +380,59 @@ export const Users = () => {
     setCurrentPage(value);
   };
 
-  return(
-    <Box m='20px'>
-      <Typography
-        variant='h4'
-        textAlign='center'
-      >
+  return (
+    <Box p="20px" overflow="auto">
+      <Typography variant="h4" textAlign="center">
         Manage Users
       </Typography>
-      
-      <Box display='flex' alignContent='center' justifyContent='space-between'>
-        <Link to='/users/new'>
-          <PersonAddAlt1Icon 
+
+      <Box display="flex" justifyContent="space-between">
+        <Link to="/users/new">
+          <PersonAddAlt1Icon
             sx={{
-              ml: '10px',
-              fontSize: '40px',
-              color: 'black'
+              ml: "10px",
+              fontSize: "40px",
+              color: "black",
             }}
-            />
+          />
         </Link>
         <Box
-            display="flex" 
-            width='20%'
-            border='1px solid black'
-            borderRadius="30px"
+          display="flex"
+          width="20%"
+          border="1px solid black"
+          borderRadius="30px"
         >
-          <InputBase sx={{ml: 2, flex: 1}}  onChange={(e) => processChange(e)}/>
-          <IconButton type="button" sx = {{p:1}}>
-              <SearchIcon />
+          <InputBase
+            sx={{ ml: 2, flex: 1 }}
+            onChange={(e) => processChange(e)}
+          />
+          <IconButton type="button" sx={{ p: 1 }}>
+            <SearchIcon />
           </IconButton>
-          {/* <Button sx={{borderRadius: '30px', backgroundColor: "#C5A773", color: 'black', fontWeight: 'bold'}}>
-            Search
-          </Button> */}
         </Box>
       </Box>
 
-      <Box m='20px 0 0 0' height='65vh' sx={{
-        '% .MuiDataGrid-root': {
-          border: 'none'
-        },
-        "& .MuiDataGrid-columnHeader": {
-          backgroundColor: "#C5A773",
-          color: "black",
-          fontWeight: "bold",
-          borderBottom: "none"
-        },
-        "& .MuiDataGrid-footerContainer": {
-          borderTop: "none",
-        },
-        backgroundColor: '#EEE5D6',
-      }}>
-        <DataGrid 
+      {message && (
+        <div className="alert alert-success text-center">{message}</div>
+      )}
+
+      <Box
+        m="20px 0 0 0"
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-columnHeader": {
+            backgroundColor: "#C5A773",
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+          },
+          backgroundColor: "#EEE5D6",
+        }}
+      >
+        <DataGrid
           rows={data.list_users}
           columns={columns}
           getRowId={(row) => row?.id}
@@ -421,16 +440,40 @@ export const Users = () => {
           disableColumnFilter
           disableColumnMenu
           disableRowSelectionOnClick
-          slots={{
-            toolbar: CustomToolbar
-          }}
         />
       </Box>
-      <Box display='flex' justifyContent='center'>
-        <Pagination count={data.total_page} page={currentPage} onChange={handleChange}/>
+      <Box display="flex" justifyContent="center">
+        <Pagination
+          count={data.total_page}
+          page={currentPage}
+          onChange={handleChange}
+        />
       </Box>
-    </Box>
-  )
-}
 
-export default Users
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDelete} color="secondary" autoFocus>
+            Delete
+          </Button>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default Users;
