@@ -3,6 +3,7 @@ package com.diamondvaluation.common;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,8 +46,8 @@ public class Customer {
 	@Column(name = "created_time", nullable =false, updatable = false)
 	private Date createdTime;
 	
-	@OneToMany
-	private List<Appoinment> appoinments;
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DiamondRequest> appoinments;
 
 	private boolean enabled;
 
@@ -54,6 +55,8 @@ public class Customer {
 		this.id = id;
 	}
 	
-	
+	public String getFullname() {
+		return this.firstName + " " + this.lastName;
+	}
 	
 }

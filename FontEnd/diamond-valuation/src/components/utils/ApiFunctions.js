@@ -97,7 +97,12 @@ export async function saveUser(user) {
 
 export async function deleteUserById(id) {
 	try {
-		const result = await api.delete(`/api/users/delete/${id}`)
+		const token = localStorage.getItem("token")
+		console.log(token);
+		const result = await api.delete(`/api/users/delete/${id}`,{
+			headers: getHeader()
+		}
+		)
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error delete user : ${error.message}`)
