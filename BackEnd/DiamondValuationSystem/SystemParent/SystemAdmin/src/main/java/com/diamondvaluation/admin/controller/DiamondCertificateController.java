@@ -1,8 +1,11 @@
 package com.diamondvaluation.admin.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
+import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.CertificateRequest;
 import com.diamondvaluation.admin.response.CertificateResponse;
+import com.diamondvaluation.admin.response.DiamondRequestResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.common.DiamondRequest;
@@ -82,5 +87,28 @@ public class DiamondCertificateController {
 		} catch (CertificateNotFoundException e) {
 			return ResponseEntity.ok(e.getMessage());
 		}
+	}
+	
+	@DeleteMapping("delete/{id}")
+	public ResponseEntity<?> deleteRequestById(@PathVariable("id") Integer id) {
+		try {
+			service.deleteById(id);
+			return new ResponseEntity<>(new MessageResponse("Delete Certificate successfully with id " + id),
+					HttpStatus.OK);
+		} catch (RequestNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+		}
+	}
+	
+	private List<CertificateResponse> listEntity2Response(List<DiamondCertificate> list) {
+		List<CertificateResponse> response = (List<CertificateResponse>) list.stream()
+				.map(s -> entity2Response(s)).toList();
+		return response;
+	}
+	
+	@GetMapping("all")
+	public ResponseEntity<?> getAllCertificate() {
+		List<DiamondCertificate> list = service.findAllCertificate();
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
 }

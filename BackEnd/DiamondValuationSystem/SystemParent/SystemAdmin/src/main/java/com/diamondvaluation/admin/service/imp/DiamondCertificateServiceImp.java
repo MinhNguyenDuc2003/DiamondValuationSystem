@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.service.imp;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -28,6 +29,20 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 			throw new CertificateNotFoundException("Cannot find any certificate with id: "+id);
 		}
 		return certificate.get();
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		Optional<DiamondCertificate> certificate = repo.findById(id);
+		if(!certificate.isPresent()) {
+			throw new CertificateNotFoundException("Can not find any appoinment with id: " + id);
+		}
+		repo.deleteById(id);
+	}
+
+	@Override
+	public List<DiamondCertificate> findAllCertificate() {
+		return  (List<DiamondCertificate>) repo.findAll();
 	}
 	
 	
