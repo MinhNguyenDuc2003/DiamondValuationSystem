@@ -84,7 +84,7 @@ export const AddUser = () => {
   };
 
   const handleCancelClick = () => {
-    navigate(redirectUrl);
+    navigate("/users");
   };
 
   return (

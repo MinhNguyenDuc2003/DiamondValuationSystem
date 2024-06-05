@@ -20,6 +20,7 @@ import Customers from "./scenes/customers/Customers";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import AddCustomer from "./scenes/customers/AddCustomer";
 import EditCustomer from "./scenes/customers/EditCustomer";
+import SideBar from "./scenes/global/SideBar";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const MainContent = () => {
   return (
     <>
       {!isLoginRoute && <NavBar />}
+      {/* {!isLoginRoute && <SideBar />} */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
