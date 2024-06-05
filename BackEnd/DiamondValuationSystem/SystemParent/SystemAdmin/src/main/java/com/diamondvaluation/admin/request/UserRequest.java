@@ -46,4 +46,5 @@ public class UserRequest {
 	private boolean enabled;
 	@JsonProperty("roles")
 	private List<String> roles;
+	
 }

@@ -10,11 +10,11 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @JsonPropertyOrder({"id", "email", "first_name", "last_name", "password", "phone_number", "enabled", "location"})
 public class CustomerRequest {
 	

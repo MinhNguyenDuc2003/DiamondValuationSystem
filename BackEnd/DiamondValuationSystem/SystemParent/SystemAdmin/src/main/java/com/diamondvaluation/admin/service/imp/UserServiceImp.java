@@ -118,4 +118,9 @@ public class UserServiceImp implements UserService {
 		return roles;
 	}
 
+	@Override
+	public User findUserById(Integer id) {
+		return userRepository.findById(id).get();
+	}
+
 }

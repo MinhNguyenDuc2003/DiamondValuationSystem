@@ -1,8 +1,5 @@
 package com.diamondvaluation.common;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,42 +13,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
-@Table(name = "appoinments")
+@Table(name = "services")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Appoinment {
+public class DiamondService {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "created_time")
-	private Date createdTime;
+	@Column(length = 64, nullable = false, unique = true)
+	private String name;
 	
-	@Column(name = "meeting_date")
-	private LocalDate meetingDate;
+	@Column(length = 128, nullable = false, unique = true)
+	private String content;
 	
-	@Column(name = "meeting_time")
-	private String meetingTime;
+	@Column(length = 64, nullable = false, unique = false)
+	private float money;
 	
-	private String note;
-	
-	private boolean status;
-	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User User;
-	
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
+	@Column(length = 128)
+	private String photo;
 
-	public Appoinment(Integer id) {
+	public DiamondService(Integer id) {
 		this.id = id;
 	}
+	
 	
 	
 	

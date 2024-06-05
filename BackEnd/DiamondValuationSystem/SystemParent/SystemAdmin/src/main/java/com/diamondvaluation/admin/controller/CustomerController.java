@@ -1,6 +1,5 @@
 package com.diamondvaluation.admin.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,6 @@ import com.diamondvaluation.admin.request.CustomerRequest;
 import com.diamondvaluation.admin.response.CustomerPageResponse;
 import com.diamondvaluation.admin.response.CustomerResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
-import com.diamondvaluation.admin.response.UserResponse;
 import com.diamondvaluation.admin.service.CustomerService;
 import com.diamondvaluation.admin.service.imp.CustomerServiceImp;
 import com.diamondvaluation.common.Customer;
@@ -60,8 +58,6 @@ public class CustomerController {
 		customer.setFirstName(request.getFirst_name());
 		customer.setLastName(request.getLast_name());
 		customer.setPhoneNumber(request.getPhone_number());
-		Date date = new Date();
-		customer.setCreatedTime(date);
 		return customer;
 	}
 	
