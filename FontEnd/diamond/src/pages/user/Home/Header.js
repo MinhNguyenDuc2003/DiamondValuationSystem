@@ -2,7 +2,9 @@ import React, { memo, useEffect, useState } from 'react';
 import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Header.scss';
-import logo from './image/Gucci-Logo.png';
+import logo from './image/logot.png';
+
+
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
