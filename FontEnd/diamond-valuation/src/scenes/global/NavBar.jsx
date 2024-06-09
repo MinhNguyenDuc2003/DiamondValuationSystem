@@ -71,9 +71,9 @@ export const NavBar = () => {
             <NavLink
               className="nav-link text-white"
               aria-current="page"
-              to={"/diamond-report"}
+              to={"/services"}
             >
-              Diamond Valuation Report
+              Services
             </NavLink>
           </li>
 

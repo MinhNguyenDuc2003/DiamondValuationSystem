@@ -38,6 +38,7 @@ export const Customers = () => {
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [error, setError] = useState("");
 
   const location = useLocation();
 
@@ -139,7 +140,6 @@ export const Customers = () => {
   useEffect(() => {
     getCustomersPerPage(currentPage, filteredData)
       .then((data) => {
-        console.log(data);
         setData({
           list_customers: data.list_customers,
           total_page: data.total_page,

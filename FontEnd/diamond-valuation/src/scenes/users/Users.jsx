@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {
   deleteUserById,
+  getUserById,
   getUsersPerPage,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,164 +24,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
-
-// export const Users = () => {
-//     const [data, setData] = useState({
-//       list_users : [],
-//       total_page : 0
-//     })
-//     const [filteredData, setFilteredData] = useState("")
-//     const [currentPage, setCurrentPage] = useState(1)
-//     const [message, setMessage] = useState("")
-
-//     const location = useLocation()
-
-//     useEffect(() => {
-
-//       setMessage(location.state?.message)
-
-//       setTimeout(() => {
-//         setMessage("")
-//       }, 2000)
-//     },  [location.state?.message])
-
-//     useEffect(() => {
-//       getUsersPerPage(currentPage, filteredData)
-//         .then((data) => {
-//           setData({
-//             list_users : data.data,
-//             total_page : data.total_pages
-//           })
-//           console.log(data.data)
-//         })
-//         .catch((error) => {
-//           setError(error.message)
-//         })
-// 	  }, [currentPage, filteredData])
-
-//   function debounce(func, timeout = 300){
-//     let timer;
-//     return (...args) => {
-//       clearTimeout(timer);
-//       timer = setTimeout(() => { func.apply(this, args); }, timeout);
-//     };
-//   }
-
-//   const handleSearchChange = (e) => {
-//     let value = e.target.value;
-//     setFilteredData(value);
-// };
-
-// const handlePageChange = (pageNumber) => {
-//   setCurrentPage(pageNumber)
-// }
-
-// const processChange = debounce((e) => handleSearchChange(e));
-
-// const handleDelete = async (id) => {
-//     const result = await deleteUserById(id);
-//     if(result!== undefined){
-//       setMessage(`Delete user with id ${id}  successfully!`)
-//       getUsersPerPage(currentPage, filteredData)
-// 			.then((data) => {
-// 				setData({
-//           list_users : data.list_users,
-//           total_page : data.total_page
-//         })
-// 			})
-// 			.catch((error) => {
-// 				setError(error.message)
-// 			})
-//       setTimeout(() => {
-//         setMessage("")
-//       }, 1000)
-//     }
-// }
-
-//   return (
-
-//     <div className="container-fluid">
-//       <div className='ms-3 mt-3'>
-// 			  <h2 className='text-center'>Manage Users</h2>
-//         <Link to={"/users/new"}>
-//           <i className="bi bi-person-add" style={{fontSize: "40px", color : "black"}}></i>
-// 				</Link>
-// 		  </div>
-
-//       <div>
-//           <form onSubmit={(e) => {e.preventDefault()}} className="form-inline d-flex align-items-center m-3 col-3">
-//               <input type="search" name="keyword" className="form-control mr-2" onChange={processChange} id="keyword" required />
-//               &nbsp;&nbsp;
-//               <button type="submit" className="btn btn-primary">
-//               <i className="bi bi-search"></i>
-//               </button>
-//           </form>
-//       </div>
-
-//       {message && <div className="alert alert-success text-center">{message}</div>}
-
-//       <div>
-//         <table className="table table-bordered table-striped table-hover table-responsive-xl">
-//         <thead className="thead-dark">
-// 					<tr className='text-center'>
-// 						<th>User Id</th>
-//             <th>Photos</th>
-//             <th>Email</th>
-//             <th>First Name</th>
-//             <th>Last Name</th>
-//             <th>Phone Number</th>
-//             <th>Enabled</th>
-//             <th></th>
-// 					</tr>
-// 				</thead>
-//         <tbody>
-//           {
-//             data.list_users && data.list_users.map((user) => (
-//               <tr key={user.id} className='text-center'>
-//                 <td>{user.id}</td>
-//                 <td> <img src={user.image_path} alt={user.name} style={{ width: '100px', height: 'auto' }} /> </td>
-//                 <td>{user.email}</td>
-//                 <td>{user.first_name}</td>
-//                 <td>{user.last_name}</td>
-//                 <td>{user.phone_number}</td>
-//                 <td><a onClick={() => handleUpdateStatus(user.id)}><i className={`bi bi-check-circle-fill ${user.enabled ? "green-icon" : "dark-icon"}`} style={{fontSize: "30px" }}></i></a> </td>
-//                 <td className="gap-2">
-// 											<Link to={`/user/${user.id}`} className="gap-2">
-// 												<span className="btn btn-warning btn-sm ml-5">
-// 													<FaEdit />
-// 												</span>
-// 											</Link>
-//                       &nbsp;&nbsp;&nbsp;
-// 											<button
-// 												className="btn btn-danger btn-sm ml-5"
-// 												onClick={() => handleDelete(user.id)}>
-// 												<FaTrashAlt />
-// 											</button>
-// 								</td>
-
-//               </tr>
-//             )
-//             )
-//           }
-//         </tbody>
-//         </table>
-
-//         <div>
-//           <Paginator
-//             currentPage={currentPage}
-// 						totalPages={data.total_page}
-//             onPageChange={handlePageChange}
-//           />
-//         </div>
-
-//       </div>
-//     </div>
-//   )
-// }
+import UserDetailsDialog from "./UserDetailsDialog";
 
 export const Users = () => {
   const [data, setData] = useState({
@@ -196,6 +45,9 @@ export const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
+  const [openUserDetailDialog, setOpenUserDetailDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const handleOpenDialog = (user) => {
     setUserToDelete(user);
     setOpenDialog(true);
@@ -204,6 +56,16 @@ export const Users = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setUserToDelete(null);
+  };
+
+  const handleOpenUserDetailDialog = (user) => {
+    setSelectedUser(user);
+    setOpenUserDetailDialog(true);
+  };
+
+  const handleCloseUserDetailDialog = () => {
+    setOpenUserDetailDialog(false);
+    setSelectedUser(null);
   };
 
   const location = useLocation();
@@ -302,7 +164,7 @@ export const Users = () => {
     {
       field: "role_names",
       headerName: "Role",
-      flex: 1,
+      flex: 0.5,
       align: "center",
       headerAlign: "center",
       renderCell: ({ row: { role_names } }) => {
@@ -320,16 +182,19 @@ export const Users = () => {
     {
       field: "action",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 0.8,
       align: "center",
       headerAlign: "center",
-      renderCell: ({ row: { id } }) => {
+      renderCell: ({ row }) => {
         return (
           <Box>
-            <IconButton onClick={() => navigate(`/users/${id}`)}>
+            <IconButton onClick={() => handleOpenUserDetailDialog(row)}>
+              <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
+            </IconButton>
+            <IconButton onClick={() => navigate(`/users/${row.id}`)}>
               <EditIcon sx={{ color: "#C5A773" }} />
             </IconButton>
-            <IconButton onClick={() => handleOpenDialog(id)}>
+            <IconButton onClick={() => handleOpenDialog(row.id)}>
               <DeleteIcon sx={{ color: "#C5A773" }} />
             </IconButton>
           </Box>
@@ -381,7 +246,7 @@ export const Users = () => {
   };
 
   return (
-    <Box p="20px" overflow="auto">
+    <Box m="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
         Manage Users
       </Typography>
@@ -450,14 +315,14 @@ export const Users = () => {
         />
       </Box>
 
-      {/* Confirmation Dialog */}
+      {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Are you sure you want to delete this user?
@@ -472,6 +337,55 @@ export const Users = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <UserDetailsDialog
+        open={openUserDetailDialog}
+        handleClose={handleCloseUserDetailDialog}
+        user={selectedUser}
+      />
+      {/* User Detail Dialog
+      <Dialog
+        open={openUserDetailDialog}
+        onClose={handleCloseUserDetailDialog}
+        aria-labelledby="user-detail-dialog-title"
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle id="user-detail-dialog-title">User Details</DialogTitle>
+        <DialogContent>
+          {selectedUser && (
+            <Box>
+              <Typography>
+                <strong>Email:</strong> {selectedUser.email}
+              </Typography>
+              <Typography>
+                <strong>Full Name:</strong>{" "}
+                {`${selectedUser.last_name || ""} ${
+                  selectedUser.first_name || ""
+                }`}
+              </Typography>
+              <Typography>
+                <strong>Phone Number:</strong> {selectedUser.phone_number}
+              </Typography>
+              <Typography>
+                <strong>Enabled:</strong> {selectedUser.enabled ? "Yes" : "No"}
+              </Typography>
+              <Typography>
+                <strong>Roles:</strong>{" "}
+                {selectedUser.role_names
+                  .split("/")
+                  .map((role) => role.charAt(0).toUpperCase() + role.slice(1))
+                  .join(", ")}
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUserDetailDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog> */}
     </Box>
   );
 };

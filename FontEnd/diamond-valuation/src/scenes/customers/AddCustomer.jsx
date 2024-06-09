@@ -44,6 +44,7 @@ const AddCustomer = () => {
 
   const handleFormSubmit = async (values) => {
     try {
+      console.log(values);
       const result = await saveCustomer(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Add new Customer successfully");
@@ -179,11 +180,7 @@ const AddCustomer = () => {
                 </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  onClick={() => setCustomer(values)}
-                >
+                <Button type="submit" variant="contained">
                   Save
                 </Button>
                 <Button
