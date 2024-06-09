@@ -173,3 +173,64 @@ export async function getCustomerById(id) {
 		throw new Error(`Error fetching customer with id ${id} : ${error.message}`)
 	}
 }
+
+// =========================== SERVICES ================================================//
+export async function getAllServices() {
+	try {
+		const result = await api.get(`/api/services/all-services`,{}, {
+			headers: getHeader()
+		})
+		return result.data;
+	} catch (error) {
+		throw new Error(`Error fetching services : ${error.message}`)
+	}
+}
+
+// export async function deleteCustomerById(id) {
+//     try {
+//         const result = await api.delete(`/api/customers/delete/${id}`,{
+//             headers: getHeader()
+//         }
+//         )
+//         return result.data;
+//     } catch (error) {
+//         throw new Error(`Error delete user : ${error.message}`)
+//     }
+// }
+
+// export async function saveCustomer(customer) {
+// 	const formData = new FormData()
+// 	formData.append("id", customer.id)
+// 	formData.append("first_name", customer.first_name)
+// 	formData.append("last_name", customer.last_name)
+// 	formData.append("email", customer.email)
+// 	formData.append("password", customer.password)
+// 	formData.append("phone_number", customer.phone_number)
+// 	formData.append("location", customer.location)
+// 	formData.append("enabled", customer.enabled)
+
+// 	try {
+// 		const response = await api.post("api/customers/customer/save", formData,{
+// 			headers: {...getHeader(),
+// 				'Content-Type': 'multipart/form-data'
+// 			} }
+// 		)
+// 		if (response.status >= 200 && response.status < 300) {
+//             return response.data ;
+//         } else 
+//             return  response.status;
+// 	} catch (error) {
+// 		console.log(error.data);
+// 	}
+// }
+
+// export async function getCustomerById(id) {
+// 	try {
+// 		const result = await api.get(`/api/customers/customer/${id}`, {} , {
+// 			headers: getHeader()
+// 		})
+// 		return result.data
+// 	} catch (error) {
+// 		throw new Error(`Error fetching customer with id ${id} : ${error.message}`)
+// 	}
+// }
