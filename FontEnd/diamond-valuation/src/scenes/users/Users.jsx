@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {
   deleteUserById,
-  getUserById,
   getUsersPerPage,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
@@ -343,49 +342,6 @@ export const Users = () => {
         handleClose={handleCloseUserDetailDialog}
         user={selectedUser}
       />
-      {/* User Detail Dialog
-      <Dialog
-        open={openUserDetailDialog}
-        onClose={handleCloseUserDetailDialog}
-        aria-labelledby="user-detail-dialog-title"
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle id="user-detail-dialog-title">User Details</DialogTitle>
-        <DialogContent>
-          {selectedUser && (
-            <Box>
-              <Typography>
-                <strong>Email:</strong> {selectedUser.email}
-              </Typography>
-              <Typography>
-                <strong>Full Name:</strong>{" "}
-                {`${selectedUser.last_name || ""} ${
-                  selectedUser.first_name || ""
-                }`}
-              </Typography>
-              <Typography>
-                <strong>Phone Number:</strong> {selectedUser.phone_number}
-              </Typography>
-              <Typography>
-                <strong>Enabled:</strong> {selectedUser.enabled ? "Yes" : "No"}
-              </Typography>
-              <Typography>
-                <strong>Roles:</strong>{" "}
-                {selectedUser.role_names
-                  .split("/")
-                  .map((role) => role.charAt(0).toUpperCase() + role.slice(1))
-                  .join(", ")}
-              </Typography>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseUserDetailDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </Box>
   );
 };

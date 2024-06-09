@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {
   deleteCustomerById,
+  getAllServices,
   getCustomersPerPage,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,9 +20,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
@@ -51,59 +50,18 @@ export const Services = () => {
       headerAlign: "center",
     },
     {
-      field: "created_time",
-      headerName: "Created At",
+      field: "number",
+      headerName: "Name",
       flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "email",
-      headerName: "Email",
-      align: "center",
-      headerAlign: "center",
-      flex: 1.5,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      flex: 1.5,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: ({ row }) =>
-        `${row.last_name || ""} ${row.first_name || ""}`,
-    },
-    {
-      field: "phone_number",
-      headerName: "Phone Number",
+      field: "money",
+      headerName: "Money",
       flex: 1,
       align: "center",
       headerAlign: "center",
-    },
-    {
-      field: "location",
-      headerName: "Location",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "enabled",
-      headerName: "Enable",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { enabled } }) => {
-        return (
-          <>
-            {enabled ? (
-              <CheckCircleIcon sx={{ color: "green", fontSize: "35px" }} />
-            ) : (
-              <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
-            )}
-          </>
-        );
-      },
     },
     {
       field: "action",
@@ -138,8 +96,9 @@ export const Services = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getCustomersPerPage(currentPage, filteredData)
+    getAllServices()
       .then((data) => {
+        console.log(data);
         setData({
           list_customers: data.list_customers,
           total_page: data.total_page,
@@ -210,7 +169,7 @@ export const Services = () => {
 
       <Box display="flex" justifyContent="space-between">
         <Link to="/customers/new">
-          <PersonAddAlt1Icon
+          <AddIcon
             sx={{
               ml: "10px",
               fontSize: "40px",

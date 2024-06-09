@@ -23,7 +23,6 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       icon={icon}
       component={<Link to={to} />}
       rootStyles={{
-        padding: "5px 35px 5px 20px !important",
         "& .ps-active": {
           color: "#C5A773",
         },
