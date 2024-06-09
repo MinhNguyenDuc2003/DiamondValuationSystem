@@ -258,7 +258,11 @@ export const Customers = () => {
           rows={data.list_customers}
           columns={columns}
           getRowId={(row) => row?.id}
+<<<<<<< HEAD
           // hideFooter
+=======
+          hideFooter
+>>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
           disableColumnFilter
           disableColumnMenu
           disableRowSelectionOnClick

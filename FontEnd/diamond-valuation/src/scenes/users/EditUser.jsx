@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { getRoles, getUserById, saveUser } from '../../components/utils/ApiFunctions'
@@ -75,6 +76,7 @@ const handleEnabledChange = (event) => {
   };
 
   const handleCheckboxChange = (event) => {
+
 	let roles = user.role_ids
     const { name, checked, value } = event.target;
     if (checked) {
@@ -82,6 +84,13 @@ const handleEnabledChange = (event) => {
       setUser({...user, [name] : roles});
     } else {
       setUser({...user, [name] : roles.filter(roleId => roleId !== value)});
+    let roles = user.role_ids;
+    const { name, checked, value } = event.target;
+    if (checked) {
+      roles.push(value);
+      setUser({ ...user, [name]: roles });
+    } else {
+      setUser({ ...user, [name]: roles.filter((roleId) => roleId !== value) });
     }
   };
 
@@ -224,4 +233,4 @@ const handleSubmit = async (e) => {
   )
 }
 
-export default EditUser
+export default EditUser;

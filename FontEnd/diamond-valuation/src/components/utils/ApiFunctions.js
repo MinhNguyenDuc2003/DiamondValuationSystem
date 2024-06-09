@@ -112,12 +112,16 @@ export async function deleteUserById(id) {
 export async function getCustomersPerPage(pageNum, keyword) {
 	try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
 		const token = localStorage.getItem("token")
 		console.log(token);
 		const result = await api.delete(`/api/users/delete/${id}`,{
 			headers: getHeader()
 		}
 		)
+<<<<<<< HEAD
 =======
 		let page = pageNum;  // Use 'let' to allow reassignment
 
@@ -128,6 +132,8 @@ export async function getCustomersPerPage(pageNum, keyword) {
 			headers: getHeader()
 		})
 >>>>>>> 95eb2fea71ea33430384be4cc23119fcba56525b
+=======
+>>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error fetching users : ${error.message}`)

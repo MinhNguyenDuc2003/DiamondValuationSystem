@@ -13,6 +13,7 @@ import com.diamondvaluation.common.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @SpringBootApplication
 @EntityScan({"com.diamondvaluation.common"})
@@ -23,16 +24,18 @@ public class SystemAdminApplication {
     @Bean
     ModelMapper getModelMapper() {
 		ModelMapper mapper = new ModelMapper();
+		
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		configureMappingForUser(mapper);
 		configureMappingForAppoinment(mapper);
 		
-		
 		return mapper;
 	}
+    
+    
 
 
-	
+
 	private void configureMappingForUser(ModelMapper mapper) {
 		mapper.typeMap(User.class, UserResponse.class)
 				.addMapping(src -> src.getPhoto(), 
@@ -40,6 +43,7 @@ public class SystemAdminApplication {
 		
 	}
 	
+
 	private void configureMappingForAppoinment(ModelMapper mapper) {
 	}
 
@@ -48,7 +52,8 @@ public class SystemAdminApplication {
 	@Bean
 	public ObjectMapper objectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
-		
+		objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.findAndRegisterModules(); // This line automatically registers all modules found in the classpath.
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 		
