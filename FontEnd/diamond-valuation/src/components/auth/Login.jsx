@@ -1,90 +1,119 @@
-import React, { useState } from "react"
-import { loginUser } from "../utils/ApiFunctions"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useAuth } from "./AuthProvider"
+import React, { useEffect, useState } from "react";
+import { loginUser } from "../utils/ApiFunctions";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Paper,
+} from "@mui/material";
 
 export const Login = () => {
-	const [errorMessage, setErrorMessage] = useState("")
-	const [login, setLogin] = useState({
-		email: "",
-		password: ""
-	})
+  const [errorMessage, setErrorMessage] = useState("");
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
 
-	const navigate = useNavigate()
-	const location = useLocation()
-	const auth = useAuth()
-	const redirectUrl = location.state?.path || "/"
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+  const redirectUrl = location.state?.path || "/";
 
-	const handleInputChange = (e) => {
-		setLogin({ ...login, [e.target.name]: e.target.value })
-	}
+  const handleInputChange = (e) => {
+    setLogin({ ...login, [e.target.name]: e.target.value });
+  };
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const result = await loginUser(login);
-		
-		if (result.token) {
-			const token = result.token;
-			auth.handleLogin(token)
-			navigate(redirectUrl, { replace: true })
-		} else {
-			setErrorMessage(result.message	 || "Invalid email or password. Please try again.");
-		}
-		setTimeout(() => {
-			setErrorMessage("");
-		}, 4000);
-	};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await loginUser(login);
 
-	return (
-		<section className="container col-6 mt-5 mb-5">
-			<form onSubmit={handleSubmit} style={{ maxWidth: "350px", margin: "0 auto" }}>
-			{errorMessage && <p className="alert alert-danger">{errorMessage}</p>}
-			<div className="border border-secondary rounded p-3">
-				<div className="row mb-3">
-					<label htmlFor="email" className="col-sm-2 col-form-label">
-						Email
-					</label>
-					<div>
-						<input
-							id="email"
-							name="email"
-							type="email"
-							className="form-control"
-							value={login.email}
-							onChange={handleInputChange}
-							required
-						/>
-					</div>
-				</div>
+    if (result.token) {
+      const token = result.token;
+      auth.handleLogin(token);
+      navigate(redirectUrl, { replace: true });
+    } else {
+      setErrorMessage(
+        result.message || "Invalid email or password. Please try again."
+      );
+    }
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
+  };
 
-				<div className="row mb-3">
-					<label htmlFor="password" className="col-sm-2 col-form-label">
-						Password
-					</label>
-					<div>
-						<input
-							id="password"
-							name="password"
-							type="password"
-							className="form-control"
-							value={login.password}
-							onChange={handleInputChange}
-							required
-							minLength={5}
-						/>
-					</div>
-				</div>
-				
+  return (
+    <Container maxWidth="sm" sx={{ mt: 5, mb: 5 }}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ maxWidth: 350, mx: "auto" }}
+      >
+        {errorMessage && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
+        <Box sx={{ border: "1px solid #ced4da", borderRadius: 1, p: 3 }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              component="label"
+              htmlFor="email"
+              sx={{ display: "block", mb: 1 }}
+            >
+              Email
+            </Typography>
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              fullWidth
+              value={login.email}
+              onChange={handleInputChange}
+              required
+            />
+          </Box>
 
-				<div className="mb-3">
-					<button type="submit" className="btn btn-hotel" style={{ marginRight: "10px",  width: "40%"}}>
-						Login
-					</button>
-				</div>
-				</div>
-			</form>
-		</section>
-	)
-}
+          <Box sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              component="label"
+              htmlFor="password"
+              sx={{ display: "block", mb: 1 }}
+            >
+              Password
+            </Typography>
+            <TextField
+              id="password"
+              name="password"
+              type="password"
+              fullWidth
+              value={login.password}
+              onChange={handleInputChange}
+              required
+              inputProps={{ minLength: 5 }}
+            />
+          </Box>
 
-export default Login
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mr: 2, width: "40%" }}
+            >
+              Login
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </Container>
+  );
+};
+
+export default Login;

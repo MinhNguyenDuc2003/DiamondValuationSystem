@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,16 +109,28 @@ public class UserController {
 
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-		boolean isDeleted = userService.deleteUserById(id);
-		if (isDeleted == true) {
-			return ResponseEntity.ok(new MessageResponse("user id " + id + " is deleted successfully!"));
+		try {
+			boolean isDeleted = userService.deleteUserById(id);
+			if (isDeleted == true) {
+				String userPhotosDir = "user-photos/" + id;
+				AmazonS3Util.removeFolder(userPhotosDir);
+				return ResponseEntity.ok(new MessageResponse("user id " + id + " is deleted successfully!"));
+			}
+		} catch (UsernameNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
 		}
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.badRequest().build();
+		
+		
 	}
 
 	@GetMapping("user/{id}")
-	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Integer id) {
-		return new ResponseEntity<UserResponse>(entity2Response(userService.getUserById(id)), HttpStatus.OK);
+	public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
+		try {
+			return new ResponseEntity<UserResponse>(entity2Response(userService.getUserById(id)), HttpStatus.OK);
+		} catch (UsernameNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+		}
 	}
 	
 	@GetMapping("page/{pageNum}")

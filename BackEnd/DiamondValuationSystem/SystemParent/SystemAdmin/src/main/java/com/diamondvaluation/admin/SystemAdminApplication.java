@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.diamondvaluation.admin.response.UserResponse;
 import com.diamondvaluation.common.User;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 @EntityScan({"com.diamondvaluation.common"})
+@EnableJpaAuditing
 public class SystemAdminApplication {
 
 
@@ -23,6 +25,7 @@ public class SystemAdminApplication {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		configureMappingForUser(mapper);
+		configureMappingForAppoinment(mapper);
 		
 		
 		return mapper;
@@ -35,6 +38,9 @@ public class SystemAdminApplication {
 				.addMapping(src -> src.getPhoto(), 
 				(dest, value) -> dest.setPhoto(value+" "));
 		
+	}
+	
+	private void configureMappingForAppoinment(ModelMapper mapper) {
 	}
 
 

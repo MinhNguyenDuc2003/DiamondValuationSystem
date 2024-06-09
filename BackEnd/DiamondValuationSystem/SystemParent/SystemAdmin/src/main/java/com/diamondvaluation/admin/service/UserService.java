@@ -19,4 +19,6 @@ public interface UserService {
 	Page<User> listUsersByPage(int pageNum, String keyword);
 
 	List<Role> getAllRoles();
+	
+	User findUserById(Integer id);
 }
