@@ -14,6 +14,11 @@ import EDUCATION_COLOR from "./pages/user/Education/Color";
 import Diamond from "./pages/user/Diamond/Diamod";
 import Contact from "./pages/user/Contact/Contact";
 import Sign from "./asset/user/sign/Sign";
+import Blog1 from "./pages/user/Blog/BlogContent/Blog1";
+import Blog2 from "./pages/user/Blog/BlogContent/Blog2";
+import Blog3 from "./pages/user/Blog/BlogContent/Blog3";
+import Blog4 from "./pages/user/Blog/BlogContent/Blog4";
+import Blog5 from "./pages/user/Blog/BlogContent/Blog5";
 
 
 
@@ -21,26 +26,52 @@ import Sign from "./asset/user/sign/Sign";
 
 const renderUserRouter = () => {
     const userRouters = [
+        //USER-LOGIN
         {
             path : ROUTERS.USER.LOGIN,
             component: <UserLogin/>
         },
+        //USER-SIGN
         {
             path : ROUTERS.USER.SIGN,
             component: <Sign/>
         },
+        //USER-HOMEPAGE
         {
             path : ROUTERS.USER.HOME,
             component: <HomePage/>
         },
+        //USER-SERVICE
         {
             path : ROUTERS.USER.SERVICE,
             component: <ServiceBody/>
         },
+        //BLOG
         {
             path : ROUTERS.USER.BLOG,
             component: <Blog/>
         },
+        {
+            path : ROUTERS.USER.BLOG_POST1,
+            component: <Blog1/>
+        },
+        {
+            path : ROUTERS.USER.BLOG_POST2,
+            component: <Blog2/>
+        },
+        {
+            path : ROUTERS.USER.BLOG_POST3,
+            component: <Blog3/>
+        },
+        {
+            path : ROUTERS.USER.BLOG_POST6,
+            component: <Blog4/>
+        },
+        {
+            path : ROUTERS.USER.BLOG_POST7,
+            component: <Blog5/>
+        },
+        //EDUCATION:
         {
             path : ROUTERS.USER.EDUCATION_CARAT,
             component: <EDUCATION_CARAT/>
@@ -61,10 +92,12 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.EDUCATION_FLUORESCENCE,
             component: <EDUCATION_FLUORESCENCE/>
         },
+        //DIAMOND
         {
             path : ROUTERS.USER.DIAMOND,
             component: <Diamond/>
         },
+        //CONTACT
         {
             path : ROUTERS.USER.CONTACT,
             component: <Contact/>

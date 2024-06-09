@@ -9,6 +9,9 @@ import banner from './image/bannerHome.jpg'
 import { Col, InputNumber, Row, Slider, Space } from "antd";
 
 const HomePage = () => {
+    const shapes = ['Round', 'Cushion', 'Emerald', 'Oval', 'Princess', 'Pear', 'Radiant', 'Asscher', 'Marquise', 'Heart'];
+    const colors = ['K', 'J', 'I', 'H', 'G', 'F', 'E', 'D'];
+    const claritys = ['SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL']
 
     const [inputValue, setInputValue] = useState(0.3);
     const onChange = (value) => {
@@ -129,40 +132,14 @@ const HomePage = () => {
                     <Col className="wrapper-input" span={8}>
                         <h2>Calculator Input</h2>
                         <div className="wrapper-input-content">
-
                             <p>SHAPE</p>
                             <div className="input-col-2">
-                                <div className={selectedShape === 'Round' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Round')}>Round</button>
-                                </div>
-                                <div className={selectedShape === 'Cushion' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Cushion')}>Cushion</button>
-                                </div>
-                                <div className={selectedShape === 'Emerald' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Emerald')}>Emerald</button>
-                                </div>
-                                <div className={selectedShape === 'Oval' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Oval')}>Oval</button>
-                                </div>
-                                <div className={selectedShape === 'Princess' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Princess')}>Princess</button>
-                                </div>
-                                <div className={selectedShape === 'Pear' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Pear')}>Pear</button>
-                                </div>
-                                <div className={selectedShape === 'Radiant' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Radiant')}>Radiant</button>
-                                </div>
-                                <div className={selectedShape === 'Asscher' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Asscher')}>Asscher</button>
-                                </div>
-                                <div className={selectedShape === 'Marquise' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Marquise')}>Marquise</button>
-                                </div>
-                                <div className={selectedShape === 'Heart' ? 'selected' : ''}>
-                                    <button onClick={() => handleShapeSelected('Heart')}>Heart</button>
-                                </div>
-                                {console.log(selectedShape)}
+                            
+                                {shapes.map((shape) => (
+                                    <div className={selectedShape === shape ? 'selected' : ''} key={shape}>
+                                        <button onClick={() => handleShapeSelected(shape)}>{shape}</button>
+                                    </div>
+                                ))}
                             </div>
                             <p>CARAT</p>
                             <div className="input-col-3">
@@ -200,59 +177,22 @@ const HomePage = () => {
                             </div>
                             <p>COLOR</p>
                             <div className="input-col-4">
-                                <div className={selectedColor === 'k' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('K')}>K</button>
-                                </div>
-
-                                <div className={selectedColor === 'J' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('J')}>J</button>
-                                </div>
-                                <div className={selectedColor === 'I' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('I')}>I</button>
-                                </div>
-                                <div className={selectedColor === 'H' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('H')}>H</button>
-                                </div>
-                                <div className={selectedColor === 'G' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('G')}>G</button>
-                                </div>
-                                <div className={selectedColor === 'F' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('F')}>F</button>
-                                </div>
-                                <div className={selectedColor === 'E' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('E')}>E</button>
-                                </div>
-                                <div className={selectedColor === 'D' ? 'selected' : ''}>
-                                    <button onClick={() => handleColorSelected('D')}>D</button>
-                                </div>
+                                {colors.map((color) => (
+                                    <div className={selectedColor === color ? 'selected' : ''} key={color}>
+                                        <button onClick={() => handleColorSelected(color)}>{color}</button>
+                                    </div>
+                                ))}
                             </div>
                             <p>CLARITY</p>
                             <div className="input-col-5">
-                                <div className={selectedClarity === 'SI2' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('SI2')}>SI2</button>
-                                </div>
-                                <div className={selectedClarity === 'SI1' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('SI1')}>SI1</button>
-                                </div>
-                                <div className={selectedClarity === 'VS2' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('VS2')}>VS2</button>
-                                </div>
-                                <div className={selectedClarity === 'VS1' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('VS1')}>VS1</button>
-                                </div>
-                                <div className={selectedClarity === 'VVS2' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('VVS2')}>VVS2</button>
-                                </div>
-                                <div className={selectedClarity === 'VVS1' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('VVS1')}>VVS1</button>
-                                </div>
-                                <div className={selectedClarity === 'IF' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('IF')}>IF</button>
-                                </div>
-                                <div className={selectedClarity === 'FL' ? 'selected' : ''}>
-                                    <button onClick={() => handleClaritySelected('FL')}>FL</button>
-                                </div>
+                                {claritys.map((clarity) => (
+                                    <div className={selectedClarity === clarity ? 'selected' : ''} key={clarity}>
+                                        <button onClick={() => handleClaritySelected(clarity)}>{clarity} </button>
+                                    </div>
+                                ))}
                             </div>
+
+
                             <div className="input-col-6">
                                 <button>Submit</button>
                             </div>
@@ -271,10 +211,7 @@ const HomePage = () => {
                                 <div className="output-value-selected">
                                     <p>
                                         {selectedShape}  {inputValue} Carat {selectedColor} {selectedClarity}
-
                                     </p>
-
-
                                 </div>
 
                             </div>
@@ -315,3 +252,5 @@ const HomePage = () => {
 };
 
 export default memo(HomePage);
+
+

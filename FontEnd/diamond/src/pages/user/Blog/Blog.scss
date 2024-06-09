@@ -1,7 +1,7 @@
 .wrapperrrrr {
     margin-top: 100px;
     padding: 20px;
-    max-width: 550px;
+    max-width: 600px;
     padding-left: 500px;
 
     .alignContent {
@@ -35,6 +35,22 @@
         }
         span{
             font-size: 13px;
+        }
+    }
+    .btn-blog{
+        border-top: 1px solid #eee;
+        margin: 10px 0;
+        button{
+            font:700 12px / 24px Roboto, Helvetica, Arial, sans-serif;
+            font-size: 10px;
+            width: 20%;
+            height: 35px;
+            margin-top: 30px;
+            background: #0386cf;
+            color: #fff;
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
         }
     }
 }
