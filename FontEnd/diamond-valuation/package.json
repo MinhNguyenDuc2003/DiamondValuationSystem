@@ -26,10 +26,7 @@
     "react-dom": "^18.2.0",
     "react-icon": "^1.0.0",
     "react-icons": "^5.2.1",
-<<<<<<< HEAD
-=======
     "react-pro-sidebar": "^1.1.0",
->>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
     "yup": "^1.4.0"
   },
   "devDependencies": {

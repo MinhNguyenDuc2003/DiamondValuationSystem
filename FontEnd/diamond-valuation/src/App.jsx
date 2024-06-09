@@ -11,7 +11,6 @@ import {
 import "./App.css";
 import Login from "./components/auth/Login";
 import Home from "./scenes/home/Home";
-import NavBar from "./scenes/layout/NavBar";
 import Users from "./scenes/users/Users";
 import { AuthProvider, useAuth } from "./components/auth/AuthProvider";
 import AddUser from "./scenes/users/AddUser";
@@ -20,10 +19,8 @@ import Customers from "./scenes/customers/Customers";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import AddCustomer from "./scenes/customers/AddCustomer";
 import EditCustomer from "./scenes/customers/EditCustomer";
-<<<<<<< HEAD
-=======
+
 import SideBar from "./scenes/global/SideBar";
->>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
 
 const App = () => {
   return (
@@ -43,11 +40,8 @@ const MainContent = () => {
 
   return (
     <>
-      {!isLoginRoute && <NavBar />}
-<<<<<<< HEAD
-=======
-      {/* {!isLoginRoute && <SideBar />} */}
->>>>>>> b8da7624214e01be661cb9349e294f5be767a4df
+      { !isLoginRoute && <SideBar /> }
+
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
