@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -57,6 +58,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return error;
 	}	
+	
+	 @ExceptionHandler(OptimisticLockingFailureException.class)
+	    public ResponseEntity<?> handleOptimisticLockingFailureException(OptimisticLockingFailureException e) {
+	        return ResponseEntity.status(409).body("Conflict: " + e.getMessage());
+	    }
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

@@ -15,18 +15,19 @@ import com.diamondvaluation.admin.request.AuthRequest;
 import com.diamondvaluation.admin.response.TokenResponse;
 import com.diamondvaluation.admin.security.jwt.JwtUtils;
 import com.diamondvaluation.admin.service.AuthService;
+import com.diamondvaluation.admin.service.TokenService;
 import com.diamondvaluation.common.User;
 
 @Service
 public class AuthServiceImp implements AuthService {
 	private final UserRepository userRepository;
-	private final JwtUtils jwtUtils;
+	private final TokenService jwtUtils;
 	private final AuthenticationManager authenticationManager;
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImp.class);
 
 	@Autowired
-	public AuthServiceImp(UserRepository userRepository, JwtUtils jwtUtils,
+	public AuthServiceImp(UserRepository userRepository, TokenService jwtUtils,
 			AuthenticationManager authenticationManager) {
 		this.userRepository = userRepository;
 		this.jwtUtils = jwtUtils;
@@ -42,8 +43,7 @@ public class AuthServiceImp implements AuthService {
 			if (userOptional.isPresent()) {
 				User user = userOptional.get();
 				if (user.isEnabled()) {
-					String token = jwtUtils.generateAccessToken(user);
-					return new TokenResponse(token);
+					return jwtUtils.generateTokens(user);
 				}
 			}
 		} catch (Exception e) {

@@ -37,7 +37,7 @@ public class CustomerController {
 	private final ModelMapper modelMapper;
 
 	@Autowired
-	public CustomerController(CustomerServiceImp customerService, ModelMapper modelMapper) {
+	public CustomerController(CustomerService customerService, ModelMapper modelMapper) {
 		this.customerService = customerService;
 		this.modelMapper = modelMapper;
 	}

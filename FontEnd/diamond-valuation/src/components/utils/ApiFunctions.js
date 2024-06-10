@@ -1,16 +1,10 @@
 import axios from "axios"
 
 export const api = axios.create({
-	baseURL: 'http://localhost:8080/Diamond'
+	baseURL: 'http://localhost:8080/Diamond',
+	withCredentials: true
 })
 
-export const getHeader = () => {
-	const token = localStorage.getItem("token")
-	return {
-		Authorization: `Bearer ${token}`,
-		"Content-Type": "application/json"
-	}
-}
 
 export async function loginUser(login) {
     try {
@@ -36,13 +30,12 @@ export async function loginUser(login) {
 export async function getUsersPerPage(pageNum, keyword) {
 	try {
 		let page = pageNum;  // Use 'let' to allow reassignment
-
+		const token = localStorage.getItem("token");
+		console.log(token);
 		if (keyword.length > 0 && page === 0) {  // Correct 'lenght' to 'length'
     		page = 1;
 		}
-		const result = await api.get(`/api/users/page/${page}?keyword=${keyword}`,{}, {
-			headers: getHeader()
-		})
+		const result = await api.get(`/api/users/page/${page}?keyword=${keyword}`)
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error fetching users : ${error.message}`)
@@ -51,9 +44,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
 	try {
-		const result = await api.get(`/api/users/user/${id}`, {} , {
-			headers: getHeader()
-		})
+		const result = await api.get(`/api/users/user/${id}`)
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching user with id ${id} : ${error.message}`)
@@ -82,11 +73,7 @@ export async function saveUser(user) {
 	formData.append("enabled", user.enabled)
 
 	try {
-		const response = await api.post("api/users/user/save", formData,{
-			headers: {...getHeader(),
-				'Content-Type': 'multipart/form-data'
-			} }
-		)
+		const response = await api.post("api/users/user/save", formData)
 		if (response.status >= 200 && response.status < 300) {
             return response.data ;
         } else 
@@ -98,9 +85,7 @@ export async function saveUser(user) {
 
 export async function deleteUserById(id) {
     try {
-        const result = await api.delete(`/api/users/delete/${id}`,{
-            headers: getHeader()
-        }
+        const result = await api.delete(`/api/users/delete/${id}`
         )
         return result.data;
     } catch (error) {
@@ -116,9 +101,7 @@ export async function getCustomersPerPage(pageNum, keyword) {
 		if (keyword.length > 0 && page === 0) {  // Correct 'lenght' to 'length'
     		page = 1;
 		}
-		const result = await api.get(`/api/customers/page/${page}?keyword=${keyword}`,{}, {
-			headers: getHeader()
-		})
+		const result = await api.get(`/api/customers/page/${page}?keyword=${keyword}`)
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error fetching users : ${error.message}`)
@@ -127,9 +110,7 @@ export async function getCustomersPerPage(pageNum, keyword) {
 
 export async function deleteCustomerById(id) {
     try {
-        const result = await api.delete(`/api/customers/delete/${id}`,{
-            headers: getHeader()
-        }
+        const result = await api.delete(`/api/customers/delete/${id}`
         )
         return result.data;
     } catch (error) {
@@ -149,10 +130,7 @@ export async function saveCustomer(customer) {
 	formData.append("enabled", customer.enabled)
 
 	try {
-		const response = await api.post("api/customers/customer/save", formData,{
-			headers: {...getHeader(),
-				'Content-Type': 'multipart/form-data'
-			} }
+		const response = await api.post("api/customers/customer/save", formData
 		)
 		if (response.status >= 200 && response.status < 300) {
             return response.data ;
@@ -165,9 +143,7 @@ export async function saveCustomer(customer) {
 
 export async function getCustomerById(id) {
 	try {
-		const result = await api.get(`/api/customers/customer/${id}`, {} , {
-			headers: getHeader()
-		})
+		const result = await api.get(`/api/customers/customer/${id}`)
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching customer with id ${id} : ${error.message}`)
@@ -177,60 +153,70 @@ export async function getCustomerById(id) {
 // =========================== SERVICES ================================================//
 export async function getAllServices() {
 	try {
-		const result = await api.get(`/api/services/all-services`,{}, {
-			headers: getHeader()
-		})
+		const result = await api.get(`/api/services/all-services`,{})
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error fetching services : ${error.message}`)
 	}
 }
 
-// export async function deleteCustomerById(id) {
-//     try {
-//         const result = await api.delete(`/api/customers/delete/${id}`,{
-//             headers: getHeader()
-//         }
-//         )
-//         return result.data;
-//     } catch (error) {
-//         throw new Error(`Error delete user : ${error.message}`)
-//     }
-// }
 
-// export async function saveCustomer(customer) {
-// 	const formData = new FormData()
-// 	formData.append("id", customer.id)
-// 	formData.append("first_name", customer.first_name)
-// 	formData.append("last_name", customer.last_name)
-// 	formData.append("email", customer.email)
-// 	formData.append("password", customer.password)
-// 	formData.append("phone_number", customer.phone_number)
-// 	formData.append("location", customer.location)
-// 	formData.append("enabled", customer.enabled)
+const refreshToken= async() => {
+	try {
+		const id = localStorage.getItem("userId");
+		const formData = new FormData();
+		formData.append("id", id);
+		const response = await api.post('/api/auth/token/refresh', formData);
+		return response.data;
+	} catch (error) {
+		console.log("Error",error); 
+	}
+}
 
-// 	try {
-// 		const response = await api.post("api/customers/customer/save", formData,{
-// 			headers: {...getHeader(),
-// 				'Content-Type': 'multipart/form-data'
-// 			} }
-// 		)
-// 		if (response.status >= 200 && response.status < 300) {
-//             return response.data ;
-//         } else 
-//             return  response.status;
-// 	} catch (error) {
-// 		console.log(error.data);
-// 	}
-// }
-
-// export async function getCustomerById(id) {
-// 	try {
-// 		const result = await api.get(`/api/customers/customer/${id}`, {} , {
-// 			headers: getHeader()
-// 		})
-// 		return result.data
-// 	} catch (error) {
-// 		throw new Error(`Error fetching customer with id ${id} : ${error.message}`)
-// 	}
-// }
+api.interceptors.request.use(
+	async (config) => {
+	  const token = localStorage.getItem("token");
+	  if (token) {
+		config.headers["Authorization"] = `Bearer ${token}`;
+	  }
+	  config.withCredentials = true;
+	  return config;
+	},
+	(error) => {
+	  return Promise.reject(error);
+	}
+  );
+api.interceptors.response.use(
+		(response) => {
+		  return response;
+		},
+		async function (error) {
+		  const originalRequest = error.config;
+		  if ((error.response.status === 403 && !originalRequest._retry)) {
+			localStorage.clear();
+			window.location.href = '/';
+        	return Promise.reject(error);
+		  }
+		  if(error.response.status === 401 && !originalRequest._retry){
+			try {
+				const resp = await refreshToken();
+		
+				if (resp.token) {
+				  const access_token = resp.token;
+				  localStorage.setItem('token', access_token);
+				  api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+		
+				  // Retry the original request with the new token
+				  return api(originalRequest);
+				} else {
+				  return Promise.reject(error); // Reject the promise to avoid further processing
+				}
+			  } catch (refreshError) {
+				// If refreshToken() fails, redirect to login
+				history.push('/login'); // Redirect to login page
+				return Promise.reject(error); // Reject the promise to avoid further processing
+			  }
+		  }
+		  return Promise.reject(error);
+		}
+	  );

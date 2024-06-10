@@ -9,32 +9,6 @@ export const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  let logoutTimer;
-
-  const setLogoutTimer = (duration) => {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(handleLogout, duration * 1000);
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedUser = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-
-        if (decodedUser.exp < currentTime) {
-          handleLogout();
-        } else {
-          setUser(decodedUser);
-          setLogoutTimer(decodedUser.exp - currentTime);
-        }
-      } catch (error) {
-        console.error("Failed to decode JWT: ", error);
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
 
   const handleLogin = (token) => {
     try {
@@ -43,7 +17,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("userRoles", decodedUser.roles);
       localStorage.setItem("token", token);
       setUser(decodedUser);
-      setLogoutTimer(decodedUser.exp - Date.now() / 1000);
     } catch (error) {
       console.error("Failed to decode JWT: ", error);
     }
@@ -61,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userRoles");
     localStorage.removeItem("token");
     setUser(null);
-    clearTimeout(logoutTimer);
   };
 
   return (
