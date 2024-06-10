@@ -201,7 +201,7 @@ const EditCustomer = () => {
                   Enabled:
                   <Switch
                     label="Enabled"
-                    value={values.enabled}
+                    checked={values.enabled}
                     name="enabled"
                     onChange={handleChange}
                   />

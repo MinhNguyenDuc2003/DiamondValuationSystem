@@ -18,6 +18,8 @@ import EditCustomer from "./scenes/customers/EditCustomer";
 import SideBar from "./scenes/global/SideBar";
 import Services from "./scenes/services/Services";
 import Topbar from "./scenes/global/TopBar";
+import AddService from "./scenes/services/AddService";
+import EditService from "./scenes/services/EditService";
 
 const App = () => {
   return (
@@ -101,6 +103,22 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Services />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/services/new"
+            element={
+              <PrivateRoute>
+                <AddService />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/services/:serviceid"
+            element={
+              <PrivateRoute>
+                <EditService />
               </PrivateRoute>
             }
           />

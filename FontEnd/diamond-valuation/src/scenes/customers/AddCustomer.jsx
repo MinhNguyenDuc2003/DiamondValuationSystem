@@ -44,7 +44,6 @@ const AddCustomer = () => {
 
   const handleFormSubmit = async (values) => {
     try {
-      console.log(values);
       const result = await saveCustomer(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Add new Customer successfully");
@@ -174,6 +173,7 @@ const AddCustomer = () => {
                   <Switch
                     label="Enabled"
                     value={values.enabled}
+                    checked={values.enabled}
                     name="enabled"
                     onChange={handleChange}
                   />

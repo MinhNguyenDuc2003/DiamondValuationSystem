@@ -18,8 +18,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
@@ -92,115 +98,6 @@ export const Users = () => {
       setError(error.message);
     }
   };
-
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "photo",
-      headerName: "Photo",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row }) => {
-        return (
-          <Box display="flex" justifyContent="center">
-            <img
-              src={row.avatar}
-              alt={row.first_name}
-              style={{ width: 50, height: 50, borderRadius: "50%" }}
-            />
-          </Box>
-        );
-      },
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      align: "center",
-      headerAlign: "center",
-      flex: 1.5,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      flex: 1.5,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: ({ row }) =>
-        `${row.last_name || ""} ${row.first_name || ""}`,
-    },
-    {
-      field: "phone_number",
-      headerName: "Phone Number",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "enabled",
-      headerName: "Enable",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { enabled } }) => {
-        return (
-          <>
-            {enabled ? (
-              <CheckCircleIcon sx={{ color: "green", fontSize: "35px" }} />
-            ) : (
-              <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
-            )}
-          </>
-        );
-      },
-    },
-    {
-      field: "role_names",
-      headerName: "Role",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { role_names } }) => {
-        return (
-          <Box display="flex" flexDirection="column" alignItems="center">
-            {role_names.split("/").map((role, index) => (
-              <Typography key={index}>
-                {role.charAt(0).toUpperCase() + role.slice(1)}
-              </Typography>
-            ))}
-          </Box>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "Actions",
-      flex: 0.8,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row }) => {
-        return (
-          <Box>
-            <IconButton onClick={() => handleOpenUserDetailDialog(row)}>
-              <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-            <IconButton onClick={() => navigate(`/users/${row.id}`)}>
-              <EditIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-            <IconButton onClick={() => handleOpenDialog(row.id)}>
-              <DeleteIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-          </Box>
-        );
-      },
-    },
-  ];
 
   const handleDelete = async () => {
     const result = await deleteUserById(userToDelete);
@@ -280,32 +177,74 @@ export const Users = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
-      <Box
-        m="20px 0 0 0"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            backgroundColor: "#C5A773",
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-          },
-          backgroundColor: "#EEE5D6",
-        }}
-      >
-        <DataGrid
-          rows={data.list_users}
-          columns={columns}
-          getRowId={(row) => row?.id}
-          hideFooter
-          disableColumnFilter
-          disableColumnMenu
-          disableRowSelectionOnClick
-        />
-      </Box>
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: "#C5A773" }}>
+            <TableRow>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Photo</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Fullname</TableCell>
+              <TableCell align="center">Phone Number</TableCell>
+              <TableCell align="center">Enable</TableCell>
+              <TableCell align="center">Role</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
+            {data.list_users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell align="center">{user.id}</TableCell>
+                <TableCell align="center">
+                  <img
+                    src={user.avatar}
+                    alt={user.first_name}
+                    style={{ width: 50, height: 50, borderRadius: "50%" }}
+                  />
+                </TableCell>
+                <TableCell align="center">{user.email}</TableCell>
+                <TableCell align="center">
+                  {user.last_name} {user.first_name}
+                </TableCell>
+                <TableCell align="center">{user.phone_number}</TableCell>
+                <TableCell align="center">
+                  {user.enabled ? (
+                    <CheckCircleIcon
+                      sx={{ color: "green", fontSize: "35px" }}
+                    />
+                  ) : (
+                    <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    {user.role_names.split("/").map((role, index) => (
+                      <Typography key={index}>
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </Typography>
+                    ))}
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
+                    <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
+                    <EditIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton onClick={() => handleOpenDialog(user.id)}>
+                    <DeleteIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box display="flex" justifyContent="center">
         <Pagination
           count={data.total_page}

@@ -160,7 +160,46 @@ export async function getAllServices() {
 	}
 }
 
+export async function deleteServiceById(id) {
+    try {
+        const result = await api.delete(`/apiapi/customers/delete/${id}`
+        )
+        return result.data;
+    } catch (error) {
+        throw new Error(`Error delete user : ${error.message}`)
+    }
+}
 
+export async function saveService(service) {
+	const formData = new FormData()
+	formData.append("id", service.id)
+	formData.append("name", service.name)
+	formData.append("money", service.money)
+	formData.append("content", service.content)
+	formData.append("photo", service.photo)
+
+	try {
+		const response = await api.post("api/services/service/save", formData
+		)
+		if (response.status >= 200 && response.status < 300) {
+            return response.data ;
+        } else 
+            return  response.status;
+	} catch (error) {
+		console.log(error.data);
+	}
+}
+
+export async function getServiceById(id) {
+	try {
+		const result = await api.get(`api/services/service/${id}`)
+		return result.data
+	} catch (error) {
+		throw new Error(`Error fetching service with id ${id} : ${error.message}`)
+	}
+}
+
+// ======================================================================================== //
 const refreshToken= async() => {
 	try {
 		const id = localStorage.getItem("userId");

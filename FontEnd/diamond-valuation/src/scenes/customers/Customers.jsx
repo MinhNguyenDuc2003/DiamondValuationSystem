@@ -17,15 +17,23 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
+import CustomerDetailsDialog from "./CustomerDetailDialog";
 
 export const Customers = () => {
   const [data, setData] = useState({
@@ -40,91 +48,11 @@ export const Customers = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [error, setError] = useState("");
 
-  const location = useLocation();
+  const [openCustomerDetailDialog, setOpenCustomerDetailDialog] =
+    useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "created_time",
-      headerName: "Created At",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      align: "center",
-      headerAlign: "center",
-      flex: 1.5,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      flex: 1.5,
-      align: "center",
-      headerAlign: "center",
-      valueGetter: ({ row }) =>
-        `${row.last_name || ""} ${row.first_name || ""}`,
-    },
-    {
-      field: "phone_number",
-      headerName: "Phone Number",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "location",
-      headerName: "Location",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "enabled",
-      headerName: "Enable",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { enabled } }) => {
-        return (
-          <>
-            {enabled ? (
-              <CheckCircleIcon sx={{ color: "green", fontSize: "35px" }} />
-            ) : (
-              <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
-            )}
-          </>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "Actions",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { id } }) => {
-        return (
-          <Box>
-            <IconButton onClick={() => navigate(`/customers/${id}`)}>
-              <EditIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-            <IconButton onClick={() => handleOpenDialog(id)}>
-              <DeleteIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-          </Box>
-        );
-      },
-    },
-  ];
+  const location = useLocation();
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -163,7 +91,7 @@ export const Customers = () => {
   const handleDelete = async () => {
     const result = await deleteCustomerById(customerToDelete);
     if (result !== undefined) {
-      setMessage(`Delete user with id ${customerToDelete}  successfully!`);
+      setMessage(`Delete customer with id ${customerToDelete}  successfully!`);
       getCustomersPerPage(currentPage, filteredData)
         .then((data) => {
           setData({
@@ -202,6 +130,16 @@ export const Customers = () => {
     setCustomerToDelete(null);
   };
 
+  const handleOpenCustomerDetailDialog = (customer) => {
+    setSelectedCustomer(customer);
+    setOpenCustomerDetailDialog(true);
+  };
+
+  const handleCloseCustomerDetailDialog = () => {
+    setOpenCustomerDetailDialog(false);
+    setSelectedCustomer(null);
+  };
+
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -238,32 +176,60 @@ export const Customers = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
-      <Box
-        m="20px 0 0 0"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            backgroundColor: "#C5A773",
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-          },
-          backgroundColor: "#EEE5D6",
-        }}
-      >
-        <DataGrid
-          rows={data.list_customers}
-          columns={columns}
-          getRowId={(row) => row?.id}
-          hideFooter
-          disableColumnFilter
-          disableColumnMenu
-          disableRowSelectionOnClick
-        />
-      </Box>
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: "#C5A773" }}>
+            <TableRow>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Created At</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Fullname</TableCell>
+              <TableCell align="center">Phone Number</TableCell>
+              <TableCell align="center">Location</TableCell>
+              <TableCell align="center">Enable</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
+            {data.list_customers.map((customer) => (
+              <TableRow key={customer.id}>
+                <TableCell align="center">{customer.id}</TableCell>
+                <TableCell align="center">{customer.created_time}</TableCell>
+                <TableCell align="center">{customer.email}</TableCell>
+                <TableCell align="center">
+                  {customer.last_name} {customer.first_name}
+                </TableCell>
+                <TableCell align="center">{customer.phone_number}</TableCell>
+                <TableCell align="center">{customer.location}</TableCell>
+                <TableCell align="center">
+                  {customer.enabled ? (
+                    <CheckCircleIcon
+                      sx={{ color: "green", fontSize: "35px" }}
+                    />
+                  ) : (
+                    <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => handleOpenCustomerDetailDialog(customer)}
+                  >
+                    <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => navigate(`/customers/${customer.id}`)}
+                  >
+                    <EditIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton onClick={() => handleOpenDialog(customer.id)}>
+                    <DeleteIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box display="flex" justifyContent="center">
         <Pagination
           count={data.total_page}
@@ -271,6 +237,12 @@ export const Customers = () => {
           onChange={handleChange}
         />
       </Box>
+
+      <CustomerDetailsDialog
+        open={openCustomerDetailDialog}
+        handleClose={handleCloseCustomerDetailDialog}
+        customer={selectedCustomer}
+      />
 
       {/* Confirmation Dialog */}
       <Dialog
