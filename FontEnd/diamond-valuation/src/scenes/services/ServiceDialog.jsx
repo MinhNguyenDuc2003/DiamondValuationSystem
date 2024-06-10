@@ -11,7 +11,7 @@ import {
 
 const ServiceDialog = ({}) => {
   <Dialog open={open} onClose={handleClose}>
-    <DialogTitle>{formData.id ? "Edit Course" : "Add Course"}</DialogTitle>
+    <DialogTitle>{formData.id ? "Edit Service" : "Add Service"}</DialogTitle>
     <DialogContent>
       <TextField
         margin="dense"
