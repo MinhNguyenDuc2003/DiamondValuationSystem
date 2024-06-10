@@ -17,6 +17,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -163,7 +170,7 @@ export const Customers = () => {
   const handleDelete = async () => {
     const result = await deleteCustomerById(customerToDelete);
     if (result !== undefined) {
-      setMessage(`Delete user with id ${customerToDelete}  successfully!`);
+      setMessage(`Delete customer with id ${customerToDelete}  successfully!`);
       getCustomersPerPage(currentPage, filteredData)
         .then((data) => {
           setData({
@@ -238,7 +245,7 @@ export const Customers = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
-      <Box
+      {/* <Box
         m="20px 0 0 0"
         sx={{
           "& .MuiDataGrid-root": {
@@ -263,7 +270,54 @@ export const Customers = () => {
           disableColumnMenu
           disableRowSelectionOnClick
         />
-      </Box>
+      </Box> */}
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: "#C5A773" }}>
+            <TableRow>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Create At</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Fullname</TableCell>
+              <TableCell align="center">Phone Number</TableCell>
+              <TableCell align="center">Location</TableCell>
+              <TableCell align="center">Enabled</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
+            {data.list_customers.map((customer) => (
+              <TableRow key={customer.id}>
+                <TableCell align="center">{customer.id}</TableCell>
+                <TableCell align="center">{customer.created_time}</TableCell>
+                <TableCell align="center">{customer.email}</TableCell>
+                <TableCell align="center">
+                  {customer.last_name} {customer.first_name}
+                </TableCell>
+                <TableCell align="center">{customer.phone_number}</TableCell>
+                <TableCell align="center">{customer.location}</TableCell>
+                <TableCell align="center">
+                  {customer.enabled ? (
+                    <CheckCircleIcon
+                      sx={{ color: "green", fontSize: "35px" }}
+                    />
+                  ) : (
+                    <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => navigate(`/customers/${id}`)}>
+                    <EditIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton onClick={() => handleOpenDialog(id)}>
+                    <DeleteIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box display="flex" justifyContent="center">
         <Pagination
           count={data.total_page}

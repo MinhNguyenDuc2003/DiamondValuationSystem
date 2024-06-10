@@ -18,6 +18,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,8 +35,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 export const Services = () => {
   const [data, setData] = useState({
-    list_customers: [],
-    total_page: 0,
+    list_services: [],
   });
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState("");
@@ -50,7 +56,7 @@ export const Services = () => {
       headerAlign: "center",
     },
     {
-      field: "number",
+      field: "name",
       headerName: "Name",
       flex: 1,
       align: "center",
@@ -98,16 +104,14 @@ export const Services = () => {
   useEffect(() => {
     getAllServices()
       .then((data) => {
-        console.log(data);
         setData({
-          list_customers: data.list_customers,
-          total_page: data.total_page,
+          list_services: data,
         });
       })
       .catch((error) => {
         setError(error.message);
       });
-  }, [currentPage, filteredData]);
+  }, []);
 
   function debounce(func, timeout = 300) {
     let timer;
@@ -164,11 +168,11 @@ export const Services = () => {
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
-        Manage Customers
+        Manage Services
       </Typography>
 
       <Box display="flex" justifyContent="space-between">
-        <Link to="/customers/new">
+        <Link to="/services/new">
           <AddIcon
             sx={{
               ml: "10px",
@@ -197,7 +201,7 @@ export const Services = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
-      <Box
+      {/* <Box
         m="20px 0 0 0"
         sx={{
           "& .MuiDataGrid-root": {
@@ -214,7 +218,7 @@ export const Services = () => {
         }}
       >
         <DataGrid
-          rows={data.list_customers}
+          rows={data.list_services}
           columns={columns}
           getRowId={(row) => row?.id}
           hideFooter
@@ -222,7 +226,38 @@ export const Services = () => {
           disableColumnMenu
           disableRowSelectionOnClick
         />
-      </Box>
+      </Box> */}
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: "#C5A773" }}>
+            <TableRow>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Money</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
+            {data.list_services.map((service) => (
+              <TableRow key={service.id}>
+                <TableCell align="center">{service.id}</TableCell>
+                <TableCell align="center">{service.name}</TableCell>
+                <TableCell align="center">{service.money}</TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => navigate(`/customers/${service.id}`)}
+                  >
+                    <EditIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                  <IconButton onClick={() => handleOpenDialog(id)}>
+                    <DeleteIcon sx={{ color: "#C5A773" }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box display="flex" justifyContent="center">
         <Pagination
           count={data.total_page}
