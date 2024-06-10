@@ -1,10 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
-import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Button, Dropdown, Menu, Input, Space } from 'antd';
 import './Header.scss';
 import logo from './image/logot.png';
-
-
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -13,11 +12,13 @@ const Header = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
+    const [ServiceOpen, setServiceOpen] = useState(false);
     const [user, setUser] = useState(null);
-
+    const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
+    
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser) {
@@ -25,6 +26,9 @@ const Header = () => {
         }
     }, []);
 
+    const handleServiceClick = () => {
+        setServiceOpen (true);
+    }
     const handleEducationClick = () => {
         setEducationOpen(true);
     };
@@ -32,10 +36,18 @@ const Header = () => {
     const handleCloseEducation = () => {
         setEducationOpen(false);
     };
+    const handleCloseService = () => {
+        setServiceOpen(false);
+    };
 
     const handleNavigateToEducation = (path) => {
         navigate(path);
         setEducationOpen(false);
+        setMenuOpen(false);
+    };
+    const handleNavigateToService = (path) => {
+        navigate(path);
+        setServiceOpen(false);
         setMenuOpen(false);
     };
 
@@ -56,8 +68,41 @@ const Header = () => {
         };
     }, [location.pathname]);
 
+    const handleSearch = () => {
+       
+        console.log('Search value:', searchValue);
+    };
+
+    const menuUser = (
+        <Menu>
+            <Menu.Item>
+                <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
+            </Menu.Item>
+            <Menu.Item>
+              <Button type='text'> Logout</Button>
+            </Menu.Item>
+        </Menu>
+    );
+    const search = (
+        <Menu>
+          
+            <Space direction="vertical">
+                    <Input.Search
+                        placeholder="input search text"
+                        style={{
+                            width: 200,
+                        }}
+                        onSearch={handleSearch}
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                </Space>
+           
+        </Menu>
+    );
+
     return (
-        <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''} ${searchOpen ? 'search-open' : ''}`}>
+        <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
             <button onClick={() => setMenuContact(!menuContact)} className='contact'>
                 <span className={scrolled ? 'scrolled' : ''}>+ Contact Us</span>
             </button>
@@ -68,32 +113,19 @@ const Header = () => {
 
             <ul className="actions">
                 <li>
-                    <button onClick={() => setUserMenuOpen(!userMenuOpen)} className={scrolled ? 'scrolled' : ''}>
-                        <UserOutlined />
-                    </button>
-                    {userMenuOpen && user && (
-                        <div className='user-menu'>
-                            <ul>
-                                <li>
-                                    <button onClick={() => navigate('/account')}>Manage Account</button>
-                                </li>
-                                <li>
-                                    <button onClick={() => { setUser(null); setUserMenuOpen(false); navigate('/login'); }}>Logout</button>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
+                    <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                        <Button type="text" icon={<UserOutlined />} />
+                    </Dropdown>
                 </li>
                 <li>
-                    <button onClick={() => setSearchOpen(!searchOpen)} className={scrolled ? 'scrolled' : ''}>
-                        <SearchOutlined />
-                    </button>
+                  
+                    <Dropdown overlay={search} trigger={['hover']} >
+                        <Button type="text" icon={<SearchOutlined />} />
+                    </Dropdown>
                 </li>
                 <li>
-                    <button onClick={() => setMenuOpen(!menuOpen)} className={scrolled ? 'scrolled' : ''}>
-                        <MenuOutlined style={{ marginRight: '5px' }} />
-                        <span>MENU</span>
-                    </button>
+                    <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
+
                 </li>
             </ul>
 
@@ -104,7 +136,7 @@ const Header = () => {
                         <ul>
                             <li>
                                 <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/service')} className='btn-menu-items'>
+                                    <button onClick={ handleServiceClick} className='btn-menu-items'>
                                         <span className='items'>
                                             <span className='name-item'>Service</span>
                                             <span className='direct-item'>
@@ -199,8 +231,48 @@ const Header = () => {
                     </div>
                 </div>
             )}
+            {ServiceOpen && (
+                <div className="education-panel">
+                    <button onClick={handleCloseService} className="close-button"><CloseCircleOutlined /></button>
+                    <div className="education-content">
+                        <ul>
+                            <li>
+                                <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
+                                    <span className='direct-item'>
+                                        <span className='direct'> <RightOutlined /></span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => handleNavigateToService('/Service/calculator')}>Calculator
+                                    <span className='direct-item'>
+                                        <span className='direct'> <RightOutlined /></span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
+                                    <span className='direct-item'>
+                                        <span className='direct'> <RightOutlined /></span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                            <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
+                                    <span className='direct-item'>
+                                        <span className='direct'> <RightOutlined /></span>
+                                    </span>
+                                </button>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                </div>
+            )}
 
             {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
+            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
+            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
 
             {searchOpen && (
                 <div className='search'></div>

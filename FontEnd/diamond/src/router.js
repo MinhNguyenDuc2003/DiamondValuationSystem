@@ -19,6 +19,7 @@ import Blog2 from "./pages/user/Blog/BlogContent/Blog2";
 import Blog3 from "./pages/user/Blog/BlogContent/Blog3";
 import Blog4 from "./pages/user/Blog/BlogContent/Blog4";
 import Blog5 from "./pages/user/Blog/BlogContent/Blog5";
+import CalculatorService from "./pages/user/Service/CalculatorService";
 
 
 
@@ -43,7 +44,19 @@ const renderUserRouter = () => {
         },
         //USER-SERVICE
         {
-            path : ROUTERS.USER.SERVICE,
+            path : ROUTERS.USER.SERVICE_VALUATION,
+            component: <ServiceBody/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_CALCULATOR,
+            component: <CalculatorService/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_SCULPTURE,
+            component: <ServiceBody/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceBody/>
         },
         //BLOG

@@ -27,7 +27,7 @@ const Blog = () => {
               </div>
               <div className='content-wrapper'>
                 <h2>
-                  <a href='Blog/ask-certification-importance'>Ask A Diamond Pro: Certified vs. Non-certified Diamonds</a>
+                  <a href='Blog/ask-certification-importance'>Ask A Shine: Certified vs. Non-certified Diamonds</a>
                 </h2>
                 <span>May 31, 2024 | 4:00pm</span>
                 <div>
@@ -48,7 +48,7 @@ const Blog = () => {
               </div>
               <div className='content-wrapper'>
                 <h2>
-                  <a href='Blog/ask-fancy-yellow-diamond-below20k'>Ask A Diamond Pro: Fancy Yellow Cushion Diamond Within a $15k – $20k Budget</a>
+                  <a href='Blog/ask-fancy-yellow-diamond-below20k'>Ask A Shine: Fancy Yellow Cushion Diamond Within a $15k – $20k Budget</a>
                 </h2>
                 <span>May 16, 2024 | 2:00pm</span>
                 <div>
@@ -68,7 +68,7 @@ const Blog = () => {
               </div>
               <div className='content-wrapper'>
                 <h2>
-                  <a href='Blog/ask-k-color-diamond-in-pave-ring'>Ask A Diamond Pro: Advice on 0.81 Carat Round K Color Diamond</a>
+                  <a href='Blog/ask-k-color-diamond-in-pave-ring'>Ask A Shine: Advice on 0.81 Carat Round K Color Diamond</a>
                 </h2>
                 <span>May 10, 2024 | 8:17pm</span>
                 <div>
@@ -93,7 +93,7 @@ const Blog = () => {
             </div>
             <div className='content-wrapper'>
               <h2>
-                <a href='Blog/ask-13k-budget-emerald-cut'>Ask A Diamond Pro: $13K Budget on Emerald Cut</a>
+                <a href='Blog/ask-13k-budget-emerald-cut'>Ask A Shine: $13K Budget on Emerald Cut</a>
               </h2>
               <span>April 12, 2024 | 5:59pm</span>
               <div>
@@ -114,7 +114,7 @@ const Blog = () => {
             </div>
             <div className='content-wrapper'>
               <h2>
-                <a href='Blog/ask-engagement-ring-purchase'>Ask A Diamond Pro: Making the Right Choice in Selecting an Engagement Ring</a>
+                <a href='Blog/ask-engagement-ring-purchase'>Ask A Shine: Making the Right Choice in Selecting an Engagement Ring</a>
               </h2>
               <span>March 28, 2024 | 2:00pm</span>
               <div>
