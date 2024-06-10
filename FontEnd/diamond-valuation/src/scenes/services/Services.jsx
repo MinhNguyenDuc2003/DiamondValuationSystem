@@ -42,53 +42,10 @@ export const Services = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [serviceToDelete, setserviceToDelete] = useState(null);
   const [error, setError] = useState("");
 
   const location = useLocation();
-
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "money",
-      headerName: "Money",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "action",
-      headerName: "Actions",
-      flex: 0.5,
-      align: "center",
-      headerAlign: "center",
-      renderCell: ({ row: { id } }) => {
-        return (
-          <Box>
-            <IconButton onClick={() => navigate(`/customers/${id}`)}>
-              <EditIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-            <IconButton onClick={() => handleOpenDialog(id)}>
-              <DeleteIcon sx={{ color: "#C5A773" }} />
-            </IconButton>
-          </Box>
-        );
-      },
-    },
-  ];
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -124,14 +81,13 @@ export const Services = () => {
   }
 
   const handleDelete = async () => {
-    const result = await deleteCustomerById(customerToDelete);
+    const result = await deleteCustomerById(serviceToDelete);
     if (result !== undefined) {
-      setMessage(`Delete user with id ${customerToDelete}  successfully!`);
-      getCustomersPerPage(currentPage, filteredData)
+      setMessage(`Delete user with id ${serviceToDelete}  successfully!`);
+      getAllServices()
         .then((data) => {
           setData({
-            list_customers: data.list_customers,
-            total_page: data.total_page,
+            list_services: data,
           });
         })
         .catch((error) => {
@@ -156,13 +112,13 @@ export const Services = () => {
   const processChange = debounce((e) => handleSearchChange(e));
 
   const handleOpenDialog = (customer) => {
-    setCustomerToDelete(customer);
+    setserviceToDelete(customer);
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setCustomerToDelete(null);
+    setserviceToDelete(null);
   };
 
   return (
@@ -201,32 +157,6 @@ export const Services = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
-      {/* <Box
-        m="20px 0 0 0"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            backgroundColor: "#C5A773",
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-          },
-          backgroundColor: "#EEE5D6",
-        }}
-      >
-        <DataGrid
-          rows={data.list_services}
-          columns={columns}
-          getRowId={(row) => row?.id}
-          hideFooter
-          disableColumnFilter
-          disableColumnMenu
-          disableRowSelectionOnClick
-        />
-      </Box> */}
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
@@ -276,7 +206,7 @@ export const Services = () => {
         <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this customer?
+            Are you sure you want to delete this service?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
