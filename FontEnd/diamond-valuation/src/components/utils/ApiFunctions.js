@@ -160,6 +160,19 @@ export async function getAllServices() {
 	}
 }
 
+export const validateToken = async() => {
+		const token = localStorage.getItem("token")
+		const formData = new FormData();
+		formData.append("token", token);
+		if(token != null && token.length>0){
+			const result = await api.post("/api/auth/token", formData)
+			console.log("abc")
+			return result;
+		}else{
+			return false;
+		}
+}
+
 
 const refreshToken= async() => {
 	try {
@@ -194,7 +207,7 @@ api.interceptors.response.use(
 		  const originalRequest = error.config;
 		  if ((error.response.status === 403 && !originalRequest._retry)) {
 			localStorage.clear();
-			window.location.href = '/';
+			window.location.href = '/login';
         	return Promise.reject(error);
 		  }
 		  if(error.response.status === 401 && !originalRequest._retry){
@@ -213,7 +226,7 @@ api.interceptors.response.use(
 				}
 			  } catch (refreshError) {
 				// If refreshToken() fails, redirect to login
-				history.push('/login'); // Redirect to login page
+				window.location.href = '/login'; // Redirect to login page
 				return Promise.reject(error); // Reject the promise to avoid further processing
 			  }
 		  }

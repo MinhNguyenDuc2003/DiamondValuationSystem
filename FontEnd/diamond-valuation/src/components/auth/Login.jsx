@@ -11,6 +11,7 @@ import {
   Alert,
   Paper,
 } from "@mui/material";
+import { validateToken } from "../utils/ApiFunctions";
 
 export const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,6 +24,16 @@ export const Login = () => {
   const location = useLocation();
   const auth = useAuth();
   const redirectUrl = location.state?.path || "/";
+
+  useEffect(() => {
+    const checkToken = async() => {
+      const result = await validateToken();
+      if(result.status==200){
+        navigate("/");
+      }
+    }
+    checkToken();
+  }, [])
 
   const handleInputChange = (e) => {
     setLogin({ ...login, [e.target.name]: e.target.value });
