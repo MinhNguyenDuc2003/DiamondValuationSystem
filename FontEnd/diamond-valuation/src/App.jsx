@@ -20,6 +20,7 @@ import Services from "./scenes/services/Services";
 import Topbar from "./scenes/global/TopBar";
 import AddService from "./scenes/services/AddService";
 import EditService from "./scenes/services/EditService";
+import Requests from "./scenes/requests/DiamondRequests";
 
 const App = () => {
   return (
@@ -50,6 +51,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
+
+          {/* Users */}
+
           <Route
             path="/users"
             element={
@@ -74,6 +78,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
+
+          {/* Customers */}
+
           <Route
             path="/customers"
             element={
@@ -98,6 +105,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
+
+          {/* Services */}
+
           <Route
             path="/services"
             element={
@@ -119,6 +129,17 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <EditService />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Requests */}
+
+          <Route
+            path="/requests"
+            element={
+              <PrivateRoute>
+                <Requests />
               </PrivateRoute>
             }
           />

@@ -199,6 +199,27 @@ export async function getServiceById(id) {
 	}
 }
 
+// ================================== REQUESTS ============================================ //
+export async function getAllRequests() {
+	try {
+		const result = await api.get(`api/diamond-requests/all-request`,{})
+		return result.data;
+	} catch (error) {
+		throw new Error(`Error fetching services : ${error.message}`)
+	}
+}
+
+export async function deleteRequestById(id) {
+    try {
+        const result = await api.delete(`api/diamond-requests/delete/${id}`
+        )
+        return result.data;
+    } catch (error) {
+        throw new Error(`Error delete user : ${error.message}`)
+    }
+}
+
+
 // ======================================================================================== //
 const refreshToken= async() => {
 	try {

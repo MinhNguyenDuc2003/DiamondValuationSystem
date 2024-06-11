@@ -34,6 +34,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ServiceDetailsDialog from "./ServiceDetailDialog";
 
 export const Services = () => {
+  console.log(localStorage.getItem("userId"));
   const [data, setData] = useState({
     list_services: [],
   });

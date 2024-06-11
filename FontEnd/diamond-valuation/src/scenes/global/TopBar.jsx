@@ -81,7 +81,11 @@ const Topbar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>Your Account</MenuItem>
+        <MenuItem
+          onClick={() => navigate(`/users/${localStorage.getItem("userId")}`)}
+        >
+          Your Account
+        </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
