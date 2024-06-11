@@ -255,7 +255,7 @@ api.interceptors.response.use(
 		  const originalRequest = error.config;
 		  if ((error.response.status === 403 && !originalRequest._retry)) {
 			localStorage.clear();
-			window.location.href = '/';
+			window.location.href = '/login';
         	return Promise.reject(error);
 		  }
 		  if(error.response.status === 401 && !originalRequest._retry){
@@ -274,7 +274,7 @@ api.interceptors.response.use(
 				}
 			  } catch (refreshError) {
 				// If refreshToken() fails, redirect to login
-				history.push('/login'); // Redirect to login page
+				window.location.href = '/login'; // Redirect to login page
 				return Promise.reject(error); // Reject the promise to avoid further processing
 			  }
 		  }

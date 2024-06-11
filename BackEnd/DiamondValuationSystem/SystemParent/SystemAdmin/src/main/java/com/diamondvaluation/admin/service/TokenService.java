@@ -44,6 +44,7 @@ public class TokenService {
 		response.setRefreshToken(randomUUID);
 		
 		RefreshToken refreshToken = new RefreshToken();
+		refreshToken.setUserType("user");
 		refreshToken.setUser(user);
 		refreshToken.setToken(passwordEncoder.encode(randomUUID));
 		
