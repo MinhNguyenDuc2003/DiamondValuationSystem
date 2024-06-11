@@ -155,6 +155,7 @@ const SideBar = () => {
               title="Services"
               to="/services"
               icon={<DiamondIcon />}
+<<<<<<< HEAD
               selected={selected}
               setSelected={setSelected}
             />
@@ -162,6 +163,8 @@ const SideBar = () => {
               title="Requests"
               to="/requests"
               icon={<RequestPageIcon />}
+=======
+>>>>>>> master
               selected={selected}
               setSelected={setSelected}
             />

@@ -44,6 +44,7 @@ const AddCustomer = () => {
 
   const handleFormSubmit = async (values) => {
     try {
+      console.log(values);
       const result = await saveCustomer(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Add new Customer successfully");

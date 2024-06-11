@@ -154,6 +154,7 @@ export async function getCustomerById(id) {
 export async function getAllServices() {
 	try {
 		const result = await api.get(`/api/services/all-services`,{})
+
 		return result.data;
 	} catch (error) {
 		throw new Error(`Error fetching services : ${error.message}`)

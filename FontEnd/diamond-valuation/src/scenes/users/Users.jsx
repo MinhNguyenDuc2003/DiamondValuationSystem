@@ -99,6 +99,118 @@ export const Users = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "photo",
+      headerName: "Photo",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row }) => {
+        return (
+          <Box display="flex" justifyContent="center">
+            <img
+              src={row.avatar}
+              alt={row.first_name}
+              style={{ width: 50, height: 50, borderRadius: "50%" }}
+            />
+          </Box>
+        );
+      },
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      align: "center",
+      headerAlign: "center",
+      flex: 1.5,
+    },
+    {
+      field: "fullName",
+      headerName: "Full name",
+      flex: 1.5,
+      align: "center",
+      headerAlign: "center",
+      valueGetter: ({ row }) =>
+        `${row.last_name || ""} ${row.first_name || ""}`,
+    },
+    {
+      field: "phone_number",
+      headerName: "Phone Number",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "enabled",
+      headerName: "Enable",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row: { enabled } }) => {
+        return (
+          <>
+            {enabled ? (
+              <CheckCircleIcon sx={{ color: "green", fontSize: "35px" }} />
+            ) : (
+              <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+            )}
+          </>
+        );
+      },
+    },
+    {
+      field: "role_names",
+      headerName: "Role",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row: { role_names } }) => {
+        return (
+          <Box display="flex" flexDirection="column" alignItems="center">
+            {role_names.split("/").map((role, index) => (
+              <Typography key={index}>
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </Typography>
+            ))}
+          </Box>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "Actions",
+      flex: 0.8,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row }) => {
+        return (
+          <Box>
+            <IconButton onClick={() => handleOpenUserDetailDialog(row)}>
+              <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
+            </IconButton>
+            <IconButton onClick={() => navigate(`/users/${row.id}`)}>
+              <EditIcon sx={{ color: "#C5A773" }} />
+            </IconButton>
+            <IconButton onClick={() => handleOpenDialog(row.id)}>
+              <DeleteIcon sx={{ color: "#C5A773" }} />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
+  ];
+
+>>>>>>> master
   const handleDelete = async () => {
     const result = await deleteUserById(userToDelete);
     if (result !== undefined) {
@@ -177,6 +289,11 @@ export const Users = () => {
         <div className="alert alert-success text-center">{message}</div>
       )}
 
+<<<<<<< HEAD
+=======
+      {error && <div className="alert alert-success text-center">{error}</div>}
+
+>>>>>>> master
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
