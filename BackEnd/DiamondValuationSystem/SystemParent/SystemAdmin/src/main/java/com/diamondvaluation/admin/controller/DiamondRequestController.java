@@ -1,7 +1,6 @@
 package com.diamondvaluation.admin.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -77,9 +76,9 @@ public class DiamondRequestController {
 		Customer customer = appoinment.getCustomer();
 		appoinmentResponse.setCustomerName(customer.getFullname());
 		appoinmentResponse.setCustomerPhone(customer.getPhoneNumber());
-		appoinmentResponse.setCreatedDate(appoinment.getCreatedDate());
 		appoinmentResponse.setService_ids(appoinment.getServiceIds());
 		appoinmentResponse.setService_names(appoinment.getServiceNames());
+		appoinmentResponse.setCreatedDate(appoinment.getCreatedDate().toString());
 		return appoinmentResponse;
 	}
 

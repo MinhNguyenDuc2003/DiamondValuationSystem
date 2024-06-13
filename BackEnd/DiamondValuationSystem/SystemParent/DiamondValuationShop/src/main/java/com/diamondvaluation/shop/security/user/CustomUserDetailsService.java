@@ -15,7 +15,7 @@ import com.diamondvaluation.shop.repository.CustomerRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
-	CustomerRepository cusRepo;
+	private CustomerRepository cusRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,16 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		if (!findByUsername.isPresent()) {
 			throw new UsernameNotFoundException("No user found with the given user name");
-		}
-
-		return new CustomUserDetails(findByUsername.get());
-	}
-	
-	public UserDetails loadUserById(Integer id) throws CustomerNotFoundException {
-		Optional<Customer> findByUsername = cusRepo.findById(id);
-
-		if (!findByUsername.isPresent()) {
-			throw new CustomerNotFoundException("No user found with the given Id");
 		}
 
 		return new CustomUserDetails(findByUsername.get());

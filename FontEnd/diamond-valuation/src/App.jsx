@@ -18,12 +18,9 @@ import EditCustomer from "./scenes/customers/EditCustomer";
 import SideBar from "./scenes/global/SideBar";
 import Services from "./scenes/services/Services";
 import Topbar from "./scenes/global/TopBar";
-<<<<<<< HEAD
 import AddService from "./scenes/services/AddService";
 import EditService from "./scenes/services/EditService";
 import Requests from "./scenes/requests/DiamondRequests";
-=======
->>>>>>> master
 
 const App = () => {
   return (
@@ -54,12 +51,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
-<<<<<<< HEAD
 
           {/* Users */}
 
-=======
->>>>>>> master
           <Route
             path="/users"
             element={
@@ -84,12 +78,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
-<<<<<<< HEAD
 
           {/* Customers */}
 
-=======
->>>>>>> master
           <Route
             path="/customers"
             element={
@@ -114,12 +105,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
-<<<<<<< HEAD
 
           {/* Services */}
 
-=======
->>>>>>> master
           <Route
             path="/services"
             element={
@@ -128,7 +116,6 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
-<<<<<<< HEAD
           <Route
             path="/services/new"
             element={
@@ -156,8 +143,6 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
-=======
->>>>>>> master
         </Routes>
       </main>
     </div>

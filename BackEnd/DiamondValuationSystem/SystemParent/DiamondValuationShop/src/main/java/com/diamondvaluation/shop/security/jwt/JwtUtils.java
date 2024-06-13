@@ -1,5 +1,7 @@
 package com.diamondvaluation.shop.security.jwt;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.diamondvaluation.common.User;
+import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.shop.exception.JwtValidationException;
 
 import io.jsonwebtoken.Claims;
@@ -31,16 +33,16 @@ public class JwtUtils {
 	@Value("${app.security.jwt.access-token.expiration}")
 	private int accessTokenExpiration;
 
-	public String generateAccessToken(User user) {
-		if (user == null || user.getId() == null || user.getEmail() == null || user.getRoles() == null) {
+	public String generateAccessToken(Customer customer) {
+		if (customer == null || customer.getId() == null || customer.getEmail() == null) {
 			throw new IllegalArgumentException("user object is null or its fields have null values");
 		}
 
 		long expirationTimeInMillis = System.currentTimeMillis() + accessTokenExpiration * 60000;
-		String subject = String.format("%s,%s", user.getId(), user.getFullname());
+		String subject = String.format("%s,%s", customer.getId(), customer.getEmail());
 
 		return Jwts.builder().subject(subject).issuer(issuerName).issuedAt(new Date())
-				.expiration(new Date(expirationTimeInMillis)).claim("roles", user.getRolesName())
+				.expiration(new Date(expirationTimeInMillis)).claim("roles", null)
 				.signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), Jwts.SIG.HS512).compact();
 
 	}
