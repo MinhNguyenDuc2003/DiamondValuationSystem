@@ -85,5 +85,9 @@ public class CustomUserDetails implements UserDetails {
 	public boolean hasRole(String roleName) {
 		return user.hasRole(roleName);
 	}
+	
+	public Integer getId() {
+		return user.getId();
+	}
 
 }

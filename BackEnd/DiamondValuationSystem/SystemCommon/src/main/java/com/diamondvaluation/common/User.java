@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -41,7 +42,6 @@ public class User {
 	@Column(name = "last_name", length = 45, nullable = false)
 	private String lastName;
 
-	private String location;
 	@Column(length = 64, nullable = false)
 	private String password;
 
@@ -52,6 +52,8 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	
+	
 
 	public boolean hasRole(String roleName) {
 		Iterator<Role> iterator = roles.iterator();
@@ -70,16 +72,36 @@ public class User {
 		return this.firstName + " " + this.lastName;
 	}
 
-	public List<String> getListRoles() {
+	public List<String> getListRoleIds() {
 		List<String> listRoles = new ArrayList<>();
 		Iterator<Role> iterator = roles.iterator();
 
 		while (iterator.hasNext()) {
 			Role role = iterator.next();
-			listRoles.add(role.getName());
+			listRoles.add(role.getId()+"");
 		}
 
 		return listRoles;
+	}
+	
+	public String getRolesName() {
+	    StringBuilder listRole = new StringBuilder();
+	    Iterator<Role> iterator = roles.iterator();
+	    while (iterator.hasNext()) {
+	        Role element = iterator.next();
+	        listRole.append(element.getName()).append("/");
+	    }
+	    
+	    // Kiểm tra xem listRole có rỗng hay không trước khi cắt ký tự cuối cùng
+	    if (listRole.length() > 0) {
+	        listRole.setLength(listRole.length() - 1); // Cắt bỏ ký tự '/' cuối cùng
+	    }
+	    
+	    return listRole.toString();
+	}
+
+	public User(Integer id) {
+		this.id = id;
 	}
 
 }

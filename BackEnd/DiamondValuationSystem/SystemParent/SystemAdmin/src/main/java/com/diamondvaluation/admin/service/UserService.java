@@ -2,6 +2,9 @@ package com.diamondvaluation.admin.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+import com.diamondvaluation.common.Role;
 import com.diamondvaluation.common.User;
 
 public interface UserService {
@@ -13,5 +16,9 @@ public interface UserService {
 	
 	User getUserById(Integer id);
 	
-	List<User> listUsersByPage(int pageNum, String keyword);
+	Page<User> listUsersByPage(int pageNum, String keyword);
+
+	List<Role> getAllRoles();
+	
+	User findUserById(Integer id);
 }

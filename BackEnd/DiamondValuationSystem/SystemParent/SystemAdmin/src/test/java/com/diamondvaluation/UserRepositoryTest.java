@@ -36,7 +36,6 @@ public class UserRepositoryTest {
         user.setLastName("nguyen");
         user.setPhoneNumber("123456789");
         user.setPhoto("123564465");
-        user.setLocation("12345646879");
         User userSaved = repository.save(user);
         
         assertThat(userSaved).isNotNull();

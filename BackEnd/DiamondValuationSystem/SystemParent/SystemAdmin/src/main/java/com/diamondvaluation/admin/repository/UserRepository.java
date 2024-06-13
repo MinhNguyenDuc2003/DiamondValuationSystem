@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 import com.diamondvaluation.common.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer>, PagingAndSortingRepository<User, Integer>{
-	@Query("SELECT u FROM User u WHERE u.email = ?1 AND u.enabled = true")
+	@Query("SELECT u FROM User u WHERE u.email = ?1 and u.enabled=true")
 	Optional<User> findByUsername(String username);
 	
 	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ',"
-			+ " u.lastName) LIKE %?1%")
+			+ " u.lastName, ' ', u.phoneNumber) LIKE %?1%")
 	Page<User> findAll(String keyword, Pageable pageable);
 }

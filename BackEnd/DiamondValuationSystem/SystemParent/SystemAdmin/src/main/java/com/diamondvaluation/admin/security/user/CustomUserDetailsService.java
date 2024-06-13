@@ -26,4 +26,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		return new CustomUserDetails(findByUsername.get());
 	}
+	
+	public UserDetails loadUserById(Integer id) throws UsernameNotFoundException {
+		Optional<User> findByUsername = userRepo.findById(id);
+
+		if (!findByUsername.isPresent()) {
+			throw new UsernameNotFoundException("No user found with the given Id");
+		}
+
+		return new CustomUserDetails(findByUsername.get());
+	}
 }

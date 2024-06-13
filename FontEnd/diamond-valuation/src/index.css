@@ -1,2 +1,66 @@
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+html,
+body,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 12px;
+}
+
+.app {
+  display: flex;
+  position: fixed;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb{
+  background: #888;
+}
+
+/* Handle on Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.h1 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 40px;
+}
+
+.h2 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 32px;
+}
+
+.h3 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 24px;
+}
+
+.h4 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 20px;
+}
+
+.h5 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 16px;
+}
+
+.h6 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 14px;
+}
