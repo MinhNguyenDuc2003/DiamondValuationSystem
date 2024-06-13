@@ -47,13 +47,10 @@ export const Customers = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [error, setError] = useState("");
-<<<<<<< HEAD
 
   const [openCustomerDetailDialog, setOpenCustomerDetailDialog] =
     useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-=======
->>>>>>> master
 
   const location = useLocation();
 

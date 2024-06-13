@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -35,10 +36,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException, java.io.IOException, ExpiredJwtException {
 		try {
-//			if (!hasAuthorizationBearer(request)) {
-//				filterChain.doFilter(request, response);
-//				return;
-//			}
+			if (!hasAuthorizationBearer(request)) {
+				filterChain.doFilter(request, response);
+				return;
+			}
 
 			String jwt = parseJwt(request);
 			if (!jwtUtils.isExpiredToken(jwt)) {
@@ -75,15 +76,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 		return new CustomUserDetails(userDetails);
 	}
-//	
-//	private boolean hasAuthorizationBearer(HttpServletRequest request) {
-//		String header = request.getHeader("Authorization");
-//		
-//		logger.info("Authorization Header: " + header);
-//		
-//		if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
-//			return false;
-//		}
-//		return true;
-//	}
+	
+	private boolean hasAuthorizationBearer(HttpServletRequest request) {
+		String header = request.getHeader("Authorization");
+		
+		logger.info("Authorization Header: " + header);
+		
+		if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
+			return false;
+		}
+		return true;
+	}
 }
