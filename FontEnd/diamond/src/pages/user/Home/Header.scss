@@ -3,70 +3,48 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 70px;
     z-index: 999;
     transition: background-color 0.3s ease;
     display: flex;
     justify-content: space-around;
-    align-items: center;
     background-color: rgb(231, 231, 231);
+    max-height: 50px;
 
     &.scrolled {
-        background-color: white;
-    }
+        background-color: rgb(228, 228, 228);
+        max-height: 50px;
 
-    &.search-open {
-        .logo {
-            transform: scale(1);
-            background: none;
-            border: none;
-            cursor: pointer;
+
+        .logo>img {
+            filter: invert(0%);
         }
 
-        .actions {
-            margin-top: 25px;
-            color: black;
-        }
-
-        .search {
-            position: absolute;
-            top: 70px;
-            right: 90px;
-            width: 650px;
-            background-color: white;
-            z-index: 1000;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
     }
 
     .contact {
+        flex: 1;
         cursor: pointer;
-        margin-left: 50px;
         border: none;
         background: none;
 
         span {
             font-weight: bold;
-            color: black;   
+            font-size: 16px;
+            color: black;
         }
     }
 
     .logo {
-        margin-top: 10px;
-        margin-left: 140px;
-        transform: scale(7) translateY(60%);
+        flex: 1;
+        transform: scale(7) translateY(70%);
         transition: transform 0.5s ease;
         background: none;
         border: none;
         cursor: pointer;
 
         img {
-            margin-right: 10px;
             width: 150px;
+            filter: invert(100%) opacity(0.6);
         }
 
         &.scrolled {
@@ -79,23 +57,23 @@
 
     .actions {
         display: flex;
-        align-items: center;
+        flex: 1;
+        justify-content: right;
 
         li {
             list-style: none;
-            margin-left: 20px;
+
             button {
                 background: none;
                 border: none;
                 cursor: pointer;
-                margin: 0 5px;
                 color: black;
                 font-size: 17px;
-                padding-left: 10px;
+
                 transition: transform 0.5s ease;
 
                 &.scrolled {
-                    margin-top: 25px;
+
                     color: black;
                     transform: translateY(-270%);
                 }
@@ -222,7 +200,7 @@
                             }
                         }
                     }
-                    
+
                 }
             }
         }
@@ -230,14 +208,15 @@
 
     .overlay {
         position: fixed;
-       
+
         background-color: rgba(0, 0, 0, 0.6);
         z-index: 999;
     }
+
     .overlay-2 {
         position: fixed;
-        
-        
+
+
         z-index: 1000;
     }
 

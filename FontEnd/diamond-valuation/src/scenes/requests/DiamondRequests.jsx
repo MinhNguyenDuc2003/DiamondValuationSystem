@@ -82,6 +82,30 @@ const Requests = () => {
     setRequestToDelete(null);
   };
 
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+    { field: "customer_name", headerName: "Customer Name", width: 150 },
+    { field: "customer_phone", headerName: "Customer Phone", width: 150 },
+    { field: "note", headerName: "Note", width: 200 },
+    { field: "service_names", headerName: "Services", width: 200 },
+    { field: "status", headerName: "Status", width: 120 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <IconButton onClick={() => navigate(`requests/${params.row.id}`)}>
+            <EditIcon sx={{ color: "#C5A773" }} />
+          </IconButton>
+          <IconButton onClick={() => handleOpenDialog(params.row)}>
+            <DeleteIcon sx={{ color: "#C5A773" }} />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -103,9 +127,12 @@ const Requests = () => {
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
             <TableRow>
               <TableCell align="center">ID</TableCell>
+              <TableCell align="center">Customer Name</TableCell>
+              <TableCell align="center">Customer Phone</TableCell>
+              <TableCell align="center">Created Date</TableCell>
               <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Service</TableCell>
               <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Customer</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -113,9 +140,12 @@ const Requests = () => {
             {data.map((request) => (
               <TableRow key={request.id}>
                 <TableCell align="center">{request.id}</TableCell>
+                <TableCell align="center">{request.customer_name}</TableCell>
+                <TableCell align="center">{request.customer_phone}</TableCell>
+                <TableCell align="center">{request.created_date}</TableCell>
                 <TableCell align="center">{request.note}</TableCell>
+                <TableCell align="center">{request.service_names}</TableCell>
                 <TableCell align="center">{request.status}</TableCell>
-                <TableCell align="center">{request.customer.name}</TableCell>
                 <TableCell align="center">
                   <IconButton
                     onClick={() => navigate(`/requests/${request.id}`)}

@@ -8,7 +8,6 @@ import logo from './image/logot.png';
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
@@ -18,7 +17,7 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    
+
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser) {
@@ -27,7 +26,7 @@ const Header = () => {
     }, []);
 
     const handleServiceClick = () => {
-        setServiceOpen (true);
+        setServiceOpen(true);
     }
     const handleEducationClick = () => {
         setEducationOpen(true);
@@ -69,7 +68,7 @@ const Header = () => {
     }, [location.pathname]);
 
     const handleSearch = () => {
-       
+
         console.log('Search value:', searchValue);
     };
 
@@ -79,25 +78,25 @@ const Header = () => {
                 <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
             </Menu.Item>
             <Menu.Item>
-              <Button type='text'> Logout</Button>
+                <Button type='text'> Logout</Button>
             </Menu.Item>
         </Menu>
     );
     const search = (
         <Menu>
-          
+
             <Space direction="vertical">
-                    <Input.Search
-                        placeholder="input search text"
-                        style={{
-                            width: 200,
-                        }}
-                        onSearch={handleSearch}
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                    />
-                </Space>
-           
+                <Input.Search
+                    placeholder="input search text"
+                    style={{
+                        width: 200,
+                    }}
+                    onSearch={handleSearch}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                />
+            </Space>
+
         </Menu>
     );
 
@@ -118,7 +117,7 @@ const Header = () => {
                     </Dropdown>
                 </li>
                 <li>
-                  
+
                     <Dropdown overlay={search} trigger={['hover']} >
                         <Button type="text" icon={<SearchOutlined />} />
                     </Dropdown>
@@ -136,7 +135,7 @@ const Header = () => {
                         <ul>
                             <li>
                                 <div className='menu-items'>
-                                    <button onClick={ handleServiceClick} className='btn-menu-items'>
+                                    <button onClick={handleServiceClick} className='btn-menu-items'>
                                         <span className='items'>
                                             <span className='name-item'>Service</span>
                                             <span className='direct-item'>
@@ -231,6 +230,7 @@ const Header = () => {
                     </div>
                 </div>
             )}
+
             {ServiceOpen && (
                 <div className="education-panel">
                     <button onClick={handleCloseService} className="close-button"><CloseCircleOutlined /></button>
@@ -258,13 +258,13 @@ const Header = () => {
                                 </button>
                             </li>
                             <li>
-                            <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
+                                <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
                                     <span className='direct-item'>
                                         <span className='direct'> <RightOutlined /></span>
                                     </span>
                                 </button>
                             </li>
-                           
+
                         </ul>
                     </div>
                 </div>
@@ -273,10 +273,6 @@ const Header = () => {
             {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
             {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
             {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
-
-            {searchOpen && (
-                <div className='search'></div>
-            )}
 
             {menuContact && (
                 <div className="wrapper-menu">
