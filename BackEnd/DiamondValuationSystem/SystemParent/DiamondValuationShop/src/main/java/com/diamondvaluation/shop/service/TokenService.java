@@ -1,4 +1,4 @@
-package com.diamondvaluation.admin.service;
+package com.diamondvaluation.shop.service;
 
 import java.util.Date;
 import java.util.List;
@@ -11,14 +11,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.diamondvaluation.admin.exception.RefreshTokenExpiredException;
-import com.diamondvaluation.admin.exception.RefreshTokenNotFoundException;
-import com.diamondvaluation.admin.repository.RefreshTokenRepository;
-import com.diamondvaluation.admin.request.RefreshTokenRequest;
-import com.diamondvaluation.admin.response.TokenResponse;
-import com.diamondvaluation.admin.security.jwt.JwtUtils;
+import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.RefreshToken;
-import com.diamondvaluation.common.User;
+import com.diamondvaluation.shop.exception.RefreshTokenExpiredException;
+import com.diamondvaluation.shop.exception.RefreshTokenNotFoundException;
+import com.diamondvaluation.shop.repository.RefreshTokenRepository;
+import com.diamondvaluation.shop.request.RefreshTokenRequest;
+import com.diamondvaluation.shop.response.TokenResponse;
+import com.diamondvaluation.shop.security.jwt.JwtUtils;
 
 
 @Service
@@ -33,8 +33,8 @@ public class TokenService {
 	@Autowired PasswordEncoder passwordEncoder;
 	
 	@Transactional
-	public TokenResponse generateTokens(User user) {
-		String accessToken = jwtUtil.generateAccessToken(user);
+	public TokenResponse generateTokens(Customer customer) {
+		String accessToken = jwtUtil.generateAccessToken(customer);
 		
 		TokenResponse response = new TokenResponse();
 		response.setToken(accessToken);
@@ -44,8 +44,8 @@ public class TokenService {
 		response.setRefreshToken(randomUUID);
 		
 		RefreshToken refreshToken = new RefreshToken();
-		refreshToken.setUserType("user");
-		refreshToken.setUser(user);
+		refreshToken.setUserType("customer");
+		refreshToken.setCustomer(customer);
 		refreshToken.setToken(passwordEncoder.encode(randomUUID));
 		
 		long refreshTokenExpirationInMillis = System.currentTimeMillis() + refreshTokenExpiration * 60000;
@@ -59,7 +59,7 @@ public class TokenService {
 	public TokenResponse refreshTokens(RefreshTokenRequest request) throws RefreshTokenNotFoundException, RefreshTokenExpiredException {
 		String rawRefreshToken = request.getRefreshToken();
 		
-		List<RefreshToken> listRefreshTokens = refreshTokenRepo.findByUserId(Integer.parseInt(request.getId()));
+		List<RefreshToken> listRefreshTokens = refreshTokenRepo.findByCustomerId(Integer.parseInt(request.getId()));
 		
 		RefreshToken foundRefreshToken = null;
 		
@@ -77,7 +77,7 @@ public class TokenService {
 		if (foundRefreshToken.getExpiryTime().before(currentTime))
 			throw new RefreshTokenExpiredException();
 		try {
-            TokenResponse response = generateTokens(foundRefreshToken.getUser());
+            TokenResponse response = generateTokens(foundRefreshToken.getCustomer());
             return response;
         } catch (OptimisticLockingFailureException e) {
             throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);

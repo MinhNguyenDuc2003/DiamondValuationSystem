@@ -1,4 +1,4 @@
-package com.diamondvaluation.admin.security;
+package com.diamondvaluation.shop.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +11,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.diamondvaluation.admin.exception.JwtValidationException;
-import com.diamondvaluation.admin.security.jwt.JwtUtils;
-import com.diamondvaluation.admin.security.user.CustomUserDetails;
-import com.diamondvaluation.admin.security.user.CustomUserDetailsService;
-import com.diamondvaluation.common.User;
+import com.diamondvaluation.common.Customer;
+import com.diamondvaluation.shop.exception.JwtValidationException;
+import com.diamondvaluation.shop.security.jwt.JwtUtils;
+import com.diamondvaluation.shop.security.user.CustomUserDetails;
+import com.diamondvaluation.shop.security.user.CustomUserDetailsService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.IOException;
@@ -44,9 +44,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			String jwt = parseJwt(request);
 			if (!jwtUtils.isExpiredToken(jwt)) {
 				if (jwt != null && !jwtUtils.validateAccessToken(jwt).isEmpty()) {
-					Integer id = getUserDetails(jwt).getId();
-					UserDetails userDetails = userDetailsService.loadUserById(id);
-					System.out.println(userDetails.getAuthorities());
+					String email = getUserDetails(jwt).getUsername();
+					UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 					var authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
 							userDetails.getAuthorities());
 					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -68,13 +67,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	}
 
 	private CustomUserDetails getUserDetails(String token) throws JwtValidationException, ExpiredJwtException {
-		User userDetails = new User();
+		Customer cusDetails = new Customer();
 		String[] jwtSubject = jwtUtils.getSubject(token).split(",");
 
-		userDetails.setId(Integer.parseInt(jwtSubject[0]));
-		userDetails.setEmail(jwtSubject[1]);
+		cusDetails.setId(Integer.parseInt(jwtSubject[0]));
+		cusDetails.setEmail(jwtSubject[1]);
 
-		return new CustomUserDetails(userDetails);
+		return new CustomUserDetails(cusDetails);
 	}
 	
 	private boolean hasAuthorizationBearer(HttpServletRequest request) {
