@@ -1,0 +1,56 @@
+app:
+  refresh-token:
+    removal:
+      interval: 18000000
+  security:
+    jwt:
+      access-token:
+        expiration: 1
+      issuer: DiamondValuation
+      refresh-token:
+        expiration: 7200
+      secret: ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv+9-$!*&%
+server:
+  port: 8081
+  servlet:
+    context-path: /DiamondShop
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: minh01672527656
+    url: jdbc:mysql://localhost:3306/diamond_db
+    username: root
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  security:
+   oauth2:
+    client:
+     registration:
+      google:
+       client-id: 155958575041-16pfns53l27ivvsenid2g0qea4fs64lt.apps.googleusercontent.com
+       client-secret: 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
+       scope:
+       - email
+       - profile
+      facebook:
+       client-id: 1731600987247737
+       client-secret: 1ef787212b81d115b2526d023b822590
+       scope:
+       - email
+       - public_profile

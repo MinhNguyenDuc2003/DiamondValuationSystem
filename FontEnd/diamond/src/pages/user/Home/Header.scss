@@ -1,0 +1,226 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(231, 231, 231);
+    max-height: 50px;
+
+    &.scrolled {
+        background-color: rgb(228, 228, 228);
+        max-height: 50px;
+
+
+        .logo>img {
+            filter: invert(0%);
+        }
+
+    }
+
+    .contact {
+        flex: 1;
+        cursor: pointer;
+        border: none;
+        background: none;
+
+        span {
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+        }
+    }
+
+    .logo {
+        flex: 1;
+        transform: scale(7) translateY(70%);
+        transition: transform 0.5s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        img {
+            width: 150px;
+            filter: invert(100%) opacity(0.6);
+        }
+
+        &.scrolled {
+            transform: scale(1);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    }
+
+    .actions {
+        display: flex;
+        flex: 1;
+        justify-content: right;
+
+        li {
+            list-style: none;
+
+            button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: black;
+                font-size: 17px;
+
+                transition: transform 0.5s ease;
+
+                &.scrolled {
+
+                    color: black;
+                    transform: translateY(-270%);
+                }
+            }
+        }
+    }
+
+    .menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 550px;
+        height: 100%;
+        background-color: white;
+        z-index: 1000;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .close-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 48px;
+        align-self: flex-end;
+        transform: scale(1);
+        transition: transform 0.6s ease;
+
+        &:hover {
+            transform: scale(0.8);
+        }
+    }
+
+    .menu-content {
+        ul {
+            li {
+                list-style: none;
+                padding: 10px 0;
+
+                button {
+                    position: relative;
+                    font-size: 20px;
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    padding-bottom: 1.5rem;
+                    padding-top: 0px;
+                    margin-left: 40px;
+                    transition: color 0.3s ease;
+
+                    .direct {
+                        position: absolute;
+                        padding-left: 5px;
+                        top: 6px;
+                        opacity: 0;
+                        transition: transform 0.5s ease, opacity 0.6s ease;
+                        font-size: 10px;
+                    }
+
+                    &:hover {
+                        color: #000;
+
+                        .direct {
+                            opacity: 1;
+                            transform: translateX(30%);
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .education-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 550px;
+        height: 100%;
+        background-color: white;
+        z-index: 1000;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .education-content {
+            ul {
+                li {
+                    list-style: none;
+                    padding: 10px 0;
+
+                    button {
+                        position: relative;
+                        font-size: 20px;
+                        border: none;
+                        background: none;
+                        cursor: pointer;
+                        padding-bottom: 1.5rem;
+                        padding-top: 0px;
+                        margin-left: 40px;
+                        transition: color 0.3s ease;
+
+                        .direct {
+                            position: absolute;
+                            padding-left: 5px;
+                            top: 6px;
+                            opacity: 0;
+                            transition: transform 0.5s ease, opacity 0.6s ease;
+                            font-size: 10px;
+                        }
+
+                        &:hover {
+                            color: #000;
+
+                            .direct {
+                                opacity: 1;
+                                transform: translateX(30%);
+                                font-size: 10px;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    .overlay {
+        position: fixed;
+
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+    }
+
+    .overlay-2 {
+        position: fixed;
+
+
+        z-index: 1000;
+    }
+
+    .actions {
+        position: relative;
+    }
+}

@@ -24,7 +24,7 @@ public class DiamondRequestResponse {
 	
 	private String customerPhone;
 	
-	private LocalDateTime createdDate;
+	private String createdDate;
 	
 	private String note;
 	
