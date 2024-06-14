@@ -2,57 +2,61 @@ package com.diamondvaluation.admin.service.imp;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.diamondvaluation.admin.exception.PasswordNotRightException;
 import com.diamondvaluation.admin.exception.UsernameNotFoundException;
 import com.diamondvaluation.admin.repository.UserRepository;
 import com.diamondvaluation.admin.request.AuthRequest;
-import com.diamondvaluation.admin.response.AuthResponse;
-import com.diamondvaluation.admin.security.jwt.JwtUtils;
+import com.diamondvaluation.admin.response.TokenResponse;
 import com.diamondvaluation.admin.service.AuthService;
+import com.diamondvaluation.admin.service.TokenService;
 import com.diamondvaluation.common.User;
+
 @Service
-public class AuthServiceImp implements AuthService{
-	private final UserRepository userRepository;
-	private final JwtUtils jwtUtils;
-	private final AuthenticationManager authenticationManager;
-	
+public class AuthServiceImp implements AuthService {
 	@Autowired
-	public AuthServiceImp(UserRepository userRepository, JwtUtils jwtUtils,
-			AuthenticationManager authenticationManager) {
+	private final UserRepository userRepository;
+	private final TokenService jwtUtils;
+	private final PasswordEncoder encoder;
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImp.class);
+
+	@Autowired
+	public AuthServiceImp(UserRepository userRepository, TokenService jwtUtils, PasswordEncoder encoder) {
 		this.userRepository = userRepository;
 		this.jwtUtils = jwtUtils;
-		this.authenticationManager = authenticationManager;
-	}
-
-
-	@Override
-	public AuthResponse login(AuthRequest authRequest) {
-		
-		authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-        );
-        Optional<User> userOptional = userRepository.findByUsername(authRequest.getUsername());
-        if (userOptional.isPresent()) {
-        	
-        	User user = userOptional.get();
-            String token = jwtUtils.generateAccessToken(userOptional.get());
-            return new AuthResponse(user.getId(), user.getEmail(), user.getFullname(), token,user.getListRoles());
-        }
-        
-        return null;
+		this.encoder = encoder;
 	}
 
 	@Override
-	public Optional<User> findByUsername(String username) {
+	public TokenResponse login(AuthRequest authRequest) {
+		User user = findByUsername(authRequest.getEmail());
+		if (checkPaswordByUser(user, authRequest.getPassword()) && user.isEnabled()) {
+			return jwtUtils.generateTokens(user);
+		}
+		return null;
+	}
+
+	@Override
+	public User findByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
-		if(!user.isPresent()) {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException("User is not exist!");
 		}
-		return user; 
+		return user.get();
+	}
+
+	@Override
+	public boolean checkPaswordByUser(User user, String rawPassword) {
+		if (!encoder.matches(rawPassword, user.getPassword())) {
+			throw new PasswordNotRightException("Password is not right!");
+		}
+		return true;
 	}
 
 }

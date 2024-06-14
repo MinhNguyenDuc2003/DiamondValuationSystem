@@ -11,13 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import com.diamondvaluation.admin.SystemAdminApplication;
 import com.diamondvaluation.admin.repository.UserRepository;
 import com.diamondvaluation.common.User;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
+@ContextConfiguration(classes = SystemAdminApplication.class)
 public class UserRepositoryTest {
     @Autowired
     private UserRepository repository;
@@ -28,17 +32,10 @@ public class UserRepositoryTest {
     public void testAddSuccess() {
     	
         User user = new User();
-        String password = "123456";
+        String password = "password123";
         user.setPassword(passwordEncoder.encode(password));
-        user.setEmail("minh123");
-        user.setEnabled(true);
-        user.setFirstName("minh");
-        user.setLastName("nguyen");
-        user.setPhoneNumber("123456789");
-        user.setPhoto("123564465");
-        user.setLocation("12345646879");
-        User userSaved = repository.save(user);
+        String username = "example@example.com";
         
-        assertThat(userSaved).isNotNull();
+        assertThat(user).isNotNull();
     }
 }

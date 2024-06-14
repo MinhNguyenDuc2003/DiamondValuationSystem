@@ -29,6 +29,8 @@ public class Role {
 	
 	@Column(length = 150, nullable = false)
 	private String description;
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -46,6 +48,17 @@ public class Role {
 		Role other = (Role) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	public Role(Integer id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+	
 	
 	
 }

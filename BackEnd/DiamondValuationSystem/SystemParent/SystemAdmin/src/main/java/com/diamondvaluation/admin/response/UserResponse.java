@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.response;
 
+import java.util.List;
 import java.util.Set;
 
 import com.diamondvaluation.common.Role;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({"id", "email", "first_name", "last_name", "location", "password", "phone_number", "enabled","image_path", "roles"})
+@JsonPropertyOrder({"id", "email", "first_name", "last_name","phone_number", "enabled","photo", "roleIds", "roleNames"})
 public class UserResponse {
 	private String id;
 
@@ -23,23 +24,15 @@ public class UserResponse {
 
 	private String lastName;
 
-	private String location;
-	private String password;
-
 	private String phoneNumber;
 
 	private boolean enabled;
 	
-	private String imagePath;
+	private String photo;
 
-	private Set<Role> roles;
-
-	@Override
-	public String toString() {
-		return "UserResponse [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", location=" + location + ", password=" + password + ", phoneNumber=" + phoneNumber + ", enabled="
-				+ enabled + ", photo=" + imagePath + ", roles=" + roles + "]";
-	}
+	private List<String> roleIds;
+	
+	private String roleNames;
 	
 	
 }

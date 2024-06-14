@@ -1,6 +1,7 @@
 package com.diamondvaluation.admin.security.jwt;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -16,7 +17,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 @Component
 public class JwtUtils {
 	private static final String SECRET_KEY_ALGORITHM = "HmacSHA512";
@@ -36,10 +39,10 @@ public class JwtUtils {
 		}
 
 		long expirationTimeInMillis = System.currentTimeMillis() + accessTokenExpiration * 60000;
-		String subject = String.format("%s,%s", user.getId(), user.getEmail());
+		String subject = String.format("%s,%s", user.getId(), user.getFullname());
 
 		return Jwts.builder().subject(subject).issuer(issuerName).issuedAt(new Date())
-				.expiration(new Date(expirationTimeInMillis)).claim("role", user.getRoles())
+				.expiration(new Date(expirationTimeInMillis)).claim("roles", user.getRolesName())
 				.signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), Jwts.SIG.HS512).compact();
 
 	}
@@ -61,13 +64,21 @@ public class JwtUtils {
 		}
 	}
 
-	public String getSubject(String token) {
+	public String getSubject(String token) throws JwtValidationException, ExpiredJwtException {
 		return parseClaims(token).getSubject();
 	}
 
-	private Claims parseClaims(String token) {
+	private Claims parseClaims(String token) throws JwtValidationException, ExpiredJwtException{
 		SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), SECRET_KEY_ALGORITHM);
 		return Jwts.parser().setSigningKey(keySpec).build().parseClaimsJws(token).getBody();
+	}
+	
+	public boolean isExpiredToken(String token) {
+		DecodedJWT jwt = JWT.decode(token);
+		if( jwt.getExpiresAt().before(new Date())) {
+		    return true;
+		}
+		return false;
 	}
 
 	public String getIssuerName() {
