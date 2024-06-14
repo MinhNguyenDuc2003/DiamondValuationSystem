@@ -1,7 +1,7 @@
 export const ROUTERS = {
     USER: {
         LOGIN: "Login",
-        SIGN: "Sign",
+        SIGNUP: "Signup",
         HOME: "",
         CONTACT: "Contact",
         SERVICE_CALCULATOR: "/Service/calculator",

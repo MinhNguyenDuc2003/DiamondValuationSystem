@@ -1,7 +1,6 @@
 package com.diamondvaluation.admin.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -25,7 +24,6 @@ import com.diamondvaluation.admin.response.CustomerPageResponse;
 import com.diamondvaluation.admin.response.CustomerResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
 import com.diamondvaluation.admin.service.CustomerService;
-import com.diamondvaluation.admin.service.imp.CustomerServiceImp;
 import com.diamondvaluation.common.Customer;
 
 import jakarta.validation.Valid;

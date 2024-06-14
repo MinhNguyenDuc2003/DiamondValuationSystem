@@ -4,11 +4,6 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diamondvaluation.admin.exception.JwtValidationException;
+import com.diamondvaluation.admin.exception.PasswordNotRightException;
 import com.diamondvaluation.admin.exception.RefreshTokenExpiredException;
 import com.diamondvaluation.admin.exception.RefreshTokenNotFoundException;
+import com.diamondvaluation.admin.exception.UsernameNotFoundException;
 import com.diamondvaluation.admin.request.AuthRequest;
 import com.diamondvaluation.admin.request.RefreshTokenRequest;
 import com.diamondvaluation.admin.response.TokenResponse;
@@ -60,8 +57,10 @@ public class AuthController {
 				setRefreshToken4Cookies(response, request, token.getRefreshToken());
 			}
 			return new ResponseEntity<>(token, HttpStatus.OK);
-		} catch (BadCredentialsException ex) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		} catch (UsernameNotFoundException ex) {
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (PasswordNotRightException ex) {
+			return ResponseEntity.status(HttpStatus.OK).build();
 		}
 		
 	}

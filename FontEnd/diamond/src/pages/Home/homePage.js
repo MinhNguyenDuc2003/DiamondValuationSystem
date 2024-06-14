@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import SliderComponent from "../../../component/SliderComponent/SliderComponent";
+import SliderComponent from "../../component/SliderComponent/SliderComponent";
 import DiamondAppraisal from './image/icon1.jpg';
 import JewelryAppraisal from './image/icon2.jpg';
 import Certification from './image/icon3.jpg';

@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class WebSecurityConfig {
+	
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -50,7 +51,6 @@ public class WebSecurityConfig {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setPasswordEncoder(passwordEncoder());
 		authProvider.setUserDetailsService(userDetailsService());
-
 		return authProvider;
 	}
 
