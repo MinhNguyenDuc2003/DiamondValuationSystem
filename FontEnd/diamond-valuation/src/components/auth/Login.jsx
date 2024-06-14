@@ -9,7 +9,6 @@ import {
   Button,
   Typography,
   Alert,
-  Paper,
 } from "@mui/material";
 import { validateToken } from "../utils/ApiFunctions";
 
