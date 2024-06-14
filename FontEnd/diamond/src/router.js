@@ -1,25 +1,27 @@
-import UserLogin from "./asset/user/login/userLogin"
+import UserLogin from "./pages/login/userLogin"
 import {  ROUTERS } from "./utils/router"
 import { Route, Routes } from "react-router-dom";
-import MasterLayout from "./pages/user/MasterLayout";
+import MasterLayout from "./pages/MasterLayout";
+import "react-bootstrap/dist/react-bootstrap.min.js"
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import HomePage from "./pages/user/Home/homePage";
-import ServiceBody from "./pages/user/Service/ServiceBody";
-import Blog from "./pages/user/Blog/Blog";
-import EDUCATION_CARAT from "./pages/user/Education/Carat";
-import EDUCATION_CUT from "./pages/user/Education/Cut";
-import EDUCATION_FLUORESCENCE from "./pages/user/Education/Fluorescence";
-import EDUCATION_CLARITY from "./pages/user/Education/Clarity";
-import EDUCATION_COLOR from "./pages/user/Education/Color";
-import Diamond from "./pages/user/Diamond/Diamod";
-import Contact from "./pages/user/Contact/Contact";
-import Sign from "./asset/user/sign/Sign";
-import Blog1 from "./pages/user/Blog/BlogContent/Blog1";
-import Blog2 from "./pages/user/Blog/BlogContent/Blog2";
-import Blog3 from "./pages/user/Blog/BlogContent/Blog3";
-import Blog4 from "./pages/user/Blog/BlogContent/Blog4";
-import Blog5 from "./pages/user/Blog/BlogContent/Blog5";
-import CalculatorService from "./pages/user/Service/CalculatorService";
+import HomePage from "./pages/Home/homePage";
+import ServiceBody from "./pages/Service/ServiceBody";
+import Blog from "./pages/Blog/Blog";
+import EDUCATION_CARAT from "./pages/Education/Carat";
+import EDUCATION_CUT from "./pages/Education/Cut";
+import EDUCATION_FLUORESCENCE from "./pages/Education/Fluorescence";
+import EDUCATION_CLARITY from "./pages/Education/Clarity";
+import EDUCATION_COLOR from "./pages/Education/Color";
+import Diamond from "./pages/Diamond/Diamond";
+import Contact from "./pages/Contact/Contact";
+import Blog1 from "./pages/Blog/BlogContent/Blog1";
+import Blog2 from "./pages/Blog/BlogContent/Blog2";
+import Blog3 from "./pages/Blog/BlogContent/Blog3";
+import Blog4 from "./pages/Blog/BlogContent/Blog4";
+import Blog5 from "./pages/Blog/BlogContent/Blog5";
+import CalculatorService from "./pages/Service/CalculatorService";
+import Signup from "./pages/Signup/Signup";
 
 
 
@@ -34,8 +36,8 @@ const renderUserRouter = () => {
         },
         //USER-SIGN
         {
-            path : ROUTERS.USER.SIGN,
-            component: <Sign/>
+            path : ROUTERS.USER.SIGNUP,
+            component: <Signup/>
         },
         //USER-HOMEPAGE
         {

@@ -7,6 +7,7 @@ import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -46,7 +47,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthController {
 	 private final AuthService authService;
 	 private final TokenService tokenService;
@@ -73,11 +74,11 @@ public class AuthController {
 			if(resposne!=null) {
 				setRefreshToken4Cookies(response, request, resposne.getRefreshToken());
 			}else {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+				return ResponseEntity.badRequest().build();
 			}
 			return new ResponseEntity<>(resposne, HttpStatus.OK);
 		} catch (BadCredentialsException ex) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.ok().build();
 		}		
 	}
 	
@@ -120,7 +121,7 @@ public class AuthController {
 			return ResponseEntity.status(403).build();
 		}
 	}
-	@PostMapping("/sign-up")
+	@PostMapping("/signup")
 	public ResponseEntity<?> registerCustomer(@Valid @RequestBody SignUpRequest requestDTO,
 			HttpServletRequest request) throws UnsupportedEncodingException, MessagingException{
 		try {

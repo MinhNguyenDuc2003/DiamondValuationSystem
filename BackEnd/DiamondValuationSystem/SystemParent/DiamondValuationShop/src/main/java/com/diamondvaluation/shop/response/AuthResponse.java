@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@JsonPropertyOrder({"email", "full_name", "token", "refresh_token"})
+@JsonPropertyOrder({"id","email", "full_name", "token", "refresh_token"})
 @Getter
 public class AuthResponse {
+	private String id;
 	private String email;
-	private String fullName;
 	private String token;
 	private String refreshToken;
 
-	public AuthResponse(String email,String fullname, String token, String refreshToken) {
+	public AuthResponse(String id, String email, String token, String refreshToken) {
 		this.email = email;
 		this.token = token;
-		this.fullName = fullname;
 		this.refreshToken = refreshToken;
+		this.id = id;
 	}    
 
 }

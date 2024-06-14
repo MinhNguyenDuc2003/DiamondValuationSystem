@@ -52,7 +52,7 @@ public class AuthServiceIpl implements AuthService {
 				Customer user = userOptional.get();
 				if (user.isEnabled()) {
 					TokenResponse token = tokenService.generateTokens(user);
-					return new AuthResponse(user.getEmail(), user.getFullname(), token.getToken(), token.getRefreshToken());
+					return new AuthResponse(user.getId()+"", user.getEmail(),token.getToken(), token.getRefreshToken());
 				}
 			} else {
 				throw new CustomerNotFoundException("Can not find any User with email: " +authRequest.getEmail());
