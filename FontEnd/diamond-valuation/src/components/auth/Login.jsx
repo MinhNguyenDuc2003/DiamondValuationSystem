@@ -9,7 +9,6 @@ import {
   Button,
   Typography,
   Alert,
-  Paper,
 } from "@mui/material";
 import { validateToken } from "../utils/ApiFunctions";
 
@@ -116,6 +115,7 @@ export const Login = () => {
               type="submit"
               variant="contained"
               color="primary"
+              name="login"
               sx={{ mr: 2, width: "40%" }}
             >
               Login

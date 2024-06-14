@@ -34,9 +34,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ServiceDetailsDialog from "./ServiceDetailDialog";
 
 export const Services = () => {
-  const [data, setData] = useState({
-    list_services: [],
-  });
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,9 +62,7 @@ export const Services = () => {
   useEffect(() => {
     getAllServices()
       .then((data) => {
-        setData({
-          list_services: data,
-        });
+        setData(data);
       })
       .catch((error) => {
         setError(error.message);
@@ -89,9 +85,7 @@ export const Services = () => {
       setMessage(`Delete user with id ${serviceToDelete}  successfully!`);
       getAllServices()
         .then((data) => {
-          setData({
-            list_services: data,
-          });
+          setData(data);
         })
         .catch((error) => {
           setError(error.message);
@@ -176,11 +170,11 @@ export const Services = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
-            {data.list_services.map((service) => (
+            {data.map((service) => (
               <TableRow key={service.id}>
                 <TableCell align="center">{service.id}</TableCell>
                 <TableCell align="center">{service.name}</TableCell>
-                <TableCell align="center">{service.money}</TableCell>
+                <TableCell align="center">${service.money}</TableCell>
                 <TableCell align="center">{service.content}</TableCell>
                 <TableCell align="center">
                   <IconButton
@@ -203,11 +197,12 @@ export const Services = () => {
         </Table>
       </TableContainer>
 
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
         <Pagination
           count={data.total_page}
           page={currentPage}
           onChange={handleChange}
+          color="primary"
         />
       </Box>
 

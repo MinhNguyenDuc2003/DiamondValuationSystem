@@ -10,18 +10,25 @@ import {
   IconButton,
   Typography,
   Dialog,
+  InputLabel,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Table,
+  FormControl,
+  Select,
+  MenuItem,
   TableBody,
   TableCell,
   TableContainer,
+  TextField,
   TableHead,
   TableRow,
+  Pagination,
   Paper,
 } from "@mui/material";
+import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,7 +38,17 @@ const Requests = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [requestToDelete, setRequestToDelete] = useState(null);
   const [message, setMessage] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [phoneFilter, setPhoneFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const requestsPerPage = 6;
+
   const navigate = useNavigate();
+
+  const convertToDate = (dateArray) => {
+    const [year, month, day, hour, minute, second] = dateArray;
+    return new Date(year, month - 1, day, hour, minute, second);
+  };
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -47,7 +64,15 @@ const Requests = () => {
   useEffect(() => {
     getAllRequests()
       .then((data) => {
-        setData(data);
+        const formattedRequests = data.map((request) => ({
+          ...request,
+          created_date: format(
+            convertToDate(request.created_date),
+            "yyyy/MM/dd HH:mm:ss"
+          ),
+        }));
+        setData(formattedRequests);
+        // setData(data);
       })
       .catch((error) => {
         setError(error.message);
@@ -82,29 +107,30 @@ const Requests = () => {
     setRequestToDelete(null);
   };
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    { field: "customer_name", headerName: "Customer Name", width: 150 },
-    { field: "customer_phone", headerName: "Customer Phone", width: 150 },
-    { field: "note", headerName: "Note", width: 200 },
-    { field: "service_names", headerName: "Services", width: 200 },
-    { field: "status", headerName: "Status", width: 120 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          <IconButton onClick={() => navigate(`requests/${params.row.id}`)}>
-            <EditIcon sx={{ color: "#C5A773" }} />
-          </IconButton>
-          <IconButton onClick={() => handleOpenDialog(params.row)}>
-            <DeleteIcon sx={{ color: "#C5A773" }} />
-          </IconButton>
-        </div>
-      ),
-    },
-  ];
+  const handleStatusFilterChange = (event) => {
+    setStatusFilter(event.target.value);
+  };
+
+  const handlePhoneFilterChange = (event) => {
+    setPhoneFilter(event.target.value);
+  };
+
+  const filteredData = data.filter(
+    (request) =>
+      (statusFilter ? request.status === statusFilter : true) &&
+      (phoneFilter ? request.customer_phone.includes(phoneFilter) : true)
+  );
+
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = filteredData.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Box p="20px" overflow="auto">
@@ -112,15 +138,44 @@ const Requests = () => {
         Manage Requests
       </Typography>
 
-      <Box display="flex" justifyContent="space-between">
-        <Link to={"/requests/new"}>
-          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
-        </Link>
-      </Box>
-
       {message && (
         <div className="alert alert-success text-center">{message}</div>
       )}
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mt: 2 }}
+      >
+        <Link to={"/requests/new"}>
+          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
+        </Link>
+
+        <Box>
+          <TextField
+            label="Customer Phone"
+            type="number"
+            // variant="outlined"
+            value={phoneFilter}
+            onChange={handlePhoneFilterChange}
+          />
+
+          <FormControl sx={{ minWidth: 120, ml: "10px" }}>
+            <InputLabel>Status Filter</InputLabel>
+            <Select
+              value={statusFilter}
+              label="Status Filter"
+              onChange={handleStatusFilterChange}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="NEW">NEW</MenuItem>
+              <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
+              <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
@@ -137,30 +192,47 @@ const Requests = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
-            {data.map((request) => (
-              <TableRow key={request.id}>
-                <TableCell align="center">{request.id}</TableCell>
-                <TableCell align="center">{request.customer_name}</TableCell>
-                <TableCell align="center">{request.customer_phone}</TableCell>
-                <TableCell align="center">{request.created_date}</TableCell>
-                <TableCell align="center">{request.note}</TableCell>
-                <TableCell align="center">{request.service_names}</TableCell>
-                <TableCell align="center">{request.status}</TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    onClick={() => navigate(`/requests/${request.id}`)}
-                  >
-                    <EditIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(request)}>
-                    <DeleteIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+            {currentRequests.length > 0 ? (
+              currentRequests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell align="center">{request.id}</TableCell>
+                  <TableCell align="center">{request.customer_name}</TableCell>
+                  <TableCell align="center">{request.customer_phone}</TableCell>
+                  <TableCell align="center">{request.created_date}</TableCell>
+                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">{request.service_names}</TableCell>
+                  <TableCell align="center">{request.status}</TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      onClick={() => navigate(`/requests/${request.id}`)}
+                    >
+                      <EditIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                    <IconButton onClick={() => handleOpenDialog(request)}>
+                      <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} align="center">
+                  No requests available.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
+        <Pagination
+          count={Math.ceil(filteredData.length / requestsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
 
       <Dialog
         open={openDialog}
