@@ -10,7 +10,6 @@ import InputBase from "@mui/material/InputBase";
 import Logout from "@mui/icons-material/Logout";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import Avatar from "@mui/material/Avatar";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -22,6 +21,7 @@ const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -81,9 +81,7 @@ const Topbar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem
-          onClick={() => navigate(`/users/${localStorage.getItem("userId")}`)}
-        >
+        <MenuItem onClick={() => navigate(`/users/${userId}`)}>
           Your Account
         </MenuItem>
         <Divider />

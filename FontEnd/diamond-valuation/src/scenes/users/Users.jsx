@@ -245,11 +245,12 @@ export const Users = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
         <Pagination
           count={data.total_page}
           page={currentPage}
           onChange={handleChange}
+          color="primary"
         />
       </Box>
 
