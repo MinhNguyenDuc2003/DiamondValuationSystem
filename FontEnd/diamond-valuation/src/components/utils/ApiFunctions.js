@@ -223,6 +223,19 @@ export async function deleteRequestById(id) {
 
 // ======================================================================================== //
 export const validateToken = async() => {
+<<<<<<< HEAD
+	const token = localStorage.getItem("token")
+	const formData = new FormData();
+	formData.append("token", token);
+	if(token != null && token.length>0){
+		const result = await api.post("/api/auth/token", formData)
+		console.log("abc")
+		return result;
+	}else{
+		return false;
+	}
+}
+=======
 		const token = localStorage.getItem("token")
 		const formData = new FormData();
 		formData.append("token", token);
@@ -235,6 +248,7 @@ export const validateToken = async() => {
 		}
 }
 
+>>>>>>> ed062d53935a3d903aaa392b2bf4da9df24e618b
 const refreshToken= async() => {
 	try {
 		const id = localStorage.getItem("userId");
