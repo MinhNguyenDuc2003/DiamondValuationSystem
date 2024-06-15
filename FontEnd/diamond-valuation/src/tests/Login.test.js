@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
-import Login from "./Login"
+import Login from "../components/auth/Login"
 import { BrowserRouter as Router } from "react-router-dom"; // Import BrowserRouter as Router
 import "@testing-library/jest-dom"
 

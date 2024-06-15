@@ -220,6 +220,36 @@ export async function deleteRequestById(id) {
     }
 }
 
+export async function saveRequest(request) {
+	const formData = new FormData()
+	formData.append("customer_id", request.customer_id)
+	formData.append("note", request.note)
+	formData.append("status", request.status)
+	 // Append service_ids correctly
+	 if (request.service_ids && request.service_ids.length > 0) {
+        formData.append("service_ids", request.service_ids.join(","));
+    }
+
+	try {
+		const response = await api.post("api/diamond-requests/request/save", formData
+		)
+		if (response.status >= 200 && response.status < 300) {
+            return response.data ;
+        } else 
+            return  response.status;
+	} catch (error) {
+		console.log(error.data);
+	}
+}
+
+export async function getRequestById(id) {
+	try {
+		const result = await api.get(`api/diamond-requests/request/${id}`)
+		return result.data
+	} catch (error) {
+		throw new Error(`Error fetching service with id ${id} : ${error.message}`)
+	}
+}
 
 // ======================================================================================== //
 export const validateToken = async() => {

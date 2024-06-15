@@ -27,8 +27,8 @@ import {
   TableRow,
   Pagination,
   Paper,
+  Alert,
 } from "@mui/material";
-import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,14 +41,10 @@ const Requests = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [phoneFilter, setPhoneFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState("");
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
-
-  const convertToDate = (dateArray) => {
-    const [year, month, day, hour, minute, second] = dateArray;
-    return new Date(year, month - 1, day, hour, minute, second);
-  };
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -64,26 +60,21 @@ const Requests = () => {
   useEffect(() => {
     getAllRequests()
       .then((data) => {
-        const formattedRequests = data.map((request) => ({
-          ...request,
-          created_date: format(
-            convertToDate(request.created_date),
-            "yyyy/MM/dd HH:mm:ss"
-          ),
-        }));
-        setData(formattedRequests);
-        // setData(data);
+        setData(data);
       })
       .catch((error) => {
         setError(error.message);
       });
+    setTimeout(() => {
+      setError("");
+    }, 2000);
   }, []);
 
   const handleDelete = async () => {
     const result = await deleteRequestById(requestToDelete);
     if (result !== undefined) {
       setMessage(`Delete request with id ${requestToDelete}  successfully!`);
-      getAllServices()
+      getAllRequests()
         .then((data) => {
           setData(data);
         })
@@ -128,6 +119,14 @@ const Requests = () => {
     indexOfLastRequest
   );
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${day}/${month}/${year}`;
+  };
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -138,15 +137,11 @@ const Requests = () => {
         Manage Requests
       </Typography>
 
-      {message && (
-        <div className="alert alert-success text-center">{message}</div>
-      )}
-
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, mb: 2 }}
       >
         <Link to={"/requests/new"}>
           <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
@@ -177,6 +172,18 @@ const Requests = () => {
         </Box>
       </Box>
 
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
@@ -198,7 +205,9 @@ const Requests = () => {
                   <TableCell align="center">{request.id}</TableCell>
                   <TableCell align="center">{request.customer_name}</TableCell>
                   <TableCell align="center">{request.customer_phone}</TableCell>
-                  <TableCell align="center">{request.created_date}</TableCell>
+                  <TableCell align="center">
+                    {formatDate(request.created_date)}
+                  </TableCell>
                   <TableCell align="center">{request.note}</TableCell>
                   <TableCell align="center">{request.service_names}</TableCell>
                   <TableCell align="center">{request.status}</TableCell>
