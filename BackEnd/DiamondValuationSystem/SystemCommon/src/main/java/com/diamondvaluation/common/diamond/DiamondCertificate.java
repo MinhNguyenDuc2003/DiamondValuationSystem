@@ -38,6 +38,8 @@ public class DiamondCertificate {
 	private Integer id;
 
 	private String name;
+	
+	private String photo;
 
 	@Column(length = 28, nullable = false, unique = false)
 	private float carat;

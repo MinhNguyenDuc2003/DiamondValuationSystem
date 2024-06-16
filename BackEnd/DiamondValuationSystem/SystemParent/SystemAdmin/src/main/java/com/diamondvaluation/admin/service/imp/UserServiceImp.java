@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.diamondvaluation.admin.exception.EmailIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.UsernameNotFoundException;
 import com.diamondvaluation.admin.repository.RoleRepository;
-import com.diamondvaluation.admin.repository.UserRepository;
+import com.diamondvaluation.admin.repository.UserRepository;  
 import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Role;
 import com.diamondvaluation.common.User;

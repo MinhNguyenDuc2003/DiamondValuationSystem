@@ -275,18 +275,17 @@ export async function deleteCertificateById(id) {
 
 // ======================================================================================== //
 export const validateToken = async() => {
-		const token = localStorage.getItem("token")
-		const formData = new FormData();
-		formData.append("token", token);
-		if(token != null && token.length>0){
-			const result = await api.post("/api/auth/token", formData)
-			console.log("abc")
-			return result;
-		}else{
-			return false;
-		}
+	const token = localStorage.getItem("token")
+	const formData = new FormData();
+	formData.append("token", token);
+	if(token != null && token.length>0){
+		const result = await api.post("/api/auth/token", formData)
+		console.log("abc")
+		return result;
+	}else{
+		return false;
+	}
 }
-
 const refreshToken= async() => {
 	try {
 		const id = localStorage.getItem("userId");

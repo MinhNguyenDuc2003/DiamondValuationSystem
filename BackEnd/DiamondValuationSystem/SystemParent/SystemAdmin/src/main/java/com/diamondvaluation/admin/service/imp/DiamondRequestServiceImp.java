@@ -33,6 +33,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 	@Transactional
 	@Override
 	public void save(DiamondRequest diamondRequest, HttpServletRequest request) {
+		
 		RequestTrack track = new RequestTrack();
 		Date date = new Date();
 		track.setUpdatedTime(date);
@@ -41,6 +42,14 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 		track.setNote(diamondRequest.getNote());
 		track.setRequest(diamondRequest);
 		track.setStatus(diamondRequest.getStatus());
+		if(diamondRequest.getId() != null) {
+			Optional<DiamondRequest> appoinment = repo.findById(diamondRequest.getId());
+			if(!appoinment.isPresent()) {
+				throw new RequestNotFoundException("Can not find any appoinment with id: " + diamondRequest.getId());
+			}
+			diamondRequest.setCreatedDate(appoinment.get().getCreatedDate());
+		}
+		
 		trackingRepo.save(track);
 		repo.save(diamondRequest);
 	}
