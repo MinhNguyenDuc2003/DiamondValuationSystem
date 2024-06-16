@@ -216,12 +216,13 @@ export async function deleteRequestById(id) {
         )
         return result.data;
     } catch (error) {
-        throw new Error(`Error delete user : ${error.message}`)
+        throw new Error(`Error delete request : ${error.message}`)
     }
 }
 
 export async function saveRequest(request) {
 	const formData = new FormData()
+	formData.append("id", request.id)
 	formData.append("customer_id", request.customer_id)
 	formData.append("note", request.note)
 	formData.append("status", request.status)
@@ -249,6 +250,27 @@ export async function getRequestById(id) {
 	} catch (error) {
 		throw new Error(`Error fetching service with id ${id} : ${error.message}`)
 	}
+}
+
+// ================================== Certificates ============================================ //
+
+export async function getAllCertificates() {
+	try {
+		const result = await api.get(`api/certificates/all`,{})
+		return result.data;
+	} catch (error) {
+		throw new Error(`Error fetching services : ${error.message}`)
+	}
+}
+
+export async function deleteCertificateById(id) {
+    try {
+        const result = await api.delete(`api/certificates/delete/${id}`
+        )
+        return result.data;
+    } catch (error) {
+        throw new Error(`Error delete certificate : ${error.message}`)
+    }
 }
 
 // ======================================================================================== //

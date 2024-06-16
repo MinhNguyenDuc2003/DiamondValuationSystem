@@ -164,9 +164,13 @@ const Requests = () => {
               onChange={handleStatusFilterChange}
             >
               <MenuItem value="">All</MenuItem>
+              <MenuItem value="WAIT">WAIT</MenuItem>
               <MenuItem value="NEW">NEW</MenuItem>
-              <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-              <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+              <MenuItem value="PROCESSING">PROCESSING</MenuItem>
+              <MenuItem value="PROCESSED">PROCESSED</MenuItem>
+              <MenuItem value="DONE">DONE</MenuItem>
+              <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
+              <MenuItem value="BLOCKED">BLOCKED</MenuItem>
             </Select>
           </FormControl>
         </Box>

@@ -32,6 +32,7 @@ const EditDiamondRequest = () => {
   const navigate = useNavigate();
 
   const [initialValues, setInitialValues] = useState({
+    id: "",
     customer_id: "",
     note: "",
     status: "NEW",
@@ -89,7 +90,7 @@ const EditDiamondRequest = () => {
 
   const handleSubmit = async (values) => {
     try {
-      const result = await saveRequest({ ...values, id });
+      const result = await saveRequest(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Request updated successfully");
         navigate("/requests");
@@ -197,9 +198,14 @@ const EditDiamondRequest = () => {
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Field as={Select} name="status" label="Status">
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="WAIT">WAIT</MenuItem>
                     <MenuItem value="NEW">NEW</MenuItem>
-                    <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-                    <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+                    <MenuItem value="PROCESSING">PROCESSING</MenuItem>
+                    <MenuItem value="PROCESSED">PROCESSED</MenuItem>
+                    <MenuItem value="DONE">DONE</MenuItem>
+                    <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
+                    <MenuItem value="BLOCKED">BLOCKED</MenuItem>
                   </Field>
                 </FormControl>
 
@@ -213,25 +219,25 @@ const EditDiamondRequest = () => {
                       <Checkbox
                         checked={values.service_ids.includes(service.id + "")}
                         onChange={(event) => {
-                          if (event.target.checked) {
-                            setFieldValue("service_ids", [
-                              ...values.service_ids,
-                              service.id,
-                            ]);
+                          let services = values.service_ids;
+                          const { name, checked, value } = event.target;
+                          if (checked) {
+                            services.push(value);
+                            setFieldValue({ ...values, [name]: services });
                           } else {
-                            setFieldValue(
-                              "service_ids",
-                              values.service_ids.filter(
-                                (id) => id !== service.id
-                              )
-                            );
+                            setFieldValue({
+                              ...values,
+                              [name]: services.filter(
+                                (roleId) => roleId !== value
+                              ),
+                            });
                           }
                         }}
                         value={service.id}
+                        name="services_ids"
                       />
                     }
                     label={service.name}
-                    // sx={{ gridColumn: "span 4" }} Remove this if it's causing layout issues
                   />
                 ))}
                 {touched.service_ids && errors.service_ids && (

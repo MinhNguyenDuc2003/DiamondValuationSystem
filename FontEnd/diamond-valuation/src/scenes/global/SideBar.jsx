@@ -11,6 +11,7 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
@@ -162,6 +163,13 @@ const SideBar = () => {
               title="Requests"
               to="/requests"
               icon={<RequestPageIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Certificates"
+              to="/certificates"
+              icon={<ReceiptLongIcon />}
               selected={selected}
               setSelected={setSelected}
             />

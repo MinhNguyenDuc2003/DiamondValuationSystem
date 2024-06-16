@@ -56,6 +56,7 @@ const AddDiamondRequest = () => {
   });
 
   const initialValues = {
+    id: "",
     customer_id: "",
     note: "",
     status: "NEW",
@@ -165,9 +166,14 @@ const AddDiamondRequest = () => {
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Field as={Select} name="status" label="Status">
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="WAIT">WAIT</MenuItem>
                     <MenuItem value="NEW">NEW</MenuItem>
-                    <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-                    <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+                    <MenuItem value="PROCESSING">PROCESSING</MenuItem>
+                    <MenuItem value="PROCESSED">PROCESSED</MenuItem>
+                    <MenuItem value="DONE">DONE</MenuItem>
+                    <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
+                    <MenuItem value="BLOCKED">BLOCKED</MenuItem>
                   </Field>
                 </FormControl>
 
