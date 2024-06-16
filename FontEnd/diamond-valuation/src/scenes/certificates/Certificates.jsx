@@ -285,7 +285,7 @@ const Certificates = () => {
               <TableCell align="center">Make</TableCell>
               <TableCell align="center">Polish</TableCell>
               <TableCell align="center">Symmetry</TableCell>
-              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Cert</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
