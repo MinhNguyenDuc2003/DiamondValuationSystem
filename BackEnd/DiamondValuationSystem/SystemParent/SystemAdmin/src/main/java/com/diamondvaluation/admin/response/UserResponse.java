@@ -1,9 +1,7 @@
 package com.diamondvaluation.admin.response;
 
 import java.util.List;
-import java.util.Set;
 
-import com.diamondvaluation.common.Role;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;

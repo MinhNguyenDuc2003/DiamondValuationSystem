@@ -28,7 +28,6 @@ import {
   Pagination,
   Paper,
 } from "@mui/material";
-import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -64,14 +63,7 @@ const Requests = () => {
   useEffect(() => {
     getAllRequests()
       .then((data) => {
-        const formattedRequests = data.map((request) => ({
-          ...request,
-          created_date: format(
-            convertToDate(request.created_date),
-            "yyyy/MM/dd HH:mm:ss"
-          ),
-        }));
-        setData(formattedRequests);
+        setData(data);
         // setData(data);
       })
       .catch((error) => {

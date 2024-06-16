@@ -19,8 +19,8 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	}
 
 	@Override
-	public void save(DiamondCertificate certificate) {
-		repo.save(certificate);
+	public DiamondCertificate save(DiamondCertificate certificate) {
+		return repo.save(certificate);
 	}
 
 
@@ -34,12 +34,13 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public boolean deleteById(Integer id) {
 		Optional<DiamondCertificate> certificate = repo.findById(id);
 		if(!certificate.isPresent()) {
 			throw new CertificateNotFoundException("Can not find any appoinment with id: " + id);
 		}
 		repo.deleteById(id);
+		return true;
 	}
 
 	@Override
