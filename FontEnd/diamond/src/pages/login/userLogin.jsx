@@ -39,6 +39,7 @@ const UserLogin = () => {
   
       if (result.token) {
         auth.handleLogin(result);
+        window.localStorage.setItem(`user` , login);
         navigate(redirectUrl, { replace: true });
       } else {
         setError(
