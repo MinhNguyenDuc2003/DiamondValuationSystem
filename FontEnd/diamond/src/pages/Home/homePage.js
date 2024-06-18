@@ -10,7 +10,7 @@ import { Col, Row } from "antd";
 
 
 const HomePage = () => {
-   
+
 
     return (
         <div className="home-page">
@@ -86,7 +86,7 @@ const HomePage = () => {
                     </Col>
                 </Row>
             </div>
-            
+
         </div>
     );
 };
