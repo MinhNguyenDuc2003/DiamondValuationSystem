@@ -17,13 +17,13 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-
-    useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser);
-        }
-    }, []);
+    const handleUserAccount = () => {
+        setUser(window.localStorage.getItem(`user`))
+    }
+    const handleLogoutClick = () => {
+        window.localStorage.removeItem(`user`);
+        navigate('/');
+    }
 
     const handleServiceClick = () => {
         setServiceOpen(true);
@@ -72,15 +72,29 @@ const Header = () => {
         console.log('Search value:', searchValue);
     };
 
+
     const menuUser = (
+
+
         <Menu>
-            <Menu.Item>
-                <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
-            </Menu.Item>
-            <Menu.Item>
-                <Button type='text'> Logout</Button>
-            </Menu.Item>
+            {user ? (
+                <>
+                    <Menu.Item>
+                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
+                    </Menu.Item>
+                </>
+            ) : (
+                <Menu.Item>
+                    <Button onClick={e => navigate("/login")} type='text'> Login</Button>
+                </Menu.Item>
+            )}
+
+
         </Menu>
+
     );
     const search = (
         <Menu>

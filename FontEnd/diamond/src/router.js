@@ -22,6 +22,7 @@ import Blog4 from "./pages/Blog/BlogContent/Blog4";
 import Blog5 from "./pages/Blog/BlogContent/Blog5";
 import CalculatorService from "./pages/Service/CalculatorService";
 import Signup from "./pages/Signup/Signup";
+import ManageAccount from "./pages/ManageAccount/ManageAccount";
 
 
 
@@ -43,6 +44,11 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.HOME,
             component: <HomePage/>
+        },
+        //USER-ACCOUNT
+        {
+            path : ROUTERS.USER.account,
+            component: <ManageAccount/>
         },
         //USER-SERVICE
         {
