@@ -43,6 +43,7 @@ const Header = () => {
         navigate(path);
         setEducationOpen(false);
         setMenuOpen(false);
+        // window.location.reload();
     };
     const handleNavigateToService = (path) => {
         navigate(path);
@@ -65,6 +66,7 @@ const Header = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
+
     }, [location.pathname]);
 
     const handleSearch = () => {
@@ -72,11 +74,15 @@ const Header = () => {
         console.log('Search value:', searchValue);
     };
 
-
+    useEffect(() => {
+        setUser(window.localStorage.getItem(`user`))
+        console.log(user);
+    })
     const menuUser = (
 
 
         <Menu>
+
             {user ? (
                 <>
                     <Menu.Item>
@@ -124,7 +130,7 @@ const Header = () => {
                     <button>Education</button>
                     <ul className="education-content">
                         <li>
-                            <button onClick={() => handleNavigateToEducation('/education/carat')}>Carat
+                            <button className='carat' onClick={() => handleNavigateToEducation('/education/carat')}>Carat
                             </button>
                         </li>
                         <li>
@@ -155,7 +161,6 @@ const Header = () => {
             </button>
 
             <div className='header-right'>
-
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
@@ -187,7 +192,9 @@ const Header = () => {
                         </input>
                         <Button className='search' type="text" icon={<SearchOutlined />} />
                     </form>
-                    <Button className='account' type="text" icon={<UserOutlined style={{ fontSize: '28px' }} />} />
+                    <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                        <Button type="text" icon={<UserOutlined />} />
+                    </Dropdown>
                 </div>
                 {/* <ul className="actions">
                     <li>
