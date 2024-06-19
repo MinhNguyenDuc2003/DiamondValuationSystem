@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   getAllCertificates,
   getAllRequests,
+  deleteCertificateById,
+  saveRequest,
+  getCustomerById,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -33,7 +36,6 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
@@ -50,27 +52,73 @@ const Certificates = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const CertificatesPerPage = 6;
   const navigate = useNavigate();
+  const [requestToUpdate, setRequestToUpdate] = useState({
+    id: "",
+    customer_id: "",
+    note: "",
+    status: "",
+    service_ids: [],
+  });
 
   const [filters, setFilters] = useState({
     carat: [0, 10],
     clarity: "",
     color: "",
     cut: "",
-    fluorescence: "",
+    flourescence: "",
     make: "",
     polish: "",
     symmetry: "",
-    name: "",
+    cert: "",
   });
 
   const filterOptions = {
-    clarity: ["IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2", "I1"],
-    color: ["D", "E", "F", "G", "H", "I", "J", "K"],
-    cut: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
-    fluorescence: ["None", "Faint", "Medium", "Strong", "Very Strong"],
-    make: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
+    clarity: [
+      "IF",
+      "VVS1",
+      "VVS2",
+      "VS1",
+      "VS2",
+      "SI1",
+      "SI2",
+      "SI3",
+      "I1",
+      "I2",
+      "I3",
+    ],
+    color: ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"],
+    cut: [
+      "Round",
+      "Marquise",
+      "Pear",
+      "Oval",
+      "Heart",
+      "Emerald",
+      "Princess",
+      "Radiant",
+      "Triangle",
+      "Baguette",
+      "Asscher",
+      "Cushion",
+    ],
+    flourescence: ["None", "Faint", "Medium", "Strong", "Very Strong"],
+    make: ["Ideal", "Excellent", "Very Good", "Good", "Fair", "Poor"],
     polish: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
     symmetry: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
+    cert: [
+      "AGS",
+      "CEGL",
+      "CGI",
+      "CGL",
+      "DCLA",
+      "EGL Asia",
+      "EGL Intl.",
+      "EGL USA",
+      "GCAL",
+      "GIA",
+      "HRD",
+      "IGI",
+    ],
   };
 
   useEffect(() => {
@@ -107,7 +155,7 @@ const Certificates = () => {
   }, []);
 
   const handleDelete = async () => {
-    const result = await deletecertificateById(certificateToDelete);
+    const result = await deleteCertificateById(certificateToDelete);
     if (result !== undefined) {
       setMessage(
         `Delete certificate with id ${certificateToDelete}  successfully!`
@@ -163,16 +211,9 @@ const Certificates = () => {
     // setOpenRequestDialog(false);
   };
 
-  const handleCreateCertificate = () => {
+  const handleCreateCertificate = async () => {
     if (selectedRequest) {
-      createCertificateForRequest(selectedRequest.id)
-        .then((response) => {
-          // Handle success, navigate to certificate details or update state
-          console.log("Certificate created successfully:", response);
-        })
-        .catch((error) => {
-          console.error("Error creating certificate:", error);
-        });
+      navigate(`/create-certificate/${selectedRequest.id}`);
     }
   };
 
@@ -185,14 +226,14 @@ const Certificates = () => {
         certificate.clarity.includes(filters.clarity)) &&
       (filters.color === "" || certificate.color.includes(filters.color)) &&
       (filters.cut === "" || certificate.cut.includes(filters.cut)) &&
-      (filters.fluorescence === "" ||
-        certificate.fluorescence.includes(filters.fluorescence)) &&
+      (filters.flourescence === "" ||
+        certificate.flourescence.includes(filters.flourescence)) &&
       (filters.make === "" || certificate.make.includes(filters.make)) &&
       (filters.polish === "" || certificate.polish.includes(filters.polish)) &&
       (filters.symmetry === "" ||
         certificate.symmetry.includes(filters.symmetry)) &&
-      (filters.name === "" ||
-        certificate.name.toLowerCase().includes(filters.name.toLowerCase()))
+      (filters.cert === "" ||
+        certificate.cert.toLowerCase().includes(filters.cert.toLowerCase()))
     );
   });
 
@@ -239,16 +280,20 @@ const Certificates = () => {
         alignItems="center"
         sx={{ mt: 2, mb: 2 }}
       >
-        <Typography gutterBottom>Carat Range</Typography>
-        <Slider
-          value={filters.carat}
-          onChange={handleCaratChange}
-          valueLabelDisplay="auto"
-          min={0}
-          max={10}
-          step={0.1}
-          sx={{ width: 200, mr: 2 }}
-        />
+        <Box>
+          <Typography gutterBottom paddingTop="10px">
+            Carat Range
+          </Typography>
+          <Slider
+            value={filters.carat}
+            onChange={handleCaratChange}
+            valueLabelDisplay="auto"
+            min={0}
+            max={10}
+            step={0.1}
+            sx={{ width: 200, mr: 2 }}
+          />
+        </Box>
 
         {Object.keys(filterOptions).map((filterKey) => (
           <FormControl key={filterKey} sx={{ minWidth: 120 }}>
@@ -261,7 +306,6 @@ const Certificates = () => {
               onChange={handleFilterChange}
               label={filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
             >
-              <MenuItem value="">All</MenuItem>
               {filterOptions[filterKey].map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
@@ -304,7 +348,7 @@ const Certificates = () => {
                   <TableCell align="center">{certificate.make}</TableCell>
                   <TableCell align="center">{certificate.polish}</TableCell>
                   <TableCell align="center">{certificate.symmetry}</TableCell>
-                  <TableCell align="center">{certificate.name}</TableCell>
+                  <TableCell align="center">{certificate.cert}</TableCell>
                   <TableCell align="center">
                     <IconButton
                       onClick={() =>

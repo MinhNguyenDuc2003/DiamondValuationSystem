@@ -67,6 +67,7 @@ const Topbar = () => {
           aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
+          data-testid="person-icon-button"
         >
           <PersonOutlinedIcon />
         </IconButton>

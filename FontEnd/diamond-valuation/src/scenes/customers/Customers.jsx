@@ -24,6 +24,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Alert,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -173,7 +174,9 @@ export const Customers = () => {
       </Box>
 
       {message && (
-        <div className="alert alert-success text-center">{message}</div>
+        <Alert severity="success" sx={{ justifyContent: "center" }}>
+          {message}
+        </Alert>
       )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>

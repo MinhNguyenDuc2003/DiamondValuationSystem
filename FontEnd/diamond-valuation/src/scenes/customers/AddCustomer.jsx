@@ -1,4 +1,11 @@
-import { Box, Button, TextField, Typography, Switch } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Switch,
+  Alert,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +51,6 @@ const AddCustomer = () => {
 
   const handleFormSubmit = async (values) => {
     try {
-      console.log(values);
       const result = await saveCustomer(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Add new Customer successfully");
@@ -58,6 +64,7 @@ const AddCustomer = () => {
     setTimeout(() => {
       setErrorMessage("");
     }, 3000);
+    console.log(errorMessage);
   };
 
   return (
@@ -65,6 +72,13 @@ const AddCustomer = () => {
       <Typography variant="h4" textAlign="center" m="20px">
         Add Customer
       </Typography>
+
+      {/* {errorMessage && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errorMessage}
+        </Alert>
+      )} */}
+
       <Box
         maxWidth="700px"
         m="0 auto"

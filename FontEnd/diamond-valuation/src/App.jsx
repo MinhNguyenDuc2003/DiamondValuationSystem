@@ -24,6 +24,7 @@ import Requests from "./scenes/requests/DiamondRequests";
 import AddDiamondRequest from "./scenes/requests/AddDiamondRequest";
 import EditDiamondRequest from "./scenes/requests/EditDiamondRequest";
 import Certificates from "./scenes/certificates/Certificates";
+import CreateCertificate from "./scenes/certificates/CreateCertificate";
 
 const App = () => {
   return (
@@ -172,6 +173,14 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Certificates />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-certificate/:requestId"
+            element={
+              <PrivateRoute>
+                <CreateCertificate />
               </PrivateRoute>
             }
           />

@@ -273,6 +273,33 @@ export async function deleteCertificateById(id) {
     }
 }
 
+export async function saveCertificate(certificate) {
+	const formData = new FormData()
+	formData.append("id", certificate.id)
+	formData.append("cut", certificate.cut)
+	formData.append("carat", certificate.carat)
+	formData.append("color", certificate.color)
+	formData.append("clarity", certificate.clarity)
+	formData.append("make", certificate.make)
+	formData.append("measurement", certificate.measurement)
+	formData.append("polish", certificate.polish)
+	formData.append("symmetry", certificate.symmetry)
+	formData.append("flourescence", certificate.flourescence)
+	formData.append("name", certificate.cert)
+	formData.append("request_id", certificate.request_id)
+
+	try {
+		const response = await api.post("api/certificates/certificate/save", formData
+		)
+		if (response.status >= 200 && response.status < 300) {
+            return response.data ;
+        } else 
+            return  response.status;
+	} catch (error) {
+		console.log(error.data);
+	}
+}
+
 // ======================================================================================== //
 export const validateToken = async() => {
 	const token = localStorage.getItem("token")
