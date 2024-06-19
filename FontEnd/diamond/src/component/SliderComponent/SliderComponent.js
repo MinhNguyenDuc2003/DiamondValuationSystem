@@ -6,13 +6,13 @@ const SliderComponent = () => {
 
   return (
     <div className='bannerStyle'>
-      <video 
-        className='videoStyle' 
-        src={videoSrc} autoPlay loop muted/>
+      <video
+        className='videoStyle'
+        src={videoSrc} autoPlay loop muted />
     </div>
   );
 };
- 
+
 
 
 

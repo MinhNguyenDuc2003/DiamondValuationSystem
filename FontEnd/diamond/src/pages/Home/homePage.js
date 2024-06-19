@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import SliderComponent from "../../component/SliderComponent/SliderComponent";
+import videoSrc from "./image/main.mp4";
 import DiamondAppraisal from './image/icon1.jpg';
 import JewelryAppraisal from './image/icon2.jpg';
 import Certification from './image/icon3.jpg';
@@ -7,14 +7,21 @@ import Consultation from './image/icon4.jpg';
 import './HomePage.scss';
 import banner from './image/bannerHome.jpg';
 import { Col, Row } from "antd";
+import './banner.scss'
 
 
 const HomePage = () => {
-   
+
 
     return (
         <div className="home-page">
-            <SliderComponent />
+
+            <div className='bannerStyle'>
+                <video
+                    className='videoStyle'
+                    src={videoSrc} autoPlay loop muted />
+            </div>
+
             <div className="body-content">
                 <div className="wrapper-text">
                     <h1>Company History</h1>
@@ -86,7 +93,7 @@ const HomePage = () => {
                     </Col>
                 </Row>
             </div>
-            
+
         </div>
     );
 };

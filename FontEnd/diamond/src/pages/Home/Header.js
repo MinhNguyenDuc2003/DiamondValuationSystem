@@ -17,13 +17,13 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-
-    useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser);
-        }
-    }, []);
+    const handleUserAccount = () => {
+        setUser(window.localStorage.getItem(`user`))
+    }
+    const handleLogoutClick = () => {
+        window.localStorage.removeItem(`user`);
+        navigate('/');
+    }
 
     const handleServiceClick = () => {
         setServiceOpen(true);
@@ -43,6 +43,7 @@ const Header = () => {
         navigate(path);
         setEducationOpen(false);
         setMenuOpen(false);
+        // window.location.reload();
     };
     const handleNavigateToService = (path) => {
         navigate(path);
@@ -65,6 +66,7 @@ const Header = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
+
     }, [location.pathname]);
 
     const handleSearch = () => {
@@ -72,15 +74,33 @@ const Header = () => {
         console.log('Search value:', searchValue);
     };
 
+    useEffect(() => {
+        setUser(window.localStorage.getItem(`user`))
+        console.log(user);
+    })
     const menuUser = (
+
+
         <Menu>
-            <Menu.Item>
-                <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
-            </Menu.Item>
-            <Menu.Item>
-                <Button type='text'> Logout</Button>
-            </Menu.Item>
+
+            {user ? (
+                <>
+                    <Menu.Item>
+                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
+                    </Menu.Item>
+                </>
+            ) : (
+                <Menu.Item>
+                    <Button onClick={e => navigate("/login")} type='text'> Login</Button>
+                </Menu.Item>
+            )}
+
+
         </Menu>
+
     );
     const search = (
         <Menu>
@@ -102,31 +122,98 @@ const Header = () => {
 
     return (
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
-            <button onClick={() => setMenuContact(!menuContact)} className='contact'>
-                <span className={scrolled ? 'scrolled' : ''}>+ Contact Us</span>
-            </button>
+            <div className='header-left'>
+                <div className='contact'>
+                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                </div>
+                <div className='education'>
+                    <button>Education</button>
+                    <ul className="education-content">
+                        <li>
+                            <button className='carat' onClick={() => handleNavigateToEducation('/education/carat')}>Carat
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToEducation('/education/cut')}>Cut
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToEducation('/education/color')}>Color
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToEducation('/education/clarity')}>Clarity
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToEducation('/education/fluorescence')}>Fluorescence
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div className='diamond'>
+                    <button>Diamond</button>
+                </div>
+            </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
                 <img src={logo} alt="Logo" />
             </button>
 
-            <ul className="actions">
-                <li>
+            <div className='header-right'>
+                <div className='service'>
+                    <button>Service</button>
+                    <ul className="service-content">
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/calculator')}>Calculation
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div className='blog' >
+                    <button onClick={() => handleNavigateToEducation('/blog')}>Blog</button>
+                </div>
+
+                <div className='active'>
+                    <form className='search-box'>
+                        <input type='text' placeholder='Looking for blogs'>
+                        </input>
+                        <Button className='search' type="text" icon={<SearchOutlined />} />
+                    </form>
                     <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
                         <Button type="text" icon={<UserOutlined />} />
                     </Dropdown>
-                </li>
-                <li>
+                </div>
+                {/* <ul className="actions">
+                    <li>
+                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                            <Button type="text" icon={<UserOutlined />} />
+                        </Dropdown>
+                    </li>
+                    <li>
 
-                    <Dropdown overlay={search} trigger={['hover']} >
-                        <Button type="text" icon={<SearchOutlined />} />
-                    </Dropdown>
-                </li>
-                <li>
-                    <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
+                        // <Dropdown overlay={search} trigger={['hover']} >
+                        //     <Button type="text" icon={<SearchOutlined />} />
+                        // </Dropdown>
+                    </li>
+                    <li>
+                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
 
-                </li>
-            </ul>
+                    </li>
+                </ul> */}
+            </div>
 
             {menuOpen && (
                 <div className="menu">
