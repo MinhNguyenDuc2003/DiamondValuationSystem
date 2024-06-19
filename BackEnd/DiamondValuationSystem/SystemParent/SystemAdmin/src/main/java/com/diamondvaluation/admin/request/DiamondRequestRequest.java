@@ -1,10 +1,9 @@
 package com.diamondvaluation.admin.request;
 
+import java.util.Date;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 public class DiamondRequestRequest {
-	
 	private Integer id;
 	
 	@NotNull (message = "customer cannnot be null")

@@ -21,6 +21,9 @@ import Topbar from "./scenes/global/TopBar";
 import AddService from "./scenes/services/AddService";
 import EditService from "./scenes/services/EditService";
 import Requests from "./scenes/requests/DiamondRequests";
+import AddDiamondRequest from "./scenes/requests/AddDiamondRequest";
+import EditDiamondRequest from "./scenes/requests/EditDiamondRequest";
+import Certificates from "./scenes/certificates/Certificates";
 
 const App = () => {
   return (
@@ -140,6 +143,35 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Requests />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/requests/new"
+            element={
+              <PrivateRoute>
+                <AddDiamondRequest />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/requests/:requestid"
+            element={
+              <PrivateRoute>
+                <EditDiamondRequest />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Certificates */}
+
+          <Route
+            path="/certificates/"
+            element={
+              <PrivateRoute>
+                <Certificates />
               </PrivateRoute>
             }
           />

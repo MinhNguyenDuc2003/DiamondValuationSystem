@@ -5,11 +5,11 @@ import com.diamondvaluation.common.diamond.DiamondCertificate;
 
 public interface DiamondCertificateService {
 
-	void save(DiamondCertificate certificate);
+	DiamondCertificate save(DiamondCertificate certificate);
 
 	DiamondCertificate getCertificateById(Integer id);
 
-	void deleteById(Integer id);
+	boolean deleteById(Integer id);
 
 	List<DiamondCertificate> findAllCertificate();
 

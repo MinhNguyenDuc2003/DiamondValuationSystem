@@ -216,10 +216,62 @@ export async function deleteRequestById(id) {
         )
         return result.data;
     } catch (error) {
-        throw new Error(`Error delete user : ${error.message}`)
+        throw new Error(`Error delete request : ${error.message}`)
     }
 }
 
+export async function saveRequest(request) {
+	const formData = new FormData()
+	formData.append("id", request.id)
+	formData.append("customer_id", request.customer_id)
+	formData.append("note", request.note)
+	formData.append("status", request.status)
+	 // Append service_ids correctly
+	 if (request.service_ids && request.service_ids.length > 0) {
+        formData.append("service_ids", request.service_ids.join(","));
+    }
+
+	try {
+		const response = await api.post("api/diamond-requests/request/save", formData
+		)
+		if (response.status >= 200 && response.status < 300) {
+            return response.data ;
+        } else 
+            return  response.status;
+	} catch (error) {
+		console.log(error.data);
+	}
+}
+
+export async function getRequestById(id) {
+	try {
+		const result = await api.get(`api/diamond-requests/request/${id}`)
+		return result.data
+	} catch (error) {
+		throw new Error(`Error fetching service with id ${id} : ${error.message}`)
+	}
+}
+
+// ================================== Certificates ============================================ //
+
+export async function getAllCertificates() {
+	try {
+		const result = await api.get(`api/certificates/all`,{})
+		return result.data;
+	} catch (error) {
+		throw new Error(`Error fetching services : ${error.message}`)
+	}
+}
+
+export async function deleteCertificateById(id) {
+    try {
+        const result = await api.delete(`api/certificates/delete/${id}`
+        )
+        return result.data;
+    } catch (error) {
+        throw new Error(`Error delete certificate : ${error.message}`)
+    }
+}
 
 // ======================================================================================== //
 export const validateToken = async() => {
