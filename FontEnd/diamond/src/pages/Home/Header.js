@@ -192,7 +192,7 @@ const Header = () => {
                         </input>
                         <Button className='search' type="text" icon={<SearchOutlined />} />
                     </form>
-                    <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                    <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
                         <Button type="text" icon={<UserOutlined />} />
                     </Dropdown>
                 </div>
