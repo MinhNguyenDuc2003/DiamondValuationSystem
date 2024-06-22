@@ -29,7 +29,7 @@ public class AuthControllerTest {
 	@Autowired ObjectMapper objectMapper;
 	
 	@Test
-	public void testGetAccessTokenSuccess() throws Exception {
+	public void testGetAccessTokenRefreshTokenSuccess() throws Exception {
 		AuthRequest request = new AuthRequest();
 		request.setEmail("example@example.com");
 		request.setPassword("password123");

@@ -1,6 +1,8 @@
 package com.diamondvaluation.common;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,19 @@ public class DiamondRequest {
 	private LocalDateTime lastModifiedDate;
 	
 	private String note;
+	
+	private double paymentTotal;
+	
+	private LocalDate appointmentDate;
+	
+    private LocalTime appointmentTime;
+	
+	@Column(name = "payment_method",nullable = false, unique = false)
+	@Enumerated(EnumType.STRING)
+	private PaymentMethod method;
+	
+	@Column(name = "is_paid",nullable = false, unique = false)
+	private boolean isPaid;
 	
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)

@@ -1,7 +1,5 @@
 package com.diamondvaluation.admin.response;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -17,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@JsonPropertyOrder({"id", "customer_name", "phone_number", "created_time","note","service_ids","service_names", "status"})
+@JsonPropertyOrder({"id", "customer_name", "phone_number", "created_time","note","service_ids","service_names", "status", "payment_method","total", "paid"})
 public class DiamondRequestResponse {
 	private Integer id;
 	
@@ -34,4 +32,14 @@ public class DiamondRequestResponse {
 	private String service_names;
 	
 	private String status;
+	
+	private String payment_method;
+	
+	private double total;
+	
+	private boolean paid;
+	
+	private String appoinment_date;
+	
+	private String appoinment_time;
 }

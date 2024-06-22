@@ -1,5 +1,7 @@
 package com.diamondvaluation.admin.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.diamondvaluation.common.Customer;
@@ -13,6 +15,10 @@ public interface CustomerService {
 	Customer getCustomerById(Integer id);
 
 	Page<Customer> listCustomersByPage(int pageNum, String keyword);
+
+	
+
+	
 
 
 }

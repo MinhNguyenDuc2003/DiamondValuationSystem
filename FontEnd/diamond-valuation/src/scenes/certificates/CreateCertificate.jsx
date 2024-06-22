@@ -18,6 +18,7 @@ import {
   getRequestById,
   saveCertificate,
   saveRequest,
+  updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 
 const CreateCertificate = () => {
@@ -66,6 +67,11 @@ const CreateCertificate = () => {
     setTimeout(() => {
       setError("");
     }, 2000);
+
+    return () => {
+      // This will be executed when the component unmounts
+      updateRequestStatus(requestId, "NEW");
+    };
   }, [requestId]);
 
   const handleSubmit = async (values) => {
@@ -76,10 +82,23 @@ const CreateCertificate = () => {
           "successMessage",
           "Add new Certificate successfully"
         );
+        updateRequestStatus(requestId, "PROCESSED");
         navigate("/certificates");
       } else {
         setError("Error creating certificate");
       }
+    } catch (error) {
+      setError(error);
+    }
+    setTimeout(() => {
+      setError("");
+    }, 3000);
+  };
+
+  const handleCancel = async () => {
+    try {
+      updateRequestStatus(requestId, "NEW");
+      navigate("/certificates");
     } catch (error) {
       setError(error);
     }
@@ -231,7 +250,7 @@ const CreateCertificate = () => {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => navigate("/certificates")}
+                onClick={() => handleCancel()}
                 sx={{ backgroundColor: "grey" }}
               >
                 Cancel

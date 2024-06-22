@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   getAllCertificates,
-  getAllRequests,
   deleteCertificateById,
-  saveRequest,
-  getCustomerById,
+  getAllRequestsNew,
+  updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -142,7 +141,7 @@ const Certificates = () => {
       .catch((error) => {
         setError(error.message);
       });
-    getAllRequests()
+    getAllRequestsNew()
       .then((data) => {
         setRequests(data);
       })
@@ -213,6 +212,7 @@ const Certificates = () => {
 
   const handleCreateCertificate = async () => {
     if (selectedRequest) {
+      updateRequestStatus(selectedRequest.id, "PROCESSING");
       navigate(`/create-certificate/${selectedRequest.id}`);
     }
   };

@@ -80,8 +80,8 @@ public class UserServiceImp implements UserService {
 	}
 	@Override
 	public boolean deleteUserById(Integer id) {
-		User user = userRepository.findById(id).get();
-		if(user==null) {
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
 			throw new UsernameNotFoundException("Can not find any user with Id "+id);
 		}
 		userRepository.deleteById(id);
