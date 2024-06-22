@@ -31,7 +31,7 @@ public class DiamondService {
 	private String content;
 	
 	@Column(length = 64, nullable = false, unique = false)
-	private float money;
+	private double money;
 	
 	@Column(length = 128)
 	private String photo;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.diamondvaluation.common.setting.Setting;
 import com.diamondvaluation.common.setting.SettingCategory;
 import com.diamondvaluation.shop.EmailSettingBag;
+import com.diamondvaluation.shop.PaymentSettingBag;
 import com.diamondvaluation.shop.repository.SettingRepository;
 import com.diamondvaluation.shop.service.SettingService;
 
@@ -22,6 +23,13 @@ public class SettingServiceIpl implements SettingService {
 	public EmailSettingBag getEmailSettings() {
 		List<Setting> list = repo.findByTwoCategories(SettingCategory.MAIL_SERVER, SettingCategory.MAIL_TEMPLATES);
 		EmailSettingBag settings = new EmailSettingBag(list);
+		return settings;
+	}
+
+	@Override
+	public PaymentSettingBag getPaymentSettings() {
+		List<Setting> list = repo.findByCategory(SettingCategory.PAYMENT);
+		PaymentSettingBag settings = new PaymentSettingBag(list);
 		return settings;
 	}
 

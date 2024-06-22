@@ -83,7 +83,7 @@ export async function saveUser(user) {
 	}
 }
 
-export async function deleteUserById(id) {
+export async function  UserById(id) {
     try {
         const result = await api.delete(`/api/users/delete/${id}`
         )

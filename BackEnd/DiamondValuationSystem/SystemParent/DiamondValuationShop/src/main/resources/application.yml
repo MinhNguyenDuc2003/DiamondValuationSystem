@@ -5,15 +5,15 @@ app:
   security:
     jwt:
       access-token:
-        expiration: 1
+        expiration: 60
       issuer: DiamondValuation
       refresh-token:
         expiration: 7200
       secret: ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv+9-$!*&%
 server:
   port: 8081
-#  servlet:
-##    context-path: /DiamondShop
+  servlet:
+    context-path: /DiamondShop
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -42,18 +42,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   security:
-   oauth2:
-    client:
-     registration:
-      google:
-       client-id: 155958575041-16pfns53l27ivvsenid2g0qea4fs64lt.apps.googleusercontent.com
-       client-secret: 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
-       scope:
-       - email
-       - profile
-      facebook:
-       client-id: 1731600987247737
-       client-secret: 1ef787212b81d115b2526d023b822590
-       scope:
-       - email
-       - public_profile
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 155958575041-16pfns53l27ivvsenid2g0qea4fs64lt.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+          facebook:
+            client-id: 1731600987247737
+            client-secret: 1ef787212b81d115b2526d023b822590
+            scope:
+              - email
+              - public_profile
+paypal:
+  client:
+    id: Ab4kREeSpjk8R738YwCYUPBMnNUDl0N2XlByUFnL8peEhUkpYLjqLkoyXTXlNyj-fp3z3c5bb3LAtSEW
+    secret: EHigX7VbvIswP2ToWPJiPg-A0ZVni0AXe_UDPnfjxgUXMHQt86Xdjl2oYHumwSdoYzKW012o4NbOQYT-   
+  mode: sandbox
