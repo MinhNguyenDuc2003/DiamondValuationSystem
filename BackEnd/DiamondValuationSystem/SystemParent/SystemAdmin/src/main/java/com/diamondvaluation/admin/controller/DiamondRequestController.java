@@ -1,5 +1,8 @@
 package com.diamondvaluation.admin.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +39,7 @@ public class DiamondRequestController {
 	private final ModelMapper modelMapper;
 
 	@Autowired
-	public DiamondRequestController(DiamondRequestService requestService, ModelMapper modelMapper
-			) {
+	public DiamondRequestController(DiamondRequestService requestService, ModelMapper modelMapper) {
 		this.requestService = requestService;
 		this.modelMapper = modelMapper;
 	}
@@ -48,7 +50,7 @@ public class DiamondRequestController {
 		try {
 			DiamondRequest appoinment = request2Entity(appoinmentRequest);
 			requestService.save(appoinment, request);
-			
+
 			return new ResponseEntity<>(new MessageResponse("Add/Update Appoinment successfully!"), HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -65,10 +67,21 @@ public class DiamondRequestController {
 			DiamondService service = new DiamondService(Integer.parseInt(id));
 			list.add(service);
 		}
-		
+
 		RequestStatus status = RequestStatus.valueOf(request.getStatus());
 		appoinment.setStatus(status);
 		appoinment.setServices(list);
+		appoinment.setMethod(request.getPayment_method());
+		if (request.getAppointmentDate() != null) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
+            appoinment.setAppointmentDate(date);
+        }
+		if (request.getAppointmentTime() != null) {
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
+            appoinment.setAppointmentTime(time);
+        }
 		return appoinment;
 	}
 
@@ -80,6 +93,15 @@ public class DiamondRequestController {
 		appoinmentResponse.setService_ids(appoinment.getServiceIds());
 		appoinmentResponse.setService_names(appoinment.getServiceNames());
 		appoinmentResponse.setCreatedDate(appoinment.getCreatedDate().toString());
+		appoinmentResponse.setPaid(appoinment.isPaid());
+		appoinmentResponse.setPayment_method(appoinment.getMethod() + "");
+		appoinmentResponse.setTotal(appoinment.getPaymentTotal());
+		if (appoinment.getAppointmentDate() != null) {
+			appoinmentResponse.setAppoinment_date(appoinment.getAppointmentDate().toString());
+		}
+		if (appoinment.getAppointmentTime() != null) {
+			appoinmentResponse.setAppoinment_time(appoinment.getAppointmentTime().toString());
+		}
 		return appoinmentResponse;
 	}
 

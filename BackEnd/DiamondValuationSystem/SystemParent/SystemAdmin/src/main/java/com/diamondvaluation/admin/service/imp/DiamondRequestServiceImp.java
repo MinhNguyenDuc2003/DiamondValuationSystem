@@ -8,11 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
+import com.diamondvaluation.admin.exception.ServiceNotFoundException;
 import com.diamondvaluation.admin.repository.DiamondRequestRepository;
 import com.diamondvaluation.admin.repository.RequestTrackRepository;
+import com.diamondvaluation.admin.repository.ServiceRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.common.DiamondRequest;
+<<<<<<< HEAD
 import com.diamondvaluation.common.RequestStatus;
+=======
+import com.diamondvaluation.common.DiamondService;
+>>>>>>> f1eae3c546cbb705823b3e813c1b369cc6cd71bd
 import com.diamondvaluation.common.RequestTrack;
 import com.diamondvaluation.common.User;
 
@@ -22,14 +28,16 @@ import jakarta.transaction.Transactional;
 @Service
 public class DiamondRequestServiceImp implements DiamondRequestService{
 	private final DiamondRequestRepository repo;
+	private final ServiceRepository serviceRepo;
 	private final RequestTrackRepository trackingRepo;
 	
 
-	public DiamondRequestServiceImp(DiamondRequestRepository repo, RequestTrackRepository trackingRepo) {
+	public DiamondRequestServiceImp(DiamondRequestRepository repo, RequestTrackRepository trackingRepo,
+			ServiceRepository serviceRepo) {
 		this.repo = repo;
 		this.trackingRepo = trackingRepo;
+		this.serviceRepo = serviceRepo;
 	}
-
 
 	@Transactional
 	@Override
@@ -50,7 +58,15 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 			}
 			diamondRequest.setCreatedDate(appoinment.get().getCreatedDate());
 		}
-		
+		double money = 0.0;
+		for(DiamondService service : diamondRequest.getServices()) {
+			Optional<DiamondService> ds = serviceRepo.findById(service.getId());
+			if(!ds.isPresent()) {
+				throw new ServiceNotFoundException("Service is not exist!");
+			}
+			money += ds.get().getMoney();
+		}
+		diamondRequest.setPaymentTotal(money);
 		trackingRepo.save(track);
 		repo.save(diamondRequest);
 	}
