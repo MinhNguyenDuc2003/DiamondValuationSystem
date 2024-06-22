@@ -93,9 +93,17 @@ const Header = () => {
                     </Menu.Item>
                 </>
             ) : (
-                <Menu.Item>
-                    <Button onClick={e => navigate("/login")} type='text'> Login</Button>
-                </Menu.Item>
+                <>
+                    <Menu.Item>
+                        <Button onClick={e => navigate("/login")} type='text'> Login</Button>
+
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={e => navigate("/signup")} type='text'> Sign Up</Button>
+
+                    </Menu.Item>
+                </>
+
             )}
 
 

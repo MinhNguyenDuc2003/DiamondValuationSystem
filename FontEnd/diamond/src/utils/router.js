@@ -1,12 +1,14 @@
 export const ROUTERS = {
     USER: {
         LOGIN: "Login",
+        ForgotPassword: "retake-password",
         SIGNUP: "signup",
         HOME: "",
         account: "account",
         CONTACT: "Contact",
         SERVICE_CALCULATOR: "/Service/calculator",
         SERVICE_VALUATION: "/Service/valuation",
+        SERVICE_VALUATION_FORM: "/Service/valuation/valuation-form",
         SERVICE_SCULPTURE: "/Service/sculpture",
         SERVICE_SALE: "/Service/sale",
         BLOG: "Blog",
