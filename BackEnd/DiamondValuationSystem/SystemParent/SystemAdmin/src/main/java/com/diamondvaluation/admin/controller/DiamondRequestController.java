@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -115,6 +116,22 @@ public class DiamondRequestController {
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("requests/status/new")
+	public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate() {
+		List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.NEW);
+		return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
+	}
+
+	@PutMapping("request/update-status/{id}/{status}")
+	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
+			@PathVariable("status") RequestStatus status) {
+		try {
+			requestService.updateRequestStatus(id, status);
+			return new ResponseEntity<>(new MessageResponse("Status updated successfully for request id " + id),
+					HttpStatus.OK);
+		} catch (RequestNotFoundException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 
 }

@@ -102,7 +102,10 @@ export const Users = () => {
   const handleDelete = async () => {
     const result = await deleteUserById(userToDelete);
     if (result !== undefined) {
-      setMessage(`Delete user with id ${userToDelete}  successfully!`);
+      localStorage.setItem(
+        "successMessage",
+        `Delete User ${userToDelete} successfully`
+      );
       getUsersPerPage(currentPage, filteredData)
         .then((data) => {
           setData({

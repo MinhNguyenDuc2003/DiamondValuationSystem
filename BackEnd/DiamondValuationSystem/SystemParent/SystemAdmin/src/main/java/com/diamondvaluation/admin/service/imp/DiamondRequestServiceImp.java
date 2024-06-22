@@ -12,6 +12,7 @@ import com.diamondvaluation.admin.repository.DiamondRequestRepository;
 import com.diamondvaluation.admin.repository.RequestTrackRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.common.DiamondRequest;
+import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.RequestTrack;
 import com.diamondvaluation.common.User;
 
@@ -82,5 +83,18 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 	public List<DiamondRequest> findAllRequest() {
 		return (List<DiamondRequest>) repo.findAll();
 	}
+	
+	
+	public List<DiamondRequest> findRequestsByStatusSortedByCreatedDate(RequestStatus status) {
+        return repo.findByStatusOrderByCreatedDateAsc(status);
+    }
+
+    @Transactional
+    @Override
+    public void updateRequestStatus(Integer id, RequestStatus status) {
+        DiamondRequest request = getRequestById(id);
+        request.setStatus(status);
+        repo.save(request);
+    }
 
 }

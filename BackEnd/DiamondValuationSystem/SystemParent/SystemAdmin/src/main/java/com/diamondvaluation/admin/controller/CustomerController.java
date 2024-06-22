@@ -2,6 +2,7 @@ package com.diamondvaluation.admin.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +108,5 @@ public class CustomerController {
 		return customerResponses;
 	}
 	
-	@GetMapping("get/all")
-	public Iterable<Customer> getAllCustomers() {
-		return customerRepository.findAll();
-	}
+	
 }

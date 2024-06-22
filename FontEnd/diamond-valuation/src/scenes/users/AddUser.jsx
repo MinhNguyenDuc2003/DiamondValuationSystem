@@ -79,9 +79,9 @@ export const AddUser = () => {
     } catch (error) {
       setErrorMessage(error);
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 3000);
+    // setTimeout(() => {
+    //   setErrorMessage("");
+    // }, 4000);
   };
 
   const handleCancelClick = () => {
@@ -93,7 +93,7 @@ export const AddUser = () => {
       <div>
         <h2 className="text-center">Manage Users</h2>
       </div>
-
+      {/* Your email is invalid */}
       <form
         onSubmit={(e) => handleSubmit(e)}
         style={{ maxWidth: "700px", margin: "0 auto" }}
@@ -196,7 +196,9 @@ export const AddUser = () => {
           </div>
 
           <div className="form-group row mt-3">
-            <label className="col-sm-4 col-form-label">Enabled:</label>
+            <label className="col-sm-4 col-form-label" htmlFor="enabled">
+              Enabled:
+            </label>
             <div className="col-sm-8 mt-2">
               <input
                 onChange={(e) => handleEnabledChange(e)}
@@ -221,8 +223,10 @@ export const AddUser = () => {
                       name="role_ids"
                       className="m-2"
                     />
-                    <small>{role.name} </small> -{" "}
-                    <small>{role.description}</small>
+                    <label htmlFor={`role-${role.id}`}>
+                      <small>{role.name}</small> -{" "}
+                      <small>{role.description}</small>
+                    </label>
                     <br />
                   </div>
                 ))}
@@ -230,7 +234,9 @@ export const AddUser = () => {
           </div>
 
           <div className="form-group row mt-2">
-            <label className="col-sm-4 col-form-label">Photos:</label>
+            <label htmlFor="fileImage" className="col-sm-4 col-form-label">
+              Photos:
+            </label>
             <div className="col-sm-8">
               <input
                 type="file"
@@ -254,7 +260,12 @@ export const AddUser = () => {
           </div>
 
           <div className="text-center">
-            <input type="submit" value="Save" className="btn btn-primary m-3" />
+            <input
+              type="submit"
+              value="Save"
+              name="form"
+              className="btn btn-primary m-3"
+            />
             <input
               type="button"
               value="Cancel"
