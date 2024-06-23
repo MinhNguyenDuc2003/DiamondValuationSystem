@@ -19,6 +19,7 @@ import {
   TextField,
   Autocomplete,
   InputLabel,
+  Switch,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -37,6 +38,10 @@ const EditDiamondRequest = () => {
     note: "",
     status: "NEW",
     service_ids: [],
+    payment_method: "TM",
+    paid: false,
+    appointment_date: null,
+    appointment_time: "",
   });
 
   useEffect(() => {
@@ -72,6 +77,10 @@ const EditDiamondRequest = () => {
             note: requestEdit.note,
             status: requestEdit.status,
             service_ids: requestEdit.service_ids,
+            payment_method: requestEdit.payment_method,
+            paid: requestEdit.paid,
+            appointment_date: requestEdit.appoinment_date || null,
+            appointment_time: requestEdit.appoinment_time,
           });
         }
       } catch (error) {
@@ -80,16 +89,22 @@ const EditDiamondRequest = () => {
     };
     fetchRequest();
   }, [requestid, customers]);
+  console.log(initialValues);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string().required("Customer is required"),
     note: Yup.string(),
     status: Yup.string().required("Status is required"),
     service_ids: Yup.array().min(1, "At least one service must be selected"),
+    payment_method: Yup.string().required("Payment method is required"),
+    paid: Yup.boolean().required("Paid status is required"),
+    appointment_date: Yup.date().nullable(),
+    appointment_time: Yup.string().nullable(),
   });
 
   const handleSubmit = async (values) => {
     try {
+      console.log(values);
       const result = await saveRequest(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Request updated successfully");
@@ -155,7 +170,7 @@ const EditDiamondRequest = () => {
                   <Autocomplete
                     options={customers}
                     getOptionLabel={(option) =>
-                      `${option.first_name} ${option.last_name} - ${option.phone_number}`
+                      `${option.first_name} ${option.last_name} - ${option.phone_number} - ${option.email}`
                     }
                     isOptionEqualToValue={(option, value) =>
                       option.id === value.id
@@ -198,7 +213,6 @@ const EditDiamondRequest = () => {
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Field as={Select} name="status" label="Status">
-                    <MenuItem value="">All</MenuItem>
                     <MenuItem value="WAIT">WAIT</MenuItem>
                     <MenuItem value="NEW">NEW</MenuItem>
                     <MenuItem value="PROCESSING">PROCESSING</MenuItem>
@@ -223,18 +237,18 @@ const EditDiamondRequest = () => {
                           const { name, checked, value } = event.target;
                           if (checked) {
                             services.push(value);
-                            setFieldValue({ ...values, [name]: services });
+                            setInitialValues({ ...values, [name]: services });
                           } else {
-                            setFieldValue({
+                            setInitialValues({
                               ...values,
                               [name]: services.filter(
-                                (roleId) => roleId !== value
+                                (serviceID) => serviceID !== value
                               ),
                             });
                           }
                         }}
                         value={service.id}
-                        name="services_ids"
+                        name="service_ids"
                       />
                     }
                     label={service.name}
@@ -245,6 +259,68 @@ const EditDiamondRequest = () => {
                     {errors.service_ids}
                   </div>
                 )}
+                <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                  <InputLabel>Payment Method</InputLabel>
+                  <Field
+                    as={Select}
+                    name="payment_method"
+                    label="Payment Method"
+                  >
+                    <MenuItem value="TM">TM</MenuItem>
+                    <MenuItem value="CK">CK</MenuItem>
+                  </Field>
+                  {touched.payment_method && errors.payment_method && (
+                    <div style={{ color: "red" }}>{errors.payment_method}</div>
+                  )}
+                </FormControl>
+
+                <Box>
+                  Paid:
+                  <Switch
+                    label="Paid"
+                    checked={values.paid}
+                    name="paid"
+                    onChange={handleChange}
+                  />
+                </Box>
+
+                <TextField
+                  fullWidth
+                  type="date"
+                  margin="dense"
+                  label="Appointment Date"
+                  name="appointment_date"
+                  value={values.appointment_date || ""}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.appointment_date && Boolean(errors.appointment_date)
+                  }
+                  helperText={
+                    touched.appointment_date && errors.appointment_date
+                  }
+                  sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{ shrink: true }}
+                />
+
+                <TextField
+                  fullWidth
+                  type="time"
+                  margin="dense"
+                  label="Appointment Time"
+                  name="appointment_time"
+                  value={values.appointment_time || ""}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.appointment_time && Boolean(errors.appointment_time)
+                  }
+                  helperText={
+                    touched.appointment_time && errors.appointment_time
+                  }
+                  sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{ shrink: true }}
+                />
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">

@@ -221,10 +221,11 @@ export async function saveRequest(request) {
   formData.append("customer_id", request.customer_id);
   formData.append("note", request.note);
   formData.append("status", request.status);
-  // Append service_ids correctly
-  if (request.service_ids && request.service_ids.length > 0) {
-    formData.append("service_ids", request.service_ids.join(","));
-  }
+  formData.append("service_ids", request.service_ids);
+  formData.append("payment_method", request.payment_method);
+  formData.append("appointmentDate", request.appointment_date);
+  formData.append("appointmentTime", request.appointment_time);
+  formData.append("is_paid", request.paid);
 
   try {
     const response = await api.post(

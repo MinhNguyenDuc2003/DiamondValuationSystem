@@ -213,7 +213,7 @@ const Certificates = () => {
   const handleCreateCertificate = async () => {
     if (selectedRequest) {
       updateRequestStatus(selectedRequest.id, "PROCESSING");
-      navigate(`/create-certificate/${selectedRequest.id}`);
+      navigate(`/create-certificate/${selectedRequest.id}`, { replace: true });
     }
   };
 

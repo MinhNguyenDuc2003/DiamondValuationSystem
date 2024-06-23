@@ -17,7 +17,6 @@ import * as Yup from "yup";
 import {
   getRequestById,
   saveCertificate,
-  saveRequest,
   updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 
@@ -39,7 +38,9 @@ const CreateCertificate = () => {
     polish: "",
     symmetry: "",
     cert: "",
-    measurement: "",
+    length: "",
+    width: "",
+    height: "",
     request_id: requestId,
   };
 
@@ -53,7 +54,9 @@ const CreateCertificate = () => {
     polish: Yup.string().required("Required"),
     symmetry: Yup.string().required("Required"),
     cert: Yup.string().required("Required"),
-    measurement: Yup.string().required("Required"),
+    length: Yup.number().required("Required"),
+    width: Yup.number().required("Required"),
+    height: Yup.number().required("Required"),
   });
 
   useEffect(() => {
@@ -67,16 +70,16 @@ const CreateCertificate = () => {
     setTimeout(() => {
       setError("");
     }, 2000);
-
-    return () => {
-      // This will be executed when the component unmounts
-      updateRequestStatus(requestId, "NEW");
-    };
   }, [requestId]);
 
   const handleSubmit = async (values) => {
     try {
-      const result = await saveCertificate(values);
+      const measurement = `${values.length}-${values.width}x${values.height}mm`;
+      const certificateData = {
+        ...values,
+        measurement,
+      };
+      const result = await saveCertificate(certificateData);
       if (result.message !== undefined) {
         localStorage.setItem(
           "successMessage",
@@ -158,107 +161,144 @@ const CreateCertificate = () => {
 
   return (
     <Box p="20px">
-      <Typography variant="h4" gutterBottom>
-        Create Certificate for Request ID: {requestId}
-      </Typography>
-      {request && (
-        <Typography variant="h6" gutterBottom>
-          Current Status: {request.status}
-        </Typography>
-      )}
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {String(error)}
-        </Alert>
-      )}
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+      <Box
+        maxWidth="700px"
+        m="0 auto"
+        border="1px solid black"
+        borderRadius="5px"
+        p="16px"
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <Form>
-            <Grid container spacing={2}>
-              {Object.keys(diamondCriterias).map((filterKey) => (
-                <Grid item xs={12} sm={6} key={filterKey}>
-                  <FormControl fullWidth>
-                    <InputLabel>
-                      {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
-                    </InputLabel>
-                    <Field
-                      as={Select}
-                      name={filterKey}
-                      value={values[filterKey]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      label={
-                        filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
-                      }
-                    >
-                      {diamondCriterias[filterKey].map((criteria) => (
-                        <MenuItem key={criteria} value={criteria}>
-                          {criteria}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                    {touched[filterKey] && errors[filterKey] ? (
-                      <div>{errors[filterKey]}</div>
-                    ) : null}
-                  </FormControl>
-                </Grid>
-              ))}
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Carat"
-                  name="carat"
-                  value={values.carat}
-                  type="number"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.carat && Boolean(errors.carat)}
-                  helperText={touched.carat && errors.carat}
-                  inputProps={{ step: 0.01 }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Measurement"
-                  name="measurement"
-                  value={values.measurement}
-                  type="text"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.measurement && Boolean(errors.measurement)}
-                  helperText={touched.measurement && errors.measurement}
-                />
-              </Grid>
-            </Grid>
-            <Box display="flex" justifyContent="center" mt="20px" gap="10px">
-              <Button type="submit" variant="contained">
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleCancel()}
-                sx={{ backgroundColor: "grey" }}
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Form>
+        <Typography variant="h4" gutterBottom>
+          Create Certificate for Request ID: {requestId}
+        </Typography>
+        {request && (
+          <Typography variant="h6" gutterBottom>
+            Current Status: {request.status}
+          </Typography>
         )}
-      </Formik>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {String(error)}
+          </Alert>
+        )}
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+          }) => (
+            <Form>
+              <Grid container spacing={2}>
+                {Object.keys(diamondCriterias).map((filterKey) => (
+                  <Grid item xs={12} sm={6} key={filterKey}>
+                    <FormControl fullWidth>
+                      <InputLabel>
+                        {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
+                      </InputLabel>
+                      <Field
+                        as={Select}
+                        name={filterKey}
+                        value={values[filterKey]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label={
+                          filterKey.charAt(0).toUpperCase() + filterKey.slice(1)
+                        }
+                      >
+                        {diamondCriterias[filterKey].map((criteria) => (
+                          <MenuItem key={criteria} value={criteria}>
+                            {criteria}
+                          </MenuItem>
+                        ))}
+                      </Field>
+                      {touched[filterKey] && errors[filterKey] ? (
+                        <div>{errors[filterKey]}</div>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                ))}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Carat"
+                    name="carat"
+                    value={values.carat}
+                    type="number"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.carat && Boolean(errors.carat)}
+                    helperText={touched.carat && errors.carat}
+                    inputProps={{ step: 0.01 }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography>Meansurement: </Typography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Length"
+                    name="length"
+                    value={values.length}
+                    type="text"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.length && Boolean(errors.length)}
+                    helperText={touched.length && errors.length}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Width"
+                    name="width"
+                    value={values.width}
+                    type="text"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.width && Boolean(errors.width)}
+                    helperText={touched.width && errors.width}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Height"
+                    name="height"
+                    value={values.height}
+                    type="text"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.height && Boolean(errors.height)}
+                    helperText={touched.height && errors.height}
+                  />
+                </Grid>
+              </Grid>
+              <Box display="flex" justifyContent="center" mt="20px" gap="10px">
+                <Button type="submit" variant="contained">
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleCancel()}
+                  sx={{ backgroundColor: "grey" }}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Form>
+          )}
+        </Formik>
+      </Box>
     </Box>
   );
 };

@@ -207,10 +207,10 @@ export const Customers = () => {
                 <TableCell align="center">
                   {customer.enabled ? (
                     <CheckCircleIcon
-                      sx={{ color: "green", fontSize: "35px" }}
+                      sx={{ color: "green", fontSize: "25px" }}
                     />
                   ) : (
-                    <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+                    <CheckCircleOutlineIcon sx={{ fontSize: "25px" }} />
                   )}
                 </TableCell>
                 <TableCell align="center">

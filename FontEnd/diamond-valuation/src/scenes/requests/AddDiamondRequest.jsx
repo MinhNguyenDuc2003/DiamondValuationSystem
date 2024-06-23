@@ -53,6 +53,8 @@ const AddDiamondRequest = () => {
     note: Yup.string(),
     status: Yup.string().required("Status is required"),
     service_ids: Yup.array().min(1, "At least one service must be selected"),
+    payment_method: Yup.string().required("Payment method is required"),
+    paid: Yup.boolean().required("Paid status is required"),
   });
 
   const initialValues = {
@@ -61,10 +63,15 @@ const AddDiamondRequest = () => {
     note: "",
     status: "NEW",
     service_ids: [],
+    payment_method: "TM",
+    paid: false,
+    appointment_date: "",
+    appointment_time: "",
   };
 
   const handleSubmit = async (values) => {
     try {
+      console.log(values);
       const result = await saveRequest(values);
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Add new Request successfully");
@@ -128,7 +135,7 @@ const AddDiamondRequest = () => {
                   <Autocomplete
                     options={customers}
                     getOptionLabel={(option) =>
-                      `${option.first_name} ${option.last_name} - ${option.phone_number}`
+                      `${option.first_name} ${option.last_name} - ${option.phone_number} - ${option.email}`
                     }
                     isOptionEqualToValue={(option, value) =>
                       option.id === value.id
@@ -139,7 +146,7 @@ const AddDiamondRequest = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Customer Phone"
+                        label="Customer"
                         variant="outlined"
                         error={
                           touched.customer_id && Boolean(errors.customer_id)
@@ -166,7 +173,6 @@ const AddDiamondRequest = () => {
                 <FormControl fullWidth>
                   <InputLabel>Status</InputLabel>
                   <Field as={Select} name="status" label="Status">
-                    <MenuItem value="">All</MenuItem>
                     <MenuItem value="WAIT">WAIT</MenuItem>
                     <MenuItem value="NEW">NEW</MenuItem>
                     <MenuItem value="PROCESSING">PROCESSING</MenuItem>
@@ -185,7 +191,6 @@ const AddDiamondRequest = () => {
                     key={service.id}
                     control={
                       <Checkbox
-                        checked={values.service_ids.includes(service.id)}
                         onChange={(event) => {
                           if (event.target.checked) {
                             setFieldValue("service_ids", [
@@ -202,6 +207,7 @@ const AddDiamondRequest = () => {
                           }
                         }}
                         value={service.id}
+                        name="service_ids"
                       />
                     }
                     label={service.name}
@@ -213,6 +219,70 @@ const AddDiamondRequest = () => {
                     {errors.service_ids}
                   </div>
                 )}
+
+                <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                  <InputLabel>Payment Method</InputLabel>
+                  <Field
+                    as={Select}
+                    name="payment_method"
+                    label="Payment Method"
+                  >
+                    <MenuItem value="TM">TM</MenuItem>
+                    <MenuItem value="CK">CK</MenuItem>
+                  </Field>
+                  {touched.payment_method && errors.payment_method && (
+                    <div style={{ color: "red" }}>{errors.payment_method}</div>
+                  )}
+                </FormControl>
+
+                <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                  <InputLabel>Paid</InputLabel>
+                  <Field as={Select} name="paid" label="Paid">
+                    <MenuItem value={true}>Yes</MenuItem>
+                    <MenuItem value={false}>No</MenuItem>
+                  </Field>
+                  {touched.paid && errors.paid && (
+                    <div style={{ color: "red" }}>{errors.paid}</div>
+                  )}
+                </FormControl>
+
+                <TextField
+                  fullWidth
+                  type="date"
+                  margin="dense"
+                  label="Appointment Date"
+                  name="appointment_date"
+                  value={values.appointment_date}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.appointment_date && Boolean(errors.appointment_date)
+                  }
+                  helperText={
+                    touched.appointment_date && errors.appointment_date
+                  }
+                  sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{ shrink: true }}
+                />
+
+                <TextField
+                  fullWidth
+                  type="time"
+                  margin="dense"
+                  label="Appointment Time"
+                  name="appointment_time"
+                  value={values.appointment_time}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.appointment_time && Boolean(errors.appointment_time)
+                  }
+                  helperText={
+                    touched.appointment_time && errors.appointment_time
+                  }
+                  sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{ shrink: true }}
+                />
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">

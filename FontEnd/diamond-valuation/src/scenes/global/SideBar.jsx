@@ -256,29 +256,25 @@ const SideBar = () => {
     full_name: "",
     roles_name: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     const roles = localStorage.getItem("userRoles");
-    const token = localStorage.getItem("token") ? true : false;
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    const token = localStorage.getItem("token");
     setUser({
       full_name: userName,
       roles_name: roles,
     });
   }, []);
 
-  useEffect(() => {
-    setIsCollapsed(isMobile);
-  }, [isMobile]);
-
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const closeDrawer = () => {
+    setDrawerOpen(false);
   };
 
   const sidebarContent = (
@@ -298,12 +294,7 @@ const SideBar = () => {
             alignItems="center"
             ml="15px"
           >
-            <Typography
-              variant="h3"
-              // color={colors.grey[100]}
-            >
-              ADMINIS
-            </Typography>
+            <Typography variant="h3">ADMINIS</Typography>
             <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
               <MenuOutlinedIcon />
             </IconButton>
@@ -319,26 +310,15 @@ const SideBar = () => {
               alt="profile-user"
               width="100px"
               height="100px"
-              // src={`../../assets/user.png`}
               style={{ cursor: "pointer", borderRadius: "50%" }}
             />
           </Box>
 
           <Box textAlign="center">
-            <Typography
-              variant="h5"
-              // color={colors.grey[100]}
-              fontWeight="bold"
-              sx={{ m: "10px 0 0 0" }}
-            >
+            <Typography variant="h5" fontWeight="bold" sx={{ m: "10px 0 0 0" }}>
               {user.full_name}
             </Typography>
-            <Typography
-              variant="h6"
-              // color={colors.greenAccent[500]}
-            >
-              {user.roles_name}
-            </Typography>
+            <Typography variant="h6">{user.roles_name}</Typography>
           </Box>
         </Box>
       )}
@@ -346,18 +326,14 @@ const SideBar = () => {
       {/* MENU ITEMS */}
       <Box paddingLeft={isCollapsed ? undefined : "10%"}>
         <Item
-          title="Dashbord"
+          title="Dashboard"
           to="/"
           icon={<HomeOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
         />
 
-        <Typography
-          variant="h6"
-          // color={colors.grey[300]}
-          sx={{ m: "15px 0 5px 20px" }}
-        >
+        <Typography variant="h6" sx={{ m: "15px 0 5px 20px" }}>
           Data
         </Typography>
         <Item
@@ -395,11 +371,8 @@ const SideBar = () => {
           selected={selected}
           setSelected={setSelected}
         />
-        <Typography
-          variant="h6"
-          // color={colors.grey[300]}
-          sx={{ m: "15px 0 5px 20px" }}
-        >
+
+        <Typography variant="h6" sx={{ m: "15px 0 5px 20px" }}>
           Pages
         </Typography>
         <Item
@@ -430,22 +403,36 @@ const SideBar = () => {
   return (
     <Box>
       {isMobile ? (
-        <Drawer open={drawerOpen} onClose={toggleDrawer}>
-          <Box
-            sx={{ width: 250 }}
-            role="presentation"
-            onClick={toggleDrawer}
-            onKeyDown={toggleDrawer}
-          >
-            <Sidebar
-              collapsed={isCollapsed}
-              backgroundColor="#EEE5D6 !important"
-              style={{ height: "100vh" }}
+        <>
+          <Drawer open={drawerOpen} onClose={toggleDrawer}>
+            <Box
+              sx={{ width: 250 }}
+              role="presentation"
+              onClick={closeDrawer}
+              onKeyDown={closeDrawer}
             >
-              <Menu iconShape="square">{sidebarContent}</Menu>
-            </Sidebar>
-          </Box>
-        </Drawer>
+              <Sidebar
+                collapsed={false}
+                backgroundColor="#EEE5D6 !important"
+                style={{ height: "100vh" }}
+              >
+                <Menu iconShape="square">{sidebarContent}</Menu>
+              </Sidebar>
+            </Box>
+          </Drawer>
+          <IconButton
+            onClick={toggleDrawer}
+            style={{
+              position: "fixed",
+              top: 10,
+              left: 10,
+              zIndex: 1300,
+              backgroundColor: "#EEE5D6",
+            }}
+          >
+            <MenuOutlinedIcon />
+          </IconButton>
+        </>
       ) : (
         <Sidebar
           collapsed={isCollapsed}
@@ -454,20 +441,6 @@ const SideBar = () => {
         >
           <Menu iconShape="square">{sidebarContent}</Menu>
         </Sidebar>
-      )}
-      {isMobile && (
-        <IconButton
-          onClick={toggleDrawer}
-          style={{
-            position: "fixed",
-            top: 10,
-            left: 10,
-            zIndex: 1300,
-            backgroundColor: "#EEE5D6",
-          }}
-        >
-          <MenuOutlinedIcon />
-        </IconButton>
       )}
     </Box>
   );

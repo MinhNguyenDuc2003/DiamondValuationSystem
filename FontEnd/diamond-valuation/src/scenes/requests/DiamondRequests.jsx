@@ -32,6 +32,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PaidIcon from "@mui/icons-material/Paid";
 
 const Requests = () => {
   const [data, setData] = useState([]);
@@ -196,8 +197,12 @@ const Requests = () => {
               <TableCell align="center">Customer Name</TableCell>
               <TableCell align="center">Customer Phone</TableCell>
               <TableCell align="center">Created Date</TableCell>
-              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Payment method</TableCell>
+              <TableCell align="center">Appointment Date</TableCell>
               <TableCell align="center">Service</TableCell>
+              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Total</TableCell>
+              <TableCell align="center">Paid</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -212,8 +217,22 @@ const Requests = () => {
                   <TableCell align="center">
                     {formatDate(request.created_date)}
                   </TableCell>
-                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">{request.payment_method}</TableCell>
+                  <TableCell align="center">
+                    {request.appoinment_date} {request.appoinment_time}
+                  </TableCell>
                   <TableCell align="center">{request.service_names}</TableCell>
+                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">
+                    ${request.total.toFixed(2)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {request.paid ? (
+                      <PaidIcon sx={{ color: "green", fontSize: "25px" }} />
+                    ) : (
+                      <PaidIcon sx={{ fontSize: "25px" }} />
+                    )}
+                  </TableCell>
                   <TableCell align="center">{request.status}</TableCell>
                   <TableCell align="center">
                     <IconButton
