@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import videoSrc from "./image/main.mp4";
+import imgMiddle from "./image/diamond_title.png"
 import DiamondAppraisal from './image/icon1.jpg';
 import JewelryAppraisal from './image/icon2.jpg';
 import Certification from './image/icon3.jpg';
@@ -17,9 +18,7 @@ const HomePage = () => {
         <div className="home-page">
 
             <div className='bannerStyle'>
-                <video
-                    className='videoStyle'
-                    src={videoSrc} autoPlay loop muted />
+                <img className="img-title" src={imgMiddle} />
             </div>
 
             <div className="body-content">

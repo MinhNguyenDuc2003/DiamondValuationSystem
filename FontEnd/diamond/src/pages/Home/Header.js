@@ -51,6 +51,16 @@ const Header = () => {
         setMenuOpen(false);
     };
 
+    const handleContact = (element) => {
+        setMenuContact(!menuContact)
+        const targerElement = document.getElementById(element)
+        if (targerElement) {
+            targerElement.style.height = "100%"
+        } else {
+            targerElement.style.height = "0%"
+        }
+    }
+
     useEffect(() => {
         const handleScroll = () => {
             const scrollY = window.scrollY;
@@ -125,6 +135,38 @@ const Header = () => {
             <div className='header-left'>
                 <div className='contact'>
                     <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    {/* {menuContact && ( */}
+                    <div className="contact-content">
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <PhoneOutlined />
+                                <span>CALL US 099999999</span>
+                            </a>
+                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <WhatsAppOutlined />
+                                <span>WHATSAPP US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FacebookOutlined />
+                                <span>FACEBOOK US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <EnvironmentOutlined />
+                                <span>ADDRESS US</span>
+                            </a>
+                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+                    {/* )} */}
                 </div>
                 <div className='education'>
                     <button>Education</button>
@@ -215,7 +257,7 @@ const Header = () => {
                 </ul> */}
             </div>
 
-            {menuOpen && (
+            {/* {menuOpen && (
                 <div className="menu">
                     <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
                     <div className="menu-content">
@@ -355,13 +397,13 @@ const Header = () => {
                         </ul>
                     </div>
                 </div>
-            )}
-
+            )} */}
+            {/* 
             {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
             {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
-            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
+            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>} */}
 
-            {menuContact && (
+            {/* {menuContact && (
                 <div className="wrapper-menu">
                     <button onClick={() => setMenuContact(false)} className="close-button"><CloseCircleOutlined /></button>
                     <div className="menu-content">
@@ -396,8 +438,8 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>}
+            )} */}
+            {/* {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
         </div>
     );
 };

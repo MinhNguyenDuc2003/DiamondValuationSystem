@@ -3,8 +3,7 @@
 }
 
 .home-page {
-    margin-left: 10px;
-    width: 1450px;
+    width: auto;
     background-color: #f9f9f9;
 
 
@@ -118,13 +117,13 @@
 
         .wrapper-input {
 
-            
+
             .selected button {
                 background-color: rgb(79, 70, 229);
                 color: #fff;
             }
-           
-    
+
+
 
             margin-left: 200px;
             border: 0 solid #e5e7eb;
@@ -133,7 +132,7 @@
                 display: grid;
                 grid-template-columns: repeat(5, 1fr);
                 gap: 10px;
-               
+
 
                 button {
                     border: none;
@@ -147,11 +146,12 @@
                     width: 70px;
                     border-radius: 5px;
                     cursor: pointer;
+
                     &:hover {
                         opacity: 1;
                         background-color: rgb(209 213 219)
                     }
-                   
+
                 }
 
             }
@@ -160,7 +160,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 gap: 10px;
-                
+
                 button {
                     border: none;
                     border-radius: 10px;
@@ -231,26 +231,28 @@
                     }
                 }
             }
-            
+
         }
-       
-        .wrapper-input-content{
+
+        .wrapper-input-content {
             padding-top: 5px;
             border-radius: 10px;
             box-shadow:
-               
+
                 1px 0px 2px rgba(0, 0, 0, 0.12);
-                p{
-                    opacity: 1;
-                    color: rgb(107 114 128 );
-                    letter-spacing: .025em;
-                    margin-top: 1rem;
-                    text-transform: uppercase;
-                }
+
+            p {
+                opacity: 1;
+                color: rgb(107 114 128);
+                letter-spacing: .025em;
+                margin-top: 1rem;
+                text-transform: uppercase;
+            }
         }
+
         .wrapper-output-content {
             text-align: center;
-           
+
             width: 100%;
             height: 70%;
             background-color: #fff;
@@ -284,7 +286,7 @@
 
             font-size: 20px;
             text-align: center;
-            
+
 
             p {
                 font-weight: bold;
@@ -294,26 +296,28 @@
         .total-price {
             font-size: 50px;
             font-weight: 600;
-            
+
         }
-        .toolTip{
+
+        .toolTip {
             opacity: 1;
-            color: rgb(107 114 128 );
+            color: rgb(107 114 128);
             letter-spacing: .025em;
             margin-top: 1rem;
-            
+
         }
-        .toolTip-1{
+
+        .toolTip-1 {
             font-size: large;
             font-weight: 600;
         }
 
-        .output-value-selected{
+        .output-value-selected {
             opacity: 1;
-            color: rgb(107 114 128 );
+            color: rgb(107 114 128);
             letter-spacing: .025em;
             margin-top: 1rem;
-           
+
         }
 
 
