@@ -10,5 +10,5 @@ root.render(
     <BrowserRouter>
       <RouterCustom></RouterCustom>
     </BrowserRouter>
-    </AuthProvider>
+  </AuthProvider>
 );
