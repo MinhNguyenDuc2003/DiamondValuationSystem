@@ -22,6 +22,7 @@ const Header = () => {
     }
     const handleLogoutClick = () => {
         window.localStorage.removeItem(`user`);
+        window.location.reload()
         navigate('/');
     }
 
@@ -75,9 +76,12 @@ const Header = () => {
     };
 
     useEffect(() => {
+        
         setUser(window.localStorage.getItem(`user`))
         console.log(user);
-    })
+        
+    },[user])
+    const nameUser = JSON.parse(user);
     const menuUser = (
 
 
@@ -201,7 +205,11 @@ const Header = () => {
                         <Button className='search' type="text" icon={<SearchOutlined />} />
                     </form>
                     <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                        <Button type="text" icon={<UserOutlined />} />
+                        {user ? (
+                            <strong style={{ margin: 0 }}>{nameUser.LastName}</strong>
+                        ): (  
+                            <Button type="text" icon={<UserOutlined />} />
+                        )}
                     </Dropdown>
                 </div>
                 {/* <ul className="actions">
@@ -276,90 +284,6 @@ const Header = () => {
                                     </button>
                                 </div>
                             </li>
-                        </ul>
-                    </div>
-                </div>
-            )}
-
-            {educationOpen && (
-                <div className="education-panel">
-                    <button onClick={handleCloseEducation} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="education-content">
-                        <ul>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/carat')}>Carat
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/cut')}>Cut
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/color')}>Color
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/clarity')}>Clarity
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/fluorescence')}>Fluorescence
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            )}
-
-            {ServiceOpen && (
-                <div className="education-panel">
-                    <button onClick={handleCloseService} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="education-content">
-                        <ul>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/calculator')}>Calculator
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-
                         </ul>
                     </div>
                 </div>

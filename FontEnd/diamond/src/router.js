@@ -27,6 +27,10 @@ import Valuation from "./pages/Service/Valuation";
 import ServiceForm from "./pages/Service/ServiceForm";
 import Sculpture from "./pages/Service/Sculpture";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import Checkout from "./pages/Payment/checkout";
+import Success from "./pages/Payment/success";
+
+
 
 
 
@@ -80,6 +84,16 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
+        },
+        //CheckOut
+        {
+            path : ROUTERS.USER.PAYMENT_CHECKOUT,
+            component: <Checkout/>
+        },
+        //Pay success
+        {
+            path : ROUTERS.USER.PAYMENT_success,
+            component: <Success/>
         },
         //BLOG
         {
