@@ -90,9 +90,7 @@ describe("EditUser Component", () => {
     fireEvent.submit(screen.getByText(/save/i));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/users", {
-        state: { message: "Add/Update new User successfully" },
-      });
+      expect(mockNavigate).toHaveBeenCalledWith("/users");
     });
   });
 

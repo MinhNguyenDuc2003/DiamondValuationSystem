@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Project\DiamondValuationSystem\FontEnd\diamond-valuation\src\tests\EditUser.test.js">
+        <testCase name="EditUser Component EU - Fetch and Display User Data" duration="77"/>
+        <testCase name="EditUser Component EU - Submit Form with Valid Data" duration="96"/>
+        <testCase name="EditUser Component EU - Cancel Form Submission" duration="12"/>
+        <testCase name="EditUser Component EU - Password Field Behavior" duration="16"/>
+    </file>
+</testExecutions>

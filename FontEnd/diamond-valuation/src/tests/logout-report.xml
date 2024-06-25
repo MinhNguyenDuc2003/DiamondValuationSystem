@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Project\DiamondValuationSystem\FontEnd\diamond-valuation\src\tests\Logout.test.js">
+        <testCase name="should redirect after successful logout" duration="192"/>
+        <testCase name="should handle logout correctly and clear data" duration="54"/>
+    </file>
+</testExecutions>

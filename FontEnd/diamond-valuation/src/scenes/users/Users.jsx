@@ -231,7 +231,10 @@ export const Users = () => {
                   <IconButton onClick={() => navigate(`/users/${user.id}`)}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(user.id)}>
+                  <IconButton
+                    data-testid={`delete-button-${user.id}`}
+                    onClick={() => handleOpenDialog(user.id)}
+                  >
                     <DeleteIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
                 </TableCell>
