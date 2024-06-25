@@ -24,6 +24,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -78,6 +79,8 @@ public class DiamondRequest {
 	@ManyToMany
 	@JoinTable(name = "request_services",joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
 	List<DiamondService> services = new ArrayList<>();
+	
+
 
 	public DiamondRequest(Integer id) {
 		this.id = id;

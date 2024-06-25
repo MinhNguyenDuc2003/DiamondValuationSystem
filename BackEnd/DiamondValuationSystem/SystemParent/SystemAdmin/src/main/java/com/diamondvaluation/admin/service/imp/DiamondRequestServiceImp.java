@@ -14,8 +14,13 @@ import com.diamondvaluation.admin.repository.RequestTrackRepository;
 import com.diamondvaluation.admin.repository.ServiceRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.common.DiamondRequest;
+<<<<<<< HEAD
 import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.DiamondService;
+=======
+import com.diamondvaluation.common.DiamondService;
+import com.diamondvaluation.common.RequestStatus;
+>>>>>>> 43c8ea9f027024452b4c7f7fe2f64d5fafdabab1
 import com.diamondvaluation.common.RequestTrack;
 import com.diamondvaluation.common.User;
 
@@ -104,10 +109,18 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 
     @Transactional
     @Override
-    public void updateRequestStatus(Integer id, RequestStatus status) {
-        DiamondRequest request = getRequestById(id);
-        request.setStatus(status);
-        repo.save(request);
+    public void updateRequestStatus(Integer id, RequestStatus status, HttpServletRequest request) {
+    	DiamondRequest diamondRequest = getRequestById(id);
+    	RequestTrack track = new RequestTrack();
+		Date date = new Date();
+		track.setUpdatedTime(date);
+		User user = Utility.getIdOfAuthenticatedUser(request);
+		track.setUpdatedBy(user);
+		track.setNote(diamondRequest.getNote());
+		track.setRequest(diamondRequest);
+		track.setStatus(diamondRequest.getStatus());
+		diamondRequest.setStatus(status);
+        repo.save(diamondRequest);
     }
 
 }

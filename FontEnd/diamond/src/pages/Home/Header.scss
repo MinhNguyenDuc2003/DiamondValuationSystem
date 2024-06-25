@@ -1,4 +1,7 @@
+
+   
 .header {
+
     position: fixed;
     top: 0;
     left: 0;
@@ -177,7 +180,7 @@
 
     .logo {
         flex: 0.5;
-        transform: scale(7) translateY(70%);
+        transform: scale(6) translateY(50%);
         transition: transform 0.5s ease;
         background: none;
         border: none;

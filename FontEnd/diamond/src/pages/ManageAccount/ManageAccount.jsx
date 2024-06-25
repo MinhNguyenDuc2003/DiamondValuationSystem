@@ -23,6 +23,7 @@ const ManageAccount = () => {
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    window.location.reload()
     try {
       // Update user data in localStorage
       window.localStorage.setItem(

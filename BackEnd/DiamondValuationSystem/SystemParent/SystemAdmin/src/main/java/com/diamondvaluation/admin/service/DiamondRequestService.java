@@ -18,6 +18,6 @@ public interface DiamondRequestService {
 	List<DiamondRequest> findAllRequest();
 	
 	List<DiamondRequest> findRequestsByStatusSortedByCreatedDate(RequestStatus status);
-    void updateRequestStatus(Integer id, RequestStatus status);
+    void updateRequestStatus(Integer id, RequestStatus status,  HttpServletRequest request);
 
 }

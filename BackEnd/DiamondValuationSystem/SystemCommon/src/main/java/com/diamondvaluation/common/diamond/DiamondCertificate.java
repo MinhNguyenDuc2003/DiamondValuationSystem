@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.diamondvaluation.common.DiamondRequest;
+import com.diamondvaluation.common.DiamondValuation;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,7 +42,10 @@ public class DiamondCertificate {
 	private String name;
 	
 	private String photo;
-
+	
+	@Column(nullable = false, unique = true)
+	private String code;
+	
 	@Column(length = 28, nullable = false, unique = false)
 	private float carat;
 
@@ -83,5 +88,8 @@ public class DiamondCertificate {
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private DiamondFluorescence flourescence;
-
+	
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinColumn(name = "valuation_id")
+	private DiamondValuation valuation;
 }
