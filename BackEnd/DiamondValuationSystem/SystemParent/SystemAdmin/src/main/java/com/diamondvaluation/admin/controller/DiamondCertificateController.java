@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,12 +25,15 @@ import org.thymeleaf.spring6.SpringWebFluxTemplateEngine;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import com.diamondvaluation.admin.AmazonS3Util;
+import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
 import com.diamondvaluation.admin.request.CertificateRequest;
 import com.diamondvaluation.admin.response.CertificateResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
+import com.diamondvaluation.admin.service.DiamondValuationService;
 import com.diamondvaluation.common.DiamondRequest;
+import com.diamondvaluation.common.DiamondValuation;
 import com.diamondvaluation.common.diamond.DiamondCertificate;
 import com.diamondvaluation.common.diamond.DiamondClarity;
 import com.diamondvaluation.common.diamond.DiamondColor;
@@ -45,6 +47,9 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @RestController
 @RequestMapping("/api/certificates/")
@@ -52,25 +57,29 @@ public class DiamondCertificateController {
 	private final DiamondCertificateService service;
 	private final ModelMapper modelMapper;
 	private final SpringWebFluxTemplateEngine templateEngine;
-
-	@Autowired
+	private final DiamondValuationService valuationService;
+	
 	public DiamondCertificateController(DiamondCertificateService service, ModelMapper modelMapper,
-			SpringWebFluxTemplateEngine templateEngine) {
+			SpringWebFluxTemplateEngine templateEngine, DiamondValuationService valuationService) {
 		this.service = service;
 		this.modelMapper = modelMapper;
 		this.templateEngine = templateEngine;
+		this.valuationService = valuationService;
 	}
 
 	@PostMapping("certificate/save")
 	public ResponseEntity<?> addNewCertificate(@ModelAttribute @Valid CertificateRequest request
-			,@RequestParam(name = "photo", required = false) MultipartFile multipartFile) {
+			,@RequestParam(name = "photo", required = false) MultipartFile multipartFile) throws S3Exception, AwsServiceException, SdkClientException, IOException {
 		try {
 			DiamondCertificate certificate = request2Entity(request);
 			DiamondCertificate savedCertificate = null;			
 			if (multipartFile!=null && !multipartFile.isEmpty()) {
 				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 				certificate.setPhoto(fileName);
+				DiamondValuation valuation = valuationService.save(certificate);
+				certificate.setValuation(valuation);
 				savedCertificate = service.save(certificate);
+				
 				if (savedCertificate != null) {
 					String uploadDir = "certificate-photos/" + savedCertificate.getId();
 					AmazonS3Util.removeFolder(uploadDir);
@@ -79,13 +88,15 @@ public class DiamondCertificateController {
 			} else {
 				if (certificate.getPhoto()==null || certificate.getPhoto().isEmpty())
 					certificate.setPhoto(null);
+				DiamondValuation valuation = valuationService.save(certificate);
+				certificate.setValuation(valuation);
 				savedCertificate = service.save(certificate);
 			}
 			if (savedCertificate == null) {
 				return ResponseEntity.badRequest().build();
 			}
 			return new ResponseEntity<>(new MessageResponse("Add/Update User successfully!"), HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (CertificateIsAlreadyExistException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
@@ -111,7 +122,15 @@ public class DiamondCertificateController {
 
 	private CertificateResponse entity2Response(DiamondCertificate certificate) {
 		CertificateResponse response = modelMapper.map(certificate, CertificateResponse.class);
-
+		if(certificate.getValuation()!=null) {
+			DiamondValuation valuation = valuationService.getById(certificate.getValuation().getId());
+			response.setMaxPrice(valuation.getMaxPrice());
+			response.setMinPrice(valuation.getMinPrice());
+			response.setRealPrice(valuation.getRealPrice());
+			response.setRapPercent(valuation.getRapPercent());
+			response.setRapPrice(valuation.getRapPrice());
+			response.setValuationId(valuation.getId());
+		}
 		return response;
 	}
 

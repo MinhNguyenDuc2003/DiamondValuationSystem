@@ -72,12 +72,13 @@ public class DiamondRequestController {
 		appoinment.setStatus(status);
 		appoinment.setServices(list);
 		appoinment.setMethod(request.getPayment_method());
-		if (request.getAppointmentDate() != null) {
+		appoinment.setPaid(request.isPaid());
+		if (request.getAppointmentDate() != null && request.getAppointmentDate().toString().length()>0) {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
             appoinment.setAppointmentDate(date);
         }
-		if (request.getAppointmentTime() != null) {
+		if (request.getAppointmentTime() != null && request.getAppointmentTime().toString().length()>0) {
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
             appoinment.setAppointmentTime(time);
@@ -146,9 +147,9 @@ public class DiamondRequestController {
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
-			@PathVariable("status") RequestStatus status) {
+			@PathVariable("status") RequestStatus status,  HttpServletRequest request) {
 		try {
-			requestService.updateRequestStatus(id, status);
+			requestService.updateRequestStatus(id, status, request);
 			return new ResponseEntity<>(new MessageResponse("Status updated successfully for request id " + id),
 					HttpStatus.OK);
 		} catch (RequestNotFoundException e) {

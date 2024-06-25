@@ -2,6 +2,8 @@ package com.diamondvaluation.common.diamond_information;
 
 import com.diamondvaluation.common.diamond.DiamondClarity;
 import com.diamondvaluation.common.diamond.DiamondColor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,12 +16,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="diamond_attributes")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class DiamondAttribute {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +33,7 @@ public class DiamondAttribute {
 	
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
-	private DiamondClarity clarty;
+	private DiamondClarity clarity;
 	
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
@@ -38,5 +44,7 @@ public class DiamondAttribute {
 	
 	@ManyToOne
 	@JoinColumn(name = "carat_id")
+	@JsonBackReference
+	@JsonIgnore
 	private Carat carat;
 }

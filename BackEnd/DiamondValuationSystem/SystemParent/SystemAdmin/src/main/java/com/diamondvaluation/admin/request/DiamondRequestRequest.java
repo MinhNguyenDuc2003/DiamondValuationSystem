@@ -31,8 +31,8 @@ public class DiamondRequestRequest {
 	
 	@NotNull
 	private List<String> service_ids;
-
-	private boolean is_paid;
+	@NotNull
+	private boolean paid;
 	@NotNull 
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod payment_method;
