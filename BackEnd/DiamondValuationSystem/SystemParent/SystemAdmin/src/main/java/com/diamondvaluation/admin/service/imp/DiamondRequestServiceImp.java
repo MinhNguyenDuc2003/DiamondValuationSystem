@@ -14,13 +14,8 @@ import com.diamondvaluation.admin.repository.RequestTrackRepository;
 import com.diamondvaluation.admin.repository.ServiceRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.common.DiamondRequest;
-<<<<<<< HEAD
-import com.diamondvaluation.common.RequestStatus;
-import com.diamondvaluation.common.DiamondService;
-=======
 import com.diamondvaluation.common.DiamondService;
 import com.diamondvaluation.common.RequestStatus;
->>>>>>> 43c8ea9f027024452b4c7f7fe2f64d5fafdabab1
 import com.diamondvaluation.common.RequestTrack;
 import com.diamondvaluation.common.User;
 
