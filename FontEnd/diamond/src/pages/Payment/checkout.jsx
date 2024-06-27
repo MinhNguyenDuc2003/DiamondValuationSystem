@@ -36,6 +36,9 @@ const Checkout = () => {
 
   const navigate = useNavigate('');
   const handleBookingClick = () => {
+    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(formData);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
     alert(' Booking successful !');
     <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
      Booking successful !
@@ -47,6 +50,9 @@ const Checkout = () => {
   };
   const handlePayClick = () => {
     if(checkPay === true){   
+      const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+      existingOrders.push(formData);
+      localStorage.setItem('orders', JSON.stringify(existingOrders));
       navigate('/Payment-checkout-success')
     }else{
       alert(' Pay Fail')

@@ -29,6 +29,7 @@ import Sculpture from "./pages/Service/Sculpture";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
+import MyOder from "./pages/MyOrder/MyOder";
 
 
 
@@ -63,6 +64,11 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.account,
             component: <ManageAccount/>
+        },
+        //USER-ODER
+        {
+            path : ROUTERS.USER.MYORDER,
+            component: <MyOder/>
         },
         //USER-SERVICE
         {

@@ -12,20 +12,16 @@ const ManageAccount = () => {
     location: user.Location || '',
     password: user.Password || '',
     phone: user.Phone || ''
-    // Add more fields as needed
   });
 
-  // Function to handle form input change
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    window.location.reload()
+    
     try {
-      // Update user data in localStorage
       window.localStorage.setItem(
         'user',
         JSON.stringify({
@@ -36,7 +32,6 @@ const ManageAccount = () => {
           Location: formData.location,
           Password: formData.password,
           Phone: formData.phone
-          // Update more fields as needed
         })
       );
 
@@ -44,7 +39,7 @@ const ManageAccount = () => {
       setUser(JSON.parse(window.localStorage.getItem('user')));
 
       // Call API to update user data
-      const userId = user.id; // Assuming 'id' is the unique identifier for the user
+      const userId = user.id; 
       const response = await fetch(`https://6660044b5425580055b1c21d.mockapi.io/Assignment/User/${userId}`, {
         method: 'PUT',
         headers: {
@@ -52,25 +47,21 @@ const ManageAccount = () => {
         },
         body: JSON.stringify({
           ...user,
-          Email: formData.email,
+          Email: formData.email ,
           FirstName: formData.firstName,
           LastName: formData.lastName,
           Location: formData.location,
           Password: formData.password,
           Phone: formData.phone
-          // Update more fields as needed
         })
       });
 
       if (response.ok) {
-        // Successful update
         console.log('User data updated successfully');
       } else {
-        // Handle error case
         console.error('Failed to update user data');
       }
 
-      // Exit edit mode after submission
       setEditMode(false);
     } catch (error) {
       console.error('Error updating user data:', error);

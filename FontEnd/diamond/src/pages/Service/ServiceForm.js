@@ -5,6 +5,7 @@ import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem,
 import paypal from './img/PayPal_Logo.jpg';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 const formItemLayout = {
   labelCol: {
@@ -59,19 +60,27 @@ const ServiceForm = () => {
   const [payMentSelected, setPayMentSelected] = useState('');
   const navigate = useNavigate();
 
+  
+
   const handleDateChange = (newValue) => {
     setSelectedDate(newValue.format('DD/MM/YYYY'));
   };
 
+  const [id, setId] = useState(uuidv4());
+
   const onFinish = (values) => {
+    setId(uuidv4());
+    const order = {
+      ...values,
+      id : id,
+      date: selectedDate,
+      service: serviceSelected,
+      paymentMethod: payMentSelected
+    };
     navigate('/Payment-checkout', {
       state: {
-        formData: {
-          ...values,
-          date: selectedDate,
-          service: serviceSelected,
-          paymentMethod: payMentSelected
-        }
+        formData: order
+        
       }
     });
   };
@@ -197,7 +206,10 @@ const ServiceForm = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                      <MenuItem key={value} label={value} 
+                      >
+                        {value}
+                        </MenuItem>
                     ))}
                   </Box>
                 )}
@@ -207,7 +219,7 @@ const ServiceForm = () => {
                   <MenuItem
                     key={name}
                     value={name}
-                    style={getStyles(name, serviceSelected, theme)}
+                    
                   >
                     {name}
                   </MenuItem>

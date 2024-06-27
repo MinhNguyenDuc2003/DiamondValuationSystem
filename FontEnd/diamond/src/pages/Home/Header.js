@@ -70,17 +70,32 @@ const Header = () => {
 
     }, [location.pathname]);
 
-    const handleSearch = () => {
+    const blogs = [
+        { id: `ask-certification-importance`, title: 'Introduction to Diamonds' },
+        { id: `ask-fancy-yellow-diamond-below20k`, title: 'The 4 C’s of Diamonds' },
+        { id: `ask-k-color-diamond-in-pave-ring`, title: 'Choosing the Right Diamond' },
+    ];
 
+    const handleSearch = () => {
         console.log('Search value:', searchValue);
+        const filteredBlogs = blogs.filter(blog =>
+            blog.title.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        console.log('Filtered blogs:', filteredBlogs);
+        if (filteredBlogs.length > 0) {
+            setSearchValue(``);
+            navigate(`/blog/${filteredBlogs[0].id}`);
+        } else {
+            console.log(`no result`)
+        }
     };
 
     useEffect(() => {
-        
+
         setUser(window.localStorage.getItem(`user`))
-        console.log(user);
-        
-    },[user])
+
+
+    }, [user])
     const nameUser = JSON.parse(user);
     const menuUser = (
 
@@ -91,6 +106,9 @@ const Header = () => {
                 <>
                     <Menu.Item>
                         <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={e => navigate('/MyOrder')} type='text'> My Order</Button>
                     </Menu.Item>
                     <Menu.Item>
                         <Button onClick={handleLogoutClick} type='text'> Logout</Button>
@@ -114,23 +132,7 @@ const Header = () => {
         </Menu>
 
     );
-    const search = (
-        <Menu>
 
-            <Space direction="vertical">
-                <Input.Search
-                    placeholder="input search text"
-                    style={{
-                        width: 200,
-                    }}
-                    onSearch={handleSearch}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                />
-            </Space>
-
-        </Menu>
-    );
 
     return (
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
@@ -199,99 +201,26 @@ const Header = () => {
                 </div>
 
                 <div className='active'>
-                    <form className='search-box'>
-                        <input type='text' placeholder='Looking for blogs'>
-                        </input>
-                        <Button className='search' type="text" icon={<SearchOutlined />} />
+                    <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                        <Input
+                            type='text'
+                            placeholder='Looking for blogs'
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                        <Button className='search' htmlType='submit' icon={<SearchOutlined />} />
                     </form>
                     <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
                         {user ? (
                             <strong style={{ margin: 0 }}>{nameUser.LastName}</strong>
-                        ): (  
+                        ) : (
                             <Button type="text" icon={<UserOutlined />} />
                         )}
                     </Dropdown>
                 </div>
-                {/* <ul className="actions">
-                    <li>
-                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                            <Button type="text" icon={<UserOutlined />} />
-                        </Dropdown>
-                    </li>
-                    <li>
-
-                        // <Dropdown overlay={search} trigger={['hover']} >
-                        //     <Button type="text" icon={<SearchOutlined />} />
-                        // </Dropdown>
-                    </li>
-                    <li>
-                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
-
-                    </li>
-                </ul> */}
             </div>
 
-            {menuOpen && (
-                <div className="menu">
-                    <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <ul>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleServiceClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Service</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/blog')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Blog</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleEducationClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Education</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/diamond')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Diamond</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            )}
 
-            {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
-            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
-            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
 
             {menuContact && (
                 <div className="wrapper-menu">
