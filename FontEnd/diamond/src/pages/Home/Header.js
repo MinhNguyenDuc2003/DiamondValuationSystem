@@ -96,7 +96,8 @@ const Header = () => {
 
 
     }, [user])
-    const nameUser = JSON.parse(user);
+    const nameUser = 'justin';
+    // const nameUser = JSON.parse(user);
     const menuUser = (
 
 

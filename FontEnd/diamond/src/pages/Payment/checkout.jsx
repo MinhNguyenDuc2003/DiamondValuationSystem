@@ -4,16 +4,6 @@ import paypal from '../Service/img/PayPal_Logo.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 
-const fakeFormData = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'johndoe@example.com',
-  phone: '1234567890',
-  address: '123 Main St, City, Country',
-  date: '2024-06-30',
-  service: ['Valuation', 'Appraisal'],
-  paymentMethod: 'PayPal'
-};
 
 const servicePrices = {
   'Valuation': 100,
@@ -22,7 +12,7 @@ const servicePrices = {
 };
 
 const Checkout = () => {
-  const { formData } = useLocation().state || { formData: fakeFormData };
+  const { formData } = useLocation().state ;
   const [checkPay , setCheckPay] = useState(true);
 
   const calculateTotal = () => {
@@ -36,9 +26,9 @@ const Checkout = () => {
 
   const navigate = useNavigate('');
   const handleBookingClick = () => {
-    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    existingOrders.push(formData);
-    localStorage.setItem('orders', JSON.stringify(existingOrders));
+    // const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    // existingOrders.push(formData);
+    // localStorage.setItem('orders', JSON.stringify(existingOrders));
     alert(' Booking successful !');
     <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
      Booking successful !

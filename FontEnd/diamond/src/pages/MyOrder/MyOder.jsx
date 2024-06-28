@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Stepper, Step, StepLabel, Typography, Paper, Modal, IconButton } from '@mui/material';
+import { Box, Button, Stepper, Step, StepLabel, Typography, Paper, Modal, IconButton, Pagination } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const steps = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
 
 const MyOrder = () => {
- const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
 
   useEffect(() => {
-    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    setOrders(storedOrders);
+    // const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    // setOrders(storedOrders);
   }, []);
 
   const handleStepChange = (orderId, newStep) => {
@@ -23,8 +25,8 @@ const MyOrder = () => {
       return order;
     });
 
-    setOrders(updatedOrders);   
-    localStorage.setItem('orders', JSON.stringify(updatedOrders));
+    setOrders(updatedOrders);
+    // localStorage.setItem('orders', JSON.stringify(updatedOrders));
 
     if (newStep >= steps.length) {
       handleRemoveOrder(orderId);
@@ -36,7 +38,7 @@ const MyOrder = () => {
   const handleRemoveOrder = (orderId) => {
     const updatedOrders = orders.filter(order => order.id !== orderId);
     setOrders(updatedOrders);
-    localStorage.setItem('orders', JSON.stringify(updatedOrders));
+    // localStorage.setItem('orders', JSON.stringify(updatedOrders));
     setSelectedOrder(null);
     setModalOpen(false);
   };
@@ -51,6 +53,14 @@ const MyOrder = () => {
     setSelectedOrder(null);
   };
 
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastOrder = currentPage * itemsPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
   return (
     <div className='wrapperrr'>
       <Box sx={{ margin: 2 }}>
@@ -60,7 +70,7 @@ const MyOrder = () => {
         {orders.length === 0 ? (
           <Typography>No orders to track.</Typography>
         ) : (
-          orders.map(order => (
+          currentOrders.map(order => (
             <Paper key={order.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 2, padding: 2 }}>
               <Box>
                 <Typography variant="h6">Order ID: {order.id}</Typography>
@@ -101,6 +111,12 @@ const MyOrder = () => {
           )}
         </Box>
       </Modal>
+      <Pagination 
+        count={Math.ceil(orders.length / itemsPerPage)}
+        page={currentPage}
+        onChange={handlePageChange}
+        shape="rounded"
+      />
     </div>
   );
 };
