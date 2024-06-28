@@ -23,8 +23,8 @@ public class ServiceRequest {
 	@NotBlank (message = "Service name cannnot be null")
 	private String name;
 	
-	@NotBlank (message = "money cannnot be null")
-	@Pattern(regexp = "\\d+", message = "Money is only number")
+	@NotBlank(message = "Money cannot be null")
+	@Pattern(regexp = "\\d+(\\.\\d{1,2})?", message = "Money must be a valid number, with up to two decimal places")
 	private String money;
 	
 	@NotBlank (message = "Service content cannnot be null")

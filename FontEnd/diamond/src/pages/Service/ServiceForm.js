@@ -5,7 +5,10 @@ import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem,
 import paypal from './img/PayPal_Logo.jpg';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { v4 as uuidv4 } from 'uuid';
+=======
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
 
 const formItemLayout = {
   labelCol: {
@@ -60,12 +63,16 @@ const ServiceForm = () => {
   const [payMentSelected, setPayMentSelected] = useState('');
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   
 
+=======
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
   const handleDateChange = (newValue) => {
     setSelectedDate(newValue.format('DD/MM/YYYY'));
   };
 
+<<<<<<< HEAD
   const [id, setId] = useState(uuidv4());
 
   const onFinish = (values) => {
@@ -81,6 +88,17 @@ const ServiceForm = () => {
       state: {
         formData: order
         
+=======
+  const onFinish = (values) => {
+    navigate('/Payment-checkout', {
+      state: {
+        formData: {
+          ...values,
+          date: selectedDate,
+          service: serviceSelected,
+          paymentMethod: payMentSelected
+        }
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
       }
     });
   };
@@ -206,10 +224,14 @@ const ServiceForm = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => (
+<<<<<<< HEAD
                       <MenuItem key={value} label={value} 
                       >
                         {value}
                         </MenuItem>
+=======
+                      <Chip key={value} label={value} />
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
                     ))}
                   </Box>
                 )}
@@ -219,7 +241,11 @@ const ServiceForm = () => {
                   <MenuItem
                     key={name}
                     value={name}
+<<<<<<< HEAD
                     
+=======
+                    style={getStyles(name, serviceSelected, theme)}
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
                   >
                     {name}
                   </MenuItem>

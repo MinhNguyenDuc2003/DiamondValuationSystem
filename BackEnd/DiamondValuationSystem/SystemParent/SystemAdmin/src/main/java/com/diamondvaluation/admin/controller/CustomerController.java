@@ -2,6 +2,7 @@ package com.diamondvaluation.admin.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.diamondvaluation.admin.exception.EmailIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.UsernameNotFoundException;
+import com.diamondvaluation.admin.repository.CustomerRepository;
 import com.diamondvaluation.admin.request.CustomerRequest;
 import com.diamondvaluation.admin.response.CustomerPageResponse;
 import com.diamondvaluation.admin.response.CustomerResponse;
@@ -33,11 +35,13 @@ import jakarta.validation.Valid;
 public class CustomerController {
 	private final CustomerService customerService;
 	private final ModelMapper modelMapper;
+	private final CustomerRepository customerRepository;
 
 	@Autowired
-	public CustomerController(CustomerService customerService, ModelMapper modelMapper) {
+	public CustomerController(CustomerService customerService, ModelMapper modelMapper, CustomerRepository customerRepository) {
 		this.customerService = customerService;
 		this.modelMapper = modelMapper;
+		this.customerRepository = customerRepository;
 	}
 
 	@PostMapping("customer/save")
@@ -103,4 +107,6 @@ public class CustomerController {
 		customers.forEach(customer -> customerResponses.add(entity2Response(customer)));
 		return customerResponses;
 	}
+	
+	
 }

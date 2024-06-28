@@ -1,8 +1,11 @@
 HELP.md
+# General ignores
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!SystemParent/DiamondValuationShop/target/
+!SystemParent/DiamondValuationShop/target/DiamondValuation
 
 ### STS ###
 .apt_generated

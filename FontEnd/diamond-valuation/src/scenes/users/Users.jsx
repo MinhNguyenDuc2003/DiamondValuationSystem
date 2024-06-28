@@ -102,7 +102,10 @@ export const Users = () => {
   const handleDelete = async () => {
     const result = await deleteUserById(userToDelete);
     if (result !== undefined) {
-      setMessage(`Delete user with id ${userToDelete}  successfully!`);
+      localStorage.setItem(
+        "successMessage",
+        `Delete User ${userToDelete} successfully`
+      );
       getUsersPerPage(currentPage, filteredData)
         .then((data) => {
           setData({
@@ -182,7 +185,6 @@ export const Users = () => {
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
             <TableRow>
               <TableCell align="center">ID</TableCell>
-              <TableCell align="center">Photo</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Fullname</TableCell>
               <TableCell align="center">Phone Number</TableCell>
@@ -195,13 +197,6 @@ export const Users = () => {
             {data.list_users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell align="center">{user.id}</TableCell>
-                <TableCell align="center">
-                  <img
-                    src={user.avatar}
-                    alt={user.first_name}
-                    style={{ width: 50, height: 50, borderRadius: "50%" }}
-                  />
-                </TableCell>
                 <TableCell align="center">{user.email}</TableCell>
                 <TableCell align="center">
                   {user.last_name} {user.first_name}
@@ -210,10 +205,10 @@ export const Users = () => {
                 <TableCell align="center">
                   {user.enabled ? (
                     <CheckCircleIcon
-                      sx={{ color: "green", fontSize: "35px" }}
+                      sx={{ color: "green", fontSize: "25px" }}
                     />
                   ) : (
-                    <CheckCircleOutlineIcon sx={{ fontSize: "35px" }} />
+                    <CheckCircleOutlineIcon sx={{ fontSize: "25px" }} />
                   )}
                 </TableCell>
                 <TableCell align="center">
@@ -236,7 +231,10 @@ export const Users = () => {
                   <IconButton onClick={() => navigate(`/users/${user.id}`)}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(user.id)}>
+                  <IconButton
+                    data-testid={`delete-button-${user.id}`}
+                    onClick={() => handleOpenDialog(user.id)}
+                  >
                     <DeleteIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
                 </TableCell>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+	name="viewport">
+<meta content="ie=edge" http-equiv="X-UA-Compatible">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<title>Diamond Grading Report</title>
+<style>
+.header {
+	background-color: #003366;
+	color: white;
+	padding: 20px;
+	text-align: center;
+}
+
+.header img {
+	width: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.logo-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.text-container {
+	margin-left: 20px;
+}
+
+.certificate-title, .sub-title {
+	text-align: center;
+}
+
+.certificate-title {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.sub-title {
+	font-size: 14px;
+}
+
+.content {
+	padding: 20px;
+}
+
+.details-table {
+	width: 100%;
+}
+
+.details-table td {
+	padding: 5px;
+}
+
+.details-table .label {
+	font-weight: bold;
+}
+
+.lab-tested {
+	writing-mode: vertical-rl;
+	text-orientation: upright;
+	background: #f0f0f0;
+	padding: 10px;
+	text-align: center;
+	font-weight: bold;
+	color: #003366;
+}
+
+.signatures img {
+	width: 100px;
+}
+</style>
+</head>
+<body>
+	<div class="a4 container">
+		<img style="width: 100px;filter: invert(100%)" th:src="@{/image/logo.png}"
+						alt="MGTL Logo">
+		<div class="header d-flex align-items-center justify-content-center">
+		
+			<div class="text-container" style="margin-left: 20px;">
+				<div class="certificate-title text-center">DIAMOND GRADING
+					REPORT</div>
+				<div class="sub-title text-center">
+					Gemstone Report <br>[An ISO 9001:2024 Certified] <br>Registered
+					Under The Trade Marks with SHINE. of VietNam.
+				</div>
+			</div>
+		</div>
+
+		<div class="content row">
+			<div class="col-11">
+				<table class="details-table">
+					<tr>
+						<td class="label">NAME</td>
+						<td>: TO WHOM IT MAY CONCERN</td>
+						<td rowspan="10" class="text-center"><img
+							src="https://via.placeholder.com/100" alt="Natural Diamond">
+							<br> <b>NATURAL DIAMOND</b></td>
+					</tr>
+					<tr>
+						<td class="label">REPORT NO.</td>
+						<td>: MGTLHRIMP161</td>
+					</tr>
+					<tr>
+						<td class="label">WEIGHT</td>
+						<td>: 0.45 Ct. (1 Piece)</td>
+					</tr>
+					<tr>
+						<td class="label">SHAPE/CUT</td>
+						<td>: RBC</td>
+					</tr>
+					<tr>
+						<td class="label">FINISH</td>
+						<td>: Very Good</td>
+					</tr>
+					<tr>
+						<td class="label">COLOUR</td>
+						<td>: D - E</td>
+					</tr>
+					<tr>
+						<td class="label">CLARITY</td>
+						<td>: VVS</td>
+					</tr>
+					<tr>
+						<td class="label">DIMENSIONS</td>
+						<td>: 4.74 * 3.11 mm</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="signatures row mt-3">
+			<div class="col-6 text-center">
+				<br> <b>Chief Gemmologist</b>
+			</div>
+			<div class="col-6 text-center">
+				<br> <b>Gemmologist</b>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.diamondvaluation.admin.JiraService;
 import com.diamondvaluation.admin.SystemAdminApplication;
 import com.diamondvaluation.admin.request.AuthRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,12 +25,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 public class AuthControllerTest {
 	private static final String LOGIN = "/api/auth/sign-in";
-	
+	@Autowired JiraService service;
 	@Autowired MockMvc mockMvc;
 	@Autowired ObjectMapper objectMapper;
 	
 	@Test
-	public void testGetAccessTokenSuccess() throws Exception {
+	public void testGetAccessTokenRefreshTokenSuccess() throws Exception {
 		AuthRequest request = new AuthRequest();
 		request.setEmail("example@example.com");
 		request.setPassword("password123");

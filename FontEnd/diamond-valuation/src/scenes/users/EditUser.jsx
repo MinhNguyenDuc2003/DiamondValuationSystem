@@ -97,9 +97,11 @@ export const EditUser = () => {
     try {
       const result = await saveUser(user);
       if (result.message !== undefined) {
-        navigate(redirectUrl, {
-          state: { message: "Add/Update new User successfully" },
-        });
+        localStorage.setItem(
+          "successMessage",
+          `Edit User ${user.id} successfully`
+        );
+        navigate(redirectUrl);
       } else {
         setErrorMessage("Your email is invalid");
       }
@@ -200,7 +202,7 @@ export const EditUser = () => {
                 id="password"
                 name="password"
                 onChange={(e) => handleInputChange(e)}
-                minLenght={5}
+                minLength={5}
                 maxLength={20}
               />
             </div>
@@ -219,14 +221,16 @@ export const EditUser = () => {
                 id="phone_number"
                 name="phone_number"
                 onChange={(e) => handleInputChange(e)}
-                minLenght={10}
+                minLength={10}
                 maxLength={10}
               />
             </div>
           </div>
 
           <div className="form-group row mt-3">
-            <label className="col-sm-4 col-form-label">Enabled:</label>
+            <label className="col-sm-4 col-form-label" htmlFor="enabled">
+              Enabled:
+            </label>
             <div className="col-sm-8 mt-2">
               <input
                 onChange={(e) => handleEnabledChange(e)}

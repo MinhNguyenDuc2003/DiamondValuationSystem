@@ -5,8 +5,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Login from "./components/auth/Login";
-import Home from "./scenes/home/Home";
-import NavBar from "./scenes/global/NavBar";
 import Users from "./scenes/users/Users";
 import { AuthProvider, useAuth } from "./components/auth/AuthProvider";
 import AddUser from "./scenes/users/AddUser";
@@ -21,6 +19,11 @@ import Topbar from "./scenes/global/TopBar";
 import AddService from "./scenes/services/AddService";
 import EditService from "./scenes/services/EditService";
 import Requests from "./scenes/requests/DiamondRequests";
+import AddDiamondRequest from "./scenes/requests/AddDiamondRequest";
+import EditDiamondRequest from "./scenes/requests/EditDiamondRequest";
+import Certificates from "./scenes/certificates/Certificates";
+import CreateCertificate from "./scenes/certificates/CreateCertificate";
+import Dashboard from "./scenes/home/Dashboard";
 
 const App = () => {
   return (
@@ -47,7 +50,7 @@ const MainContent = () => {
             path="/"
             element={
               <PrivateRoute>
-                <Home />
+                <Dashboard />
               </PrivateRoute>
             }
           />
@@ -140,6 +143,43 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Requests />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/requests/new"
+            element={
+              <PrivateRoute>
+                <AddDiamondRequest />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/requests/:requestid"
+            element={
+              <PrivateRoute>
+                <EditDiamondRequest />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Certificates */}
+
+          <Route
+            path="/certificates/"
+            element={
+              <PrivateRoute>
+                <Certificates />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-certificate/:requestId"
+            element={
+              <PrivateRoute>
+                <CreateCertificate />
               </PrivateRoute>
             }
           />

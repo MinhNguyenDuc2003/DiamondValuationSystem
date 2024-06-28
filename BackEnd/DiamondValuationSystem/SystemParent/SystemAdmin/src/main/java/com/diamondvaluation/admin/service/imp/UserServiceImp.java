@@ -8,13 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.admin.exception.EmailIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.UsernameNotFoundException;
 import com.diamondvaluation.admin.repository.RoleRepository;
-import com.diamondvaluation.admin.repository.UserRepository;
+import com.diamondvaluation.admin.repository.UserRepository;  
 import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Role;
 import com.diamondvaluation.common.User;
@@ -80,8 +81,8 @@ public class UserServiceImp implements UserService {
 	}
 	@Override
 	public boolean deleteUserById(Integer id) {
-		User user = userRepository.findById(id).get();
-		if(user==null) {
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
 			throw new UsernameNotFoundException("Can not find any user with Id "+id);
 		}
 		userRepository.deleteById(id);

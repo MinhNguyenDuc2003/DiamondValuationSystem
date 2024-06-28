@@ -7,6 +7,7 @@ import com.diamondvaluation.common.diamond.DiamondFluorescence;
 import com.diamondvaluation.common.diamond.DiamondMake;
 import com.diamondvaluation.common.diamond.DiamondPolish;
 import com.diamondvaluation.common.diamond.DiamondSymmetry;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,8 @@ public class CertificateResponse {
 	
 	private float carat;
 	
+	private String code;
+	
 	private DiamondClarity clarity;
 	
 	private DiamondFluorescence flourescence;
@@ -41,4 +44,16 @@ public class CertificateResponse {
 	private DiamondCut cut;
 	
 	private String name;
+
+	private Integer valuationId;
+	
+	private double maxPrice;
+	
+	private double minPrice;
+	
+	private double rapPercent;
+	
+	private double rapPrice;
+	
+	private double realPrice;
 }

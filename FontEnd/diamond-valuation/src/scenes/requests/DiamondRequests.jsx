@@ -27,11 +27,39 @@ import {
   TableRow,
   Pagination,
   Paper,
+  Alert,
+  Chip,
 } from "@mui/material";
-import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PaidIcon from "@mui/icons-material/Paid";
+import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import BuildIcon from "@mui/icons-material/Build";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import DoneIcon from "@mui/icons-material/Done";
+import BlockIcon from "@mui/icons-material/Block";
+
+const statusColors = {
+  WAIT: "warning",
+  NEW: "primary",
+  PROCESSING: "info",
+  PROCESSED: "secondary",
+  DONE: "success",
+  BLOCKREQUEST: "error",
+  BLOCKED: "error",
+};
+
+const statusIcons = {
+  WAIT: <WatchLaterIcon />,
+  NEW: <NewReleasesIcon />,
+  PROCESSING: <BuildIcon />,
+  PROCESSED: <DoneAllIcon />,
+  DONE: <DoneIcon />,
+  BLOCKREQUEST: <BlockIcon />,
+  BLOCKED: <BlockIcon />,
+};
 
 const Requests = () => {
   const [data, setData] = useState([]);
@@ -41,14 +69,10 @@ const Requests = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [phoneFilter, setPhoneFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState("");
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
-
-  const convertToDate = (dateArray) => {
-    const [year, month, day, hour, minute, second] = dateArray;
-    return new Date(year, month - 1, day, hour, minute, second);
-  };
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -64,26 +88,21 @@ const Requests = () => {
   useEffect(() => {
     getAllRequests()
       .then((data) => {
-        const formattedRequests = data.map((request) => ({
-          ...request,
-          created_date: format(
-            convertToDate(request.created_date),
-            "yyyy/MM/dd HH:mm:ss"
-          ),
-        }));
-        setData(formattedRequests);
-        // setData(data);
+        setData(data);
       })
       .catch((error) => {
         setError(error.message);
       });
+    setTimeout(() => {
+      setError("");
+    }, 2000);
   }, []);
 
   const handleDelete = async () => {
     const result = await deleteRequestById(requestToDelete);
     if (result !== undefined) {
       setMessage(`Delete request with id ${requestToDelete}  successfully!`);
-      getAllServices()
+      getAllRequests()
         .then((data) => {
           setData(data);
         })
@@ -128,6 +147,14 @@ const Requests = () => {
     indexOfLastRequest
   );
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${day}/${month}/${year}`;
+  };
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -137,19 +164,20 @@ const Requests = () => {
       <Typography variant="h4" textAlign="center">
         Manage Requests
       </Typography>
-
-      {message && (
-        <div className="alert alert-success text-center">{message}</div>
-      )}
+      <Typography variant="body1" textAlign="center" mb={4}>
+        Here you can view, edit, and manage all customer requests.
+      </Typography>
 
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, mb: 2 }}
       >
         <Link to={"/requests/new"}>
-          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
+          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+            Add New Request
+          </Button>
         </Link>
 
         <Box>
@@ -169,13 +197,29 @@ const Requests = () => {
               onChange={handleStatusFilterChange}
             >
               <MenuItem value="">All</MenuItem>
+              <MenuItem value="WAIT">WAIT</MenuItem>
               <MenuItem value="NEW">NEW</MenuItem>
-              <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-              <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+              <MenuItem value="PROCESSING">PROCESSING</MenuItem>
+              <MenuItem value="PROCESSED">PROCESSED</MenuItem>
+              <MenuItem value="DONE">DONE</MenuItem>
+              <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
+              <MenuItem value="BLOCKED">BLOCKED</MenuItem>
             </Select>
           </FormControl>
         </Box>
       </Box>
+
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
@@ -185,8 +229,12 @@ const Requests = () => {
               <TableCell align="center">Customer Name</TableCell>
               <TableCell align="center">Customer Phone</TableCell>
               <TableCell align="center">Created Date</TableCell>
-              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Payment method</TableCell>
+              <TableCell align="center">Appointment Date</TableCell>
               <TableCell align="center">Service</TableCell>
+              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Total</TableCell>
+              <TableCell align="center">Paid</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -198,10 +246,33 @@ const Requests = () => {
                   <TableCell align="center">{request.id}</TableCell>
                   <TableCell align="center">{request.customer_name}</TableCell>
                   <TableCell align="center">{request.customer_phone}</TableCell>
-                  <TableCell align="center">{request.created_date}</TableCell>
-                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">
+                    {formatDate(request.created_date)}
+                  </TableCell>
+                  <TableCell align="center">{request.payment_method}</TableCell>
+                  <TableCell align="center">
+                    {request.appoinment_date} {request.appoinment_time}
+                  </TableCell>
                   <TableCell align="center">{request.service_names}</TableCell>
-                  <TableCell align="center">{request.status}</TableCell>
+                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">
+                    ${request.total.toFixed(2)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {request.paid ? (
+                      <PaidIcon sx={{ color: "green", fontSize: "25px" }} />
+                    ) : (
+                      <PaidIcon sx={{ fontSize: "25px" }} />
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      icon={statusIcons[request.status]}
+                      label={request.status}
+                      color={statusColors[request.status]}
+                      // sx={{ width: "100px" }}
+                    />
+                  </TableCell>
                   <TableCell align="center">
                     <IconButton
                       onClick={() => navigate(`/requests/${request.id}`)}
@@ -216,7 +287,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={12} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>

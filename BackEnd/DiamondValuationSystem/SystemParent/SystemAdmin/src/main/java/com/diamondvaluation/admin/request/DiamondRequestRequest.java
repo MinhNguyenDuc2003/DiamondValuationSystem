@@ -1,10 +1,14 @@
 package com.diamondvaluation.admin.request;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
+import com.diamondvaluation.common.PaymentMethod;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,7 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 public class DiamondRequestRequest {
-	
 	private Integer id;
 	
 	@NotNull (message = "customer cannnot be null")
@@ -28,8 +31,14 @@ public class DiamondRequestRequest {
 	
 	@NotNull
 	private List<String> service_ids;
+	@NotNull
+	private boolean paid;
+	@NotNull 
+	@Enumerated(EnumType.STRING)
+	private PaymentMethod payment_method;
 	
-	
-	
+	private String appointmentDate;
+	    
+	private String appointmentTime;
 	
 }

@@ -1,6 +1,8 @@
 package com.diamondvaluation.common;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +52,19 @@ public class DiamondRequest {
 	
 	private String note;
 	
+	private double paymentTotal;
+	
+	private LocalDate appointmentDate;
+	
+    private LocalTime appointmentTime;
+	
+	@Column(name = "payment_method",nullable = false, unique = false)
+	@Enumerated(EnumType.STRING)
+	private PaymentMethod method;
+	
+	@Column(name = "is_paid",nullable = false, unique = false)
+	private boolean isPaid;
+	
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private RequestStatus status;
@@ -63,6 +79,8 @@ public class DiamondRequest {
 	@ManyToMany
 	@JoinTable(name = "request_services",joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
 	List<DiamondService> services = new ArrayList<>();
+	
+
 
 	public DiamondRequest(Integer id) {
 		this.id = id;

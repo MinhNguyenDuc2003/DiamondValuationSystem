@@ -91,6 +91,7 @@ const Header = () => {
     };
 
     useEffect(() => {
+<<<<<<< HEAD
 
         setUser(window.localStorage.getItem(`user`))
 
@@ -101,6 +102,47 @@ const Header = () => {
     const menuUser = (
 
 
+=======
+        
+        setUser(window.localStorage.getItem(`user`))
+        console.log(user);
+        
+    },[user])
+    const nameUser = JSON.parse(user);
+    const menuUser = (
+
+
+        <Menu>
+
+            {user ? (
+                <>
+                    <Menu.Item>
+                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
+                    </Menu.Item>
+                </>
+            ) : (
+                <>
+                    <Menu.Item>
+                        <Button onClick={e => navigate("/login")} type='text'> Login</Button>
+
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Button onClick={e => navigate("/signup")} type='text'> Sign Up</Button>
+
+                    </Menu.Item>
+                </>
+
+            )}
+
+
+        </Menu>
+
+    );
+    const search = (
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
         <Menu>
 
             {user ? (
@@ -202,6 +244,7 @@ const Header = () => {
                 </div>
 
                 <div className='active'>
+<<<<<<< HEAD
                     <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
                         <Input
                             type='text'
@@ -210,18 +253,112 @@ const Header = () => {
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                         <Button className='search' htmlType='submit' icon={<SearchOutlined />} />
+=======
+                    <form className='search-box'>
+                        <input type='text' placeholder='Looking for blogs'>
+                        </input>
+                        <Button className='search' type="text" icon={<SearchOutlined />} />
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
                     </form>
                     <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
                         {user ? (
                             <strong style={{ margin: 0 }}>{nameUser.LastName}</strong>
+<<<<<<< HEAD
                         ) : (
                             <Button type="text" icon={<UserOutlined />} />
                         )}
                     </Dropdown>
+=======
+                        ): (  
+                            <Button type="text" icon={<UserOutlined />} />
+                        )}
+                    </Dropdown>
+                </div>
+                {/* <ul className="actions">
+                    <li>
+                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                            <Button type="text" icon={<UserOutlined />} />
+                        </Dropdown>
+                    </li>
+                    <li>
+
+                        // <Dropdown overlay={search} trigger={['hover']} >
+                        //     <Button type="text" icon={<SearchOutlined />} />
+                        // </Dropdown>
+                    </li>
+                    <li>
+                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
+
+                    </li>
+                </ul> */}
+            </div>
+
+            {menuOpen && (
+                <div className="menu">
+                    <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
+                    <div className="menu-content">
+                        <ul>
+                            <li>
+                                <div className='menu-items'>
+                                    <button onClick={handleServiceClick} className='btn-menu-items'>
+                                        <span className='items'>
+                                            <span className='name-item'>Service</span>
+                                            <span className='direct-item'>
+                                                <span className='direct'> <RightOutlined /></span>
+                                            </span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='menu-items'>
+                                    <button onClick={() => handleNavigateToEducation('/blog')} className='btn-menu-items'>
+                                        <span className='items'>
+                                            <span className='name-item'>Blog</span>
+                                            <span className='direct-item'>
+                                                <span className='direct'> <RightOutlined /></span>
+                                            </span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='menu-items'>
+                                    <button onClick={handleEducationClick} className='btn-menu-items'>
+                                        <span className='items'>
+                                            <span className='name-item'>Education</span>
+                                            <span className='direct-item'>
+                                                <span className='direct'> <RightOutlined /></span>
+                                            </span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='menu-items'>
+                                    <button onClick={() => handleNavigateToEducation('/diamond')} className='btn-menu-items'>
+                                        <span className='items'>
+                                            <span className='name-item'>Diamond</span>
+                                            <span className='direct-item'>
+                                                <span className='direct'> <RightOutlined /></span>
+                                            </span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
                 </div>
             </div>
 
+<<<<<<< HEAD
 
+=======
+            {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
+            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
+            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
 
             {menuContact && (
                 <div className="wrapper-menu">

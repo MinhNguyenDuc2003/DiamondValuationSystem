@@ -29,7 +29,10 @@ import Sculpture from "./pages/Service/Sculpture";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
+<<<<<<< HEAD
 import MyOder from "./pages/MyOrder/MyOder";
+=======
+>>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
 
 
 
