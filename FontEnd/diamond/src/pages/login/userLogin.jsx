@@ -21,7 +21,6 @@ const UserLogin = () => {
     useEffect(() => {
       const checkToken = async () => {
         const result = await validateToken();
-        console.log("abc");
         if (result.status === 200 ) {
           navigate("/");
         }
@@ -58,7 +57,7 @@ const UserLogin = () => {
                             {error}
                     </Alert>)}
                 <div className='form-group' >
-                    <label htmlFor='email' className='text-start'>email</label>
+                    <label htmlFor='email' className='text-start'>Email</label>
                     <input 
                         className='form-control'
                         type='email' 

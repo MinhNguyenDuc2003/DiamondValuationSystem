@@ -1,1 +1,15 @@
-Hello
+ private begincarat 0.1 0.1
+ endcarat 0.3	0.3
+ color D F
+
+clarity	IF If
+number 803 8.4
+
+
+0.5
+
+Carat 0.1-0.3 color clarity number 
+
+ 0.3-0.4
+
+>0.10.2 <0.3 D

@@ -8,23 +8,13 @@ export const api = axios.create({
 
 
 export async function loginUser(login) {
-    try {
-        const response = await api.post("/api/login", login);
+        const response = await api.post("/diamond-shop/login", login);
         return response.data ;
-    } catch (error) {
-        if (error.response) {
-            // Server responded with a status other than 2xx
-            return { success: false, status: error.response.status, message: error.response.data?.message || 'An error occurred' };
-        } else {
-            // Network error or other issue
-            return { success: false, message: error.message || 'Network error' };
-        }
-	}
 }
 
 export async function createNewAccount(account){
   try {
-    const response = await api.post("/api/signup", account);
+    const response = await api.post("/diamond-shop/signup", account);
     return response;
 } catch (error) {
     if (error.response) {
@@ -42,11 +32,8 @@ export const validateToken = async() => {
     const formData = new FormData();
     formData.append("token", token);
     if(token != null && token.length>0){
-        const result = await api.post("/api/auth/token", formData)
-        console.log("abc")
+        const result = await api.post("/diamond-shop/token", formData)
         return result;
-    }else{
-        return false;
     }
 }
 
@@ -56,7 +43,7 @@ try {
     if(id!==null & id>0){
       const formData = new FormData();
       formData.append("id", id);
-      const response = await api.post('/api/auth/token/refresh', formData);
+      const response = await api.post('/diamond-shop/token/refresh', formData);
       return response.data;
     }
 } catch (error) {

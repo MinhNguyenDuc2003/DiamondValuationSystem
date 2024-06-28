@@ -47,7 +47,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/diamond-shop")
 public class AuthController {
 	 private final AuthService authService;
 	 private final TokenService tokenService;
@@ -116,9 +116,9 @@ public class AuthController {
 			jwtUtils.validateAccessToken(token);
 			return ResponseEntity.ok().build();
 		}catch (JwtValidationException e) {
-			return ResponseEntity.status(403).build();
+			return ResponseEntity.status(401).build();
 		}catch (ExpiredJwtException e) {
-			return ResponseEntity.status(403).build();
+			return ResponseEntity.status(401).build();
 		}
 	}
 	@PostMapping("/signup")
