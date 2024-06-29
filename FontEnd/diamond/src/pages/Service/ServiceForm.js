@@ -1,15 +1,24 @@
 import './Service.scss';
 import React, { useState } from 'react';
 import { Form } from 'antd';
-import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField
+}
+  from '@mui/material';
 import paypal from './img/PayPal_Logo.jpg';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { v4 as uuidv4 } from 'uuid';
-=======
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
 
+//các style từ MUI
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -28,7 +37,6 @@ const formItemLayout = {
     },
   },
 };
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -40,15 +48,8 @@ const MenuProps = {
   },
 };
 
-const getStyles = (name, personName, theme) => {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-};
 
+//ten các service
 const names = [
   'Valuation',
   'Appraisal',
@@ -56,60 +57,60 @@ const names = [
 ];
 
 const ServiceForm = () => {
-  const theme = useTheme();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState();
   const [form] = Form.useForm();
   const [serviceSelected, setServiceSelected] = useState([]);
   const [payMentSelected, setPayMentSelected] = useState('');
-  const navigate = useNavigate();
+  const currentDate = new Date();
+  // Hàm lấy ngày, tháng, năm 
+  const day = currentDate.getDate().toString().padStart(2, '0'); 
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); 
+  const year = currentDate.getFullYear(); 
 
-<<<<<<< HEAD
-  
-
-=======
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
-  const handleDateChange = (newValue) => {
-    setSelectedDate(newValue.format('DD/MM/YYYY'));
-  };
-
-<<<<<<< HEAD
-  const [id, setId] = useState(uuidv4());
+  //hàm tạo chuỗi ngày tháng năm dạng "dd-mm-yyyy"
+  const formattedDate = `${day}-${month}-${year}`;
 
   const onFinish = (values) => {
-    setId(uuidv4());
-    const order = {
+    //hàm random RequestID
+    const requestId = Math.floor(Math.random() * 10) + 1;
+    //hàm lấy userID
+    const userId = JSON.parse(window.localStorage.getItem('user'));
+    //tạo ra request từ các data
+    const request = {
       ...values,
-      id : id,
+      userID: userId.id,
+      currentDate: formattedDate,
+      id: requestId,
       date: selectedDate,
       service: serviceSelected,
       paymentMethod: payMentSelected
     };
+
+    //truyền các dữ liệu đã nhập từ form sag PayMent Recipt
     navigate('/Payment-checkout', {
       state: {
-        formData: order
-        
-=======
-  const onFinish = (values) => {
-    navigate('/Payment-checkout', {
-      state: {
-        formData: {
-          ...values,
-          date: selectedDate,
-          service: serviceSelected,
-          paymentMethod: payMentSelected
-        }
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
+        formData: request
       }
     });
   };
 
   const handleServiceChange = (event) => {
-    const { value } = event.target; // Ensure event.target.value exists
+    const { value } = event.target;
     setServiceSelected(
       typeof value === 'string' ? value.split(',') : value
     );
   };
 
+  const handleChangeDate = (value) => {
+
+    // const selectedDate = new Date(value)
+    // if(currentDate > selectedDate){
+    //   console.log('Ngày nhập liệu bé hơn ngày hiện tại');
+    // }else{
+    setSelectedDate(value)
+    // }
+  }
   return (
     <div className='wrapperrr'>
       <div className="body-content">
@@ -197,7 +198,7 @@ const ServiceForm = () => {
               <TextField
                 label="Preferred Appraisal Date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => handleChangeDate(e.target.value)}
                 fullWidth
                 margin="normal"
                 type="date"
@@ -210,7 +211,7 @@ const ServiceForm = () => {
           <Form.Item
             label="Choose Service"
             name='service'
-           
+
           >
             <FormControl fullWidth>
               <InputLabel id="demo-multiple-chip-label">Service</InputLabel>
@@ -219,19 +220,15 @@ const ServiceForm = () => {
                 id="demo-multiple-chip"
                 multiple
                 value={serviceSelected}
-                onChange={(event) => handleServiceChange(event)} // Pass event directly
+                onChange={(event) => handleServiceChange(event)} 
                 input={<OutlinedInput id="select-multiple-chip" label="Service" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => (
-<<<<<<< HEAD
-                      <MenuItem key={value} label={value} 
+                      <MenuItem key={value} label={value}
                       >
                         {value}
-                        </MenuItem>
-=======
-                      <Chip key={value} label={value} />
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
+                      </MenuItem>
                     ))}
                   </Box>
                 )}
@@ -241,11 +238,7 @@ const ServiceForm = () => {
                   <MenuItem
                     key={name}
                     value={name}
-<<<<<<< HEAD
-                    
-=======
-                    style={getStyles(name, serviceSelected, theme)}
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
+
                   >
                     {name}
                   </MenuItem>
@@ -278,7 +271,7 @@ const ServiceForm = () => {
                   label={
                     <Box display="flex" alignItems="center">
                       <img src={paypal} alt="PayPal" height="20" style={{ marginRight: 5 }} />
-                     
+
                     </Box>
                   }
                 />
@@ -286,10 +279,10 @@ const ServiceForm = () => {
             </FormControl>
           </Form.Item>
           <Form.Item>
-          <Box marginTop={2} marginLeft={45} display="flex" justifyContent="center">
-            <Button variant="contained" type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <Box marginTop={2} marginLeft={45} display="flex" justifyContent="center">
+              <Button variant="contained" type="submit" >
+                Submit
+              </Button>
             </Box>
           </Form.Item>
         </Form>

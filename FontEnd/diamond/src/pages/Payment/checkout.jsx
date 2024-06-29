@@ -3,21 +3,9 @@ import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, 
 import paypal from '../Service/img/PayPal_Logo.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
+import { ToastContainer, toast } from 'react-toastify';
 
-<<<<<<< HEAD
-=======
-const fakeFormData = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'johndoe@example.com',
-  phone: '1234567890',
-  address: '123 Main St, City, Country',
-  date: '2024-06-30',
-  service: ['Valuation', 'Appraisal'],
-  paymentMethod: 'PayPal'
-};
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
-
+//khai báo giá của service
 const servicePrices = {
   'Valuation': 100,
   'Appraisal': 150,
@@ -25,54 +13,45 @@ const servicePrices = {
 };
 
 const Checkout = () => {
-<<<<<<< HEAD
   const { formData } = useLocation().state ;
-=======
-  const { formData } = useLocation().state || { formData: fakeFormData };
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
   const [checkPay , setCheckPay] = useState(true);
-
+  const navigate = useNavigate('');
+  
+  //hàm tính giá tiền của các service sử dụng
   const calculateTotal = () => {
     if (formData.service) {
       return formData.service.reduce((total, service) => total + (servicePrices[service] || 0), 0);
     }
     return 0;
   };
-
+  
   const total = calculateTotal();
-
-  const navigate = useNavigate('');
+  
+  //call api de check exist requestID ở method : Carh
   const handleBookingClick = () => {
-<<<<<<< HEAD
-    // const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    // existingOrders.push(formData);
-    // localStorage.setItem('orders', JSON.stringify(existingOrders));
-=======
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
-    alert(' Booking successful !');
-    <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-     Booking successful !
-    </Alert>
-    
+    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(formData);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
+   toast.success(` Booking successful !`, {autoClose : 3000})
     setTimeout(() => {
       navigate('/');
-    }, 100);
+    }, 4000);
   };
+  //call api de check exist requestID ở method : PayPal
   const handlePayClick = () => {
     if(checkPay === true){   
-<<<<<<< HEAD
       const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
       existingOrders.push(formData);
       localStorage.setItem('orders', JSON.stringify(existingOrders));
-=======
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
       navigate('/Payment-checkout-success')
     }else{
-      alert(' Pay Fail')
+      toast.error(`Pay Fail`, {autoClose : 2000})
     }
   }
   return (
     <div className="wrapperrrrr">
+      <ToastContainer/>
       <Paper className="checkout-paper" elevation={3}>
         <div className='header-checkout'>
           <Typography variant="h4" align="center" gutterBottom>

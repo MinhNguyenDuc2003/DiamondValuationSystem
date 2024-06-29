@@ -20,11 +20,7 @@ const ManageAccount = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     
-=======
-    window.location.reload()
->>>>>>> 834f79b370566ec58ef3a196806fa6076eb7a69f
     try {
       window.localStorage.setItem(
         'user',
