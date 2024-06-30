@@ -36,6 +36,7 @@ const Checkout = () => {
    toast.success(` Booking successful !`, {autoClose : 3000})
     setTimeout(() => {
       navigate('/');
+      window.location.reload();
     }, 4000);
   };
   //call api de check exist requestID ở method : PayPal

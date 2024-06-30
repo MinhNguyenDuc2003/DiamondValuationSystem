@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Menu, Input, Space } from 'antd';
 import './Header.scss';
 import logo from './image/logot.png';
-import { IconButton, List, ListItemButton, ListItemText, Popover } from '@mui/material';
-
+import { Badge, IconButton, List, ListItemButton, ListItemText, Popover } from '@mui/material';
+import MailIcon from '@mui/icons-material/Mail';
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -17,10 +17,14 @@ const Header = () => {
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const [totalRequest , setTotalRequest] = useState('')
+    const [badgeVisible, setBadgeVisible] = useState(true);
 
-    const handleUserAccount = () => {
-        setUser(window.localStorage.getItem(`user`))
-    }
+    // Ẩn Badge khi click vào
+    const handleBadgeClick = () => {
+        setBadgeVisible(false); 
+      
+    };
     const handleLogoutClick = () => {
         window.localStorage.removeItem(`user`);
         window.location.reload()
@@ -51,6 +55,12 @@ const Header = () => {
     };
 
     useEffect(() => {
+        const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        //dung để lấy ra độ dài của mảng
+        setTotalRequest(storedOrders.length);
+      }, []);
+
+    useEffect(() => {           
         const handleScroll = () => {
             const scrollY = window.scrollY;
             setScrolled(scrollY > 0);
@@ -117,7 +127,14 @@ const Header = () => {
                             <ListItemText primary="Manage Account" />
                         </ListItemButton>
                         <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
+
+                            <Badge sx={{gap : "5px"}} 
+                            badgeContent={totalRequest}
+                            onClick={handleBadgeClick}
+                             color="primary">
                             <ListItemText primary="My Request" />
+                                
+                            </Badge>
                         </ListItemButton>
                         <ListItemButton onClick={handleLogoutClick}>
                             <ListItemText primary="Logout" />
@@ -222,7 +239,10 @@ const Header = () => {
                         onClick={handleMenuOpen}
                     >
                         {user ? (
-                            <strong >{nameUser.LastName}</strong>
+                               <Badge sx={{gap : "5px"}} badgeContent={totalRequest} color="primary">
+                                   <strong >{nameUser.LastName}</strong>
+
+                               </Badge>
                         ) : (
                             <UserOutlined />
                         )}

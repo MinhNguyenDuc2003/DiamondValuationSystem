@@ -9,7 +9,7 @@ const MyOrder = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [totalRequest , setTotalRequest] = useState('');
 //phan trang , 3 request / 1 trang
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
@@ -18,6 +18,8 @@ const MyOrder = () => {
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
     setOrders(storedOrders);
+    //dung để lấy ra độ dài của mảng
+    setTotalRequest(storedOrders.length);
   }, []);
 
 
@@ -36,12 +38,16 @@ const MyOrder = () => {
     setCurrentPage(page);
   };
 
+  //các hàm khai báo phục vụ cho  phân trang
   const indexOfLastOrder = currentPage * itemsPerPage;
   const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   return (
-    <div className='wrapperrr'>
+    <Box className='wrapperrr' >
+    <Box sx={{textAlign : 'start', marginLeft:'50px'}}> 
+      <Typography sx={{color :'blue'}}>Total Request : {totalRequest} </Typography>
+    </Box>
       <Box sx={{ margin: 2 }}>
         <Typography variant="h4">Tracking Request Process</Typography>
       </Box>
@@ -50,10 +56,15 @@ const MyOrder = () => {
           <Typography>No Request to track.</Typography>
         ) : (
           currentOrders.map(order => (
-            <Paper key={order.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 2, padding: 2 }}>
-              <Box>
+            <Paper key={order.id} sx={{textAlign:'start' ,display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 2, padding: 2 }}>
+              <Box >
                 <Typography variant="h6">Request ID: {order.id}</Typography>
+                <Typography>Date: {order.currentDate} </Typography>
                 <Typography>Customer: {order.firstName} {order.lastName}</Typography>
+                <Typography>Serviced: {order.service.join(', ')} </Typography>
+                <Typography>PayMent: {order.paymentMethod === 'PayPal' ? 'Done' : 'Not Yet'} </Typography>
+
+                
               </Box>
               <Button variant="contained" onClick={() => handleShowDetails(order)}>Show Details</Button>
             </Paper>
@@ -98,7 +109,7 @@ const MyOrder = () => {
         onChange={handlePageChange}
         shape="rounded"
       />
-    </div>
+    </Box>
   );
 };
 
