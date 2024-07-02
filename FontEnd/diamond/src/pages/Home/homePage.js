@@ -10,7 +10,6 @@ import { Col, Row } from "antd";
 import './banner.scss'
 import { Box } from "@mui/material";
 
-
 const HomePage = () => {
 
 

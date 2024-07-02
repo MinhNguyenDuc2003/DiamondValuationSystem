@@ -52,7 +52,7 @@ const ServiceForm = () => {
   const onFinish = () => {
     const requestId = Math.floor(Math.random() * 10) + 1;
     const userId = JSON.parse(window.localStorage.getItem('user'));
-
+    //lay du liệu của user và thêm vào request
     const request = {
       userID: userId.id,
       currentDate: formattedDate,
