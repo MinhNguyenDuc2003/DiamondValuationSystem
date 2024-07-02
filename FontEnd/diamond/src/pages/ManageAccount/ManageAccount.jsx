@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Typography, TextField, Button, Box, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 const ManageAccount = () => {
-    const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {}); // Parse user object from localStorage
-  const [editMode, setEditMode] = useState(false); // State to manage edit mode
+  const navigate = useNavigate();
+  const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {});
+  const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     email: user.Email || '',
     firstName: user.FirstName || '',
@@ -13,6 +14,9 @@ const ManageAccount = () => {
     password: user.Password || '',
     phone: user.Phone || ''
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,8 +24,9 @@ const ManageAccount = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
+      // Update localStorage
       window.localStorage.setItem(
         'user',
         JSON.stringify({
@@ -38,16 +43,16 @@ const ManageAccount = () => {
       // Update user state
       setUser(JSON.parse(window.localStorage.getItem('user')));
 
-      // Call API to update user data
-      const userId = user.id; 
-      const response = await fetch(`https://6660044b5425580055b1c21d.mockapi.io/Assignment/User/${userId}`, {
+     //call api 
+      const userId = user.id;
+      const response = await fetch(`https://api.example.com/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...user,
-          Email: formData.email ,
+          Email: formData.email,
           FirstName: formData.firstName,
           LastName: formData.lastName,
           Location: formData.location,
@@ -57,25 +62,62 @@ const ManageAccount = () => {
       });
 
       if (response.ok) {
-        console.log('User data updated successfully');
+        setSnackbarSeverity('success');
+        setSnackbarMessage('User data updated successfully');
       } else {
-        console.error('Failed to update user data');
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Failed to update user data');
       }
+      setSnackbarOpen(true);
 
-      setEditMode(false);
+      setEditMode(false); // Exit edit mode
     } catch (error) {
       console.error('Error updating user data:', error);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error updating user data');
+      setSnackbarOpen(true);
     }
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelClick = () => {
+    // Reset dât
+    setFormData({
+      email: user.Email || '',
+      firstName: user.FirstName || '',
+      lastName: user.LastName || '',
+      location: user.Location || '',
+      password: user.Password || '',
+      phone: user.Phone || ''
+    });
+
+    setEditMode(false);
+  };
+
   return (
-    <Container maxWidth="sm" className='wrapperrr'>
+    <Container maxWidth="sm" className="wrapperr">
       <Typography variant="h3" gutterBottom>Your Profile</Typography>
       <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 1 }}>
-        
+        {!editMode ? (
+          <>
+            <Typography variant="h5" gutterBottom>Personal Information</Typography>
+            <Typography variant="body1" gutterBottom><strong>Email:</strong> {formData.email}</Typography>
+            <Typography variant="body1" gutterBottom><strong>First Name:</strong> {formData.firstName}</Typography>
+            <Typography variant="body1" gutterBottom><strong>Last Name:</strong> {formData.lastName}</Typography>
+            <Typography variant="body1" gutterBottom><strong>Location:</strong> {formData.location}</Typography>
+            <Typography variant="body1" gutterBottom><strong>Phone:</strong> {formData.phone}</Typography>
+            <Button onClick={handleEditClick} variant="outlined" color="primary" sx={{ mt: 2 }}>Edit</Button>
+          </>
+        ) : (
           <form onSubmit={handleSubmit}>
             <TextField
-            sx={{color:'gray'}}
               id="email"
               name="email"
               label="Email"
@@ -83,6 +125,7 @@ const ManageAccount = () => {
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              disabled={!editMode}
             />
             <TextField
               id="firstName"
@@ -94,6 +137,7 @@ const ManageAccount = () => {
               fullWidth
               margin="normal"
               required
+              disabled={!editMode}
             />
             <TextField
               id="lastName"
@@ -105,6 +149,7 @@ const ManageAccount = () => {
               fullWidth
               margin="normal"
               required
+              disabled={!editMode}
             />
             <TextField
               id="location"
@@ -116,6 +161,7 @@ const ManageAccount = () => {
               fullWidth
               margin="normal"
               required
+              disabled={!editMode}
             />
             <TextField
               id="password"
@@ -128,6 +174,7 @@ const ManageAccount = () => {
               fullWidth
               margin="normal"
               required
+              disabled={!editMode}
             />
             <TextField
               id="phone"
@@ -139,16 +186,28 @@ const ManageAccount = () => {
               fullWidth
               margin="normal"
               required
+              disabled={!editMode}
             />
-            {/* Add more TextFields for additional fields */}
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-              Save
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Button type="submit" variant="contained" color="primary" sx={{ mr: 2 }}>
+                Save
+              </Button>
+              <Button variant="contained" color="secondary" onClick={handleCancelClick}>
+                Cancel
+              </Button>
+            </Box>
           </form>
-       
+        )}
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+      />
     </Container>
-  )
-}
+  );
+};
 
-export default ManageAccount
+export default ManageAccount;
