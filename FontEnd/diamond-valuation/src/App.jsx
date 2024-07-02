@@ -24,6 +24,8 @@ import EditDiamondRequest from "./scenes/requests/EditDiamondRequest";
 import Certificates from "./scenes/certificates/Certificates";
 import CreateCertificate from "./scenes/certificates/CreateCertificate";
 import Dashboard from "./scenes/home/Dashboard";
+import Rapaport from "./scenes/rapaport/Rapaport";
+import Report from "./scenes/report/Report";
 
 const App = () => {
   return (
@@ -180,6 +182,26 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <CreateCertificate />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Rapaport */}
+          <Route
+            path="/rapaport"
+            element={
+              <PrivateRoute>
+                <Rapaport />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Report */}
+          <Route
+            path="/report"
+            element={
+              <PrivateRoute>
+                <Report />
               </PrivateRoute>
             }
           />
