@@ -11,6 +11,8 @@ export const ROUTERS = {
         SERVICE_VALUATION: "/Service/valuation",
         SERVICE_VALUATION_FORM: "/Service/valuation/valuation-form",
         SERVICE_SCULPTURE: "/Service/sculpture",
+        SERVICE_Lookup: "/Service/Lookup",
+        SERVICE_Report: "/Report/:id",
         PAYMENT_CHECKOUT: "/Payment-checkout",
         PAYMENT_success: "/Payment-checkout-success",
         SERVICE_SALE: "/Service/sale",

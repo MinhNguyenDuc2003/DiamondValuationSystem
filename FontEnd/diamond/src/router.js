@@ -30,6 +30,8 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
 import MyOder from "./pages/MyOrder/MyOder";
+import Lookup from "./pages/Lookup/Lookup";
+
 
 
 
@@ -90,6 +92,10 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_Lookup,
+            component: <Lookup/>
         },
         //CheckOut
         {

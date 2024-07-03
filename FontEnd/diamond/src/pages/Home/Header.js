@@ -1,11 +1,10 @@
 import React, { memo, useEffect, useState } from 'react';
-import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import {CloseCircleOutlined, UserOutlined, SearchOutlined,FacebookOutlined, PhoneOutlined, WhatsAppOutlined,  EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Dropdown, Menu, Input, Space } from 'antd';
+import { Button,  Input } from 'antd';
 import './Header.scss';
 import logo from './image/logot.png';
 import { Badge, IconButton, List, ListItemButton, ListItemText, Popover } from '@mui/material';
-import MailIcon from '@mui/icons-material/Mail';
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -18,13 +17,13 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [totalRequest , setTotalRequest] = useState('')
-    const [badgeVisible, setBadgeVisible] = useState(true);
+    // const [badgeVisible, setBadgeVisible] = useState(true);
 
     // Ẩn Badge khi click vào
-    const handleBadgeClick = () => {
-        setBadgeVisible(false); 
+    // const handleBadgeClick = () => {
+    //     setBadgeVisible(false); 
       
-    };
+    // };
     const handleLogoutClick = () => {
         window.localStorage.removeItem(`user`);
         window.location.reload()
@@ -85,11 +84,9 @@ const Header = () => {
     ];
 
     const handleSearch = () => {
-        console.log('Search value:', searchValue);
         const filteredBlogs = blogs.filter(blog =>
             blog.title.toLowerCase().includes(searchValue.toLowerCase())
         );
-        console.log('Filtered blogs:', filteredBlogs);
         if (filteredBlogs.length > 0) {
             setSearchValue(``);
             navigate(`/blog/${filteredBlogs[0].id}`);
@@ -130,7 +127,6 @@ const Header = () => {
 
                             <Badge sx={{gap : "5px"}} 
                             badgeContent={totalRequest}
-                            onClick={handleBadgeClick}
                              color="primary">
                             <ListItemText primary="My Request" />
                                 
@@ -213,6 +209,10 @@ const Header = () => {
                         </li>
                         <li>
                             <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>Lookup
                             </button>
                         </li>
                     </ul>
