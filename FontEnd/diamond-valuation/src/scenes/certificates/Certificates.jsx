@@ -343,11 +343,6 @@ const Certificates = () => {
               <TableCell align="center">Symmetry</TableCell>
               <TableCell align="center">Measurement</TableCell>
               <TableCell align="center">Cert</TableCell>
-              {/* <TableCell align="center">Min Price</TableCell>
-              <TableCell align="center">Max Price</TableCell>
-              <TableCell align="center">RAP Percent</TableCell>
-              <TableCell align="center">RAP Price</TableCell>
-              <TableCell align="center">Real Price</TableCell> */}
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -493,16 +488,29 @@ const Certificates = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
+          <Button
+            onClick={handleDelete}
+            color="secondary"
+            autoFocus
+            variant="contained"
+          >
             Delete
           </Button>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button
+            onClick={handleCloseDialog}
+            color="primary"
+            variant="contained"
+          >
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openRequestDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog
+        open={openRequestDialog}
+        onClose={() => setOpenDialog(false)}
+        variant="contained"
+      >
         <DialogTitle>Select Request</DialogTitle>
         <DialogContent>
           <DialogContentText>

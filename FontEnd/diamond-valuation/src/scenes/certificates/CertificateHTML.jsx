@@ -1,4 +1,7 @@
 import React from "react";
+import logo from "../../../image/logo.png";
+import facet1 from "../../../image/Facet_part1.jpg";
+import facet2 from "../../../image/Facet_part2.jpg";
 
 const CertificateHTML = (certificate) => {
   return `
@@ -110,7 +113,7 @@ const CertificateHTML = (certificate) => {
 <body>
     <div class="title">
         <div class="logo">
-            <img src="logot.png" alt="LogoShine">
+            <img src=${logo} alt="LogoShine">
         </div>
         <div class="titleName">
             <h1 style="font-size: 20px; font-weight: bold;">SHINE REPORT</h1>
@@ -127,7 +130,7 @@ const CertificateHTML = (certificate) => {
                     <p>September 01/2024</p>
                     <p>SHINE Report Number <span>${certificate.code}</span></p>
                     <p>Shape and Cutting Style <span>${certificate.cut}</span></p>
-                    <p>Measurements <span>${certificate.meansurement}</span></p>
+                    <p>Measurements <span>${certificate.measurement}</span></p>
                 </div>
             </div>
             <div class="S-prop">
@@ -163,13 +166,13 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>PROPORTIONS</p>
                 <div class="props">
-                    <img class="alt-diamond" src="Facet_part1.jpg" alt="">
+                    <img class="alt-diamond" src=${facet1} alt="">
                 </div>
             </div>
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src="Facet_part2.jpg" alt="">
+                    <img class="alt-diamond" src=${facet2} alt="">
                 </div>
             </div>
 

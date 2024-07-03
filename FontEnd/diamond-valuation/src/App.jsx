@@ -26,6 +26,9 @@ import CreateCertificate from "./scenes/certificates/CreateCertificate";
 import Dashboard from "./scenes/home/Dashboard";
 import Rapaport from "./scenes/rapaport/Rapaport";
 import Report from "./scenes/report/Report";
+import EditCertificate from "./scenes/certificates/EditCertificate";
+import ManageRequest from "./scenes/manager/ManageRequest";
+import ManageReports from "./scenes/manager/ManageReports";
 
 const App = () => {
   return (
@@ -178,6 +181,14 @@ const MainContent = () => {
             }
           />
           <Route
+            path="/certificates/:certificateId"
+            element={
+              <PrivateRoute>
+                <EditCertificate />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/create-certificate/:requestId"
             element={
               <PrivateRoute>
@@ -202,6 +213,24 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Report />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Manager */}
+          <Route
+            path="/managerequests"
+            element={
+              <PrivateRoute>
+                <ManageRequest />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/managereports"
+            element={
+              <PrivateRoute>
+                <ManageReports />
               </PrivateRoute>
             }
           />

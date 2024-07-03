@@ -15,34 +15,16 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
-  getRequestById,
+  getCertificateById,
   saveCertificate,
-  updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 
-const CreateCertificate = () => {
-  const { requestId } = useParams();
-  const [request, setRequest] = useState(null);
+const EditCertificate = () => {
+  const { certificateId } = useParams();
+  const [certificate, setCertificate] = useState(null);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-
-  const initialValues = {
-    id: "",
-    carat: "",
-    clarity: "",
-    color: "",
-    cut: "",
-    flourescence: "",
-    make: "",
-    polish: "",
-    symmetry: "",
-    cert: "",
-    length: "",
-    width: "",
-    height: "",
-    request_id: requestId,
-  };
 
   const validationSchema = Yup.object().shape({
     carat: Yup.number().required("Required"),
@@ -60,36 +42,32 @@ const CreateCertificate = () => {
   });
 
   useEffect(() => {
-    getRequestById(requestId)
+    getCertificateById(certificateId)
       .then((data) => {
-        setRequest(data);
+        setCertificate(data);
       })
       .catch((error) => {
-        console.error("Error fetching request: ", error);
+        console.error("Error fetching certificate: ", error);
       });
-    setTimeout(() => {
-      setError("");
-    }, 2000);
-  }, [requestId]);
+  }, [certificateId]);
 
   const handleSubmit = async (values) => {
     try {
       const measurement = `${values.length}-${values.width}x${values.height}mm`;
-      const certificateData = {
+      const updatedCertificateData = {
         ...values,
         measurement,
       };
-      console.log(certificateData);
-      const result = await saveCertificate(certificateData);
+      console.log(updatedCertificateData);
+      const result = await saveCertificate(updatedCertificateData);
       if (result.message !== undefined) {
         localStorage.setItem(
           "successMessage",
-          "Add new Certificate successfully"
+          "Certificate updated successfully"
         );
-        updateRequestStatus(requestId, "PROCESSED");
         navigate("/certificates");
       } else {
-        setError("Error creating certificate");
+        setError("Error updating certificate");
       }
     } catch (error) {
       setError(error);
@@ -101,7 +79,6 @@ const CreateCertificate = () => {
 
   const handleCancel = async () => {
     try {
-      updateRequestStatus(requestId, "NEW");
       navigate("/certificates");
     } catch (error) {
       setError(error);
@@ -160,6 +137,25 @@ const CreateCertificate = () => {
     ],
   };
 
+  if (!certificate) return null;
+
+  const initialValues = {
+    id: certificate.id,
+    carat: certificate.carat,
+    clarity: certificate.clarity,
+    color: certificate.color,
+    cut: certificate.cut,
+    flourescence: certificate.flourescence,
+    make: certificate.make,
+    polish: certificate.polish,
+    symmetry: certificate.symmetry,
+    cert: certificate.name,
+    length: parseFloat(certificate.measurement.split("-")[0]),
+    width: parseFloat(certificate.measurement.split("-")[1].split("x")[0]),
+    height: parseFloat(certificate.measurement.split("x")[1].replace("mm", "")),
+    request_id: certificate.request_id,
+  };
+
   return (
     <Box p="20px">
       <Box
@@ -170,13 +166,8 @@ const CreateCertificate = () => {
         p="16px"
       >
         <Typography variant="h4" gutterBottom>
-          Create Certificate for Request ID: {requestId}
+          Edit Certificate for ID: {certificateId}
         </Typography>
-        {request && (
-          <Typography variant="h6" gutterBottom>
-            Current Status: {request.status}
-          </Typography>
-        )}
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -188,6 +179,7 @@ const CreateCertificate = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
+          enableReinitialize
         >
           {({
             values,
@@ -242,7 +234,7 @@ const CreateCertificate = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>Meansurement: </Typography>
+                  <Typography>Measurement: </Typography>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -304,4 +296,4 @@ const CreateCertificate = () => {
   );
 };
 
-export default CreateCertificate;
+export default EditCertificate;

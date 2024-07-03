@@ -14,6 +14,7 @@ import RequestPageIcon from "@mui/icons-material/RequestPage";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
+import BlockIcon from "@mui/icons-material/Block";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
@@ -194,26 +195,19 @@ const SideBar = () => {
               //   color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Pages
+              Manager
             </Typography>
             <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
+              title="Manage Requests"
+              to="/managerequests"
+              icon={<BlockIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlinedIcon />}
+              title="Manage Reports"
+              to="/managereports"
+              icon={<ReportIcon />}
               selected={selected}
               setSelected={setSelected}
             />

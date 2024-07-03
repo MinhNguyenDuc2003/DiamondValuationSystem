@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Button,
   TextField,
@@ -18,8 +19,11 @@ export const Report = () => {
     const reportData = {
       title,
       content,
+      status: "New",
     };
-    console.log("Report Data Submitted:", reportData);
+    axios
+      .post("https://665ae895003609eda45f3327.mockapi.io/Report", reportData)
+      .catch((error) => console.error("Error creating course:", error));
     // Handle the submitted report data here (e.g., send to an API)
     handleClear();
   };

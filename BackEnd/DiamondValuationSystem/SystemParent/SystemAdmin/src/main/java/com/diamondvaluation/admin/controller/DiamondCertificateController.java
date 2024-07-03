@@ -115,6 +115,7 @@ public class DiamondCertificateController {
 		certificate.setPolish(polish);
 		certificate.setSymmetry(symmetry);
 		certificate.setFlourescence(flourescence);
+		certificate.setMeasurement(request.getMeasurement());
 		DiamondRequest diamondRequest = new DiamondRequest(request.getRequest_id());
 		certificate.setRequest(diamondRequest);
 		return certificate;
@@ -122,6 +123,7 @@ public class DiamondCertificateController {
 
 	private CertificateResponse entity2Response(DiamondCertificate certificate) {
 		CertificateResponse response = modelMapper.map(certificate, CertificateResponse.class);
+		response.setRequestId(certificate.getRequest().getId());
 		if(certificate.getValuation()!=null) {
 			DiamondValuation valuation = valuationService.getById(certificate.getValuation().getId());
 			response.setMaxPrice(valuation.getMaxPrice());

@@ -79,8 +79,8 @@ const EditDiamondRequest = () => {
             service_ids: requestEdit.service_ids,
             payment_method: requestEdit.payment_method,
             paid: requestEdit.paid,
-            appointment_date: requestEdit.appoinment_date || null,
-            appointment_time: requestEdit.appoinment_time,
+            appointment_date: requestEdit.appoinment_date || "",
+            appointment_time: requestEdit.appoinment_time || "",
           });
         }
       } catch (error) {

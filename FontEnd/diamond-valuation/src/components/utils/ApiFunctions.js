@@ -285,6 +285,15 @@ export async function getAllCertificates() {
   }
 }
 
+export async function getCertificateById(id) {
+  try {
+    const result = await api.get(`api/certificates/certificate/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 export async function deleteCertificateById(id) {
   try {
     const result = await api.delete(`api/certificates/delete/${id}`);
