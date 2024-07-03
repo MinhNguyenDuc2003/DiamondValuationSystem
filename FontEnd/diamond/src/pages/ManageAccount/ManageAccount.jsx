@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Box, Snackbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Container, Typography, TextField, Button, Box, Snackbar, Avatar } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import LockIcon from '@mui/icons-material/Lock';
 
 const ManageAccount = () => {
-  const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {});
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     email: user.Email || '',
     firstName: user.FirstName || '',
     lastName: user.LastName || '',
-    location: user.Location || '',
+    location: user.Location || '',  
     password: user.Password || '',
     phone: user.Phone || ''
   });
@@ -43,9 +49,9 @@ const ManageAccount = () => {
       // Update user state
       setUser(JSON.parse(window.localStorage.getItem('user')));
 
-     //call api 
+      // Call API
       const userId = user.id;
-      const response = await fetch(`https://api.example.com/users/${userId}`, {
+      const response = await fetch(`https://api.com/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -88,7 +94,7 @@ const ManageAccount = () => {
   };
 
   const handleCancelClick = () => {
-    // Reset dât
+    // Reset form data
     setFormData({
       email: user.Email || '',
       firstName: user.FirstName || '',
@@ -102,18 +108,40 @@ const ManageAccount = () => {
   };
 
   return (
-    <Container maxWidth="sm" className="wrapperr">
-      <Typography variant="h3" gutterBottom>Your Profile</Typography>
-      <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 1 }}>
+    <Container maxWidth="md" sx={{ mt: 15 , mb: 10 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Avatar sx={{ width: 80, height: 80, mr: 2, backgroundColor: 'gray' }}>
+          <Typography sx={{fontSize : '30px'}}>
+          {user.LastName.charAt(0)}
+          </Typography>
+          </Avatar>
+        <Typography variant="h4">Your Profile</Typography>
+      </Box>
+      <Box sx={{ bgcolor: 'background.paper', p: 4, borderRadius: 1, boxShadow: 2 }}>
         {!editMode ? (
           <>
             <Typography variant="h5" gutterBottom>Personal Information</Typography>
-            <Typography variant="body1" gutterBottom><strong>Email:</strong> {formData.email}</Typography>
-            <Typography variant="body1" gutterBottom><strong>First Name:</strong> {formData.firstName}</Typography>
-            <Typography variant="body1" gutterBottom><strong>Last Name:</strong> {formData.lastName}</Typography>
-            <Typography variant="body1" gutterBottom><strong>Location:</strong> {formData.location}</Typography>
-            <Typography variant="body1" gutterBottom><strong>Phone:</strong> {formData.phone}</Typography>
-            <Button onClick={handleEditClick} variant="outlined" color="primary" sx={{ mt: 2 }}>Edit</Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <EmailIcon sx={{ mr: 1 }} />
+              <Typography variant="body1"><strong>Email:</strong> {formData.email}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <PersonIcon sx={{ mr: 1 }} />
+              <Typography variant="body1"><strong>First Name:</strong> {formData.firstName}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <PersonIcon sx={{ mr: 1 }} />
+              <Typography variant="body1"><strong>Last Name:</strong> {formData.lastName}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <LocationOnIcon sx={{ mr: 1 }} />
+              <Typography variant="body1"><strong>Location:</strong> {formData.location}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <PhoneIcon sx={{ mr: 1 }} />
+              <Typography variant="body1"><strong>Phone:</strong> {formData.phone}</Typography>
+            </Box>
+            <Button onClick={handleEditClick} variant="outlined" startIcon={<EditIcon />} sx={{ mt: 2 }}>Edit</Button>
           </>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -125,74 +153,93 @@ const ManageAccount = () => {
               onChange={handleInputChange}
               fullWidth
               margin="normal"
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <EmailIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="firstName"
               name="firstName"
               label="First Name"
-              variant="outlined"
               value={formData.firstName}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <PersonIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="lastName"
               name="lastName"
               label="Last Name"
-              variant="outlined"
               value={formData.lastName}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <PersonIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="location"
               name="location"
               label="Location"
-              variant="outlined"
               value={formData.location}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <LocationOnIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="password"
               name="password"
               label="Password"
               type="password"
-              variant="outlined"
               value={formData.password}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <LockIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="phone"
               name="phone"
               label="Phone"
-              variant="outlined"
               value={formData.phone}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
-              disabled={!editMode}
+              InputProps={{
+                startAdornment: (
+                  <PhoneIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Button type="submit" variant="contained" color="primary" sx={{ mr: 2 }}>
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />} sx={{ mr: 2 }}>
                 Save
               </Button>
-              <Button variant="contained" color="secondary" onClick={handleCancelClick}>
+              <Button variant="contained" color="error" startIcon={<CancelIcon />} onClick={handleCancelClick}>
                 Cancel
               </Button>
             </Box>

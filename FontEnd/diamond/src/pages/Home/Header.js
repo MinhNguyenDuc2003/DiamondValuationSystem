@@ -196,7 +196,7 @@ const Header = () => {
                     <button>Service</button>
                     <ul className="service-content">
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
+                            <button onClick={() => handleNavigateToService('/Service/Valuation')}>Valuation
                             </button>
                         </li>
                         <li>
@@ -204,11 +204,11 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
+                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>ServiceList
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
+                            <button onClick={() => handleNavigateToService('/Service/Sculpture')}>Sculpture
                             </button>
                         </li>
                         <li>

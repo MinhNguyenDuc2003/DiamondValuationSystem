@@ -31,6 +31,7 @@ import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
 import MyOder from "./pages/MyOrder/MyOder";
 import Lookup from "./pages/Lookup/Lookup";
+import ServiceList from "./pages/ServiceList/ServiceList";
 
 
 
@@ -80,6 +81,10 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.SERVICE_VALUATION_FORM,
             component: <ServiceForm/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_ServiceList,
+            component: <ServiceList/>
         },
         {
             path : ROUTERS.USER.SERVICE_CALCULATOR,

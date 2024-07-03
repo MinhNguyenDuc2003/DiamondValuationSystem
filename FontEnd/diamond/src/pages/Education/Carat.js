@@ -1,30 +1,53 @@
 import React from 'react';
+import { Container, Typography, Paper, List, ListItem } from '@mui/material';
 import './Education.scss';
 import data from './Education.json';
 
 const EDUCATION_CARAT = () => {
   return (
-    <div className="education-wrapper">
-      {data.Carat.title && <h1>{data.Carat.title}</h1>}
-      {data.Carat.author && <p><strong>Author:</strong> {data.Carat.author}</p>}
-      {data.Carat.date && <p><strong>Date:</strong> {data.Carat.date}</p>}
-      {data.Carat.content && data.Carat.content.map((section, index) => (
-        <div key={index} className="section">
-          {section.heading && <h2>{section.heading}</h2>}
-          {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
+    <Container maxWidth="md" className="education-wrapper">
+        {data.Carat.title && (
+          <Typography variant="h4" gutterBottom>
+            {data.Carat.title}
+          </Typography>
+        )}
+        {data.Carat.author && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Author:</strong> {data.Carat.author}
+          </Typography>
+        )}
+        {data.Carat.date && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Date:</strong> {data.Carat.date}
+          </Typography>
+        )}
+        {data.Carat.content &&
+          data.Carat.content.map((section, index) => (
+            <div key={index} className="section">
+              {section.heading && (
+                <Typography variant="h5" gutterBottom>
+                  {section.heading}
+                </Typography>
+              )}
+              {section.paragraphs &&
+                section.paragraphs.map((paragraph, idx) => (
+                  <Typography key={idx} variant="body1" paragraph>
+                    {paragraph}
+                  </Typography>
+                ))}
+              {section.listItems && (
+                <List>
+                  {section.listItems.map((item, idx) => (
+                    <ListItem key={idx}>
+                      <Typography variant="body1">{item}</Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </div>
           ))}
-          {section.listItems && (
-            <ul>
-              {section.listItems.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
-    </div>
+    </Container>
   );
-}
+};
 
 export default EDUCATION_CARAT;

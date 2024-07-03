@@ -1,30 +1,53 @@
 import React from 'react';
+import { Container, Typography, Paper, List, ListItem } from '@mui/material';
 import './Education.scss';
 import data from './Education.json';
+
 const EDUCATION_CLARITY = () => {
   return (
-
-    <div className="education-wrapper">
-      {data.Clarity.title && <h1>{data.Clarity.title}</h1>}
-      {data.Clarity.author && <p><strong>Author:</strong> {data.Clarity.author}</p>}
-      {data.Clarity.date && <p><strong>Date:</strong> {data.Clarity.date}</p>}
-      {data.Clarity.content && data.Clarity.content.map((section, index) => (
-        <div key={index} className="section">
-          {section.heading && <h2>{section.heading}</h2>}
-          {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
+    <Container maxWidth="md" className="education-wrapper">
+        {data.Clarity.title && (
+          <Typography variant="h4" gutterBottom>
+            {data.Clarity.title}
+          </Typography>
+        )}
+        {data.Clarity.author && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Author:</strong> {data.Clarity.author}
+          </Typography>
+        )}
+        {data.Clarity.date && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Date:</strong> {data.Clarity.date}
+          </Typography>
+        )}
+        {data.Clarity.content &&
+          data.Clarity.content.map((section, index) => (
+            <div key={index} className="section">
+              {section.heading && (
+                <Typography variant="h5" gutterBottom>
+                  {section.heading}
+                </Typography>
+              )}
+              {section.paragraphs &&
+                section.paragraphs.map((paragraph, idx) => (
+                  <Typography key={idx} variant="body1" paragraph>
+                    {paragraph}
+                  </Typography>
+                ))}
+              {section.listItems && (
+                <List>
+                  {section.listItems.map((item, idx) => (
+                    <ListItem key={idx}>
+                      <Typography variant="body1">{item}</Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </div>
           ))}
-          {section.listItems && (
-            <ul>
-              {section.listItems.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
-    </div>
+    </Container>
   );
-}
+};
 
 export default EDUCATION_CLARITY;
