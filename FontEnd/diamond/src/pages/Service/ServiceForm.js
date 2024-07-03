@@ -1,10 +1,10 @@
-import './Service.scss';
 import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
   FormControl,
   FormControlLabel,
+  FormLabel,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -44,9 +44,9 @@ const ServiceForm = () => {
   const currentDate = new Date();
 
   // Hàm lấy ngày, tháng, năm
-  const day = currentDate.getDate().toString().padStart(2, '0'); 
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); 
-  const year = currentDate.getFullYear(); 
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const year = currentDate.getFullYear();
   const formattedDate = `${day}-${month}-${year}`;
 
   const onFinish = () => {
@@ -101,14 +101,14 @@ const ServiceForm = () => {
   return (
     <div className='wrapperrr'>
       <div className="body-content">
-        <Box component="form" onSubmit={onFinish} sx={{ml:'12%', maxWidth: 600 }}>
+        <Box component="form" onSubmit={onFinish} sx={{ ml: '30%', maxWidth: 600 }}>
           <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
             Service Form
           </Typography>
           <TextField
             label="First Name"
             name="FirstName"
-            value={user.FirstName }
+            value={user.FirstName}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -117,7 +117,7 @@ const ServiceForm = () => {
           <TextField
             label="Last Name"
             name="LastName"
-            value={user.LastName }
+            value={user.LastName}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -127,7 +127,7 @@ const ServiceForm = () => {
             label="Email"
             name="Email"
             type="email"
-            value={user.Email }
+            value={user.Email}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -136,7 +136,7 @@ const ServiceForm = () => {
           <TextField
             label="Phone Number"
             name="Phone"
-            value={user.Phone }
+            value={user.Phone}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -145,7 +145,7 @@ const ServiceForm = () => {
           <TextField
             label="Address"
             name="Location"
-            value={user.Location }
+            value={user.Location}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -192,8 +192,8 @@ const ServiceForm = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl  component="fieldset" margin="normal">
-            
+          <FormControl component="fieldset" margin="normal">
+
             <RadioGroup
               row
               aria-labelledby="payment-method-radio-group-label"

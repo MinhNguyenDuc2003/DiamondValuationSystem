@@ -1,10 +1,18 @@
 import React, { memo, useEffect, useState } from 'react';
-import {CloseCircleOutlined, UserOutlined, SearchOutlined,FacebookOutlined, PhoneOutlined, WhatsAppOutlined,  EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button,  Input } from 'antd';
 import './Header.scss';
 import logo from './image/logot.png';
-import { Badge, IconButton, List, ListItemButton, ListItemText, Popover } from '@mui/material';
+import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import '@fontsource/roboto/500.css';
+import { useMediaQuery } from 'react-responsive';
+import MenuIcon from '@mui/icons-material/Menu';
+
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -16,20 +24,21 @@ const Header = () => {
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const [totalRequest , setTotalRequest] = useState('')
-    // const [badgeVisible, setBadgeVisible] = useState(true);
+    const [totalRequest, setTotalRequest] = useState('')
+    const [badgeVisible, setBadgeVisible] = useState(true);
+      //Responsive........
+      const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
 
     // Ẩn Badge khi click vào
-    // const handleBadgeClick = () => {
-    //     setBadgeVisible(false); 
-      
-    // };
+    const handleBadgeClick = () => {
+        setBadgeVisible(false);
+
+    };
     const handleLogoutClick = () => {
         window.localStorage.removeItem(`user`);
         window.location.reload()
         navigate('/');
     }
-
     const handleMenuOpen = (event) => {
         setUserMenuOpen(event.currentTarget);
     };
@@ -57,9 +66,9 @@ const Header = () => {
         const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
         //dung để lấy ra độ dài của mảng
         setTotalRequest(storedOrders.length);
-      }, []);
+    }, []);
 
-    useEffect(() => {           
+    useEffect(() => {
         const handleScroll = () => {
             const scrollY = window.scrollY;
             setScrolled(scrollY > 0);
@@ -84,9 +93,11 @@ const Header = () => {
     ];
 
     const handleSearch = () => {
+        console.log('Search value:', searchValue);
         const filteredBlogs = blogs.filter(blog =>
             blog.title.toLowerCase().includes(searchValue.toLowerCase())
         );
+        console.log('Filtered blogs:', filteredBlogs);
         if (filteredBlogs.length > 0) {
             setSearchValue(``);
             navigate(`/blog/${filteredBlogs[0].id}`);
@@ -114,22 +125,30 @@ const Header = () => {
             }}
             transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'left',
             }}
         >
             <List>
+                
                 {user ? (
                     <>
                         <ListItemButton onClick={() => handleNavigate('/account')}>
                             <ListItemText primary="Manage Account" />
                         </ListItemButton>
+                        {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
+
+                        )}
                         <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
-                            <Badge sx={{gap : "5px"}} 
-                            badgeContent={totalRequest}
-                             color="primary">
-                            <ListItemText primary="My Request" />
-                                
+                            <Badge sx={{ gap: "5px" }}
+                                badgeContent={totalRequest}
+                                onClick={handleBadgeClick}
+                                color="primary">
+                                <ListItemText primary="My Request" />
+
                             </Badge>
                         </ListItemButton>
                         <ListItemButton onClick={handleLogoutClick}>
@@ -150,12 +169,48 @@ const Header = () => {
         </Popover>
     );
 
+  
 
     return (
+
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
+
             <div className='header-left'>
+
                 <div className='contact'>
                     <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    {/* {menuContact && ( */}
+                    <div className="contact-content">
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <CallOutlinedIcon className='icon-contact' />
+                                <span>CALL US 099999999</span>
+                            </a>
+                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <WhatsAppIcon className='icon-contact' />
+                                <span>WHATSAPP US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FacebookOutlinedIcon className='icon-contact' />
+                                <span>FACEBOOK US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FmdGoodIcon className='icon-contact' />
+                                <span>ADDRESS US</span>
+                            </a>
+                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+                    {/* )} */}
                 </div>
                 <div className='education'>
                     <button>Education</button>
@@ -185,18 +240,26 @@ const Header = () => {
                 <div className='diamond'>
                     <button>Diamond</button>
                 </div>
+                {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
             </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
                 <img src={logo} alt="Logo" />
+
+
             </button>
 
+
+
             <div className='header-right'>
+
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/Valuation')}>Valuation
+                            <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
                             </button>
                         </li>
                         <li>
@@ -204,17 +267,18 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>ServiceList
+                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>Service List
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/Sculpture')}>Sculpture
+                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>LookUp
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>Lookup
+                            <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
                             </button>
                         </li>
+
                     </ul>
                 </div>
                 <div className='blog' >
@@ -223,36 +287,40 @@ const Header = () => {
 
                 <div className='active'>
                     <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-                        <Input
+                        <input
                             type='text'
                             placeholder='Looking for blogs'
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <Button className='search' htmlType='submit' icon={<SearchOutlined />} />
+                        <button className='search'><icon>{<SearchIcon fontSize='16px' style={{ marginBottom: '10px' }} />}</icon></button>
                     </form>
-                    <IconButton
-                        className='account-button'
+                    <div
+                        className='account'
                         aria-label="account-menu"
                         aria-controls="account-menu"
                         aria-haspopup="true"
                         onClick={handleMenuOpen}
                     >
-                        {user ? (
-                               <Badge sx={{gap : "5px"}} badgeContent={totalRequest} color="primary">
-                                   <strong >{nameUser.LastName}</strong>
+                        <div className='account-icon'>
+                            {user ? (
+                                <Badge sx={{ gap: "5px" }} badgeContent={totalRequest} color="primary">
+                                    <strong >{nameUser.LastName}</strong>
 
-                               </Badge>
-                        ) : (
-                            <UserOutlined />
-                        )}
-                    </IconButton>
+                                </Badge>
+                            ) : (
+                                <AccountCircleIcon />
+                            )}
+                        </div>
+
+                    </div>
                     {menuUser}
                 </div>
+
             </div>
 
 
-            {menuContact && (
+            {/* {menuContact && (
                 <div className="wrapper-menu">
                     <button onClick={() => setMenuContact(false)} className="close-button"><CloseCircleOutlined /></button>
                     <div className="menu-content">
@@ -288,7 +356,7 @@ const Header = () => {
                     </div>
                 </div>
             )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>}
+            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
         </div>
     );
 };
