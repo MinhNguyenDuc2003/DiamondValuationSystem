@@ -13,6 +13,7 @@ import '@fontsource/roboto/500.css';
 import { useMediaQuery } from 'react-responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 
+
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -26,8 +27,10 @@ const Header = () => {
     const location = useLocation();
     const [totalRequest, setTotalRequest] = useState('')
     const [badgeVisible, setBadgeVisible] = useState(true);
-      //Responsive........
-      const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
+
+    //Responsive........
+    const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
+
 
     // Ẩn Badge khi click vào
     const handleBadgeClick = () => {
@@ -39,6 +42,7 @@ const Header = () => {
         window.location.reload()
         navigate('/');
     }
+
     const handleMenuOpen = (event) => {
         setUserMenuOpen(event.currentTarget);
     };
@@ -129,7 +133,6 @@ const Header = () => {
             }}
         >
             <List>
-                
                 {user ? (
                     <>
                         <ListItemButton onClick={() => handleNavigate('/account')}>
@@ -169,16 +172,12 @@ const Header = () => {
         </Popover>
     );
 
-  
 
     return (
-
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
-
             <div className='header-left'>
-
                 <div className='contact'>
-                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}><span>+</span> Contact Us</button>
                     {/* {menuContact && ( */}
                     <div className="contact-content">
                         <div className="col">
@@ -239,7 +238,7 @@ const Header = () => {
                 </div>
                 <div className='diamond'>
                     <button>Diamond</button>
-                </div>
+                </div>      
                 {isMaxScreen767 && (
                     <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
                 )}
@@ -247,14 +246,9 @@ const Header = () => {
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
                 <img src={logo} alt="Logo" />
-
-
             </button>
 
-
-
             <div className='header-right'>
-
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
@@ -267,18 +261,13 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>Service List
-                            </button>
-                        </li>
-                        <li>
-                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>LookUp
+                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
                             </button>
                         </li>
                         <li>
                             <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
                             </button>
                         </li>
-
                     </ul>
                 </div>
                 <div className='blog' >
@@ -293,7 +282,7 @@ const Header = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button className='search'><icon>{<SearchIcon fontSize='16px' style={{ marginBottom: '10px' }} />}</icon></button>
+                        <button className='search'>{<SearchIcon />}</button>
                     </form>
                     <div
                         className='account'
@@ -316,7 +305,6 @@ const Header = () => {
                     </div>
                     {menuUser}
                 </div>
-
             </div>
 
 

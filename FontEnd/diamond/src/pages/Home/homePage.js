@@ -1,9 +1,6 @@
 import React, { memo } from "react";
 import bannerHome from "./image/diamondbanner.png";
-import DiamondAppraisal from './image/icon1.jpg';
-import JewelryAppraisal from './image/icon2.jpg';
-import Certification from './image/icon3.jpg';
-import Consultation from './image/icon4.jpg';
+import aboutimg from "./image/checkdiamond.jpg"
 import './HomePage.scss';
 import './banner.scss'
 
@@ -16,6 +13,7 @@ const HomePage = () => {
         <div className="home-page">
             <div className="banner">
                 <div className="filter-banner" />
+                <p>Welcome to Shine, your trusted partner in diamond valuation</p>
                 <img
                     className="img-banner"
                     src={bannerHome}
@@ -33,6 +31,15 @@ const HomePage = () => {
                     </p>
                 </div>
             </div>
+            <div className="body-content-2">
+                <div className="bc2-props">
+                    <img src={aboutimg} />
+                    <div className="prop-content">
+                        <h2>About Shine</h2>
+                        <p>Shine is a premier company dedicated to providing accurate and reliable diamond valuations. With years of experience in the diamond industry, we combine advanced technology with expert analysis to deliver precise valuations for your precious gems.</p>
+                    </div>
+                </div>
+            </div>
             <div className="body-content-3">
                 <h1>Our Vision for the Future</h1>
                 <p>
@@ -42,41 +49,60 @@ const HomePage = () => {
                     For more information about our services or to schedule an appraisal, please visit our website or contact our customer service team. At Shine, we are here to help you discover the true value of your diamonds.
                 </p>
             </div>
-            <div className="body-content-2">
-                <div className="bc2-props">
-                    <div className="bc2-prop">
-                        <img src={DiamondAppraisal} alt="icon1" />
-                        <h3>Diamond Appraisal</h3>
-                        <p>
-                            Detailed and accurate assessments of diamond value,
-                            considering factors such as carat weight, color, clarity, and cut.
-                        </p>
-                    </div>
-                    <div className="bc2-prop">
-                        <img src={JewelryAppraisal} alt="icon2" />
-                        <h3>Jewelry Appraisal</h3>
-                        <p>
-                            Appraisals for diamond jewelry, ensuring each
-                            piece is evaluated with precision and expertise.
-                        </p>
-                    </div>
-                    <div className="bc2-prop">
-                        <img src={Certification} alt="icon3" />
-                        <h3>Certification</h3>
-                        <p>
-                            Providing certified reports that are recognized globally, enhancing the value and authenticity of your diamonds.
 
-                        </p>
-                    </div>
-                    <div className="bc2-prop">
-                        <img src={Consultation} alt="icon4" />
-                        <h3>Consultation</h3>
-                        <p>
-                            Expert advice on diamond investments, purchases, and sales, tailored to meet individual client needs.
-                        </p>
+            <div className="body-content-4">
+                <section className="bc4">
+                    <h2>
+                        Discovering the True Worth
+                    </h2>
+                    <h3>Unveiling the Value of Your Diamonds</h3>
+                    <p>
+                        In every diamond lies a story of transformation,
+                        revealing beauty through time and pressure.
+                        A diamond's brilliance is a testament to its journey;
+                        beauty forged through nature's forces.
+                        <i>
+                            “The soul is placed in the body like a rough diamond,
+                            and must be polished, or the luster of it will never appear.”
+                            – Daniel Defoe
+                        </i>
+                    </p>
+                </section>
+                <div className="frame-diamond" />
+                <div className="frame-diamond-shadow" />
+            </div>
+
+            <section id="what-we-offer">
+                <div class="container">
+                    <h2 class="section-title">What We Offer</h2>
+
+                    <div class="offerings">
+                        <div class="offering-item">
+                            <h3 class="offering-title">Precision Technology</h3>
+                            <p class="offering-description">Cutting-Edge Tools and Software</p>
+                            <p class="offering-detail">We utilize the latest advancements in gemological technology to ensure each diamond is meticulously evaluated. Our state-of-the-art equipment measures every facet of your diamond, providing precise data on its cut, clarity, color, and carat weight.</p>
+                        </div>
+
+                        <div class="offering-item">
+                            <h3 class="offering-title">Expert Insights</h3>
+                            <p class="offering-description">Certified Gemologist Analysis</p>
+                            <p class="offering-detail">Our team of certified gemologists brings a wealth of knowledge and experience to every valuation. They analyze the data collected from our advanced tools and provide comprehensive, insightful reports that highlight the true value of your diamonds.</p>
+                        </div>
+
+                        <div class="offering-item">
+                            <h3 class="offering-title">Seamless Experience</h3>
+                            <p class="offering-description">User-Friendly Platform</p>
+                            <p class="offering-detail">Submitting your diamonds for valuation has never been easier. Our intuitive platform guides you through the process, allowing you to submit your diamonds and receive detailed reports swiftly. We prioritize ease of use, so you can focus on what matters most.</p>
+                        </div>
+
+                        <div class="offering-item">
+                            <h3 class="offering-title">Confidential and Secure</h3>
+                            <p class="offering-description">Top-Level Security Measures</p>
+                            <p class="offering-detail">We understand the importance of privacy and security. Your diamond information is handled with the highest level of confidentiality, safeguarded by our robust security protocols. Trust us to protect your valuable data throughout the valuation process.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
         </div>
 
