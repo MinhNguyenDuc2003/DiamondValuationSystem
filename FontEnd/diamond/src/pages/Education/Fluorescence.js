@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Paper, List, ListItem } from '@mui/material';
+import { Container, Typography} from '@mui/material';
 import './Education.scss';
 import data from './Education.json';
 
@@ -35,15 +35,7 @@ const EDUCATION_FLUORESCENCE = () => {
                     {paragraph}
                   </Typography>
                 ))}
-              {section.listItems && (
-                <List>
-                  {section.listItems.map((item, idx) => (
-                    <ListItem key={idx}>
-                      <Typography variant="body1">{item}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              )}
+              
             </div>
           ))}
     </Container>

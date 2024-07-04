@@ -313,6 +313,15 @@
     .filter-banner{
       height: 50vh;
     }
+    .header .header-right .active {
+      gap: 13px;
+  }
+  .header .header-right .active .search-box {
+    width: 60%;
+}
+.header .header-left .contact button {
+  font-size: 12px;
+}
 }
 
  
@@ -353,7 +362,7 @@
    width: 100%; 
 }
 .footer .footer-content .footer-props {
-   display: block; 
+   display: flex; 
 }
 .footer .footer-content .logo {
   display: none;
