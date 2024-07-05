@@ -1,13 +1,15 @@
 package com.diamondvaluation.shop.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +21,9 @@ import com.diamondvaluation.shop.ControllerHelper;
 import com.diamondvaluation.shop.PaypalPaymentIntent;
 import com.diamondvaluation.shop.PaypalPaymentMethod;
 import com.diamondvaluation.shop.exception.CustomerNotFoundException;
-import com.diamondvaluation.shop.exception.PayPalApiException;
 import com.diamondvaluation.shop.request.CheckOutRequest;
 import com.diamondvaluation.shop.service.DiamondRequestService;
 import com.diamondvaluation.shop.service.PayPalService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -36,7 +35,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class CheckoutController {
+public class PaymentController {
 	private final ControllerHelper controllerHelper;
 	private final DiamondRequestService requestService;
 	private final PayPalService paypalService;
@@ -46,21 +45,24 @@ public class CheckoutController {
 	public static final String PAYPAL_SUCCESS_URL = "api/pay/success";
 	public static final String PAYPAL_CANCEL_URL = "api/pay/cancel";
 	
+	@Value("${baseUrl}")
+	private String BASEURL;
+	
 	@Autowired
-	public CheckoutController(ControllerHelper controllerHelper, DiamondRequestService requestService,
+	public PaymentController(ControllerHelper controllerHelper, DiamondRequestService requestService,
 			PayPalService paypalService) {
 		this.controllerHelper = controllerHelper;
 		this.requestService = requestService;
 		this.paypalService = paypalService;
 	}
 
-	@GetMapping("/checkout")
+	@PostMapping("/check-out")
 	public ResponseEntity<?> placeOrder(@RequestBody @Valid CheckOutRequest checkOutRequest,
 			HttpServletRequest request) {
 		try {
 			Customer customer = controllerHelper.getAuthenticatedCustomer(request);
 			boolean isPaid = false;
-			if (checkOutRequest.getPayment_method().equals("CK")) {
+			if (checkOutRequest.getPaymentMethod().equals("PAYPAL")) {
 				isPaid = true;
 			}
 			requestService.createDiamondRequest(checkOutRequest, customer, isPaid);
@@ -88,18 +90,16 @@ public class CheckoutController {
 //	}
 	
 	@PostMapping("/pay")
-	public ResponseEntity<?> pay(HttpServletRequest request){
-		String cancelUrl = "http://localhost:3000/";
-		String successUrl = "http://localhost:3000/";
+	public ResponseEntity<?> pay(HttpServletRequest request, @RequestParam("total") double total){
 		try {
 			Payment payment = paypalService.createPayment(
-					4.0, 
+					total, 
 					"USD", 
 					PaypalPaymentMethod.paypal, 
 					PaypalPaymentIntent.sale,
 					"payment description", 
-					cancelUrl, 
-					successUrl);
+					BASEURL+"pay/cancel", 
+					BASEURL+"pay/success");
 			for(Links links : payment.getLinks()){
 				if(links.getRel().equals("approval_url")){
 					return ResponseEntity.ok(links.getHref());
@@ -111,13 +111,16 @@ public class CheckoutController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment not approved");
 	}
 	
-	@GetMapping("pay/validate")
+	@PostMapping("pay/validate")
 	@Transactional
 	public ResponseEntity<?> successPay(@RequestParam("paymentId") String paymentId,@RequestParam("PayerID") String payerId,
 			@RequestBody @Valid CheckOutRequest checkOutRequest,
 			HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 	    try {
-	        Payment payment = paypalService.executePayment(paymentId, payerId);
+	    	String requestId = UUID.randomUUID().toString();
+	    	HttpHeaders headers = new HttpHeaders();
+	        headers.add("PayPal-Request-Id", requestId);
+	        Payment payment = paypalService.executePayment(paymentId, payerId, headers);
 	        if (payment.getState().equals("approved")) {
 	            return placeOrder(checkOutRequest,
 	        			request);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,8 @@ public class AuthServiceIpl implements AuthService {
 			} else {
 				throw new CustomerNotFoundException("Can not find any User with email: " +authRequest.getEmail());
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+		} catch (BadCredentialsException e) {
+			throw new CustomerNotFoundException("Can not find any User with email and password");
 		}
 		return null;
 	}
@@ -94,6 +95,34 @@ public class AuthServiceIpl implements AuthService {
 		}else {
 			return false;
 		}
+	}
+
+	@Override
+	public String updateResetPasswordToken(String email) {
+		Optional<Customer> customer = cusRepository.findByEmailDatabase(email);
+		if (customer.isPresent()) {
+			String token = RandomString.make(30);
+			customer.get().setResetPasswordCode(token);
+			cusRepository.save(customer.get());
+			return token;
+		} else {
+			throw new CustomerNotFoundException("Could not find any customer with the email " + email);
+		}
+	}
+
+	@Override
+	public void updatePassword(String token, String newPassword) {
+		Optional<Customer> customerOption = cusRepository.findByResetPasswordCode(token);
+		if (!customerOption.isPresent()) {
+			throw new CustomerNotFoundException("No customer found: invalid token");
+		}
+		Customer customer = customerOption.get();
+		customer.setPassword(newPassword);
+		customer.setResetPasswordCode(null);
+		encodePassword(customer);
+		
+		cusRepository.save(customer);
+		
 	}
 	
 	

@@ -3,6 +3,7 @@ package com.diamondvaluation.shop.security;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -33,13 +36,21 @@ import jakarta.servlet.http.HttpServletResponse;
 public class WebSecurityConfig {
 	private final CustomOAuth2UserService oAuth2UserService;
 	private final OAuth2LoginSuccessHandler oauthLoginHandler;
+	private final String clientId;
 	
-	@Autowired 
-	 public WebSecurityConfig(CustomOAuth2UserService oAuth2UserService, OAuth2LoginSuccessHandler oauthLoginHandler) {
+	@Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+	
+	@Autowired
+	public WebSecurityConfig(CustomOAuth2UserService oAuth2UserService, OAuth2LoginSuccessHandler oauthLoginHandler,
+			@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, ClientRegistrationRepository clientRegistrationRepository) {
+		super();
 		this.oAuth2UserService = oAuth2UserService;
 		this.oauthLoginHandler = oauthLoginHandler;
+		this.clientId = clientId;
+		this.clientRegistrationRepository = clientRegistrationRepository;
 	}
-	
+
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(); 
@@ -74,11 +85,11 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-
+            	.requestMatchers("/diamond-shop/customer/*").authenticated()	
                 .anyRequest().permitAll())
             .oauth2Login(form -> form
     				.userInfoEndpoint()
-    				.userService(oAuth2UserService)
+    					.userService(oAuth2UserService)
     				.and().successHandler(oauthLoginHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)

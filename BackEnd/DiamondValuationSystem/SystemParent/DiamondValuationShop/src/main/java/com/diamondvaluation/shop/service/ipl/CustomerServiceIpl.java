@@ -9,6 +9,7 @@ import com.diamondvaluation.common.AuthenticationType;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.shop.exception.CustomerNotFoundException;
 import com.diamondvaluation.shop.repository.CustomerRepository;
+import com.diamondvaluation.shop.request.CustomerRequest;
 import com.diamondvaluation.shop.service.CustomerService;
 @Service
 @Transactional
@@ -52,6 +53,47 @@ public class CustomerServiceIpl implements CustomerService{
 			return null;
 		}
 		return customer.get();
+	}
+
+	@Override
+	public Customer getCustomerById(Integer id) {
+		Optional<Customer> customer = repo.findById(id);
+		if(!customer.isPresent()) {
+			throw new CustomerNotFoundException("Cannot find any User with id" + id);
+		}
+		return customer.get();
+	}
+
+	@Override
+	public Customer updateCustomer(Customer customer) {
+		Optional<Customer> customerEmail = repo.findByEmailAll(customer.getEmail());
+		Optional<Customer> customerById = repo.findById(customer.getId());
+		if(!customerById.isPresent()) {
+			throw new CustomerNotFoundException("Cannot find any User with id" + customer.getId());
+		}
+		Customer savedCustomer = customerById.get();
+		String email = customerById.get().getEmail();
+		
+		if(customerEmail.isPresent()) {
+			if(customerEmail.get().getEmail().equals(email)) {
+				savedCustomer.setId(customer.getId());
+				savedCustomer.setEmail(customer.getEmail());
+				savedCustomer.setFirstName(customer.getFirstName());
+				savedCustomer.setLastName(customer.getLastName());
+				savedCustomer.setPhoneNumber(customer.getPhoneNumber());
+				savedCustomer.setLocation(customer.getLocation());
+				return repo.save(savedCustomer);
+			}
+		}else {
+			savedCustomer.setId(customer.getId());
+			savedCustomer.setEmail(customer.getEmail());
+			savedCustomer.setFirstName(customer.getFirstName());
+			savedCustomer.setLastName(customer.getLastName());
+			savedCustomer.setPhoneNumber(customer.getPhoneNumber());
+			savedCustomer.setLocation(customer.getLocation());
+			return repo.save(savedCustomer);
+		}
+		return null;
 	}
 
 }

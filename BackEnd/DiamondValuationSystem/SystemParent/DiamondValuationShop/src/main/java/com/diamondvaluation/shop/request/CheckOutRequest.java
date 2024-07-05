@@ -18,13 +18,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckOutRequest {
-	@JsonProperty("payment_method")
-	@NotNull @NotBlank(message = "payment method cannot be blank!")
-	private String payment_method;
-	
-	@JsonProperty("serviceId")
-	@NotNull(message = "service cannot be blank!")
-	private List<String> serviceId;
+	@NotBlank(message = "Payment method is required")
+    private String paymentMethod;
+
+	@JsonProperty("service_name")
+    private List<String> serviceName;
+
+    @NotBlank(message = "Date is required")
+    private String date;
 	
 	@JsonProperty("note")
 	private String note;

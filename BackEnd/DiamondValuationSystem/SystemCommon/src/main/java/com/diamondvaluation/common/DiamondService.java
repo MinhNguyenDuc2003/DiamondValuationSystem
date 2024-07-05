@@ -39,6 +39,10 @@ public class DiamondService {
 	public DiamondService(Integer id) {
 		this.id = id;
 	}
+
+	public DiamondService(String name) {
+		this.name = name;
+	}
 	
 	
 	

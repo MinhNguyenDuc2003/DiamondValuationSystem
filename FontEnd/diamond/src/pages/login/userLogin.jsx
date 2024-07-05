@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleOutlined, FacebookOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './userLogin.scss';
-import { loginUser, validateToken } from '../../utils/ApiFunction';
+import { loginGoogleAccount, loginUser, validateToken } from '../../utils/ApiFunction';
 import { useAuth } from '../../component/Auth/AuthProvider';
 import Alert from 'react-bootstrap/Alert';
 
@@ -13,19 +13,26 @@ const UserLogin = () => {
       password: "",
     });
   
+  
     const navigate = useNavigate();
     const location = useLocation();
     const auth = useAuth();
     const redirectUrl = location.state?.path || "/";
-  
+    const errorLogin = location.state?.error;
+    
     useEffect(() => {
       const checkToken = async () => {
-        const result = await validateToken();
-        console.log("abc");
-        if (result.status === 200 ) {
-          navigate("/");
+        const localStorageToken = localStorage.getItem("token");
+        if (localStorageToken) {
+          const result = await validateToken();
+          if (result.status === 200) {
+            navigate("/");
+          }
         }
       };
+      if(errorLogin !== null || errorLogin.length ===0){
+        setError(errorLogin);
+      }
       checkToken();
     }, []);
   
@@ -35,22 +42,31 @@ const UserLogin = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      const result = await loginUser(login);
+      try {
+        const result = await loginUser(login);
   
-      if (result.token) {
-        auth.handleLogin(result);
-        window.localStorage.setItem(`user` , login);
+      if (result.status === 200) {
+        auth.handleLogin(result.data);
         navigate(redirectUrl, { replace: true });
       } else {
         setError(
           "Invalid email or password. Please try again."
         );
       }
+      } catch (error) {
+        setError(
+          "Invalid email or password. Please try again."
+        );
+      }
+      
       setTimeout(() => {
         setError("");
       }, 4000);
     };
 
+    const handleGoogleLogin = async() => {
+      window.location.href = 'http://localhost:8081/DiamondShop/oauth2/authorization/google';
+    }
     return (
         <div className='wrapperr'>
             <form className='login-form' onSubmit={handleSubmit}>
@@ -58,7 +74,7 @@ const UserLogin = () => {
                             {error}
                     </Alert>)}
                 <div className='form-group' >
-                    <label htmlFor='email' className='text-start'>email</label>
+                    <label htmlFor='email' className='text-start'>Email</label>
                     <input 
                         className='form-control'
                         type='email' 
@@ -81,23 +97,19 @@ const UserLogin = () => {
                         minLength={5}
                         required 
                     />
-                </div>
-                
+                </div>             
                 <button type='submit' className='login-button'>
                     Login
                 </button>
                 <div>
-                <a href='/retake-password' className='' style={{ textDecoration: 'none' }}>Forgot Password ?</a>
+                <a href='/forgot-password' className='' style={{ textDecoration: 'none' }}>Forgot Password ?</a>
                 </div>
             </form>
             
             <div className='alternative-login'>
                 <p>Or login with</p>
-                <button className='google-login'>
+                <button className='google-login' onClick={handleGoogleLogin}>
                     <GoogleOutlined /> Google
-                </button>
-                <button className='facebook-login'>
-                    <FacebookOutlined /> Facebook
                 </button>
             </div>
             <div>

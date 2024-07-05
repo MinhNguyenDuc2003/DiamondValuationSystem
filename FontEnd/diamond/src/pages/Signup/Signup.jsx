@@ -3,6 +3,7 @@ import './Signup.scss';
 import { useNavigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 import { createNewAccount } from '../../utils/ApiFunction';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Link } from '@mui/material';
 const Signup = () => {
     const [user , setUser] = useState({
         email : "",
@@ -14,6 +15,7 @@ const Signup = () => {
     })
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [error, setError] = useState('');
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (event) => {
@@ -31,14 +33,23 @@ const Signup = () => {
     const handleSubmit = async (e) =>{
         e.preventDefault()
         try {
-            const result = await createNewAccount(user);
+            if(user.password === passwordConfirm){
+                const result = await createNewAccount(user);
             console.log(result.status);
             if (result.status < 200 || result.status >= 300) {
                 setError("Email is already exist!")
             }
             else{
-                navigate("/login");
+                setOpen(true);
+                setTimeout(() => {
+                  setOpen(false);
+                  navigate("/login");
+                }, 10000);
             }
+            } else{
+                setError("Your password confirm does not match to your password!")
+            }
+            
         } catch (error) {
             console.log(error);
             setError("Email is already exist!")
@@ -52,7 +63,10 @@ const Signup = () => {
         navigate("/login");
     }
 
-    
+    const handleClickDialog = () => {
+        setOpen(false)
+        navigate("/");
+    }
 
     return (
         <div className='wrapperrrr'>
@@ -160,6 +174,24 @@ const Signup = () => {
                     onClick={() => handleClickCancel()}
                     />
             </div>
+
+            <Dialog
+                open={open}
+                onClose={handleClickDialog}
+            >
+            <DialogTitle>Success</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                Account created successfully! Please check your email to verify acocunt before login.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleClickDialog} color="primary">
+                Close
+            </Button>
+            </DialogActions>
+            </Dialog>
+
             </form>
         </div>
     );
