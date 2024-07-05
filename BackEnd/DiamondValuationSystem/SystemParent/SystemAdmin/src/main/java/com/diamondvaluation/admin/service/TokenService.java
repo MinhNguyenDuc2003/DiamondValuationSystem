@@ -78,6 +78,7 @@ public class TokenService {
 			throw new RefreshTokenExpiredException();
 		try {
             TokenResponse response = generateTokens(foundRefreshToken.getUser());
+            refreshTokenRepo.delete(foundRefreshToken);
             return response;
         } catch (OptimisticLockingFailureException e) {
             throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);

@@ -2,8 +2,12 @@ import React, { memo, useEffect, useState } from 'react';
 import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Menu, Input, Space } from 'antd';
+import { getCustomerById } from '../../utils/ApiFunction';
 import './Header.scss';
 import logo from './image/logot.png';
+import Account from './Account.jsx';
+import { useAuth } from '../../component/Auth/AuthProvider.jsx';
+
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -12,18 +16,16 @@ const Header = () => {
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
     const [ServiceOpen, setServiceOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
+    const [isLogin, setLogin] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-
-    const handleUserAccount = () => {
-        setUser(window.localStorage.getItem(`user`))
-    }
+    const auth = useAuth();
     const handleLogoutClick = () => {
-        window.localStorage.removeItem(`user`);
-        window.location.reload()
-        navigate('/');
+        setLogin(false)
+        auth.handleLogout();
+        navigate('/login');
     }
 
     const handleServiceClick = () => {
@@ -77,30 +79,36 @@ const Header = () => {
 
     useEffect(() => {
         
-        setUser(window.localStorage.getItem(`user`))
-        console.log(user);
-        
-    },[user])
-    const nameUser = JSON.parse(user);
+        const getCustomer = async() => {
+            const data = await getCustomerById();
+            if(data!==null){
+              setUser({
+                first_name: data.first_name,
+                last_name: data.last_name
+              }); 
+              setLogin(true)
+            }
+          }
+          getCustomer();
+    },[navigate])
     const menuUser = (
 
 
         <Menu>
 
-            {user ? (
+            {isLogin ? (
                 <>
                     <Menu.Item>
                         <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
                     </Menu.Item>
                     <Menu.Item>
-                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
+                        <Button onClick={handleLogoutClick} type='text'> Log out</Button>
                     </Menu.Item>
                 </>
             ) : (
                 <>
                     <Menu.Item>
                         <Button onClick={e => navigate("/login")} type='text'> Login</Button>
-
                     </Menu.Item>
                     <Menu.Item>
                         <Button onClick={e => navigate("/signup")} type='text'> Sign Up</Button>
@@ -131,6 +139,7 @@ const Header = () => {
 
         </Menu>
     );
+
 
     return (
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
@@ -204,13 +213,14 @@ const Header = () => {
                         </input>
                         <Button className='search' type="text" icon={<SearchOutlined />} />
                     </form>
-                    <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                        {user ? (
-                            <strong style={{ margin: 0 }}>{nameUser.LastName}</strong>
-                        ): (  
-                            <Button type="text" icon={<UserOutlined />} />
-                        )}
-                    </Dropdown>
+                    <div>
+                    <Account
+                        isLogin={isLogin}
+                        menuUser={menuUser}
+                        userMenuOpen={userMenuOpen}
+                        setUserMenuOpen={setUserMenuOpen}
+                    />
+        </div>
                 </div>
                 {/* <ul className="actions">
                     <li>

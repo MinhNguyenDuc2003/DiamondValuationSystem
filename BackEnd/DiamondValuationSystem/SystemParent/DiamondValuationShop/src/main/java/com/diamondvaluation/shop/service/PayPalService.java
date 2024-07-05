@@ -1,7 +1,5 @@
 package com.diamondvaluation.shop.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -133,7 +131,8 @@ public class PayPalService {
 		return payment.create(apiContext);
 	}
 	
-	public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException{
+	public Payment executePayment(String paymentId, String payerId,  HttpHeaders headers) throws PayPalRESTException{
+		apiContext.addHTTPHeader("PayPal-Request-Id", headers.getFirst("PayPal-Request-Id"));
 		Payment payment = new Payment();
 		payment.setId(paymentId);
 		PaymentExecution paymentExecute = new PaymentExecution();
