@@ -3,11 +3,7 @@ import data from "./data/Data.json"
 import './Valuation.scss'
 import pic2 from './img/Sculpture_Pic.jpg'
 import { useNavigate } from 'react-router-dom'
-<<<<<<< HEAD
-import { getAllServices } from '../../utils/ApiFunction';
-=======
 import { ToastContainer, toast } from 'react-toastify'
->>>>>>> 7cb4221b0519a05c4f7d761104d5fceec8749517
 const Sculpture = () => {
   const [dataContent, setDataContent] = useState(null);
     const navigate = useNavigate("");

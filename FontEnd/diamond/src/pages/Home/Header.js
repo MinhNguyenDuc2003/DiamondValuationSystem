@@ -1,13 +1,12 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-import { Button, Dropdown, Menu, Input, Space } from 'antd';
+import {Dropdown, Menu, Input, Space } from 'antd';
 import { getCustomerById } from '../../utils/ApiFunction';
-import Account from './Account.jsx';
-import { useAuth } from '../../component/Auth/AuthProvider.jsx';
 import './Header.scss';
 import logo from './image/logot.png';
-import { Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
+import Account from './Account.jsx';
+import { useAuth } from '../../component/Auth/AuthProvider.jsx';
+import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
@@ -17,7 +16,7 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import '@fontsource/roboto/500.css';
 import { useMediaQuery } from 'react-responsive';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import { SearchOutlined } from '@mui/icons-material';
 
 
 const Header = () => {
@@ -32,7 +31,9 @@ const Header = () => {
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+
     const auth = useAuth();
+
     const [totalRequest, setTotalRequest] = useState('')
     const [badgeVisible, setBadgeVisible] = useState(true);
 
@@ -133,7 +134,7 @@ const Header = () => {
             }}
         >
             <List>
-                {user ? (
+                {isLogin ? (
                     <>
                         <ListItemButton onClick={() => handleNavigate('/account')}>
                             <ListItemText primary="Manage Account" />
@@ -146,45 +147,30 @@ const Header = () => {
                         )}
                         <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
-            {isLogin ? (
-                <>
-                    <Menu.Item>
-                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button onClick={handleLogoutClick} type='text'> Log out</Button>
-                    </Menu.Item>
-                </>
-            ) : (
-                <>
-                    <Menu.Item>
-                        <Button onClick={e => navigate("/login")} type='text'> Login</Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button onClick={e => navigate("/signup")} type='text'> Sign Up</Button>
+                            <Badge sx={{ gap: "5px" }}
+                                badgeContent={totalRequest}
+                                onClick={handleBadgeClick}
+                                color="primary">
+                                <ListItemText primary="My Request" />
 
-                    </Menu.Item>
-                </>
-
-            )}
-
-    );
-    const search = (
-        <Menu>
-
-            <Space direction="vertical">
-                <Input.Search
-                    placeholder="input search text"
-                    style={{
-                        width: 200,
-                    }}
-                    onSearch={handleSearch}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                />
-            </Space>
-
-        </Menu>
+                            </Badge>
+                        </ListItemButton>
+                        <ListItemButton onClick={handleLogoutClick}>
+                            <ListItemText primary="Logout" />
+                        </ListItemButton>
+                    </>
+                ) : (
+                    <>
+                        <ListItemButton onClick={() => navigate("/login")}>
+                            <ListItemText primary="Login" />
+                        </ListItemButton>
+                        <ListItemButton onClick={() => navigate("/signup")}>
+                            <ListItemText primary="Sign Up" />
+                        </ListItemButton>
+                    </>
+                )}
+            </List>
+        </Popover>
     );
 
 
@@ -267,7 +253,7 @@ const Header = () => {
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
-                    <li>
+                        <li>
                             <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
                             </button>
                         </li>
@@ -276,11 +262,7 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>Service List
-                            </button>
-                        </li>
-                        <li>
-                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>LookUp
+                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
                             </button>
                         </li>
                         <li>
@@ -297,7 +279,7 @@ const Header = () => {
                     <form className='search-box'>
                         <input type='text' placeholder='Looking for blogs'>
                         </input>
-                        <Button className='search' type="text" icon={<SearchOutlined />} />
+                        <Button className='search' type="text" icon={<SearchOutlined/>} />
                     </form>
                     <div>
                     <Account
