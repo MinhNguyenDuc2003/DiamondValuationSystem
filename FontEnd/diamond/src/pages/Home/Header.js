@@ -1,12 +1,23 @@
 import React, { memo, useEffect, useState } from 'react';
-import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 import { Button, Dropdown, Menu, Input, Space } from 'antd';
 import { getCustomerById } from '../../utils/ApiFunction';
-import './Header.scss';
-import logo from './image/logot.png';
 import Account from './Account.jsx';
 import { useAuth } from '../../component/Auth/AuthProvider.jsx';
+import './Header.scss';
+import logo from './image/logot.png';
+import { Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import '@fontsource/roboto/500.css';
+import { useMediaQuery } from 'react-responsive';
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 
 const Header = () => {
@@ -22,37 +33,52 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const auth = useAuth();
+    const [totalRequest, setTotalRequest] = useState('')
+    const [badgeVisible, setBadgeVisible] = useState(true);
+
+    //Responsive........
+    const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
+
+
+    // Ẩn Badge khi click vào
+    const handleBadgeClick = () => {
+        setBadgeVisible(false);
+
+    };
     const handleLogoutClick = () => {
         setLogin(false)
         auth.handleLogout();
         navigate('/login');
     }
 
-    const handleServiceClick = () => {
-        setServiceOpen(true);
-    }
-    const handleEducationClick = () => {
-        setEducationOpen(true);
+    const handleMenuOpen = (event) => {
+        setUserMenuOpen(event.currentTarget);
     };
 
-    const handleCloseEducation = () => {
-        setEducationOpen(false);
+    const handleMenuClose = () => {
+        setUserMenuOpen(null);
     };
-    const handleCloseService = () => {
-        setServiceOpen(false);
+    const handleNavigate = (path) => {
+        navigate(path);
+        setUserMenuOpen(false);
     };
-
     const handleNavigateToEducation = (path) => {
         navigate(path);
         setEducationOpen(false);
         setMenuOpen(false);
-        // window.location.reload();
+        window.location.reload();
     };
     const handleNavigateToService = (path) => {
         navigate(path);
         setServiceOpen(false);
         setMenuOpen(false);
     };
+
+    useEffect(() => {
+        const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        //dung để lấy ra độ dài của mảng
+        setTotalRequest(storedOrders.length);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -93,8 +119,32 @@ const Header = () => {
     },[navigate])
     const menuUser = (
 
+        <Popover
+            open={Boolean(userMenuOpen)}
+            anchorEl={userMenuOpen}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+        >
+            <List>
+                {user ? (
+                    <>
+                        <ListItemButton onClick={() => handleNavigate('/account')}>
+                            <ListItemText primary="Manage Account" />
+                        </ListItemButton>
+                        {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
 
-        <Menu>
+                        )}
+                        <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
             {isLogin ? (
                 <>
@@ -117,9 +167,6 @@ const Header = () => {
                 </>
 
             )}
-
-
-        </Menu>
 
     );
     const search = (
@@ -145,7 +192,39 @@ const Header = () => {
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
             <div className='header-left'>
                 <div className='contact'>
-                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}><span>+</span> Contact Us</button>
+                    {/* {menuContact && ( */}
+                    <div className="contact-content">
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <CallOutlinedIcon className='icon-contact' />
+                                <span>CALL US 099999999</span>
+                            </a>
+                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <WhatsAppIcon className='icon-contact' />
+                                <span>WHATSAPP US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FacebookOutlinedIcon className='icon-contact' />
+                                <span>FACEBOOK US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FmdGoodIcon className='icon-contact' />
+                                <span>ADDRESS US</span>
+                            </a>
+                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+                    {/* )} */}
                 </div>
                 <div className='education'>
                     <button>Education</button>
@@ -174,7 +253,10 @@ const Header = () => {
                 </div>
                 <div className='diamond'>
                     <button>Diamond</button>
-                </div>
+                </div>      
+                {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
             </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
@@ -185,7 +267,7 @@ const Header = () => {
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
-                        <li>
+                    <li>
                             <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
                             </button>
                         </li>
@@ -194,7 +276,11 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
+                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>Service List
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>LookUp
                             </button>
                         </li>
                         <li>
@@ -230,71 +316,12 @@ const Header = () => {
                     </li>
                     <li>
 
-                        // <Dropdown overlay={search} trigger={['hover']} >
-                        //     <Button type="text" icon={<SearchOutlined />} />
-                        // </Dropdown>
-                    </li>
-                    <li>
-                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
+                                </Badge>
+                            ) : (
+                                <AccountCircleIcon />
+                            )}
+                        </div>
 
-                    </li>
-                </ul> */}
-            </div>
-
-            {menuOpen && (
-                <div className="menu">
-                    <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <ul>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleServiceClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Service</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/blog')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Blog</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleEducationClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Education</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/diamond')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Diamond</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             )}
@@ -339,7 +366,8 @@ const Header = () => {
                     </div>
                 </div>
             )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>}
+            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
+        </div>
         </div>
     );
 };

@@ -92,6 +92,10 @@ const renderUserRouter = () => {
             component: <ServiceForm/>
         },
         {
+            path : ROUTERS.USER.SERVICE_ServiceList,
+            component: <ServiceList/>
+        },
+        {
             path : ROUTERS.USER.SERVICE_CALCULATOR,
             component: <CalculatorService/>
         },
@@ -102,6 +106,10 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_Lookup,
+            component: <Lookup/>
         },
         //CheckOut
         {

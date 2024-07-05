@@ -3,6 +3,7 @@ import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, 
 import paypal from '../Service/img/PayPal_Logo.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
+<<<<<<< HEAD
 import { createPayment, getAllServices, getCustomerById, placeOrderDiamond } from '../../utils/ApiFunction';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Link } from '@mui/material';
 
@@ -65,6 +66,23 @@ const Checkout = () => {
 },[])
 
 useEffect(() => {
+=======
+import { ToastContainer, toast } from 'react-toastify';
+
+//khai báo giá của service
+const servicePrices = {
+  'Valuation': 100,
+  'Appraisal': 150,
+  'Sculpture': 200
+};
+
+const Checkout = () => {
+  const { formData } = useLocation().state ;
+  const [checkPay , setCheckPay] = useState(true);
+  const navigate = useNavigate('');
+  
+  //hàm tính giá tiền của các service sử dụng
+>>>>>>> 7cb4221b0519a05c4f7d761104d5fceec8749517
   const calculateTotal = () => {
     if (cart.serviceSelected.length > 0 && services.length > 0) {
       return services.reduce((total, service) => {
@@ -76,8 +94,9 @@ useEffect(() => {
     }
     return 0;
   };
-
+  
   const total = calculateTotal();
+<<<<<<< HEAD
   setTotal(total);
 }, [cart.serviceSelected, services]);
 
@@ -118,6 +137,31 @@ useEffect(() => {
       setTimeout(() => {
         setError("");
       }, 6000);
+=======
+  
+  //call api de check exist requestID ở method : Carh
+  const handleBookingClick = () => {
+    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(formData);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
+   toast.success(` Booking successful !`, {autoClose : 3000})
+    setTimeout(() => {
+      navigate('/');
+      window.location.reload();
+    }, 4000);
+  };
+  //call api de check exist requestID ở method : PayPal
+  const handlePayClick = () => {
+    if(checkPay === true){   
+      const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+      existingOrders.push(formData);
+      localStorage.setItem('orders', JSON.stringify(existingOrders));
+      navigate('/Payment-checkout-success')
+    }else{
+      toast.error(`Pay Fail`, {autoClose : 2000})
+    }
+>>>>>>> 7cb4221b0519a05c4f7d761104d5fceec8749517
   }
 
 
@@ -127,6 +171,7 @@ const handleClickDialog = () => {
 }
   return (
     <div className="wrapperrrrr">
+      <ToastContainer/>
       <Paper className="checkout-paper" elevation={3}>
         <div className='header-checkout'>
           <Typography variant="h4" align="center" gutterBottom>
