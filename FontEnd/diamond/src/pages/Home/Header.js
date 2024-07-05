@@ -1,9 +1,15 @@
 import React, { memo, useEffect, useState } from 'react';
-import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Dropdown, Menu, Input, Space } from 'antd';
 import './Header.scss';
 import logo from './image/logot.png';
+import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import '@fontsource/roboto/500.css';
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -16,34 +22,36 @@ const Header = () => {
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const [totalRequest, setTotalRequest] = useState('')
+    const [badgeVisible, setBadgeVisible] = useState(true);
 
-    const handleUserAccount = () => {
-        setUser(window.localStorage.getItem(`user`))
-    }
+    // Ẩn Badge khi click vào
+    const handleBadgeClick = () => {
+        setBadgeVisible(false);
+
+    };
     const handleLogoutClick = () => {
         window.localStorage.removeItem(`user`);
+        window.location.reload()
         navigate('/');
     }
 
-    const handleServiceClick = () => {
-        setServiceOpen(true);
-    }
-    const handleEducationClick = () => {
-        setEducationOpen(true);
+    const handleMenuOpen = (event) => {
+        setUserMenuOpen(event.currentTarget);
     };
 
-    const handleCloseEducation = () => {
-        setEducationOpen(false);
+    const handleMenuClose = () => {
+        setUserMenuOpen(null);
     };
-    const handleCloseService = () => {
-        setServiceOpen(false);
+    const handleNavigate = (path) => {
+        navigate(path);
+        setUserMenuOpen(false);
     };
-
     const handleNavigateToEducation = (path) => {
         navigate(path);
         setEducationOpen(false);
         setMenuOpen(false);
-        // window.location.reload();
+        window.location.reload();
     };
     const handleNavigateToService = (path) => {
         navigate(path);
@@ -51,15 +59,11 @@ const Header = () => {
         setMenuOpen(false);
     };
 
-    const handleContact = (element) => {
-        setMenuContact(!menuContact)
-        const targerElement = document.getElementById(element)
-        if (targerElement) {
-            targerElement.style.height = "100%"
-        } else {
-            targerElement.style.height = "0%"
-        }
-    }
+    useEffect(() => {
+        const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        //dung để lấy ra độ dài của mảng
+        setTotalRequest(storedOrders.length);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -79,88 +83,114 @@ const Header = () => {
 
     }, [location.pathname]);
 
-    const handleSearch = () => {
+    const blogs = [
+        { id: `ask-certification-importance`, title: 'Introduction to Diamonds' },
+        { id: `ask-fancy-yellow-diamond-below20k`, title: 'The 4 C’s of Diamonds' },
+        { id: `ask-k-color-diamond-in-pave-ring`, title: 'Choosing the Right Diamond' },
+    ];
 
+    const handleSearch = () => {
         console.log('Search value:', searchValue);
+        const filteredBlogs = blogs.filter(blog =>
+            blog.title.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        console.log('Filtered blogs:', filteredBlogs);
+        if (filteredBlogs.length > 0) {
+            setSearchValue(``);
+            navigate(`/blog/${filteredBlogs[0].id}`);
+        } else {
+            console.log(`no result`)
+        }
     };
 
     useEffect(() => {
+
         setUser(window.localStorage.getItem(`user`))
-        console.log(user);
-    })
+
+
+    }, [user])
+    const nameUser = JSON.parse(user);
     const menuUser = (
 
+        <Popover
+            open={Boolean(userMenuOpen)}
+            anchorEl={userMenuOpen}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+        >
+            <List>
+                {user ? (
+                    <>
+                        <ListItemButton onClick={() => handleNavigate('/account')}>
+                            <ListItemText primary="Manage Account" />
+                        </ListItemButton>
+                        <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
-        <Menu>
+                            <Badge sx={{ gap: "5px" }}
+                                badgeContent={totalRequest}
+                                onClick={handleBadgeClick}
+                                color="primary">
+                                <ListItemText primary="My Request" />
 
-            {user ? (
-                <>
-                    <Menu.Item>
-                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
-                    </Menu.Item>
-                </>
-            ) : (
-                <Menu.Item>
-                    <Button onClick={e => navigate("/login")} type='text'> Login</Button>
-                </Menu.Item>
-            )}
-
-
-        </Menu>
-
+                            </Badge>
+                        </ListItemButton>
+                        <ListItemButton onClick={handleLogoutClick}>
+                            <ListItemText primary="Logout" />
+                        </ListItemButton>
+                    </>
+                ) : (
+                    <>
+                        <ListItemButton onClick={() => navigate("/login")}>
+                            <ListItemText primary="Login" />
+                        </ListItemButton>
+                        <ListItemButton onClick={() => navigate("/signup")}>
+                            <ListItemText primary="Sign Up" />
+                        </ListItemButton>
+                    </>
+                )}
+            </List>
+        </Popover>
     );
-    const search = (
-        <Menu>
 
-            <Space direction="vertical">
-                <Input.Search
-                    placeholder="input search text"
-                    style={{
-                        width: 200,
-                    }}
-                    onSearch={handleSearch}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                />
-            </Space>
-
-        </Menu>
-    );
 
     return (
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
             <div className='header-left'>
                 <div className='contact'>
-                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}><span>+</span> Contact Us</button>
                     {/* {menuContact && ( */}
                     <div className="contact-content">
                         <div className="col">
                             <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <PhoneOutlined />
+                                <CallOutlinedIcon className='icon-contact' />
                                 <span>CALL US 099999999</span>
                             </a>
                             <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
                         </div>
                         <div className="col">
                             <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <WhatsAppOutlined />
+                                <WhatsAppIcon className='icon-contact' />
                                 <span>WHATSAPP US</span>
                             </a>
                             <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
                         </div>
                         <div className="col">
                             <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <FacebookOutlined />
+                                <FacebookOutlinedIcon className='icon-contact' />
                                 <span>FACEBOOK US</span>
                             </a>
                             <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
                         </div>
                         <div className="col">
                             <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <EnvironmentOutlined />
+                                <FmdGoodIcon className='icon-contact' />
                                 <span>ADDRESS US</span>
                             </a>
                             <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
@@ -229,179 +259,38 @@ const Header = () => {
                 </div>
 
                 <div className='active'>
-                    <form className='search-box'>
-                        <input type='text' placeholder='Looking for blogs'>
-                        </input>
-                        <Button className='search' type="text" icon={<SearchOutlined />} />
+                    <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                        <input
+                            type='text'
+                            placeholder='Looking for blogs'
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                        <button className='search'>{<SearchIcon />}</button>
                     </form>
-                    <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                        <Button type="text" icon={<UserOutlined />} />
-                    </Dropdown>
+                    <div
+                        className='account'
+                        aria-label="account-menu"
+                        aria-controls="account-menu"
+                        aria-haspopup="true"
+                        onClick={handleMenuOpen}
+                    >
+                        <div className='account-icon'>
+                            {user ? (
+                                <Badge sx={{ gap: "5px" }} badgeContent={totalRequest} color="primary">
+                                    <strong >{nameUser.LastName}</strong>
+
+                                </Badge>
+                            ) : (
+                                <AccountCircleIcon />
+                            )}
+                        </div>
+
+                    </div>
+                    {menuUser}
                 </div>
-                {/* <ul className="actions">
-                    <li>
-                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                            <Button type="text" icon={<UserOutlined />} />
-                        </Dropdown>
-                    </li>
-                    <li>
-
-                        // <Dropdown overlay={search} trigger={['hover']} >
-                        //     <Button type="text" icon={<SearchOutlined />} />
-                        // </Dropdown>
-                    </li>
-                    <li>
-                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
-
-                    </li>
-                </ul> */}
             </div>
 
-            {/* {menuOpen && (
-                <div className="menu">
-                    <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <ul>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleServiceClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Service</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/blog')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Blog</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleEducationClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Education</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/diamond')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Diamond</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            )}
-
-            {educationOpen && (
-                <div className="education-panel">
-                    <button onClick={handleCloseEducation} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="education-content">
-                        <ul>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/carat')}>Carat
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/cut')}>Cut
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/color')}>Color
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/clarity')}>Clarity
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToEducation('/education/fluorescence')}>Fluorescence
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            )}
-
-            {ServiceOpen && (
-                <div className="education-panel">
-                    <button onClick={handleCloseService} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="education-content">
-                        <ul>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/calculator')}>Calculator
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => handleNavigateToService('/Service/sculpture')}>Sculpture
-                                    <span className='direct-item'>
-                                        <span className='direct'> <RightOutlined /></span>
-                                    </span>
-                                </button>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            )} */}
-            {/* 
-            {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
-            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
-            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>} */}
 
             {/* {menuContact && (
                 <div className="wrapper-menu">
@@ -438,8 +327,8 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            )} */}
-            {/* {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
+            )}
+            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
         </div>
     );
 };

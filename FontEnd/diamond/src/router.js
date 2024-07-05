@@ -6,7 +6,7 @@ import "react-bootstrap/dist/react-bootstrap.min.js"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import HomePage from "./pages/Home/homePage";
-import ServiceBody from "./pages/Service/ServiceBody";
+
 import Blog from "./pages/Blog/Blog";
 import EDUCATION_CARAT from "./pages/Education/Carat";
 import EDUCATION_CUT from "./pages/Education/Cut";
@@ -23,6 +23,16 @@ import Blog5 from "./pages/Blog/BlogContent/Blog5";
 import CalculatorService from "./pages/Service/CalculatorService";
 import Signup from "./pages/Signup/Signup";
 import ManageAccount from "./pages/ManageAccount/ManageAccount";
+import Valuation from "./pages/Service/Valuation";
+import ServiceForm from "./pages/Service/ServiceForm";
+import Sculpture from "./pages/Service/Sculpture";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import Checkout from "./pages/Payment/checkout";
+import Success from "./pages/Payment/success";
+import MyOder from "./pages/MyOrder/MyOder";
+
+
+
 
 
 
@@ -34,6 +44,11 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.LOGIN,
             component: <UserLogin/>
+        },
+        //USER-Forgot-Password
+        {
+            path : ROUTERS.USER.ForgotPassword,
+            component: <ForgotPassword/>
         },
         //USER-SIGN
         {
@@ -50,10 +65,19 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.account,
             component: <ManageAccount/>
         },
+        //USER-ODER
+        {
+            path : ROUTERS.USER.MYRequest,
+            component: <MyOder/>
+        },
         //USER-SERVICE
         {
             path : ROUTERS.USER.SERVICE_VALUATION,
-            component: <ServiceBody/>
+            component: <Valuation/>
+        },
+        {
+            path : ROUTERS.USER.SERVICE_VALUATION_FORM,
+            component: <ServiceForm/>
         },
         {
             path : ROUTERS.USER.SERVICE_CALCULATOR,
@@ -61,11 +85,21 @@ const renderUserRouter = () => {
         },
         {
             path : ROUTERS.USER.SERVICE_SCULPTURE,
-            component: <ServiceBody/>
+            component: <Sculpture/>
         },
         {
             path : ROUTERS.USER.SERVICE_SALE,
-            component: <ServiceBody/>
+            component: <ServiceForm/>
+        },
+        //CheckOut
+        {
+            path : ROUTERS.USER.PAYMENT_CHECKOUT,
+            component: <Checkout/>
+        },
+        //Pay success
+        {
+            path : ROUTERS.USER.PAYMENT_success,
+            component: <Success/>
         },
         //BLOG
         {

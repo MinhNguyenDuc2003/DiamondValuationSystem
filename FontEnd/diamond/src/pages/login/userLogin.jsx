@@ -81,13 +81,12 @@ const UserLogin = () => {
                         minLength={5}
                         required 
                     />
-                </div>
-                
+                </div>             
                 <button type='submit' className='login-button'>
                     Login
                 </button>
                 <div>
-                <a href='/signup' className='' style={{ textDecoration: 'none' }}>Create new account</a>
+                <a href='/retake-password' className='' style={{ textDecoration: 'none' }}>Forgot Password ?</a>
                 </div>
             </form>
             
@@ -100,11 +99,9 @@ const UserLogin = () => {
                     <FacebookOutlined /> Facebook
                 </button>
             </div>
-
-            <div cl>
-
-            </div>
-          
+            <div>
+                <a href='/signup' className='' style={{ textDecoration: 'none' }}>Create new account</a>
+                </div>
         </div>
     );
 };

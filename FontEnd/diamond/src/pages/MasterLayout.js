@@ -4,11 +4,12 @@ import Footer from "./Home/Footer";
 
 const MasterLayout = ({ children, ...props }) => {
     return (
-        <div {...props}>
-            <Header/>
+        <>
+            {/* <div {...props}> */}
+            <Header />
             {children}
-            <Footer/>
-        </div>
+            <Footer />
+        </>
     );
 };
 

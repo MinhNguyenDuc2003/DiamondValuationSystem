@@ -2,16 +2,15 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     z-index: 3;
     transition: background-color 0.3s ease;
     display: flex;
     justify-content: space-around;
-    background-color: #eeeeee;
+    background-color: #222831;
     height: 80px;
 
     &.scrolled {
-        background-color: #eeeeee;
 
         .logo>img {
             filter: invert(0%);
@@ -19,9 +18,14 @@
     }
 
     button {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-weight: 350;
         border-style: none;
-        color: #212121;
-        font-size: 22px;
+        color: #EEEEEE;
+        font-size: 24px;
+        height: 100%;
+        background: none;
+
     }
 
     .header-left {
@@ -39,13 +43,14 @@
             >button::after {
                 content: '';
                 position: absolute;
-                background-color: #000;
+                background-color: #EEEEEE;
                 width: 50%;
                 height: 1.5px;
                 bottom: 30%;
                 left: 25%;
                 transition: ease 0.3s;
                 transform: scaleX(0);
+
             }
 
             >button:not(.contact button):hover:after {
@@ -64,6 +69,11 @@
                 border-radius: 5px;
                 font-size: 18px;
                 transition: ease 0.3s;
+
+                span {
+                    transform: rotate(0deg);
+                    transition: transform 0.3s ease;
+                }
             }
 
             button:hover {
@@ -74,7 +84,7 @@
         .contact-content {
             display: grid;
             grid-template-columns: auto auto auto auto;
-            align-items: center;
+            align-items: baseline;
             justify-items: center;
             column-gap: 5px;
             height: 0%;
@@ -83,21 +93,29 @@
             z-index: 4;
             top: 80px;
             left: 0;
-            background-color: rgb(234, 133, 133);
+            background-color: #5f5f6a;
             overflow-y: hidden;
             transition: 0.5s;
 
             a {
+                display: flex;
+                align-items: end;
                 font-size: 18px;
                 font-weight: bold;
                 text-decoration: none;
-                color: #252525;
+                color: #ffffff;
             }
 
             p {
                 text-align: justify;
+                color: #ffffff;
                 font-size: 12px;
                 margin-bottom: 0;
+            }
+
+            .icon-contact {
+                color: #ffffff;
+                margin: 0 5px 5px 0;
             }
 
             .col {
@@ -119,14 +137,18 @@
         }
 
         .education-content {
-            display: none;
+            opacity: 0;
             position: absolute;
-            background-color: #eeeeee;
+            background-color: #393E46;
             top: 100%;
             list-style-type: none;
+            height: 0;
             width: 80%;
-            padding: 20px 0px 0 0px;
+            padding: 0px 0px 0 0px;
             z-index: 100;
+            transition: 0.2s;
+            overflow: hidden;
+            border-radius: 0 0 5px 5px;
 
             li button {
                 display: block;
@@ -137,16 +159,24 @@
                 background: none;
                 padding: 5px 0;
                 padding-left: 10%;
+                color: #EEEEEE;
+
+                &:hover {
+                    text-shadow: 0 0 5px #eeeeee,
+                        0 0 15px #eeeeee,
+                        0 0 25px #eeeeee, ;
+                }
             }
 
             li:not(:last-child) {
-                border-bottom: #ffffff 2px solid;
+                border-bottom: #eeeeee30 1px solid;
             }
 
         }
 
         .education:hover .education-content {
-            display: block;
+            height: 260%;
+            opacity: 1;
         }
 
         // nav-Diamond
@@ -169,10 +199,10 @@
             >button:not(.active Button):after {
                 content: '';
                 position: absolute;
-                background-color: #000;
+                background-color: #EEEEEE;
                 width: 50%;
                 height: 1.5px;
-                top: 60%;
+                bottom: 30%;
                 left: 25%;
                 transition: ease 0.3s;
                 transform: scaleX(0);
@@ -190,31 +220,45 @@
         }
 
         .service-content {
-            display: none;
+            opacity: 0;
             position: absolute;
-            background-color: #eeeeee;
+            background-color: #393E46;
             top: 100%;
             list-style-type: none;
-            width: 90%;
-            padding: 20px 0px 0 0px;
+            height: 0;
+            width: 100%;
+            padding: 0 0px 0 0px;
             z-index: 100;
+            overflow: hidden;
+            transition: all 0.2s;
+            border-radius: 0 0 5px 5px;
 
             li button {
                 display: block;
+                width: 100%;
                 font-size: 20px;
+                text-align: left;
                 border: none;
                 background: none;
                 padding: 5px 0;
                 padding-left: 10%;
+                color: #EEEEEE;
+
+                &:hover {
+                    text-shadow: 0 0 5px #eeeeee,
+                        0 0 15px #eeeeee,
+                        0 0 25px #eeeeee, ;
+                }
             }
 
             li:not(:last-child) {
-                border-bottom: #ffffff 2px solid;
+                border-bottom: #eeeeee30 1px solid;
             }
         }
 
         .service:hover .service-content {
-            display: block;
+            height: 205%;
+            opacity: 1;
         }
 
         // nav-Blog
@@ -224,27 +268,62 @@
 
         // Search - Account
         .active {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
             flex: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
 
             // Search
             .search-box {
                 display: flex;
+                align-items: center;
+                justify-content: baseline;
+                width: 70%;
                 height: 40%;
-                background-color: #ffffff;
+                background-color: #EEEEEE;
                 border-radius: 132px;
 
                 input {
                     padding: 0px 5px 0px 10px;
-                    border: none;
+                    border-style: none;
                     outline: none;
                     border-radius: 132px;
+                    width: 90%;
+                    background-color: #EEEEEE;
+                    overflow: hidden;
                 }
 
-                Button {
+                .search {
+                    height: 90%;
                     border-radius: 132px;
+                    background-color: rgba(255, 0, 0, 0);
+                    color: rgb(107, 107, 107);
+                    transition: 0.3s ease-in-out;
+                    font-size: 16px;
+
+
+                    &:hover {
+                        color: rgb(41, 41, 41);
+                    }
+                }
+
+
+            }
+
+            //Account
+            .account {
+                width: 15%;
+                height: 50%;
+                border-radius: 132px;
+                cursor: pointer;
+                transition: 0.3s ease;
+                color: #EEEEEE;
+
+                &:hover {
+                    text-shadow: 0 0 5px #eeeeee,
+                        0 0 15px #eeeeee,
+                        0 0 25px #eeeeee, ;
                 }
             }
         }
@@ -253,15 +332,15 @@
     // Main Logo
     .logo {
         flex: 0.5;
-        transform: scale(7) translateY(70%);
+        transform: scale(5.5) translateY(70%);
         transition: transform 0.5s ease;
         background: none;
         border: none;
+        filter: invert(100%);
 
         img {
             width: 200px;
-            padding-top: 10px;
-            filter: invert(100%) opacity(0.6);
+            filter: opacity(0.7);
         }
 
         &.scrolled {
@@ -269,150 +348,7 @@
             background: none;
             border: none;
             cursor: pointer;
+
         }
     }
-
-
-    // .menu {
-    //     position: fixed;
-    //     top: 0;
-    //     right: 0;
-    //     width: 550px;
-    //     height: 100%;
-    //     background-color: white;
-    //     z-index: 1000;
-    //     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    //     padding: 20px;
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: flex-start;
-    // }
-
-    // .close-button {
-    //     background: none;
-    //     border: none;
-    //     cursor: pointer;
-    //     font-size: 48px;
-    //     align-self: flex-end;
-    //     transform: scale(1);
-    //     transition: transform 0.6s ease;
-
-    //     &:hover {
-    //         transform: scale(0.8);
-    //     }
-    // }
-
-    // .menu-content {
-    //     ul {
-    //         li {
-    //             list-style: none;
-    //             padding: 10px 0;
-
-    //             button {
-    //                 position: relative;
-    //                 font-size: 20px;
-    //                 border: none;
-    //                 background: none;
-    //                 cursor: pointer;
-    //                 padding-bottom: 1.5rem;
-    //                 padding-top: 0px;
-    //                 margin-left: 40px;
-    //                 transition: color 0.3s ease;
-
-    //                 .direct {
-    //                     position: absolute;
-    //                     padding-left: 5px;
-    //                     top: 6px;
-    //                     opacity: 0;
-    //                     transition: transform 0.5s ease, opacity 0.6s ease;
-    //                     font-size: 10px;
-    //                 }
-
-    //                 &:hover {
-    //                     color: #000;
-
-    //                     .direct {
-    //                         opacity: 1;
-    //                         transform: translateX(30%);
-    //                         font-size: 10px;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // .education-panel {
-    //     position: fixed;
-    //     top: 0;
-    //     right: 0;
-    //     width: 550px;
-    //     height: 100%;
-    //     background-color: white;
-    //     z-index: 1000;
-    //     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    //     padding: 20px;
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: flex-start;
-
-    // .education-content {
-    //     ul {
-    //         li {
-    //             list-style: none;
-    //             padding: 10px 0;
-
-    //             button {
-    //                 position: relative;
-    //                 font-size: 20px;
-    //                 border: none;
-    //                 background: none;
-    //                 cursor: pointer;
-    //                 padding-bottom: 1.5rem;
-    //                 padding-top: 0px;
-    //                 margin-left: 40px;
-    //                 transition: color 0.3s ease;
-
-    //                 .direct {
-    //                     position: absolute;
-    //                     padding-left: 5px;
-    //                     top: 6px;
-    //                     opacity: 0;
-    //                     transition: transform 0.5s ease, opacity 0.6s ease;
-    //                     font-size: 10px;
-    //                 }
-
-    //                 &:hover {
-    //                     color: #000;
-
-    //                     .direct {
-    //                         opacity: 1;
-    //                         transform: translateX(30%);
-    //                         font-size: 10px;
-    //                     }
-    //                 }
-    //             }
-
-    //         }
-    //     }
-    // }
-    // }
-
-    // .overlay {
-    //     position: fixed;
-
-    //     background-color: rgba(0, 0, 0, 0.6);
-    //     z-index: 999;
-    // }
-
-    // .overlay-2 {
-    //     position: fixed;
-
-
-    //     z-index: 1000;
-    // }
-
-    // .actions {
-    //     position: relative;
-    // }
 }
