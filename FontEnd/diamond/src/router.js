@@ -33,6 +33,7 @@ import VerifyAccount from "./pages/Signup/VerifyAccount";
 import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 import GoogleLoginSuccess from "./pages/login/GoogleLoginSuccess";
 import PaymentFail from "./pages/Payment/PaymentFail";
+import ServiceList from "./pages/ServiceList/ServiceList";
 
 
 
@@ -92,6 +93,10 @@ const renderUserRouter = () => {
             component: <ServiceForm/>
         },
         {
+            path : ROUTERS.USER.SERVICE_ServiceList,
+            component: <ServiceList/>
+        },
+        {
             path : ROUTERS.USER.SERVICE_CALCULATOR,
             component: <CalculatorService/>
         },
@@ -103,6 +108,10 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
         },
+        // {
+        //     path : ROUTERS.USER.SERVICE_Lookup,
+        //     component: <LookUp/>
+        // },
         //CheckOut
         {
             path : ROUTERS.USER.PAYMENT_CHECKOUT,

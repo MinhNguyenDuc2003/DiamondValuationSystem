@@ -1,9 +1,7 @@
-import './Service.scss';
 import React, { useState, useEffect } from 'react';
 import { Form } from 'antd';
 import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
 import paypal from './img/PayPal_Logo.jpg';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { getAllServices } from '../../utils/ApiFunction';
 
@@ -26,6 +24,7 @@ const formItemLayout = {
   },
 };
 
+// Style constants
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -47,13 +46,12 @@ const getStyles = (name, personName, theme) => {
 };
 
 const ServiceForm = () => {
-  const theme = useTheme();
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [selectedDate, setSelectedDate] = useState('');
   const [serviceSelected, setServiceSelected] = useState([]);
   const [payMentSelected, setPayMentSelected] = useState('');
   const [services, setServices] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(()=> {
     const Services = async() => {
@@ -83,7 +81,7 @@ const ServiceForm = () => {
   };
 
   const handleServiceChange = (event) => {
-    const { value } = event.target; // Ensure event.target.value exists
+    const { value } = event.target;
     setServiceSelected(
       typeof value === 'string' ? value.split(',') : value
     );
@@ -93,7 +91,6 @@ const ServiceForm = () => {
     <div className='wrapperrr'>
       <div className="body-content">
         <Form
-          form={form}
           {...formItemLayout}
           className='form-valuation'
           onFinish={onFinish}
@@ -157,7 +154,7 @@ const ServiceForm = () => {
                     value={service.name}
                     
                   >
-                    {service.name} - {service.content}
+                    {service.name} - {service.content} - {service.money}
                   </MenuItem>
                 ))}
               </Select>
@@ -200,8 +197,8 @@ const ServiceForm = () => {
             <Button variant="contained" type="primary" htmlType="submit">
               Submit
             </Button>
-            </Box>
-          </Form.Item>
+          </Box>
+        </Form.Item>
         </Form>
       </div>
     </div>

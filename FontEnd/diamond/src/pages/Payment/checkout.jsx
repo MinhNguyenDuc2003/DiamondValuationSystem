@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import { createPayment, getAllServices, getCustomerById, placeOrderDiamond } from '../../utils/ApiFunction';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Link } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
 
 const Checkout = () => {
   const [user, setUser] = useState({});
@@ -76,7 +77,7 @@ useEffect(() => {
     }
     return 0;
   };
-
+  
   const total = calculateTotal();
   setTotal(total);
 }, [cart.serviceSelected, services]);
@@ -127,6 +128,7 @@ const handleClickDialog = () => {
 }
   return (
     <div className="wrapperrrrr">
+      <ToastContainer/>
       <Paper className="checkout-paper" elevation={3}>
         <div className='header-checkout'>
           <Typography variant="h4" align="center" gutterBottom>

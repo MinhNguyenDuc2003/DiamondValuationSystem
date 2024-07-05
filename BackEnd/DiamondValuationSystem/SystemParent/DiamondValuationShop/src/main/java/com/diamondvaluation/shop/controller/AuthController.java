@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.shop.EmailSettingBag;
 import com.diamondvaluation.shop.Utility;
-import com.diamondvaluation.shop.exception.CustomerIsAlreadyExistException;
+import com.diamondvaluation.shop .exception.CustomerIsAlreadyExistException;
 import com.diamondvaluation.shop.exception.CustomerNotFoundException;
 import com.diamondvaluation.shop.exception.JwtValidationException;
 import com.diamondvaluation.shop.exception.RefreshTokenExpiredException;
@@ -114,16 +114,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/token")
-	public ResponseEntity<?> accessToken(@RequestParam("token") String token) {
-		try {
-			jwtUtils.validateAccessToken(token);
-			System.out.println("abc");
+	public ResponseEntity<?> accessToken() {
 			return ResponseEntity.ok().build();
-		} catch (JwtValidationException e) {
-			return ResponseEntity.status(401).build();
-		} catch (ExpiredJwtException e) {
-			return ResponseEntity.status(401).build();
-		}
 	}
 
 	@PostMapping("/signup")

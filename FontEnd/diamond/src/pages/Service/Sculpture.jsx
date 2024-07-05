@@ -3,7 +3,7 @@ import data from "./data/Data.json"
 import './Valuation.scss'
 import pic2 from './img/Sculpture_Pic.jpg'
 import { useNavigate } from 'react-router-dom'
-import { getAllServices } from '../../utils/ApiFunction';
+import { ToastContainer, toast } from 'react-toastify'
 const Sculpture = () => {
   const [dataContent, setDataContent] = useState(null);
     const navigate = useNavigate("");
@@ -15,8 +15,22 @@ const Sculpture = () => {
             <div>Loading....</div>
         )
     }
+    //check xem người dùng đã đăng nhập hay chưa
+    const handleSendForm = () => {
+        const checkUser = window.localStorage.getItem('user');
+        if (checkUser){
+           navigate('/Service/valuation/valuation-form')
+        }else{
+            toast.error(`You need to login` , {autoClose : 3000})
+            setTimeout(() => {
+                navigate(`/login`)
+            }, 4000);
+        }
+       
+    }
     return (
         <div className='wrapperrr'>
+            <ToastContainer/>
             <div className='header-valuation'>
                 <div>
                     <h9>{dataContent.SculptureIntroduction.subtle}</h9>
@@ -26,7 +40,7 @@ const Sculpture = () => {
                 </div>
                 </div>
                 <div >
-                    <button onClick={e => navigate('/Service/valuation/valuation-form')} className='btn-form'>
+                    <button onClick={handleSendForm} className='btn-form'>
                         Send Form To Sculpture
                     </button>
                 </div>
