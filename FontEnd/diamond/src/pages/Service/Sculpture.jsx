@@ -3,7 +3,6 @@ import data from "./data/Data.json"
 import './Valuation.scss'
 import pic2 from './img/Sculpture_Pic.jpg'
 import { useNavigate } from 'react-router-dom'
-import { getAllServices } from '../../utils/ApiFunction';
 const Sculpture = () => {
   const [dataContent, setDataContent] = useState(null);
     const navigate = useNavigate("");

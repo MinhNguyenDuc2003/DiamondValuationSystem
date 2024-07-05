@@ -32,7 +32,7 @@ export const Login = () => {
       }
     };
     const token = localStorage.getItem("token")
-    if(token !== undefined && token.length>0){
+    if(token !== undefined || token.length>0){
       checkToken();
     }
   }, []);
