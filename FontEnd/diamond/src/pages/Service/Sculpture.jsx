@@ -33,7 +33,7 @@ const Sculpture = () => {
             <ToastContainer/>
             <div className='header-valuation'>
                 <div>
-                    <h9>{dataContent.SculptureIntroduction.subtle}</h9>
+                    <h6>{dataContent.SculptureIntroduction.subtle}</h6>
                 </div>
                 <div>
                     <h1>{dataContent.SculptureIntroduction.title}</h1>
@@ -54,7 +54,7 @@ const Sculpture = () => {
                             case 'list':
                                 return <div className='list'><li key={index}>{section.content}</li> </div>
                             case 'img':
-                                return <img className='img-valuation' src={section.src === 'pic2' ? pic2 : "" } alt={section.alt}></img>
+                                return <img className='img-valuation' key={index} src={section.src === 'pic2' ? pic2 : "" } alt={section.alt}></img>
                                 default:
                                     return null;
                         }
