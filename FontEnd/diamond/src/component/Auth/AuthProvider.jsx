@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("userId")
     localStorage.removeItem("email");
     localStorage.removeItem("token");
   };

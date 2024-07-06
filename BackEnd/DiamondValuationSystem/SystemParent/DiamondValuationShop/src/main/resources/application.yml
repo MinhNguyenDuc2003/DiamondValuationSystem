@@ -5,7 +5,7 @@ app:
   security:
     jwt:
       access-token:
-        expiration: 60
+        expiration: 1
       issuer: DiamondValuation
       refresh-token:
         expiration: 7200
@@ -48,9 +48,8 @@ spring:
           google:
             client-id: 155958575041-16pfns53l27ivvsenid2g0qea4fs64lt.apps.googleusercontent.com
             client-secret: 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
-            scope:
-              - email
-              - profile
+            redirect-uri: http://localhost:3000/login/oauth2/code/google
+            scope: openid, profile, email
           facebook:
             client-id: 1731600987247737
             client-secret: 1ef787212b81d115b2526d023b822590
@@ -62,3 +61,4 @@ paypal:
     id: Ab4kREeSpjk8R738YwCYUPBMnNUDl0N2XlByUFnL8peEhUkpYLjqLkoyXTXlNyj-fp3z3c5bb3LAtSEW
     secret: EHigX7VbvIswP2ToWPJiPg-A0ZVni0AXe_UDPnfjxgUXMHQt86Xdjl2oYHumwSdoYzKW012o4NbOQYT-   
   mode: sandbox
+baseUrl: http://localhost:3000/

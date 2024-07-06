@@ -1,9 +1,23 @@
 import React, { memo, useEffect, useState } from 'react';
-import { RightOutlined, CloseCircleOutlined, UserOutlined, SearchOutlined, MenuOutlined, FacebookOutlined, PhoneOutlined, WhatsAppOutlined, AudioOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Dropdown, Menu, Input, Space } from 'antd';
+import {Dropdown, Menu, Input, Space } from 'antd';
+import { getCustomerById } from '../../utils/ApiFunction';
 import './Header.scss';
 import logo from './image/logot.png';
+import Account from './Account.jsx';
+import { useAuth } from '../../component/Auth/AuthProvider.jsx';
+import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import '@fontsource/roboto/500.css';
+import { useMediaQuery } from 'react-responsive';
+import MenuIcon from '@mui/icons-material/Menu';
+import { SearchOutlined } from '@mui/icons-material';
+
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -12,45 +26,60 @@ const Header = () => {
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
     const [ServiceOpen, setServiceOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
+    const [isLogin, setLogin] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleUserAccount = () => {
-        setUser(window.localStorage.getItem(`user`))
-    }
+    const auth = useAuth();
+
+    const [totalRequest, setTotalRequest] = useState('')
+    const [badgeVisible, setBadgeVisible] = useState(true);
+
+    //Responsive........
+    const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
+
+
+    // Ẩn Badge khi click vào
+    const handleBadgeClick = () => {
+        setBadgeVisible(false);
+
+    };
     const handleLogoutClick = () => {
-        window.localStorage.removeItem(`user`);
-        window.location.reload()
-        navigate('/');
+        setLogin(false)
+        auth.handleLogout();
+        navigate('/login');
     }
 
-    const handleServiceClick = () => {
-        setServiceOpen(true);
-    }
-    const handleEducationClick = () => {
-        setEducationOpen(true);
+    const handleMenuOpen = (event) => {
+        setUserMenuOpen(event.currentTarget);
     };
 
-    const handleCloseEducation = () => {
-        setEducationOpen(false);
+    const handleMenuClose = () => {
+        setUserMenuOpen(null);
     };
-    const handleCloseService = () => {
-        setServiceOpen(false);
+    const handleNavigate = (path) => {
+        navigate(path);
+        setUserMenuOpen(false);
     };
-
     const handleNavigateToEducation = (path) => {
         navigate(path);
         setEducationOpen(false);
         setMenuOpen(false);
-        // window.location.reload();
+        window.location.reload();
     };
     const handleNavigateToService = (path) => {
         navigate(path);
         setServiceOpen(false);
         setMenuOpen(false);
     };
+
+    useEffect(() => {
+        const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        //dung để lấy ra độ dài của mảng
+        setTotalRequest(storedOrders.length);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -77,66 +106,111 @@ const Header = () => {
 
     useEffect(() => {
         
-        setUser(window.localStorage.getItem(`user`))
-        console.log(user);
-        
-    },[user])
-    const nameUser = JSON.parse(user);
+        const getCustomer = async() => {
+            const data = await getCustomerById();
+            if(data!==null){
+              setUser({
+                first_name: data.first_name,
+                last_name: data.last_name
+              }); 
+              setLogin(true)
+            }
+          }
+          getCustomer();
+    },[navigate])
     const menuUser = (
 
+        <Popover
+            open={Boolean(userMenuOpen)}
+            anchorEl={userMenuOpen}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+        >
+            <List>
+                {isLogin ? (
+                    <>
+                        <ListItemButton onClick={() => handleNavigate('/account')}>
+                            <ListItemText primary="Manage Account" />
+                        </ListItemButton>
+                        {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
 
-        <Menu>
+                        )}
+                        <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
-            {user ? (
-                <>
-                    <Menu.Item>
-                        <Button onClick={() => navigate('/account')} type="text">Manage Account</Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button onClick={handleLogoutClick} type='text'> Logout</Button>
-                    </Menu.Item>
-                </>
-            ) : (
-                <>
-                    <Menu.Item>
-                        <Button onClick={e => navigate("/login")} type='text'> Login</Button>
+                            <Badge sx={{ gap: "5px" }}
+                                badgeContent={totalRequest}
+                                onClick={handleBadgeClick}
+                                color="primary">
+                                <ListItemText primary="My Request" />
 
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Button onClick={e => navigate("/signup")} type='text'> Sign Up</Button>
-
-                    </Menu.Item>
-                </>
-
-            )}
-
-
-        </Menu>
-
+                            </Badge>
+                        </ListItemButton>
+                        <ListItemButton onClick={handleLogoutClick}>
+                            <ListItemText primary="Logout" />
+                        </ListItemButton>
+                    </>
+                ) : (
+                    <>
+                        <ListItemButton onClick={() => navigate("/login")}>
+                            <ListItemText primary="Login" />
+                        </ListItemButton>
+                        <ListItemButton onClick={() => navigate("/signup")}>
+                            <ListItemText primary="Sign Up" />
+                        </ListItemButton>
+                    </>
+                )}
+            </List>
+        </Popover>
     );
-    const search = (
-        <Menu>
 
-            <Space direction="vertical">
-                <Input.Search
-                    placeholder="input search text"
-                    style={{
-                        width: 200,
-                    }}
-                    onSearch={handleSearch}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                />
-            </Space>
-
-        </Menu>
-    );
 
     return (
         <div className={`header ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
             <div className='header-left'>
                 <div className='contact'>
-                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}>+ Contact Us</button>
+                    <button onClick={() => setMenuContact(!menuContact)} className={scrolled ? 'scrolled' : ''}><span>+</span> Contact Us</button>
+                    {/* {menuContact && ( */}
+                    <div className="contact-content">
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <CallOutlinedIcon className='icon-contact' />
+                                <span>CALL US 099999999</span>
+                            </a>
+                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <WhatsAppIcon className='icon-contact' />
+                                <span>WHATSAPP US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FacebookOutlinedIcon className='icon-contact' />
+                                <span>FACEBOOK US</span>
+                            </a>
+                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
+                        </div>
+                        <div className="col">
+                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
+                                <FmdGoodIcon className='icon-contact' />
+                                <span>ADDRESS US</span>
+                            </a>
+                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+                    {/* )} */}
                 </div>
                 <div className='education'>
                     <button>Education</button>
@@ -165,7 +239,10 @@ const Header = () => {
                 </div>
                 <div className='diamond'>
                     <button>Diamond</button>
-                </div>
+                </div>      
+                {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
             </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
@@ -202,15 +279,16 @@ const Header = () => {
                     <form className='search-box'>
                         <input type='text' placeholder='Looking for blogs'>
                         </input>
-                        <Button className='search' type="text" icon={<SearchOutlined />} />
+                        <Button className='search' type="text" icon={<SearchOutlined/>} />
                     </form>
-                    <Dropdown className='account' overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                        {user ? (
-                            <strong style={{ margin: 0 }}>{nameUser.LastName}</strong>
-                        ): (  
-                            <Button type="text" icon={<UserOutlined />} />
-                        )}
-                    </Dropdown>
+                    <div>
+                    <Account
+                        isLogin={isLogin}
+                        menuUser={menuUser}
+                        userMenuOpen={userMenuOpen}
+                        setUserMenuOpen={setUserMenuOpen}
+                    />
+        </div>
                 </div>
                 {/* <ul className="actions">
                     <li>
@@ -220,71 +298,12 @@ const Header = () => {
                     </li>
                     <li>
 
-                        // <Dropdown overlay={search} trigger={['hover']} >
-                        //     <Button type="text" icon={<SearchOutlined />} />
-                        // </Dropdown>
-                    </li>
-                    <li>
-                        <Button type="text" onClick={() => setMenuOpen(!menuOpen)} icon={<MenuOutlined />} />
+                                </Badge>
+                            ) : (
+                                <AccountCircleIcon />
+                            )}
+                        </div>
 
-                    </li>
-                </ul> */}
-            </div>
-
-            {menuOpen && (
-                <div className="menu">
-                    <button onClick={() => setMenuOpen(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <ul>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleServiceClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Service</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/blog')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Blog</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={handleEducationClick} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Education</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <div className='menu-items'>
-                                    <button onClick={() => handleNavigateToEducation('/diamond')} className='btn-menu-items'>
-                                        <span className='items'>
-                                            <span className='name-item'>Diamond</span>
-                                            <span className='direct-item'>
-                                                <span className='direct'> <RightOutlined /></span>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             )}
@@ -329,7 +348,8 @@ const Header = () => {
                     </div>
                 </div>
             )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>}
+            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
+        </div>
         </div>
     );
 };

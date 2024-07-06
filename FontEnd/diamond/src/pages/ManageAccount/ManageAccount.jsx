@@ -1,163 +1,188 @@
-import React, {useState} from 'react'
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+
+import React, {useEffect, useState} from 'react'
+import { Alert} from '@mui/material'
+import { getCustomerById, updateAccount } from '../../utils/ApiFunction';
 import { useNavigate } from 'react-router-dom';
+import { Container, Typography, TextField, Button, Box, Snackbar, Avatar } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import LockIcon from '@mui/icons-material/Lock';
+
 const ManageAccount = () => {
-    const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {}); // Parse user object from localStorage
-  const [editMode, setEditMode] = useState(false); // State to manage edit mode
-  const [formData, setFormData] = useState({
-    email: user.Email || '',
-    firstName: user.FirstName || '',
-    lastName: user.LastName || '',
-    location: user.Location || '',
-    password: user.Password || '',
-    phone: user.Phone || ''
-    // Add more fields as needed
+  const [editMode, setEditMode] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [user, setUser] = useState({
+    id : "",
+    email : "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    location: ""
   });
+  const [error , setError] = useState("")
+  const navigate = useNavigate()
+  useEffect(() => {
+    const getCustomer = async() => {
+      const data = await getCustomerById();
+      if(data!==null){
+        setUser({
+          id : data.id,
+          email : data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone_number: data.phone_number,
+          location: data.location
+        }); 
+      }
+    }
+    getCustomer();
+  }, [navigate])
 
   // Function to handle form input change
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    window.location.reload()
-    try {
-      // Update user data in localStorage
-      window.localStorage.setItem(
-        'user',
-        JSON.stringify({
-          ...user,
-          Email: formData.email,
-          FirstName: formData.firstName,
-          LastName: formData.lastName,
-          Location: formData.location,
-          Password: formData.password,
-          Phone: formData.phone
-          // Update more fields as needed
-        })
-      );
-
-      // Update user state
-      setUser(JSON.parse(window.localStorage.getItem('user')));
-
-      // Call API to update user data
-      const userId = user.id; // Assuming 'id' is the unique identifier for the user
-      const response = await fetch(`https://6660044b5425580055b1c21d.mockapi.io/Assignment/User/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...user,
-          Email: formData.email,
-          FirstName: formData.firstName,
-          LastName: formData.lastName,
-          Location: formData.location,
-          Password: formData.password,
-          Phone: formData.phone
-          // Update more fields as needed
-        })
-      });
-
-      if (response.ok) {
-        // Successful update
-        console.log('User data updated successfully');
-      } else {
-        // Handle error case
-        console.error('Failed to update user data');
-      }
-
-      // Exit edit mode after submission
-      setEditMode(false);
-    } catch (error) {
-      console.error('Error updating user data:', error);
+   try {
+    const response = await updateAccount(user);
+    if(response.status === 200){
+      alert("update account successfully!")
+      window.location.reload()
     }
+   } catch (error) {
+      setError("This email is already exist!")
+   }
+   setTimeout(() => {
+    setError("");
+  }, 5000);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelClick = () => {
+    window.location.reload();
   };
 
   return (
     <Container maxWidth="sm" className='wrapperrr'>
       <Typography variant="h3" gutterBottom>Your Profile</Typography>
       <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 1 }}>
-        
+          {error && <Alert severity="error">{error}</Alert>}
           <form onSubmit={handleSubmit}>
             <TextField
-            sx={{color:'gray'}}
               id="email"
               name="email"
               label="Email"
-              value={formData.email}
+              value={user.email}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              InputProps={{
+                startAdornment: (
+                  <EmailIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
-              id="firstName"
-              name="firstName"
+              id="first_name"
+              name="first_name"
               label="First Name"
               variant="outlined"
-              value={formData.firstName}
+              value={user.first_name}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
+              InputProps={{
+                startAdornment: (
+                  <PersonIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
-              id="lastName"
-              name="lastName"
+              id="last_name"
+              name="last_name"
               label="Last Name"
               variant="outlined"
-              value={formData.lastName}
+              value={user.last_name}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
+              InputProps={{
+                startAdornment: (
+                  <PersonIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
               id="location"
               name="location"
               label="Location"
               variant="outlined"
-              value={formData.location}
+              value={user.location}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
+              InputProps={{
+                startAdornment: (
+                  <LocationOnIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
             <TextField
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              variant="outlined"
-              value={formData.password}
-              onChange={handleInputChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              id="phone"
-              name="phone"
+              id="phone_number"
+              name="phone_number"
               label="Phone"
               variant="outlined"
-              value={formData.phone}
+              value={user.phone_number}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
               required
+              InputProps={{
+                startAdornment: (
+                  <PhoneIcon sx={{ mr: 1 }} />
+                ),
+              }}
             />
-            {/* Add more TextFields for additional fields */}
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-              Save
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />} sx={{ mr: 2 }}>
+                Save
+              </Button>
+              <Button variant="contained" color="error" startIcon={<CancelIcon />} onClick={handleCancelClick}>
+                Cancel
+              </Button>
+            </Box>
           </form>
-       
+        )
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+      />
     </Container>
-  )
-}
+  );
+};
 
-export default ManageAccount
+export default ManageAccount;

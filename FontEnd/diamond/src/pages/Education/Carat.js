@@ -1,30 +1,44 @@
 import React from 'react';
+import { Container, Typography } from '@mui/material';
 import './Education.scss';
 import data from './Education.json';
 
 const EDUCATION_CARAT = () => {
   return (
-    <div className="education-wrapper">
-      {data.title && <h1>{data.title}</h1>}
-      {data.author && <p><strong>Author:</strong> {data.author}</p>}
-      {data.date && <p><strong>Date:</strong> {data.date}</p>}
-      {data.content && data.content.map((section, index) => (
-        <div key={index} className="section">
-          {section.heading && <h2>{section.heading}</h2>}
-          {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
+    <Container maxWidth="md" className="education-wrapper">
+        {data.Carat.title && (
+          <Typography variant="h4" gutterBottom>
+            {data.Carat.title}
+          </Typography>
+        )}
+        {data.Carat.author && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Author:</strong> {data.Carat.author}
+          </Typography>
+        )}
+        {data.Carat.date && (
+          <Typography variant="subtitle1" color="textSecondary">
+            <strong>Date:</strong> {data.Carat.date}
+          </Typography>
+        )}
+        {data.Carat.content &&
+          data.Carat.content.map((section, index) => (
+            <div key={index} className="section">
+              {section.heading && (
+                <Typography variant="h5" gutterBottom>
+                  {section.heading}
+                </Typography>
+              )}
+              {section.paragraphs &&
+                section.paragraphs.map((paragraph, idx) => (
+                  <Typography key={idx} variant="body1" paragraph>
+                    {paragraph}
+                  </Typography>
+                ))}
+            </div>
           ))}
-          {section.listItems && (
-            <ul>
-              {section.listItems.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
-    </div>
+    </Container>
   );
-}
+};
 
 export default EDUCATION_CARAT;

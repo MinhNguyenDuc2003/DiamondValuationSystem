@@ -1,10 +1,9 @@
-import './Service.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form } from 'antd';
 import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
 import paypal from './img/PayPal_Logo.jpg';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { getAllServices } from '../../utils/ApiFunction';
 
 const formItemLayout = {
   labelCol: {
@@ -25,6 +24,7 @@ const formItemLayout = {
   },
 };
 
+// Style constants
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -45,39 +45,43 @@ const getStyles = (name, personName, theme) => {
   };
 };
 
-const names = [
-  'Valuation',
-  'Appraisal',
-  'Sculpture'
-];
-
 const ServiceForm = () => {
-  const theme = useTheme();
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [selectedDate, setSelectedDate] = useState('');
   const [serviceSelected, setServiceSelected] = useState([]);
   const [payMentSelected, setPayMentSelected] = useState('');
-  const navigate = useNavigate();
+  const [services, setServices] = useState([]);
 
-  const handleDateChange = (newValue) => {
-    setSelectedDate(newValue.format('DD/MM/YYYY'));
-  };
-
-  const onFinish = (values) => {
-    navigate('/Payment-checkout', {
-      state: {
-        formData: {
-          ...values,
-          date: selectedDate,
-          service: serviceSelected,
-          paymentMethod: payMentSelected
+  useEffect(()=> {
+    const Services = async() => {
+      try {
+        const response = await getAllServices();
+        if(response.status === 200){
+          setServices(response.data);
         }
+      } catch (error) {
+        console.log(error);
       }
-    });
+    }
+    Services();
+  }, [])
+
+
+
+  const onFinish = () => {
+    const serviceSelect = serviceSelected.reduce((value, service, index) => {
+      return index === 0 ? service : value + ',' + service;
+    }, '');
+    localStorage.setItem("selectedDate", selectedDate)
+    localStorage.setItem("serviceSelected", serviceSelect)
+    localStorage.setItem("paymentMethod", payMentSelected)
+
+    navigate('/Payment-checkout');
   };
 
   const handleServiceChange = (event) => {
-    const { value } = event.target; // Ensure event.target.value exists
+    const { value } = event.target;
     setServiceSelected(
       typeof value === 'string' ? value.split(',') : value
     );
@@ -87,7 +91,6 @@ const ServiceForm = () => {
     <div className='wrapperrr'>
       <div className="body-content">
         <Form
-          form={form}
           {...formItemLayout}
           className='form-valuation'
           onFinish={onFinish}
@@ -95,67 +98,6 @@ const ServiceForm = () => {
             maxWidth: 1000,
           }}
         >
-          <Form.Item
-            label="First Name"
-            name="firstName"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your First Name!',
-              },
-            ]}
-          >
-            <TextField label='First Name' fullWidth />
-          </Form.Item>
-          <Form.Item
-            label="Last Name"
-            name="lastName"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Last Name!',
-              },
-            ]}
-          >
-            <TextField label='Last Name' fullWidth />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                type: 'email',
-                message: 'Please input a valid Email!',
-              },
-            ]}
-          >
-            <TextField label="Email" fullWidth />
-          </Form.Item>
-          <Form.Item
-            label="Phone Number"
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Phone Number!',
-              },
-            ]}
-          >
-            <TextField label='Phone Number' fullWidth />
-          </Form.Item>
-          <Form.Item
-            label="Address"
-            name="address"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Address!',
-              },
-            ]}
-          >
-            <TextField label="Address" fullWidth />
-          </Form.Item>
           <Form.Item
             label="Preferred Appraisal Date"
             name="date"
@@ -197,19 +139,22 @@ const ServiceForm = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                      <MenuItem key={value} label={value} 
+                      >
+                        {value}
+                        </MenuItem>
                     ))}
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                {services.map((service, index) => (
                   <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, serviceSelected, theme)}
+                    key={service.id}
+                    value={service.name}
+                    
                   >
-                    {name}
+                    {service.name} - {service.content} - {service.money}
                   </MenuItem>
                 ))}
               </Select>
@@ -233,9 +178,9 @@ const ServiceForm = () => {
                 value={payMentSelected}
                 onChange={(e) => setPayMentSelected(e.target.value)}
               >
-                <FormControlLabel value="Cash" control={<Radio />} label="Cash" />
+                <FormControlLabel value="CASH" control={<Radio />} label="Cash" />
                 <FormControlLabel
-                  value="PayPal"
+                  value="PAYPAL"
                   control={<Radio />}
                   label={
                     <Box display="flex" alignItems="center">
@@ -252,8 +197,8 @@ const ServiceForm = () => {
             <Button variant="contained" type="primary" htmlType="submit">
               Submit
             </Button>
-            </Box>
-          </Form.Item>
+          </Box>
+        </Form.Item>
         </Form>
       </div>
     </div>

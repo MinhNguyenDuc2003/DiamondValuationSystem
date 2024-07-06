@@ -29,6 +29,10 @@ import Sculpture from "./pages/Service/Sculpture";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
+import VerifyAccount from "./pages/Signup/VerifyAccount";
+import ResetPassword from "./pages/ForgotPassword/ResetPassword";
+import GoogleLoginSuccess from "./pages/login/GoogleLoginSuccess";
+import PaymentFail from "./pages/Payment/PaymentFail";
 
 
 
@@ -44,10 +48,24 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.LOGIN,
             component: <UserLogin/>
         },
+        //USER-LOGIN
+        {
+            path : ROUTERS.USER.GOOGLELOGINSUCCESS,
+            component: <GoogleLoginSuccess/>
+        },
+        //VERYFIY-ACCOUNT
+        {
+            path : ROUTERS.USER.VERYFY_ACCOUNT,
+            component: <VerifyAccount/>
+        },
         //USER-Forgot-Password
         {
             path : ROUTERS.USER.ForgotPassword,
             component: <ForgotPassword/>
+        },
+        {
+            path : ROUTERS.USER.RESETPASSWORD,
+            component: <ResetPassword/>
         },
         //USER-SIGN
         {
@@ -73,6 +91,10 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.SERVICE_VALUATION_FORM,
             component: <ServiceForm/>
         },
+        // {
+        //     path : ROUTERS.USER.SERVICE_ServiceList,
+        //     component: <ServiceList/>
+        // },
         {
             path : ROUTERS.USER.SERVICE_CALCULATOR,
             component: <CalculatorService/>
@@ -85,6 +107,10 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
         },
+        // {
+        //     path : ROUTERS.USER.SERVICE_Lookup,
+        //     component: <Lookup/>
+        // },
         //CheckOut
         {
             path : ROUTERS.USER.PAYMENT_CHECKOUT,
@@ -94,6 +120,10 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.PAYMENT_success,
             component: <Success/>
+        },
+        {
+            path : ROUTERS.USER.PAYMENT_FAIL,
+            component: <PaymentFail/>
         },
         //BLOG
         {
