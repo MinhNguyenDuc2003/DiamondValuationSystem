@@ -16,7 +16,7 @@ export const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [login, setLogin] = useState({
     email: "",
-    password: "",
+    password: ""
   });
 
   const navigate = useNavigate();
@@ -31,7 +31,10 @@ export const Login = () => {
         navigate("/");
       }
     };
-    checkToken();
+    const token = localStorage.getItem("token")
+    if(token !== undefined && token.length>0){
+      checkToken();
+    }
   }, []);
 
   const handleInputChange = (e) => {

@@ -1,8 +1,11 @@
 export const ROUTERS = {
     USER: {
         LOGIN: "Login",
-        ForgotPassword: "retake-password",
+        ForgotPassword: "forgot-password",
+        RESETPASSWORD: "reset-password",
+        GOOGLELOGINSUCCESS: "/login/oauth2/code/google",
         SIGNUP: "signup",
+        VERYFY_ACCOUNT: "verify",
         HOME: "",
         account: "account",
         MYRequest: "MyRequest",
@@ -15,7 +18,8 @@ export const ROUTERS = {
         SERVICE_ServiceList: "/Service/ServiceList",
         SERVICE_Report: "/Report/:id",
         PAYMENT_CHECKOUT: "/Payment-checkout",
-        PAYMENT_success: "/Payment-checkout-success",
+        PAYMENT_success: "/pay/success",
+        PAYMENT_FAIL: "/pay/cancel",
         SERVICE_SALE: "/Service/sale",
         BLOG: "Blog",
         BLOG_POST1: "Blog/ask-certification-importance",

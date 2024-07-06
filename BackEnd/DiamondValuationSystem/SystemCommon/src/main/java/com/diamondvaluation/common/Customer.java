@@ -50,6 +50,9 @@ public class Customer {
 	@Column(name = "verification_code", length = 64)
 	private String verificationCode;
 	
+	@Column(name = "resetpassword_code", length=64)
+	private String resetPasswordCode;
+	
 	@Column(name = "created_time")
 	@CreatedDate
 	private LocalDateTime createdTime;

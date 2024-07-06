@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+
+import React, {useEffect, useState} from 'react'
+import { Alert} from '@mui/material'
+import { getCustomerById, updateAccount } from '../../utils/ApiFunction';
+import { useNavigate } from 'react-router-dom';
 import { Container, Typography, TextField, Button, Box, Snackbar, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,79 +14,57 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import LockIcon from '@mui/icons-material/Lock';
 
 const ManageAccount = () => {
-  const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {});
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({
-    email: user.Email || '',
-    firstName: user.FirstName || '',
-    lastName: user.LastName || '',
-    location: user.Location || '',  
-    password: user.Password || '',
-    phone: user.Phone || ''
-  });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [user, setUser] = useState({
+    id : "",
+    email : "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    location: ""
+  });
+  const [error , setError] = useState("")
+  const navigate = useNavigate()
+  useEffect(() => {
+    const getCustomer = async() => {
+      const data = await getCustomerById();
+      if(data!==null){
+        setUser({
+          id : data.id,
+          email : data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone_number: data.phone_number,
+          location: data.location
+        }); 
+      }
+    }
+    getCustomer();
+  }, [navigate])
 
+  // Function to handle form input change
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      // Update localStorage
-      window.localStorage.setItem(
-        'user',
-        JSON.stringify({
-          ...user,
-          Email: formData.email,
-          FirstName: formData.firstName,
-          LastName: formData.lastName,
-          Location: formData.location,
-          Password: formData.password,
-          Phone: formData.phone
-        })
-      );
-
-      // Update user state
-      setUser(JSON.parse(window.localStorage.getItem('user')));
-
-      // Call API
-      const userId = user.id;
-      const response = await fetch(`https://api.com/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...user,
-          Email: formData.email,
-          FirstName: formData.firstName,
-          LastName: formData.lastName,
-          Location: formData.location,
-          Password: formData.password,
-          Phone: formData.phone
-        })
-      });
-
-      if (response.ok) {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('User data updated successfully');
-      } else {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Failed to update user data');
-      }
-      setSnackbarOpen(true);
-
-      setEditMode(false); // Exit edit mode
-    } catch (error) {
-      console.error('Error updating user data:', error);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error updating user data');
-      setSnackbarOpen(true);
+   try {
+    const response = await updateAccount(user);
+    if(response.status === 200){
+      alert("update account successfully!")
+      window.location.reload()
     }
+   } catch (error) {
+      setError("This email is already exist!")
+   }
+   setTimeout(() => {
+    setError("");
+  }, 5000);
   };
 
   const handleSnackbarClose = () => {
@@ -94,62 +76,20 @@ const ManageAccount = () => {
   };
 
   const handleCancelClick = () => {
-    // Reset form data
-    setFormData({
-      email: user.Email || '',
-      firstName: user.FirstName || '',
-      lastName: user.LastName || '',
-      location: user.Location || '',
-      password: user.Password || '',
-      phone: user.Phone || ''
-    });
-
-    setEditMode(false);
+    window.location.reload();
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 15 , mb: 10 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <Avatar sx={{ width: 80, height: 80, mr: 2, backgroundColor: 'gray' }}>
-          <Typography sx={{fontSize : '30px'}}>
-          {user.LastName.charAt(0)}
-          </Typography>
-          </Avatar>
-        <Typography variant="h4">Your Profile</Typography>
-      </Box>
-      <Box sx={{ bgcolor: 'background.paper', p: 4, borderRadius: 1, boxShadow: 2 }}>
-        {!editMode ? (
-          <>
-            <Typography variant="h5" gutterBottom>Personal Information</Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <EmailIcon sx={{ mr: 1 }} />
-              <Typography variant="body1"><strong>Email:</strong> {formData.email}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <PersonIcon sx={{ mr: 1 }} />
-              <Typography variant="body1"><strong>First Name:</strong> {formData.firstName}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <PersonIcon sx={{ mr: 1 }} />
-              <Typography variant="body1"><strong>Last Name:</strong> {formData.lastName}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <LocationOnIcon sx={{ mr: 1 }} />
-              <Typography variant="body1"><strong>Location:</strong> {formData.location}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <PhoneIcon sx={{ mr: 1 }} />
-              <Typography variant="body1"><strong>Phone:</strong> {formData.phone}</Typography>
-            </Box>
-            <Button onClick={handleEditClick} variant="outlined" startIcon={<EditIcon />} sx={{ mt: 2 }}>Edit</Button>
-          </>
-        ) : (
+    <Container maxWidth="sm" className='wrapperrr'>
+      <Typography variant="h3" gutterBottom>Your Profile</Typography>
+      <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 1 }}>
+          {error && <Alert severity="error">{error}</Alert>}
           <form onSubmit={handleSubmit}>
             <TextField
               id="email"
               name="email"
               label="Email"
-              value={formData.email}
+              value={user.email}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -160,10 +100,11 @@ const ManageAccount = () => {
               }}
             />
             <TextField
-              id="firstName"
-              name="firstName"
+              id="first_name"
+              name="first_name"
               label="First Name"
-              value={formData.firstName}
+              variant="outlined"
+              value={user.first_name}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -175,10 +116,11 @@ const ManageAccount = () => {
               }}
             />
             <TextField
-              id="lastName"
-              name="lastName"
+              id="last_name"
+              name="last_name"
               label="Last Name"
-              value={formData.lastName}
+              variant="outlined"
+              value={user.last_name}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -193,7 +135,8 @@ const ManageAccount = () => {
               id="location"
               name="location"
               label="Location"
-              value={formData.location}
+              variant="outlined"
+              value={user.location}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -205,26 +148,11 @@ const ManageAccount = () => {
               }}
             />
             <TextField
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              fullWidth
-              margin="normal"
-              required
-              InputProps={{
-                startAdornment: (
-                  <LockIcon sx={{ mr: 1 }} />
-                ),
-              }}
-            />
-            <TextField
-              id="phone"
-              name="phone"
+              id="phone_number"
+              name="phone_number"
               label="Phone"
-              value={formData.phone}
+              variant="outlined"
+              value={user.phone_number}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -244,7 +172,7 @@ const ManageAccount = () => {
               </Button>
             </Box>
           </form>
-        )}
+        )
       </Box>
       <Snackbar
         open={snackbarOpen}

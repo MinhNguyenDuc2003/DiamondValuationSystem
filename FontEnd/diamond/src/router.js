@@ -29,10 +29,11 @@ import Sculpture from "./pages/Service/Sculpture";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Checkout from "./pages/Payment/checkout";
 import Success from "./pages/Payment/success";
-import MyOder from "./pages/MyOrder/MyOder";
-import Lookup from "./pages/Lookup/Lookup";
+import VerifyAccount from "./pages/Signup/VerifyAccount";
+import ResetPassword from "./pages/ForgotPassword/ResetPassword";
+import GoogleLoginSuccess from "./pages/login/GoogleLoginSuccess";
+import PaymentFail from "./pages/Payment/PaymentFail";
 import ServiceList from "./pages/ServiceList/ServiceList";
-
 
 
 
@@ -48,10 +49,24 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.LOGIN,
             component: <UserLogin/>
         },
+        //USER-LOGIN
+        {
+            path : ROUTERS.USER.GOOGLELOGINSUCCESS,
+            component: <GoogleLoginSuccess/>
+        },
+        //VERYFIY-ACCOUNT
+        {
+            path : ROUTERS.USER.VERYFY_ACCOUNT,
+            component: <VerifyAccount/>
+        },
         //USER-Forgot-Password
         {
             path : ROUTERS.USER.ForgotPassword,
             component: <ForgotPassword/>
+        },
+        {
+            path : ROUTERS.USER.RESETPASSWORD,
+            component: <ResetPassword/>
         },
         //USER-SIGN
         {
@@ -67,11 +82,6 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.account,
             component: <ManageAccount/>
-        },
-        //USER-ODER
-        {
-            path : ROUTERS.USER.MYRequest,
-            component: <MyOder/>
         },
         //USER-SERVICE
         {
@@ -98,10 +108,10 @@ const renderUserRouter = () => {
             path : ROUTERS.USER.SERVICE_SALE,
             component: <ServiceForm/>
         },
-        {
-            path : ROUTERS.USER.SERVICE_Lookup,
-            component: <Lookup/>
-        },
+        // {
+        //     path : ROUTERS.USER.SERVICE_Lookup,
+        //     component: <LookUp/>
+        // },
         //CheckOut
         {
             path : ROUTERS.USER.PAYMENT_CHECKOUT,
@@ -111,6 +121,10 @@ const renderUserRouter = () => {
         {
             path : ROUTERS.USER.PAYMENT_success,
             component: <Success/>
+        },
+        {
+            path : ROUTERS.USER.PAYMENT_FAIL,
+            component: <PaymentFail/>
         },
         //BLOG
         {

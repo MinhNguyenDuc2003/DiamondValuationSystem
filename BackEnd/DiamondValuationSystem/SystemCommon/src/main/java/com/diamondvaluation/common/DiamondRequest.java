@@ -10,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -70,10 +72,12 @@ public class DiamondRequest {
 	private RequestStatus status;
 	
 	@OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<RequestTrack> trackings;
 	
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
+	@JsonIgnore
 	private Customer customer;
 	
 	@ManyToMany

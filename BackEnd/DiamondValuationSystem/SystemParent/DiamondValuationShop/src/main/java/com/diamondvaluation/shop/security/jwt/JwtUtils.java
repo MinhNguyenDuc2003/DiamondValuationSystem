@@ -1,7 +1,5 @@
 package com.diamondvaluation.shop.security.jwt;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;

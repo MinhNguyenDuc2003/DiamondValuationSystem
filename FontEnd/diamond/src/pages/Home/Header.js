@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import {Dropdown, Menu, Input, Space } from 'antd';
+import { getCustomerById } from '../../utils/ApiFunction';
 import './Header.scss';
 import logo from './image/logot.png';
+import Account from './Account.jsx';
+import { useAuth } from '../../component/Auth/AuthProvider.jsx';
 import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -12,6 +16,7 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import '@fontsource/roboto/500.css';
 import { useMediaQuery } from 'react-responsive';
 import MenuIcon from '@mui/icons-material/Menu';
+import { SearchOutlined } from '@mui/icons-material';
 
 
 const Header = () => {
@@ -21,10 +26,14 @@ const Header = () => {
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
     const [ServiceOpen, setServiceOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
+    const [isLogin, setLogin] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+
+    const auth = useAuth();
+
     const [totalRequest, setTotalRequest] = useState('')
     const [badgeVisible, setBadgeVisible] = useState(true);
 
@@ -38,9 +47,9 @@ const Header = () => {
 
     };
     const handleLogoutClick = () => {
-        window.localStorage.removeItem(`user`);
-        window.location.reload()
-        navigate('/');
+        setLogin(false)
+        auth.handleLogout();
+        navigate('/login');
     }
 
     const handleMenuOpen = (event) => {
@@ -90,33 +99,25 @@ const Header = () => {
 
     }, [location.pathname]);
 
-    const blogs = [
-        { id: `ask-certification-importance`, title: 'Introduction to Diamonds' },
-        { id: `ask-fancy-yellow-diamond-below20k`, title: 'The 4 C’s of Diamonds' },
-        { id: `ask-k-color-diamond-in-pave-ring`, title: 'Choosing the Right Diamond' },
-    ];
-
     const handleSearch = () => {
+
         console.log('Search value:', searchValue);
-        const filteredBlogs = blogs.filter(blog =>
-            blog.title.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        console.log('Filtered blogs:', filteredBlogs);
-        if (filteredBlogs.length > 0) {
-            setSearchValue(``);
-            navigate(`/blog/${filteredBlogs[0].id}`);
-        } else {
-            console.log(`no result`)
-        }
     };
 
     useEffect(() => {
-
-        setUser(window.localStorage.getItem(`user`))
-
-
-    }, [user])
-    const nameUser = JSON.parse(user);
+        
+        const getCustomer = async() => {
+            const data = await getCustomerById();
+            if(data!==null){
+              setUser({
+                first_name: data.first_name,
+                last_name: data.last_name
+              }); 
+              setLogin(true)
+            }
+          }
+          getCustomer();
+    },[navigate])
     const menuUser = (
 
         <Popover
@@ -133,7 +134,7 @@ const Header = () => {
             }}
         >
             <List>
-                {user ? (
+                {isLogin ? (
                     <>
                         <ListItemButton onClick={() => handleNavigate('/account')}>
                             <ListItemText primary="Manage Account" />
@@ -252,7 +253,7 @@ const Header = () => {
                 <div className='service'>
                     <button>Service</button>
                     <ul className="service-content">
-                    <li>
+                        <li>
                             <button onClick={() => handleNavigateToService('/Service/valuation')}>Valuation
                             </button>
                         </li>
@@ -261,11 +262,7 @@ const Header = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={() => handleNavigateToService('/Service/ServiceList')}>Service List
-                            </button>
-                        </li>
-                        <li>
-                            <button onClick={() => handleNavigateToService('/Service/Lookup')}>LookUp
+                            <button onClick={() => handleNavigateToService('/Service/sale')}>Sale
                             </button>
                         </li>
                         <li>
@@ -279,26 +276,27 @@ const Header = () => {
                 </div>
 
                 <div className='active'>
-                    <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-                        <input
-                            type='text'
-                            placeholder='Looking for blogs'
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                        />
-                        <button className='search'>{<SearchIcon />}</button>
+                    <form className='search-box'>
+                        <input type='text' placeholder='Looking for blogs'>
+                        </input>
+                        <Button className='search' type="text" icon={<SearchOutlined/>} />
                     </form>
-                    <div
-                        className='account'
-                        aria-label="account-menu"
-                        aria-controls="account-menu"
-                        aria-haspopup="true"
-                        onClick={handleMenuOpen}
-                    >
-                        <div className='account-icon'>
-                            {user ? (
-                                <Badge sx={{ gap: "5px" }} badgeContent={totalRequest} color="primary">
-                                    <strong >{nameUser.LastName}</strong>
+                    <div>
+                    <Account
+                        isLogin={isLogin}
+                        menuUser={menuUser}
+                        userMenuOpen={userMenuOpen}
+                        setUserMenuOpen={setUserMenuOpen}
+                    />
+        </div>
+                </div>
+                {/* <ul className="actions">
+                    <li>
+                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
+                            <Button type="text" icon={<UserOutlined />} />
+                        </Dropdown>
+                    </li>
+                    <li>
 
                                 </Badge>
                             ) : (
@@ -307,12 +305,14 @@ const Header = () => {
                         </div>
 
                     </div>
-                    {menuUser}
                 </div>
-            </div>
+            )}
 
+            {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
+            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
+            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
 
-            {/* {menuContact && (
+            {menuContact && (
                 <div className="wrapper-menu">
                     <button onClick={() => setMenuContact(false)} className="close-button"><CloseCircleOutlined /></button>
                     <div className="menu-content">
@@ -349,6 +349,7 @@ const Header = () => {
                 </div>
             )}
             {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
+        </div>
         </div>
     );
 };
