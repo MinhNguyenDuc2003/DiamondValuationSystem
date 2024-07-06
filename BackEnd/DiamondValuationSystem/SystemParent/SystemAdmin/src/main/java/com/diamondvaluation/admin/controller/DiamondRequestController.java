@@ -1,5 +1,8 @@
 package com.diamondvaluation.admin.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.DiamondRequestRequest;
 import com.diamondvaluation.admin.response.DiamondRequestResponse;
@@ -153,6 +157,17 @@ public class DiamondRequestController {
 			return new ResponseEntity<>(new MessageResponse("Status updated successfully for request id " + id),
 					HttpStatus.OK);
 		} catch (RequestNotFoundException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/customer/{id}")
+	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id){
+		try {
+			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
+			return new ResponseEntity<>(listEntity2Response(list),
+					HttpStatus.OK);
+		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
