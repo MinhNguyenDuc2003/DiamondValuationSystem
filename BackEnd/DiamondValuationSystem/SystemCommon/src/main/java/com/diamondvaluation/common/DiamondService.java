@@ -35,6 +35,8 @@ public class DiamondService {
 	
 	@Column(length = 128)
 	private String photo;
+	
+	private boolean status;
 
 	public DiamondService(Integer id) {
 		this.id = id;

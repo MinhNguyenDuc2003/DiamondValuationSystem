@@ -22,7 +22,7 @@ const Valuation = () => {
 
     //check xem người dùng đã đăng nhập hay chưa
     const handleSendForm = () => {
-        const checkUser = window.localStorage.getItem('user');
+        const checkUser = localStorage.getItem('userId');
         if (checkUser) {
             navigate('/Service/valuation/valuation-form');
         } else {

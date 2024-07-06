@@ -257,7 +257,7 @@
         }
 
         .service:hover .service-content {
-            height: 250%;
+            height: 300%;
             opacity: 1;
         }
 
@@ -321,7 +321,7 @@
                 color: #EEEEEE;
 
                 &:hover {
-                    box-shadow: 0 0 5px #eeeeee,
+                    text-shadow: 0 0 5px #eeeeee,
                         0 0 15px #eeeeee,
                         0 0 25px #eeeeee, ;
                 }
@@ -341,8 +341,6 @@
         img {
             width: 200px;
             filter: opacity(0.7);
-            margin-right: 30px;
-
         }
 
         &.scrolled {
@@ -353,117 +351,4 @@
 
         }
     }
-}
-
-
-
-/* Media Queries */
-@media (max-width: 1024px) {
-    .header {
-        height: 100px;
-
-        button {
-            font-size: 20px;
-        }
-
-        .contact-content {
-            top: 60px;
-        }
-
-        .logo {
-            transform: scale(3) translateY(70%);
-
-            img {
-                width: 200px;
-            }
-        }
-    }
-
-    .header-left,
-    .header-right {
-        margin-right: 20px;
-    }
-
-
-}
-
-@media (max-width: 767px) {
-    .header {
-        height: 50px;
-        flex-direction: column;
-        align-items: center;
-
-        button {
-            font-size: 18px;
-        }
-
-        .contact-content {
-            top: 50px;
-        }
-
-        .logo {
-           
-
-            flex: 0.5;
-            transform: scale(2) translateY(160%);
-            transition: transform 0.5s ease;
-            background: none;
-            border: none;
-            margin-left: 30px;
-            margin-top: 5px;
-
-
-            img {
-                width: 150px;
-                filter: invert(100%) opacity(0.7);
-            }
-
-
-        }
-    }
-
-    .header-left {
-        height: 1px;
-        display: none;
-
-        button {
-            display: none;
-        }
-
-        .iconMenu {
-            margin-top: 15px;
-            margin-left: 350px;
-            display: flexbox;
-            color: #EEEEEE;
-        }
-
-    }
-
-    .header-right {
-
-        input {
-            display: none;
-        }
-
-        button {
-            display: none;
-        }
-
-        .active {
-            display: none;
-
-            .search-box {
-                display: none;
-            }
-
-            .account {
-
-                display: none;
-            }
-        }
-
-
-    }
-
-
 }

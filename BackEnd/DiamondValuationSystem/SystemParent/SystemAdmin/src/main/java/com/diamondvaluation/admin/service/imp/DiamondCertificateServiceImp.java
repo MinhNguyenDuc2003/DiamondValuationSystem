@@ -22,10 +22,8 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 
 	@Override
 	public DiamondCertificate save(DiamondCertificate certificate) {
-		if(repo.findByRequest(certificate.getRequest()).isPresent()){
-			throw new CertificateIsAlreadyExistException("certificate with this id already exist!");
-		}
-		boolean isUpdate = certificate.getCode()!=null && certificate.getCode().length()>0;
+
+		boolean isUpdate = certificate.getId()!=null && certificate.getId()!=0;
 		if(!isUpdate) {
 			boolean isDuplicated = true;
 			while(isDuplicated) {
@@ -36,7 +34,19 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 					isDuplicated = false;
 				}
 			}
+		}else {
+			Optional<DiamondCertificate> certificateInDb = repo.findById(certificate.getId());
+			if(!certificateInDb.isPresent()) {
+				throw new CertificateNotFoundException("Cannot found certificate with id" +certificate.getId());
+			}else {
+				if(certificateInDb.get().getRequest().getId() != certificate.getRequest().getId()) {
+					if(repo.findByRequestId(certificate.getRequest().getId()).isPresent()){
+						throw new CertificateIsAlreadyExistException("certificate with this id already exist!");
+					}
+				}
+			}
 		}
+		certificate.setRequest(null);
 		return repo.save(certificate);
 	}
 

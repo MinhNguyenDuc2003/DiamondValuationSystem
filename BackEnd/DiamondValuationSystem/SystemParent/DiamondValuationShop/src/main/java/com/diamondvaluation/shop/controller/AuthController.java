@@ -168,7 +168,7 @@ public class AuthController {
 			throws UnsupportedEncodingException, MessagingException {
 		try {
 			String token = authService.updateResetPasswordToken(email);
-			String link = SITEURL + "/reset-password?code=" + token;
+			String link = SITEURL + "reset-password?code=" + token;
 			sendResetPasswordEmail(link, email);
 			return ResponseEntity.ok().build();
 		} catch (CustomerNotFoundException e) {
@@ -232,7 +232,7 @@ public class AuthController {
 
 		content = content.replace("[[name]]", customer.getFullname());
 
-		String verifyURL = SITEURL + "/verify?code=" + customer.getVerificationCode();
+		String verifyURL = SITEURL + "verify?code=" + customer.getVerificationCode();
 
 		content = content.replace("[[URL]]", verifyURL);
 

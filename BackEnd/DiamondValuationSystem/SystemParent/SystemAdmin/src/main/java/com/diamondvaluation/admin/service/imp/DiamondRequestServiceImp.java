@@ -7,12 +7,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.admin.Utility;
+import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.exception.ServiceNotFoundException;
+import com.diamondvaluation.admin.repository.CustomerRepository;
 import com.diamondvaluation.admin.repository.DiamondRequestRepository;
 import com.diamondvaluation.admin.repository.RequestTrackRepository;
 import com.diamondvaluation.admin.repository.ServiceRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
+import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
 import com.diamondvaluation.common.RequestStatus;
@@ -27,13 +30,14 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 	private final DiamondRequestRepository repo;
 	private final ServiceRepository serviceRepo;
 	private final RequestTrackRepository trackingRepo;
+	private final CustomerRepository cusRepo;
 	
-
 	public DiamondRequestServiceImp(DiamondRequestRepository repo, RequestTrackRepository trackingRepo,
-			ServiceRepository serviceRepo) {
+			ServiceRepository serviceRepo, CustomerRepository cusRepo) {
 		this.repo = repo;
 		this.trackingRepo = trackingRepo;
 		this.serviceRepo = serviceRepo;
+		this.cusRepo = cusRepo;
 	}
 
 	@Transactional
@@ -117,5 +121,14 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 		diamondRequest.setStatus(status);
         repo.save(diamondRequest);
     }
+
+	@Override
+	public List<DiamondRequest> getRequestByCustomerId(Integer id) {
+		Optional<Customer> customer = cusRepo.findById(id);
+		if(!customer.isPresent()) {
+			throw new CustomerNotFoundException("Cannot find any Customer with id" + id);
+		}
+		return repo.getDiamondRequestByCustomerId(id);
+	}
 
 }
