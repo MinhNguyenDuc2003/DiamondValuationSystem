@@ -1,9 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Form } from 'antd';
-import { Box, Button, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
-import paypal from './img/PayPal_Logo.jpg';
-import { useNavigate } from 'react-router-dom';
-import { getAllServices } from '../../utils/ApiFunction';
+import React, { useState, useEffect } from "react";
+import { Form } from "antd";
+import {
+  Box,
+  Button,
+  Chip,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+} from "@mui/material";
+import paypal from "./img/PayPal_Logo.jpg";
+import { useNavigate } from "react-router-dom";
+import { getAllServices } from "../../utils/ApiFunction";
 
 const formItemLayout = {
   labelCol: {
@@ -36,63 +49,50 @@ const MenuProps = {
   },
 };
 
-const getStyles = (name, personName, theme) => {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-};
-
 const ServiceForm = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState("");
   const [serviceSelected, setServiceSelected] = useState([]);
-  const [payMentSelected, setPayMentSelected] = useState('');
+  const [payMentSelected, setPayMentSelected] = useState("");
   const [services, setServices] = useState([]);
 
-  useEffect(()=> {
-    const Services = async() => {
+  useEffect(() => {
+    const Services = async () => {
       try {
         const response = await getAllServices();
-        if(response.status === 200){
+        if (response.status === 200) {
           setServices(response.data);
         }
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     Services();
-  }, [])
-
-
+  }, []);
 
   const onFinish = () => {
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
-      return index === 0 ? service : value + ',' + service;
-    }, '');
-    localStorage.setItem("selectedDate", selectedDate)
-    localStorage.setItem("serviceSelected", serviceSelect)
-    localStorage.setItem("paymentMethod", payMentSelected)
+      return index === 0 ? service : value + "," + service;
+    }, "");
+    localStorage.setItem("selectedDate", selectedDate);
+    localStorage.setItem("serviceSelected", serviceSelect);
+    localStorage.setItem("paymentMethod", payMentSelected);
 
-    navigate('/Payment-checkout');
+    navigate("/Payment-checkout");
   };
 
   const handleServiceChange = (event) => {
     const { value } = event.target;
-    setServiceSelected(
-      typeof value === 'string' ? value.split(',') : value
-    );
+    setServiceSelected(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
-    <div className='wrapperrr'>
+    <div className="wrapperrr">
       <div className="body-content">
         <Form
           {...formItemLayout}
-          className='form-valuation'
+          className="form-valuation"
           onFinish={onFinish}
           style={{
             maxWidth: 1000,
@@ -104,7 +104,7 @@ const ServiceForm = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input date!',
+                message: "Please input date!",
               },
             ]}
           >
@@ -122,11 +122,7 @@ const ServiceForm = () => {
               />
             </FormControl>
           </Form.Item>
-          <Form.Item
-            label="Choose Service"
-            name='service'
-           
-          >
+          <Form.Item label="Choose Service" name="service">
             <FormControl fullWidth>
               <InputLabel id="demo-multiple-chip-label">Service</InputLabel>
               <Select
@@ -135,25 +131,22 @@ const ServiceForm = () => {
                 multiple
                 value={serviceSelected}
                 onChange={(event) => handleServiceChange(event)} // Pass event directly
-                input={<OutlinedInput id="select-multiple-chip" label="Service" />}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Service" />
+                }
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <MenuItem key={value} label={value} 
-                      >
+                      <MenuItem key={value} label={value}>
                         {value}
-                        </MenuItem>
+                      </MenuItem>
                     ))}
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
                 {services.map((service, index) => (
-                  <MenuItem
-                    key={service.id}
-                    value={service.name}
-                    
-                  >
+                  <MenuItem key={service.id} value={service.name}>
                     {service.name} - {service.content} - {service.money}
                   </MenuItem>
                 ))}
@@ -166,7 +159,7 @@ const ServiceForm = () => {
             rules={[
               {
                 required: true,
-                message: 'Please choose your Method Payment!',
+                message: "Please choose your Method Payment!",
               },
             ]}
           >
@@ -178,14 +171,22 @@ const ServiceForm = () => {
                 value={payMentSelected}
                 onChange={(e) => setPayMentSelected(e.target.value)}
               >
-                <FormControlLabel value="CASH" control={<Radio />} label="Cash" />
+                <FormControlLabel
+                  value="CASH"
+                  control={<Radio />}
+                  label="Cash"
+                />
                 <FormControlLabel
                   value="PAYPAL"
                   control={<Radio />}
                   label={
                     <Box display="flex" alignItems="center">
-                      <img src={paypal} alt="PayPal" height="20" style={{ marginRight: 5 }} />
-                     
+                      <img
+                        src={paypal}
+                        alt="PayPal"
+                        height="20"
+                        style={{ marginRight: 5 }}
+                      />
                     </Box>
                   }
                 />
@@ -193,12 +194,17 @@ const ServiceForm = () => {
             </FormControl>
           </Form.Item>
           <Form.Item>
-          <Box marginTop={2} marginLeft={45} display="flex" justifyContent="center">
-            <Button variant="contained" type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Box>
-        </Form.Item>
+            <Box
+              marginTop={2}
+              marginLeft={45}
+              display="flex"
+              justifyContent="center"
+            >
+              <Button variant="contained" type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Box>
+          </Form.Item>
         </Form>
       </div>
     </div>

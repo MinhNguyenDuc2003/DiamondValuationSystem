@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 public class CertificateRequest {
+	private Integer id;
+	
 	@NotBlank(message = "Cut is mandatory")
     private String cut;
 
