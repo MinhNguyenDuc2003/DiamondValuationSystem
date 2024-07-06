@@ -1,11 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {Dropdown, Menu, Input, Space } from 'antd';
-import { getCustomerById } from '../../utils/ApiFunction';
 import './Header.scss';
 import logo from './image/logot.png';
-import Account from './Account.jsx';
-import { useAuth } from '../../component/Auth/AuthProvider.jsx';
 import { Button, Badge, IconButton, List, ListItemButton, ListItemText, Popover, outlinedInputClasses, Icon } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -14,10 +10,6 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import '@fontsource/roboto/500.css';
-import { useMediaQuery } from 'react-responsive';
-import MenuIcon from '@mui/icons-material/Menu';
-import { SearchOutlined } from '@mui/icons-material';
-
 
 const Header = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -26,20 +18,12 @@ const Header = () => {
     const [menuContact, setMenuContact] = useState(false);
     const [educationOpen, setEducationOpen] = useState(false);
     const [ServiceOpen, setServiceOpen] = useState(false);
-    const [user, setUser] = useState();
-    const [isLogin, setLogin] = useState(false);
+    const [user, setUser] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-
-    const auth = useAuth();
-
     const [totalRequest, setTotalRequest] = useState('')
     const [badgeVisible, setBadgeVisible] = useState(true);
-
-    //Responsive........
-    const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
-
 
     // Ẩn Badge khi click vào
     const handleBadgeClick = () => {
@@ -47,9 +31,9 @@ const Header = () => {
 
     };
     const handleLogoutClick = () => {
-        setLogin(false)
-        auth.handleLogout();
-        navigate('/login');
+        window.localStorage.removeItem(`user`);
+        window.location.reload()
+        navigate('/');
     }
 
     const handleMenuOpen = (event) => {
@@ -99,25 +83,33 @@ const Header = () => {
 
     }, [location.pathname]);
 
-    const handleSearch = () => {
+    const blogs = [
+        { id: `ask-certification-importance`, title: 'Introduction to Diamonds' },
+        { id: `ask-fancy-yellow-diamond-below20k`, title: 'The 4 C’s of Diamonds' },
+        { id: `ask-k-color-diamond-in-pave-ring`, title: 'Choosing the Right Diamond' },
+    ];
 
+    const handleSearch = () => {
         console.log('Search value:', searchValue);
+        const filteredBlogs = blogs.filter(blog =>
+            blog.title.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        console.log('Filtered blogs:', filteredBlogs);
+        if (filteredBlogs.length > 0) {
+            setSearchValue(``);
+            navigate(`/blog/${filteredBlogs[0].id}`);
+        } else {
+            console.log(`no result`)
+        }
     };
 
     useEffect(() => {
-        
-        const getCustomer = async() => {
-            const data = await getCustomerById();
-            if(data!==null){
-              setUser({
-                first_name: data.first_name,
-                last_name: data.last_name
-              }); 
-              setLogin(true)
-            }
-          }
-          getCustomer();
-    },[navigate])
+
+        setUser(window.localStorage.getItem(`user`))
+
+
+    }, [user])
+    const nameUser = JSON.parse(user);
     const menuUser = (
 
         <Popover
@@ -134,17 +126,11 @@ const Header = () => {
             }}
         >
             <List>
-                {isLogin ? (
+                {user ? (
                     <>
                         <ListItemButton onClick={() => handleNavigate('/account')}>
                             <ListItemText primary="Manage Account" />
                         </ListItemButton>
-                        {isMaxScreen767 && (
-                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
-                            <ListItemText primary="Service"/>
-                        </ListItemButton>
-
-                        )}
                         <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
                             <Badge sx={{ gap: "5px" }}
@@ -239,10 +225,7 @@ const Header = () => {
                 </div>
                 <div className='diamond'>
                     <button>Diamond</button>
-                </div>      
-                {isMaxScreen767 && (
-                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
-                )}
+                </div>
             </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
@@ -276,27 +259,26 @@ const Header = () => {
                 </div>
 
                 <div className='active'>
-                    <form className='search-box'>
-                        <input type='text' placeholder='Looking for blogs'>
-                        </input>
-                        <Button className='search' type="text" icon={<SearchOutlined/>} />
+                    <form className='search-box' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                        <input
+                            type='text'
+                            placeholder='Looking for blogs'
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                        <button className='search'>{<SearchIcon />}</button>
                     </form>
-                    <div>
-                    <Account
-                        isLogin={isLogin}
-                        menuUser={menuUser}
-                        userMenuOpen={userMenuOpen}
-                        setUserMenuOpen={setUserMenuOpen}
-                    />
-        </div>
-                </div>
-                {/* <ul className="actions">
-                    <li>
-                        <Dropdown overlay={menuUser} trigger={['hover']} visible={userMenuOpen} onVisibleChange={setUserMenuOpen}>
-                            <Button type="text" icon={<UserOutlined />} />
-                        </Dropdown>
-                    </li>
-                    <li>
+                    <div
+                        className='account'
+                        aria-label="account-menu"
+                        aria-controls="account-menu"
+                        aria-haspopup="true"
+                        onClick={handleMenuOpen}
+                    >
+                        <div className='account-icon'>
+                            {user ? (
+                                <Badge sx={{ gap: "5px" }} badgeContent={totalRequest} color="primary">
+                                    <strong >{nameUser.LastName}</strong>
 
                                 </Badge>
                             ) : (
@@ -305,51 +287,9 @@ const Header = () => {
                         </div>
 
                     </div>
+                    {menuUser}
                 </div>
-            )}
-
-            {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)}></div>}
-            {ServiceOpen && <div className="overlay-2" onClick={() => setServiceOpen(false)}></div>}
-            {educationOpen && <div className="overlay-2" onClick={() => setEducationOpen(false)}></div>}
-
-            {menuContact && (
-                <div className="wrapper-menu">
-                    <button onClick={() => setMenuContact(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <h2>CONTACT US</h2>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <PhoneOutlined />
-                                <span>CALL US 099999999</span>
-                            </a>
-                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <WhatsAppOutlined />
-                                <span>WHATSAPP US</span>
-                            </a>
-                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <FacebookOutlined />
-                                <span>FACEBOOK US</span>
-                            </a>
-                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <EnvironmentOutlined />
-                                <span>ADDRESS US</span>
-                            </a>
-                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
-        </div>
+            </div>
         </div>
     );
 };
