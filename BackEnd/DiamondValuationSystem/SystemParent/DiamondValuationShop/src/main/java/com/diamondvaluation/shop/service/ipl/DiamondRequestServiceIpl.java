@@ -70,4 +70,13 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 		repo.updatePayStatus(id, status);
 	}
 
+	@Override
+	public List<DiamondRequest> getAllRequestByCustomerEmail(String email) {
+		Optional<Customer> customer = cusRepo.findByEmail(email);
+		if(!customer.isPresent()) {
+			throw new CustomerNotFoundException("Cannot find any customer with email:" + email);
+		}
+		return repo.findByCustomer(customer.get());
+	}
+
 }
