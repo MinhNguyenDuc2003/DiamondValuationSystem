@@ -2,10 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta
-	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-	name="viewport">
-<meta content="ie=edge" http-equiv="X-UA-Compatible">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css"
 	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 <title>Diamond Grading Report</title>
@@ -78,72 +75,276 @@
 }
 </style>
 </head>
+<style>
+    body {
+        padding: 20px;
+    }
+
+    .title {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-content: center;
+
+        .logo {
+            flex: 1;
+            width: 50px;
+
+            img {
+                width: 200px;
+            }
+
+        }
+
+        .titleName {
+            flex: 1;
+            text-align: center;
+        }
+
+        .nullBlock {
+            flex: 1;
+        }
+    }
+
+    .body {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin-top: 10px;
+        gap: 40px;
+
+        .S-prop>p {
+            width: 100%;
+            color: antiquewhite;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            padding-left: 5px;
+            background-color: rgb(9, 70, 123);
+        }
+
+        .S-prop>div:not(.middle-report div) {
+            border: 2px solid rgb(9, 70, 123);
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .S-prop>div span:not(.comment) {
+            float: right;
+        }
+
+
+        .props,
+        .characters {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thead>th {
+            align-items: center;
+        }
+
+        .left-report {
+            flex: 1;
+        }
+
+        .middle-report {
+            flex: 1;
+        }
+
+        .right-report {
+            flex: 1;
+
+            th {
+                width: 20%;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            tr>td:not(.empty-th, .empty-td) {
+                text-align: center;
+                border: 2px solid rgb(9, 70, 123);
+                border-collapse: collapse;
+            }
+        }
+    }
+</style>
+
 <body>
-	<div class="a4 container">
-		<img style="width: 100px;filter: invert(100%)" th:src="@{/image/logo.png}"
+    <div class="title">
+        <div class="logo">
+            <img th:src="@{/image/logo.png}"
 						alt="MGTL Logo">
-		<div class="header d-flex align-items-center justify-content-center">
-		
-			<div class="text-container" style="margin-left: 20px;">
-				<div class="certificate-title text-center">DIAMOND GRADING
-					REPORT</div>
-				<div class="sub-title text-center">
-					Gemstone Report <br>[An ISO 9001:2024 Certified] <br>Registered
-					Under The Trade Marks with SHINE. of VietNam.
-				</div>
-			</div>
-		</div>
+        </div>
+        <div class="titleName">
+            <h1 style="font-size: 20px; font-weight: bold;">SHINE REPORT</h1>
+            <p>15975368427</p>
+        </div>
+        <div class="nullBlock"></div>
+    </div>
 
-		<div class="content row">
-			<div class="col-11">
-				<table class="details-table">
-					<tr>
-						<td class="label">NAME</td>
-						<td>: TO WHOM IT MAY CONCERN</td>
-						<td rowspan="10" class="text-center"><img
-							src="https://via.placeholder.com/100" alt="Natural Diamond">
-							<br> <b>NATURAL DIAMOND</b></td>
-					</tr>
-					<tr>
-						<td class="label">REPORT NO.</td>
-						<td>: MGTLHRIMP161</td>
-					</tr>
-					<tr>
-						<td class="label">WEIGHT</td>
-						<td>: 0.45 Ct. (1 Piece)</td>
-					</tr>
-					<tr>
-						<td class="label">SHAPE/CUT</td>
-						<td>: RBC</td>
-					</tr>
-					<tr>
-						<td class="label">FINISH</td>
-						<td>: Very Good</td>
-					</tr>
-					<tr>
-						<td class="label">COLOUR</td>
-						<td>: D - E</td>
-					</tr>
-					<tr>
-						<td class="label">CLARITY</td>
-						<td>: VVS</td>
-					</tr>
-					<tr>
-						<td class="label">DIMENSIONS</td>
-						<td>: 4.74 * 3.11 mm</td>
-					</tr>
-				</table>
-			</div>
-		</div>
+    <div class="body">
+        <div class="left-report">
+            <div class="S-prop">
+                <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
+                <div class="detail">
+                    <p>September 01/2024</p>
+                    <p>SHINE Report Number <span>15975368427</span></p>
+                    <p>Shape and Cutting Style <span>Round Brilliant</span></p>
+                    <p>Measurements <span>5.65 - 5.69 x 3.54 mm</span></p>
+                </div>
+            </div>
+            <div class="S-prop">
+                <p>GRADING RESULT</p>
+                <div class="detail">
+                    <p>Carar Weight <span>0.71 carat</span></p>
+                    <p>Color Grade <span>J</span></p>
+                    <p>Clarity Grade <span>VS2</span></p>
+                    <p>Cut Grade <span>Very Good</span></p>
+                </div>
+            </div>
+            <div class="S-prop">
+                <p>ADDITIONAL GRADING INFORMATION</p>
+                <div class="detail">
+                    <p>Polish <span>Excellent</span></p>
+                    <p>Symmetry <span>Very Good</span></p>
+                    <p>Fluorescence <span>None</span></p>
+                    <p>Inscription(s) <span>SHINE 15975368427</span></p>
+                    <p><span class="comment" style="font-weight: bold;">Comments:
+                        </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>
+                    <p>Additional pinpoints are not shown</p>
+                </div>
+            </div>
+            <div class="S-prop">
+                <p>ORIGIN RESULT</p>
+                <div class="detail">
+                    <p>Country of Origin: <span>South Africa</span></p>
+                </div>
+            </div>
+        </div>
 
-		<div class="signatures row mt-3">
-			<div class="col-6 text-center">
-				<br> <b>Chief Gemmologist</b>
-			</div>
-			<div class="col-6 text-center">
-				<br> <b>Gemmologist</b>
-			</div>
-		</div>
-	</div>
+        <div class="middle-report">
+            <div class="S-prop">
+                <p>PROPORTIONS</p>
+                <div class="props">
+                    <img class="alt-diamond" src="Facet_part1.jpg" alt="">
+                </div>
+            </div>
+            <div class="S-prop">
+                <p>CLARITY CHARACTERISTICS</p>
+                <div class="characters">
+                    <img class="alt-diamond" src="Facet_part2.jpg" alt="">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right-report">
+            <div class="S-prop">
+                <p>GRADING SCALES</p>
+                <table>
+                    <tr class="thead">
+                        <th>SHINE COLOR SCALE</th>
+                        <th class="empty-th"></th>
+                        <th>SHINE CLARITY SCALE</th>
+                        <th class="empty-th"></th>
+                        <th>GIA CUT SCALE</th>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td class="empty-td" rowspan="23"></td>
+                        <td rowspan="3">FLAWLESS</td>
+                        <td class="empty-td" rowspan="23"></td>
+                        <td rowspan="4">EXCELLENT</td>
+                    </tr>
+                    <tr>
+                        <td>E</td>
+                    </tr>
+                    <tr>
+                        <td>F</td>
+                    </tr>
+                    <tr>
+                        <td>G</td>
+                        <td rowspan="2">INTERNALLY FLAWLESS</td>
+                    </tr>
+                    <tr>
+                        <td>H</td>
+                        <td rowspan="5">VERY GOOD</td>
+                    </tr>
+                    <tr>
+                        <td>I</td>
+                        <td rowspan="2">VVS1</td>
+                    </tr>
+                    <tr>
+                        <td>J</td>
+                    </tr>
+                    <tr>
+                        <td>K</td>
+                        <td rowspan="2">VVS2</td>
+                    </tr>
+                    <tr>
+                        <td>L</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td rowspan="2">VS1</td>
+                        <td rowspan="5">GOOD</td>
+                    </tr>
+                    <tr>
+                        <td>N</td>
+                    </tr>
+                    <tr>
+                        <td>O</td>
+                        <td rowspan="2">VS2</td>
+                    </tr>
+                    <tr>
+                        <td>P</td>
+                    </tr>
+                    <tr>
+                        <td>Q</td>
+                        <td rowspan="2">SI1</td>
+                    </tr>
+                    <tr>
+                        <td>R</td>
+                        <td rowspan="5">FAIR</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td rowspan="2">SI2</td>
+                    </tr>
+                    <tr>
+                        <td>T</td>
+                    </tr>
+                    <tr>
+                        <td>U</td>
+                        <td rowspan="2">I1</td>
+                    </tr>
+                    <tr>
+                        <td>Y</td>
+                    </tr>
+                    <tr>
+                        <td>W</td>
+                        <td rowspan="2">I2</td>
+                        <td rowspan="4">POOR</td>
+                    </tr>
+                    <tr>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>Y</td>
+                        <td rowspan="2">I3</td>
+                    </tr>
+                    <tr>
+                        <td>Z</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+
+    </div>
 </body>
 </html>
