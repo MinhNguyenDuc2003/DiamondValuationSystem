@@ -83,6 +83,26 @@ export async function saveUser(user) {
   }
 }
 
+export async function updateUser(user) {
+  const formData = new FormData();
+  formData.append("id", user.id);
+  formData.append("first_name", user.first_name);
+  formData.append("last_name", user.last_name);
+  formData.append("email", user.email);
+  formData.append("password", user.password);
+  formData.append("phone_number", user.phone_number);
+  formData.append("photo", user.photo);
+
+  try {
+    const response = await api.post("api/users/user/update", formData);
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
 export async function deleteUserById(id) {
   try {
     const result = await api.delete(`/api/users/delete/${id}`);
@@ -306,6 +326,7 @@ export async function deleteCertificateById(id) {
 export async function saveCertificate(certificate) {
   const formData = new FormData();
   formData.append("id", certificate.id);
+  formData.append("code", certificate.code);
   formData.append("cut", certificate.cut);
   formData.append("carat", certificate.carat);
   formData.append("color", certificate.color);
@@ -513,7 +534,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // If refreshToken() fails, redirect to login
-        window.location.href = "/login"; // Redirect to login page
+        // window.location.href = "/login"; // Redirect to login page
         return Promise.reject(error); // Reject the promise to avoid further processing
       }
     }
