@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.ReportNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.ReportRequest;
@@ -24,7 +23,6 @@ import com.diamondvaluation.admin.service.ReportService;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.Report;
 import com.diamondvaluation.common.ReportType;
-import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -46,14 +46,13 @@ export const validateToken = async () => {
   const token = localStorage.getItem("token");
   console.log(token);
 
-  if (token !== undefined && token !== null && token.length > 0) {
+  if (token !== null && token.length > 0) {
     try {
       // Send the token as a query parameter
-      const result = await api.post(`/diamond-shop/token?token=${token}`);
+      const result = await api.post(`/diamond-shop/token`);
       return result;
     } catch (error) {
-      const newtoken = localStorage.getItem("token");
-      const result = await api.post(`/diamond-shop/token?token=${newtoken}`);
+      const result = await api.post(`/diamond-shop/token`);
       return result;
     }
   }

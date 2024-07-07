@@ -114,16 +114,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/token")
-	public ResponseEntity<?> accessToken(@RequestParam("token") String token) {
-		try {
-			jwtUtils.validateAccessToken(token);
-			System.out.println("abc");
-			return ResponseEntity.ok().build();
-		} catch (JwtValidationException e) {
-			return ResponseEntity.status(401).build();
-		} catch (ExpiredJwtException e) {
-			return ResponseEntity.status(401).build();
-		}
+	public ResponseEntity<?> accessToken() {
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/signup")

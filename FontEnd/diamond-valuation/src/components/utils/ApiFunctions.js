@@ -325,14 +325,12 @@ export async function saveCertificate(certificate) {
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
-  const formData = new FormData();
-  formData.append("token", token);
   if (token != null && token.length > 0) {
-    const result = await api.post("/api/auth/token", formData);
-    console.log("abc");
+    const result = await api.post("/api/auth/token");
     return result;
   } else {
-    return false;
+    const result = await api.post("/api/auth/token");
+    return result;
   }
 };
 const refreshToken = async () => {
