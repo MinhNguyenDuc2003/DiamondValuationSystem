@@ -1,15 +1,7 @@
 import React from "react";
-import logo from "../../../image/logo.png";
-import facet1 from "../../../image/Facet_part1.jpg";
-import facet2 from "../../../image/Facet_part2.jpg";
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
-};
+import logo from "../Home/image/logot.png";
+import facet1 from "../Home/image/Facet_part1.jpg";
+import facet2 from "../Home/image/Facet_part2.jpg";
 
 const CertificateHTML = (certificate) => {
   return `
