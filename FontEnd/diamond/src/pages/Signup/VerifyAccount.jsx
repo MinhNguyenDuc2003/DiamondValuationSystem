@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
 import { verifyAccount } from '../../utils/ApiFunction'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+
 const VerifyAccount = () => {
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState(true)

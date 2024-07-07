@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.response;
 
+import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.diamond.DiamondClarity;
 import com.diamondvaluation.common.diamond.DiamondColor;
 import com.diamondvaluation.common.diamond.DiamondCut;
@@ -42,6 +43,10 @@ public class CertificateResponse {
 	private DiamondColor color;
 	
 	private DiamondCut cut;
+	
+	private Integer requestId;
+	
+	private String measurement;
 	
 	private String name;
 

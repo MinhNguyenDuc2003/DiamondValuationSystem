@@ -40,7 +40,7 @@ export const AddUser = () => {
 
   const handleEnabledChange = (event) => {
     const { name, checked } = event.target;
-    if (checked) {
+    if (!checked) {
       setUser({ ...user, [name]: true });
     } else {
       setUser({ ...user, [name]: false });

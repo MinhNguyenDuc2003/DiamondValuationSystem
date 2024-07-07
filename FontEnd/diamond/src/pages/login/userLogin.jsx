@@ -25,7 +25,7 @@ const UserLogin = () => {
         const localStorageToken = localStorage.getItem("token");
         if (localStorageToken) {
           const result = await validateToken();
-          if (result.status === 200) {
+          if (result !== null && result.status === 200) {
             navigate("/");
           }
         }

@@ -73,32 +73,32 @@ const HomePage = () => {
             </div>
 
             <section id="what-we-offer">
-                <div class="container">
-                    <h2 class="section-title">What We Offer</h2>
+                <div className="container">
+                    <h2 className="section-title">What We Offer</h2>
 
-                    <div class="offerings">
-                        <div class="offering-item">
-                            <h3 class="offering-title">Precision Technology</h3>
-                            <p class="offering-description">Cutting-Edge Tools and Software</p>
-                            <p class="offering-detail">We utilize the latest advancements in gemological technology to ensure each diamond is meticulously evaluated. Our state-of-the-art equipment measures every facet of your diamond, providing precise data on its cut, clarity, color, and carat weight.</p>
+                    <div className="offerings">
+                        <div className="offering-item">
+                            <h3 className="offering-title">Precision Technology</h3>
+                            <p className="offering-description">Cutting-Edge Tools and Software</p>
+                            <p className="offering-detail">We utilize the latest advancements in gemological technology to ensure each diamond is meticulously evaluated. Our state-of-the-art equipment measures every facet of your diamond, providing precise data on its cut, clarity, color, and carat weight.</p>
                         </div>
 
-                        <div class="offering-item">
-                            <h3 class="offering-title">Expert Insights</h3>
-                            <p class="offering-description">Certified Gemologist Analysis</p>
-                            <p class="offering-detail">Our team of certified gemologists brings a wealth of knowledge and experience to every valuation. They analyze the data collected from our advanced tools and provide comprehensive, insightful reports that highlight the true value of your diamonds.</p>
+                        <div className="offering-item">
+                            <h3 className="offering-title">Expert Insights</h3>
+                            <p className="offering-description">Certified Gemologist Analysis</p>
+                            <p className="offering-detail">Our team of certified gemologists brings a wealth of knowledge and experience to every valuation. They analyze the data collected from our advanced tools and provide comprehensive, insightful reports that highlight the true value of your diamonds.</p>
                         </div>
 
-                        <div class="offering-item">
-                            <h3 class="offering-title">Seamless Experience</h3>
-                            <p class="offering-description">User-Friendly Platform</p>
-                            <p class="offering-detail">Submitting your diamonds for valuation has never been easier. Our intuitive platform guides you through the process, allowing you to submit your diamonds and receive detailed reports swiftly. We prioritize ease of use, so you can focus on what matters most.</p>
+                        <div className="offering-item">
+                            <h3 className="offering-title">Seamless Experience</h3>
+                            <p className="offering-description">User-Friendly Platform</p>
+                            <p className="offering-detail">Submitting your diamonds for valuation has never been easier. Our intuitive platform guides you through the process, allowing you to submit your diamonds and receive detailed reports swiftly. We prioritize ease of use, so you can focus on what matters most.</p>
                         </div>
 
-                        <div class="offering-item">
-                            <h3 class="offering-title">Confidential and Secure</h3>
-                            <p class="offering-description">Top-Level Security Measures</p>
-                            <p class="offering-detail">We understand the importance of privacy and security. Your diamond information is handled with the highest level of confidentiality, safeguarded by our robust security protocols. Trust us to protect your valuable data throughout the valuation process.</p>
+                        <div className="offering-item">
+                            <h3 className="offering-title">Confidential and Secure</h3>
+                            <p className="offering-description">Top-Level Security Measures</p>
+                            <p className="offering-detail">We understand the importance of privacy and security. Your diamond information is handled with the highest level of confidentiality, safeguarded by our robust security protocols. Trust us to protect your valuable data throughout the valuation process.</p>
                         </div>
                     </div>
                 </div>

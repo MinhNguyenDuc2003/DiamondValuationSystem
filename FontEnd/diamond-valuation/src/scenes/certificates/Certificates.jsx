@@ -34,10 +34,15 @@ import {
   Pagination,
   Paper,
   Alert,
+  Collapse,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { PiCertificate } from "react-icons/pi";
+import CertificateHTML from "./CertificateHTML";
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -49,15 +54,9 @@ const Certificates = () => {
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [openRow, setOpenRow] = useState(null);
   const CertificatesPerPage = 6;
   const navigate = useNavigate();
-  const [requestToUpdate, setRequestToUpdate] = useState({
-    id: "",
-    customer_id: "",
-    note: "",
-    status: "",
-    service_ids: [],
-  });
 
   const [filters, setFilters] = useState({
     carat: [0, 10],
@@ -246,6 +245,18 @@ const Certificates = () => {
 
   const newRequests = requests.filter((request) => request.status === "NEW");
 
+  const openCertificateInNewTab = (certificate) => {
+    const htmlContent = CertificateHTML(certificate);
+    const newWindow = window.open("", "_blank");
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+  };
+
+  const handleRowClick = (id) => {
+    setOpenRow(openRow === id ? null : id); // Toggle the row open/close
+  };
+
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -320,7 +331,8 @@ const Certificates = () => {
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
             <TableRow>
-              <TableCell align="center">ID</TableCell>
+              <TableCell />
+              <TableCell align="center">Code</TableCell>
               <TableCell align="center">Carat</TableCell>
               <TableCell align="center">Clarity</TableCell>
               <TableCell align="center">Color</TableCell>
@@ -329,6 +341,7 @@ const Certificates = () => {
               <TableCell align="center">Make</TableCell>
               <TableCell align="center">Polish</TableCell>
               <TableCell align="center">Symmetry</TableCell>
+              <TableCell align="center">Measurement</TableCell>
               <TableCell align="center">Cert</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -336,36 +349,115 @@ const Certificates = () => {
           <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
             {currentCertificates.length > 0 ? (
               currentCertificates.map((certificate) => (
-                <TableRow key={certificate.id}>
-                  <TableCell align="center">{certificate.id}</TableCell>
-                  <TableCell align="center">{certificate.carat}</TableCell>
-                  <TableCell align="center">{certificate.clarity}</TableCell>
-                  <TableCell align="center">{certificate.color}</TableCell>
-                  <TableCell align="center">{certificate.cut}</TableCell>
-                  <TableCell align="center">
-                    {certificate.flourescence}
-                  </TableCell>
-                  <TableCell align="center">{certificate.make}</TableCell>
-                  <TableCell align="center">{certificate.polish}</TableCell>
-                  <TableCell align="center">{certificate.symmetry}</TableCell>
-                  <TableCell align="center">{certificate.cert}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      onClick={() =>
-                        navigate(`/certificates/${certificate.id}`)
-                      }
-                    >
-                      <EditIcon sx={{ color: "#C5A773" }} />
-                    </IconButton>
-                    <IconButton onClick={() => handleOpenDialog(certificate)}>
-                      <DeleteIcon sx={{ color: "#C5A773" }} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
+                <React.Fragment key={certificate.id}>
+                  <TableRow>
+                    <TableCell align="center">
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => handleRowClick(certificate.id)}
+                      >
+                        {openRow === certificate.id ? (
+                          <KeyboardArrowUpIcon />
+                        ) : (
+                          <KeyboardArrowDownIcon />
+                        )}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">{certificate.code}</TableCell>
+                    <TableCell align="center">{certificate.carat}</TableCell>
+                    <TableCell align="center">{certificate.clarity}</TableCell>
+                    <TableCell align="center">{certificate.color}</TableCell>
+                    <TableCell align="center">{certificate.cut}</TableCell>
+                    <TableCell align="center">
+                      {certificate.flourescence}
+                    </TableCell>
+                    <TableCell align="center">{certificate.make}</TableCell>
+                    <TableCell align="center">{certificate.polish}</TableCell>
+                    <TableCell align="center">{certificate.symmetry}</TableCell>
+                    <TableCell align="center">
+                      {certificate.measurement}
+                    </TableCell>
+                    <TableCell align="center">{certificate.name}</TableCell>
+
+                    <TableCell align="center">
+                      <IconButton
+                        onClick={() => openCertificateInNewTab(certificate)}
+                      >
+                        <PiCertificate color="#C5A773" />
+                      </IconButton>
+                      <IconButton
+                        onClick={() =>
+                          navigate(`/certificates/${certificate.id}`)
+                        }
+                      >
+                        <EditIcon sx={{ color: "#C5A773" }} />
+                      </IconButton>
+                      <IconButton onClick={() => handleOpenDialog(certificate)}>
+                        <DeleteIcon sx={{ color: "#C5A773" }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={13} sx={{ padding: 0 }}>
+                      <Collapse
+                        in={openRow === certificate.id}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <Box sx={{ m: 1 }}>
+                          <Typography variant="h6" gutterBottom component="div">
+                            Diamond Price
+                          </Typography>
+                          <Table size="small" aria-label="diamond price">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Min Price</TableCell>
+                                <TableCell align="center">Max Price</TableCell>
+                                <TableCell align="center">
+                                  RAP Percent
+                                </TableCell>
+                                <TableCell align="center">RAP Price</TableCell>
+                                <TableCell align="center">Real Price</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center">
+                                  {certificate.min_price}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {certificate.max_price}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  sx={{
+                                    color:
+                                      certificate.rap_percent >= 0
+                                        ? "green"
+                                        : "red",
+                                  }}
+                                >
+                                  {certificate.rap_percent.toFixed(2)}%
+                                </TableCell>
+                                <TableCell align="center">
+                                  {certificate.rap_price}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {certificate.real_price}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={11} align="center">
+                <TableCell colSpan={13} align="center">
                   No certificates available.
                 </TableCell>
               </TableRow>
@@ -396,16 +488,29 @@ const Certificates = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
+          <Button
+            onClick={handleDelete}
+            color="secondary"
+            autoFocus
+            variant="contained"
+          >
             Delete
           </Button>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button
+            onClick={handleCloseDialog}
+            color="primary"
+            variant="contained"
+          >
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openRequestDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog
+        open={openRequestDialog}
+        onClose={() => setOpenDialog(false)}
+        variant="contained"
+      >
         <DialogTitle>Select Request</DialogTitle>
         <DialogContent>
           <DialogContentText>
