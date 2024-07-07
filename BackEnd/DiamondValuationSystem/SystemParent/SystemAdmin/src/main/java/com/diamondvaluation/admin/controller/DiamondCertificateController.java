@@ -118,6 +118,7 @@ public class DiamondCertificateController {
 		certificate.setMeasurement(request.getMeasurement());
 		DiamondRequest diamondRequest = new DiamondRequest(request.getRequest_id());
 		certificate.setRequest(diamondRequest);
+		certificate.setId(request.getId());
 		return certificate;
 	}
 

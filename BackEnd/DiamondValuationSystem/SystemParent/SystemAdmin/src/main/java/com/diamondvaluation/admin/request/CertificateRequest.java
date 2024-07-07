@@ -47,4 +47,7 @@ public class CertificateRequest {
 	
     @NotNull(message = "requestId is mandatory")
 	private int request_id;
+    
+    @NotNull(message = "code is mandatory")
+    private String code;
 }

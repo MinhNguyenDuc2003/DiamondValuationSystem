@@ -30,5 +30,7 @@ public class ServiceRequest {
 	@NotBlank (message = "Service content cannnot be null")
 	private String content;
 	
+	private boolean status;
+	
 	
 }
