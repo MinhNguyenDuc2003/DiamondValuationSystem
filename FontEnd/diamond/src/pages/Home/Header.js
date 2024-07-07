@@ -35,6 +35,8 @@ const Header = () => {
     const [badgeVisible, setBadgeVisible] = useState(true);
     const auth = useAuth();
 
+     //Responsive........
+     const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
     // Ẩn Badge khi click vào
     const handleBadgeClick = () => {
         setBadgeVisible(false);
@@ -150,15 +152,15 @@ const Header = () => {
                         <ListItemButton onClick={() => handleNavigate('/account')}>
                             <ListItemText primary="Manage Account" />
                         </ListItemButton>
+                        {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
+
+                        )}
                         <ListItemButton onClick={() => handleNavigate('/MyRequest')}>
 
-                            <Badge sx={{ gap: "5px" }}
-                                badgeContent={totalRequest}
-                                onClick={handleBadgeClick}
-                                color="primary">
-                                <ListItemText primary="My Request" />
-
-                            </Badge>
+                
                         </ListItemButton>
                         <ListItemButton onClick={handleLogoutClick}>
                             <ListItemText primary="Logout" />
@@ -245,6 +247,9 @@ const Header = () => {
                 <div className='diamond'>
                     <button>Diamond</button>
                 </div>
+                {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
             </div>
 
             <button onClick={() => navigate('/')} className={`logo ${scrolled ? 'scrolled' : ''}`}>
