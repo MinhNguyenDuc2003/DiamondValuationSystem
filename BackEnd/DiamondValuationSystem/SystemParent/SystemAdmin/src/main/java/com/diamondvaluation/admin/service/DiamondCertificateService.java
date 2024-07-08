@@ -13,4 +13,6 @@ public interface DiamondCertificateService {
 
 	List<DiamondCertificate> findAllCertificate();
 
+	Integer findByRequestId(Integer id);
+
 }

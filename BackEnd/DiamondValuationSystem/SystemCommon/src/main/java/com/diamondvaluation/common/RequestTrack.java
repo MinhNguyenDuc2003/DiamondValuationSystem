@@ -2,6 +2,8 @@ package com.diamondvaluation.common;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,6 +44,7 @@ public class RequestTrack {
 	@JoinColumn(name = "user_id")
 	private User updatedBy;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "request_id")
 	private DiamondRequest request;

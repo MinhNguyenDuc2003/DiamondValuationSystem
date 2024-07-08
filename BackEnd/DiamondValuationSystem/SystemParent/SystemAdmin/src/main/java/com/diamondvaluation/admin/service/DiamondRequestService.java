@@ -22,4 +22,6 @@ public interface DiamondRequestService {
 
     
     List<DiamondRequest> getRequestByCustomerId(Integer id);
+    
+    
 }

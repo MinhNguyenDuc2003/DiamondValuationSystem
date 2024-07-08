@@ -196,7 +196,7 @@ const Topbar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => navigate(`/users/${userId}`)}>
+        <MenuItem onClick={() => navigate(`/account/information`)}>
           Your Account
         </MenuItem>
         <Divider />

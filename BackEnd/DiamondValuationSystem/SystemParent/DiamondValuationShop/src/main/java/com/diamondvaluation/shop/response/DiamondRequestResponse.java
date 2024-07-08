@@ -1,4 +1,4 @@
-package com.diamondvaluation.admin.response;
+package com.diamondvaluation.shop.response;
 
 import java.util.List;
 

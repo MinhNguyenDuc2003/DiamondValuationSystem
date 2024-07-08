@@ -64,7 +64,9 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            		
+            	.requestMatchers("/api/auth/token").authenticated()
+            	.requestMatchers("/api/users/user/save", "/api/users/delete/*").hasAnyAuthority("admin", "manager")
+            	.requestMatchers("/api/users/user/update").authenticated()
                 .anyRequest().permitAll())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)

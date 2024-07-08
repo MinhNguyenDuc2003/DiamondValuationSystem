@@ -9,23 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.exception.ReportTrackingNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
-import com.diamondvaluation.admin.exception.RequestTrackingNotFoundException;
-import com.diamondvaluation.admin.service.RequestTrackService;
-import com.diamondvaluation.common.RequestTrack;
+import com.diamondvaluation.admin.service.ReportTrackingService;
+import com.diamondvaluation.common.ReportTracking;
 
 @RestController
-@RequestMapping("/request-track")
-public class RequestTrackController {
-	private final RequestTrackService service;
+@RequestMapping("/report-track")
+public class ReportTrackingController {
+	private final ReportTrackingService service;
 
-	public RequestTrackController(RequestTrackService service) {
+	public ReportTrackingController(ReportTrackingService service) {
 		this.service = service;
 	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getAllTrackingByRequestId(@PathVariable("id") Integer id){
+	public ResponseEntity<?> getAllTrackingByReportId(@PathVariable("id") Integer id){
 		try {
-			List<RequestTrack> list = service.getTrackingByRequestId(id);
+			List<ReportTracking> list = service.getTrackingByReportId(id);
 			return ResponseEntity.ok(list);
 		} catch (RequestNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -36,7 +37,7 @@ public class RequestTrackController {
 		try {
 			service.deleteById(id);
 			return ResponseEntity.ok().build();
-		} catch (RequestTrackingNotFoundException e) {
+		} catch (ReportTrackingNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}

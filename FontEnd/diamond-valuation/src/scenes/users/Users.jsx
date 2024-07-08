@@ -35,6 +35,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import UserDetailsDialog from "./UserDetailsDialog";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 export const Users = () => {
   const [data, setData] = useState({
@@ -52,6 +53,7 @@ export const Users = () => {
 
   const [openUserDetailDialog, setOpenUserDetailDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const auth = useAuth();
 
   const handleOpenDialog = (user) => {
     setUserToDelete(user);
@@ -144,6 +146,15 @@ export const Users = () => {
     setCurrentPage(value);
   };
 
+  const handleButtonAddUser = () => {
+    if(auth.isRoleAccept("admin")!==null || auth.isRoleAccept("manager")!==null){
+      navigate("/users/new");
+    }
+    else{
+      alert("you don't have permission to add new user")
+    }
+  }
+
   return (
     <Box m="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -151,7 +162,7 @@ export const Users = () => {
       </Typography>
 
       <Box display="flex" justifyContent="space-between">
-        <Link to="/users/new">
+        <Button onClick={handleButtonAddUser}>
           <PersonAddAlt1Icon
             sx={{
               ml: "10px",
@@ -159,7 +170,7 @@ export const Users = () => {
               color: "black",
             }}
           />
-        </Link>
+        </Button>
         <Box
           display="flex"
           width="20%"
@@ -228,7 +239,7 @@ export const Users = () => {
                   <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
+                  <IconButton onClick={() => navigate("/account/information")}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
                   <IconButton
