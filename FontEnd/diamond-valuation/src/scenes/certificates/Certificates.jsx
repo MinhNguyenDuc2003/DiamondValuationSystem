@@ -41,8 +41,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import PrintIcon from "@mui/icons-material/Print";
 import { PiCertificate } from "react-icons/pi";
 import CertificateHTML from "./CertificateHTML";
+import PrintPDF from "./PrintPDF";
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -222,15 +224,21 @@ const Certificates = () => {
         (certificate.carat >= filters.carat[0] &&
           certificate.carat <= filters.carat[1])) &&
       (filters.clarity === "" ||
-        certificate.clarity.includes(filters.clarity)) &&
-      (filters.color === "" || certificate.color.includes(filters.color)) &&
-      (filters.cut === "" || certificate.cut.includes(filters.cut)) &&
+        certificate.clarity.includes(filters.clarity.replace(/\s+/g, ""))) &&
+      (filters.color === "" ||
+        certificate.color.includes(filters.color.replace(/\s+/g, ""))) &&
+      (filters.cut === "" ||
+        certificate.cut.includes(filters.cut.replace(/\s+/g, ""))) &&
       (filters.flourescence === "" ||
-        certificate.flourescence.includes(filters.flourescence)) &&
-      (filters.make === "" || certificate.make.includes(filters.make)) &&
-      (filters.polish === "" || certificate.polish.includes(filters.polish)) &&
+        certificate.flourescence.includes(
+          filters.flourescence.replace(/\s+/g, "")
+        )) &&
+      (filters.make === "" ||
+        certificate.make.includes(filters.make.replace(/\s+/g, ""))) &&
+      (filters.polish === "" ||
+        certificate.polish.includes(filters.polish.replace(/\s+/g, ""))) &&
       (filters.symmetry === "" ||
-        certificate.symmetry.includes(filters.symmetry)) &&
+        certificate.symmetry.includes(filters.symmetry.replace(/\s+/g, ""))) &&
       (filters.cert === "" ||
         certificate.cert.toLowerCase().includes(filters.cert.toLowerCase()))
     );
@@ -395,6 +403,9 @@ const Certificates = () => {
                       </IconButton>
                       <IconButton onClick={() => handleOpenDialog(certificate)}>
                         <DeleteIcon sx={{ color: "#C5A773" }} />
+                      </IconButton>
+                      <IconButton onClick={() => PrintPDF(certificate)}>
+                        <PrintIcon sx={{ color: "#C5A773" }} />
                       </IconButton>
                     </TableCell>
                   </TableRow>

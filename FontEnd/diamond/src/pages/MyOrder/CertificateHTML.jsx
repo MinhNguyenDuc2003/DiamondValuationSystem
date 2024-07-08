@@ -1,15 +1,7 @@
 import React from "react";
-import logo from "../../../image/logo.png";
-import facet1 from "../../../image/Facet_part1.jpg";
-import facet2 from "../../../image/Facet_part2.jpg";
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
-};
+import logo from "../Home/image/logot.png";
+import facet1 from "../Home/image/Facet_part1.jpg";
+import facet2 from "../Home/image/Facet_part2.jpg";
 
 const CertificateHTML = (certificate) => {
   return `
@@ -125,7 +117,7 @@ const CertificateHTML = (certificate) => {
         </div>
         <div class="titleName">
             <h1 style="font-size: 20px; font-weight: bold;">SHINE REPORT</h1>
-            <p>${certificate.code}</p>
+            <p>15975368427</p>
         </div>
         <div class="nullBlock"></div>
     </div>
@@ -155,8 +147,8 @@ const CertificateHTML = (certificate) => {
                 <div class="detail">
                     <p>Polish <span>${certificate.polish}</span></p>
                     <p>Symmetry <span>${certificate.symmetry}</span></p>
-                    <p>Flourescence <span>${certificate.flourescence}</span></p>
-                    <p>Inscription(s) <span>SHINE ${certificate.code}</span></p>
+                    <p>Fluorescence <span>${certificate.flourescence}</span></p>
+                    <p>Inscription(s) <span>SHINE 15975368427</span></p>
                     <p><span class="comment" style="font-weight: bold;">Comments:
                         </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>
                     <p>Additional pinpoints are not shown</p>
@@ -180,7 +172,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src=${certificate.photo} alt="">
+                    <img class="alt-diamond" src=${facet2} alt="">
                 </div>
             </div>
 

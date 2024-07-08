@@ -21,7 +21,7 @@ export const AddUser = () => {
 
   const [imagePreview, setImagePreview] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const auth = useAuth()
+  const auth = useAuth();
   useEffect(() => {
     const fetchRoles = async () => {
       try {
@@ -69,8 +69,12 @@ export const AddUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(auth.isRoleAccept("admin")!==null || auth.isRoleAccept("manager")!==null){
+    if (
+      auth.isRoleAccept("admin") !== null ||
+      auth.isRoleAccept("manager") !== null
+    ) {
       try {
+        console.log(user);
         const result = await saveUser(user);
         if (result.message !== undefined) {
           localStorage.setItem("successMessage", "Add new User successfully");
@@ -81,9 +85,8 @@ export const AddUser = () => {
       } catch (error) {
         setErrorMessage(error);
       }
-    }
-    else{
-      alert("you don't have permission to add new user")
+    } else {
+      alert("you don't have permission to add new user");
     }
 
     setTimeout(() => {

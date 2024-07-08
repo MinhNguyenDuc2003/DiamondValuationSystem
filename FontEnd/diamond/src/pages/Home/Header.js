@@ -150,14 +150,7 @@ const Header = () => {
               <ListItemText primary="Manage Account" />
             </ListItemButton>
             <ListItemButton onClick={() => handleNavigate("/MyRequest")}>
-              <Badge
-                sx={{ gap: "5px" }}
-                badgeContent={totalRequest}
-                onClick={handleBadgeClick}
-                color="primary"
-              >
-                <ListItemText primary="My Request" />
-              </Badge>
+              <ListItemText primary="My Request" />
             </ListItemButton>
             <ListItemButton onClick={handleLogoutClick}>
               <ListItemText primary="Logout" />
@@ -297,28 +290,23 @@ const Header = () => {
           <ul className="service-content">
             <li>
               <button
-                onClick={() => handleNavigateToService("/Service/valuation")}
-              >
-                Valuation
-              </button>
-            </li>
-            <li>
-              <button
                 onClick={() => handleNavigateToService("/Service/calculator")}
               >
                 Calculation
               </button>
             </li>
             <li>
-              <button onClick={() => handleNavigateToService("/Service/sale")}>
-                Sale
+              <button
+                onClick={() => handleNavigateToService("/Service/Lookup")}
+              >
+                LookUp
               </button>
             </li>
             <li>
               <button
-                onClick={() => handleNavigateToService("/Service/sculpture")}
+                onClick={() => handleNavigateToService("/Service/ServiceList")}
               >
-                Sculpture
+                Services List
               </button>
             </li>
           </ul>

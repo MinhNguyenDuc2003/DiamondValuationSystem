@@ -23,6 +23,8 @@ const EditCertificate = () => {
   const { certificateId } = useParams();
   const [certificate, setCertificate] = useState(null);
   const [error, setError] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const navigate = useNavigate();
 
@@ -45,11 +47,18 @@ const EditCertificate = () => {
     getCertificateById(certificateId)
       .then((data) => {
         setCertificate(data);
+        setImagePreview(data.photo);
       })
       .catch((error) => {
         console.error("Error fetching certificate: ", error);
       });
   }, [certificateId]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (values) => {
     try {
@@ -57,8 +66,8 @@ const EditCertificate = () => {
       const updatedCertificateData = {
         ...values,
         measurement,
+        photo: image,
       };
-      console.log(updatedCertificateData);
       const result = await saveCertificate(updatedCertificateData);
       if (result.message !== undefined) {
         localStorage.setItem(
@@ -154,7 +163,8 @@ const EditCertificate = () => {
     width: parseFloat(certificate.measurement.split("-")[1].split("x")[0]),
     height: parseFloat(certificate.measurement.split("x")[1].replace("mm", "")),
     request_id: certificate.request_id,
-    code : certificate.code
+    code: certificate.code,
+    photo: certificate.photo,
   };
 
   return (
@@ -276,6 +286,23 @@ const EditCertificate = () => {
                     helperText={touched.height && errors.height}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Image
+                    <input type="file" hidden onChange={handleImageChange} />
+                  </Button>
+                </Grid>
+                {imagePreview && (
+                  <Grid item xs={12}>
+                    <Box display="flex" justifyContent="center" mt="20px">
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      />
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">
@@ -283,7 +310,7 @@ const EditCertificate = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => handleCancel()}
+                  onClick={handleCancel}
                   sx={{ backgroundColor: "grey" }}
                 >
                   Cancel

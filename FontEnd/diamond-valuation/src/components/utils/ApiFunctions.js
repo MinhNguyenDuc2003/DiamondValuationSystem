@@ -338,6 +338,8 @@ export async function saveCertificate(certificate) {
   formData.append("flourescence", certificate.flourescence);
   formData.append("name", certificate.cert);
   formData.append("request_id", certificate.request_id);
+  formData.append("code", certificate.code);
+  formData.append("photo", certificate.photo);
 
   try {
     const response = await api.post(

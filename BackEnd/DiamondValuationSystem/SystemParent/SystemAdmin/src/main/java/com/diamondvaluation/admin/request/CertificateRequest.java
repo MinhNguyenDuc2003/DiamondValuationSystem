@@ -49,5 +49,4 @@ public class CertificateRequest {
     private String flourescence;
 	
 	private int request_id;
-    
 }

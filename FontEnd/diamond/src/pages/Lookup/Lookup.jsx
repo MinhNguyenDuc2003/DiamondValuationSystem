@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
-import { Box, TextField, Typography, Button, Grid } from '@mui/material';
-import data from './fakeData.json';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { Box, TextField, Typography, Button, Grid } from "@mui/material";
+import data from "./fakeData.json";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import img from '../Home/image/logot.png';
+import logo from "../Home/image/logot.png";
+import facet1 from "../Home/image/Facet_part1.jpg";
+import facet2 from "../Home/image/Facet_part2.jpg";
 
 const Lookup = () => {
-    const currentDate = new Date();
-    const [idCef, setIdCef] = useState('');
-    const [certificate, setCertificate] = useState(null);
+  const currentDate = new Date();
+  const [idCef, setIdCef] = useState("");
+  const [certificate, setCertificate] = useState(null);
 
-    // Format date
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = currentDate.getFullYear();
-    const formattedDate = `${day}-${month}-${year}`;
+  // Format date
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const year = currentDate.getFullYear();
+  const formattedDate = `${day}-${month}-${year}`;
 
-    const handleSearch = () => {
-        const result = data.find(item => item.id === parseInt(idCef));
+  const handleSearch = () => {
+    const result = data.find((item) => item.id === parseInt(idCef));
 
-        if (result) {
-            setCertificate(result);
-            openCertificateInNewTab(result);
-            window.location.reload();
-        } else {
-            toast.error(`Certificate with ID ${idCef} not found.`, { autoClose: 3000 });
-        }
-    };
+    if (result) {
+      setCertificate(result);
+      openCertificateInNewTab(result);
+      window.location.reload();
+    } else {
+      toast.error(`Certificate with ID ${idCef} not found.`, {
+        autoClose: 3000,
+      });
+    }
+  };
 
-    const openCertificateInNewTab = (certificate) => {
-        const newWindow = window.open('', '_about');
-        newWindow.document.write(`
+  const openCertificateInNewTab = (certificate) => {
+    const newWindow = window.open("", "_about");
+    newWindow.document.write(`
             <html>
             <head>
                 <title>Certificate Report</title>
@@ -149,7 +153,7 @@ const Lookup = () => {
             </head>
             <body>
                    <div class ='header-cef'>
-                    <img class='img' style={{width: '30%'}} src=${img}/>
+                    <img class='img' style={{width: '30%'}} src=${logo}/>
                     <div class='content' >
                         <h1 textAlign={'center'} variant='h4'> Shine Report</h1>
                         <h3 textAlign={'center'} variant='h6'> ${certificate.id}</h3>
@@ -197,13 +201,13 @@ const Lookup = () => {
                         <div class="S-prop">
                             <p>PROPORTIONS</p>
                             <div class="props">
-                                <img class="alt-diamond" src="Facet_part1.jpg" alt="" />
+                                <img class="alt-diamond" src=${facet1} alt="" />
                             </div>
                         </div>
                         <div class="S-prop">
                             <p>CLARITY CHARACTERISTICS</p>
                             <div class="characters">
-                                <img class="alt-diamond" src="Facet_part2.jpg" alt="" />
+                                <img class="alt-diamond" src=${facet2} alt="" />
                             </div>
                         </div>
                     </div>
@@ -316,47 +320,48 @@ const Lookup = () => {
             </body>
             </html>
         `);
-        newWindow.document.close();
-    };
+    newWindow.document.close();
+  };
 
-
-    return (
-        <Box sx={{ textAlign: 'center', mt: '10%' }}>
-            {console.log(certificate)}
-            <ToastContainer />
-            <Typography variant="h3" gutterBottom>
-                Welcome to Shine's Diamond Certificate Lookup
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                Discover the world of certified diamonds with Shine's Diamond Certificate Lookup. This tool empowers you to explore detailed
-                attributes of diamonds appraised by Shine, simply by entering their unique ID.
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                Whether you're a buyer verifying a diamond's authenticity or an appraiser seeking precise information, our intuitive interface
-                ensures a seamless experience. Enter the diamond ID below to begin your journey.
-            </Typography>
-            <Grid container justifyContent="center" sx={{ mt: 3 }}>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Enter Diamond ID"
-                        variant="outlined"
-                        fullWidth
-                        value={idCef}
-                        onChange={(e) => setIdCef(e.target.value)}
-                    />
-                </Grid>
-            </Grid>
-            <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2, mb: 11 }}
-                onClick={handleSearch}
-            >
-                Search
-            </Button>
-           
-        </Box>
-    );
+  return (
+    <Box sx={{ textAlign: "center", mt: "10%" }}>
+      {console.log(certificate)}
+      <ToastContainer />
+      <Typography variant="h3" gutterBottom>
+        Welcome to Shine's Diamond Certificate Lookup
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Discover the world of certified diamonds with Shine's Diamond
+        Certificate Lookup. This tool empowers you to explore detailed
+        attributes of diamonds appraised by Shine, simply by entering their
+        unique ID.
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Whether you're a buyer verifying a diamond's authenticity or an
+        appraiser seeking precise information, our intuitive interface ensures a
+        seamless experience. Enter the diamond ID below to begin your journey.
+      </Typography>
+      <Grid container justifyContent="center" sx={{ mt: 3 }}>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Enter Diamond ID"
+            variant="outlined"
+            fullWidth
+            value={idCef}
+            onChange={(e) => setIdCef(e.target.value)}
+          />
+        </Grid>
+      </Grid>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mb: 11 }}
+        onClick={handleSearch}
+      >
+        Search
+      </Button>
+    </Box>
+  );
 };
 
 export default Lookup;
