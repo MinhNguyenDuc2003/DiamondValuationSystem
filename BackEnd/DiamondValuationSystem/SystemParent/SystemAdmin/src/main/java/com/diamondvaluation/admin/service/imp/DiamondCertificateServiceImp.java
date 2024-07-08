@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
+import com.diamondvaluation.admin.exception.DiamondRequestAlreadyExistCertificateException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.repository.DiamondCertificateRepository;
 import com.diamondvaluation.admin.repository.DiamondRequestRepository;
@@ -31,6 +32,10 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 		boolean isUpdate = certificate.getId()!=null && certificate.getId()!=0;
 		if(!isUpdate) {
 			boolean isDuplicated = true;
+			Optional<DiamondCertificate> request = repo.findByRequestId(certificate.getRequest().getId());
+			if(request.isPresent()) {
+				throw new DiamondRequestAlreadyExistCertificateException("Certificate is already exist with this id");
+			}
 			while(isDuplicated) {
 				UUID uniqueKey = UUID.randomUUID();
 				String code = "SH"+uniqueKey.toString().substring(23);

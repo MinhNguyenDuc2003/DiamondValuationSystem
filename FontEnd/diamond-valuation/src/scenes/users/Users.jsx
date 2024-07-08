@@ -151,7 +151,7 @@ export const Users = () => {
       navigate("/users/new");
     }
     else{
-      alert("you don't have permission to add new user")
+      alert("you don't have permission to add")
     }
   }
 
@@ -239,7 +239,7 @@ export const Users = () => {
                   <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => navigate("/account/information")}>
+                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
                   <IconButton

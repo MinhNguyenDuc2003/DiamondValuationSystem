@@ -56,8 +56,8 @@ public class DiamondValuationImp implements DiamondValuationService{
 	}
 
 	@Override
-	public void deleteAllValuation() {
-		repo.deleteAll();
+	public void deletebyId(Integer id) {
+		repo.deleteById(id);
 	}
 	
 	

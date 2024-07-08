@@ -146,7 +146,7 @@ export async function saveCustomer(customer) {
   formData.append("last_name", customer.last_name);
   formData.append("email", customer.email);
   formData.append("password", customer.password);
-  formData.append("phone_number", customer.phone_numbe);
+  formData.append("phone_number", customer.phone_number);
   formData.append("location", customer.location);
   formData.append("enabled", customer.enabled);
 
@@ -338,7 +338,6 @@ export async function saveCertificate(certificate) {
   formData.append("flourescence", certificate.flourescence);
   formData.append("name", certificate.cert);
   formData.append("request_id", certificate.request_id);
-  formData.append("code", certificate.code);
   formData.append("photo", certificate.photo);
 
   try {

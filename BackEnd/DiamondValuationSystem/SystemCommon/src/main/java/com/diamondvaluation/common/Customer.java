@@ -61,7 +61,7 @@ public class Customer {
 	@Column(name = "authentication_type", length = 10)
 	private AuthenticationType authenticationType;
 	
-	@OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer")
 	private List<DiamondRequest> appoinments;
 
 	private boolean enabled;
