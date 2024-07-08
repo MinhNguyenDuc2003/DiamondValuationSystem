@@ -147,6 +147,12 @@ export const Customers = () => {
         Manage Customers
       </Typography>
 
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
       <Box display="flex" justifyContent="space-between">
         <Link to="/customers/new">
           <PersonAddAlt1Icon
@@ -172,12 +178,6 @@ export const Customers = () => {
           </IconButton>
         </Box>
       </Box>
-
-      {message && (
-        <Alert severity="success" sx={{ justifyContent: "center" }}>
-          {message}
-        </Alert>
-      )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>

@@ -40,6 +40,8 @@ import BuildIcon from "@mui/icons-material/Build";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DoneIcon from "@mui/icons-material/Done";
 import BlockIcon from "@mui/icons-material/Block";
+import RestorePageIcon from "@mui/icons-material/RestorePage";
+import WarningIcon from "@mui/icons-material/Warning";
 
 const statusColors = {
   WAIT: "warning",
@@ -270,7 +272,6 @@ const Requests = () => {
                       icon={statusIcons[request.status]}
                       label={request.status}
                       color={statusColors[request.status]}
-                      // sx={{ width: "100px" }}
                     />
                   </TableCell>
                   <TableCell align="center">

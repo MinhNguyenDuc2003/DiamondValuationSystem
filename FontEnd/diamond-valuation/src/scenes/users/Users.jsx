@@ -25,6 +25,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Alert,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -147,19 +148,33 @@ export const Users = () => {
   };
 
   const handleButtonAddUser = () => {
-    if(auth.isRoleAccept("admin")!==null || auth.isRoleAccept("manager")!==null){
+    if (
+      auth.isRoleAccept("admin") !== null ||
+      auth.isRoleAccept("manager") !== null
+    ) {
       navigate("/users/new");
+    } else {
+      alert("you don't have permission to add new user");
     }
-    else{
-      alert("you don't have permission to add new user")
-    }
-  }
+  };
 
   return (
     <Box m="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
         Manage Users
       </Typography>
+
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <Box display="flex" justifyContent="space-between">
         <Button onClick={handleButtonAddUser}>
@@ -186,10 +201,6 @@ export const Users = () => {
           </IconButton>
         </Box>
       </Box>
-
-      {message && (
-        <div className="alert alert-success text-center">{message}</div>
-      )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>

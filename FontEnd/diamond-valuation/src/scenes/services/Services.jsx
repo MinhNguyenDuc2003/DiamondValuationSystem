@@ -24,6 +24,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -134,6 +135,12 @@ export const Services = () => {
         Manage services
       </Typography>
 
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
       <Box display="flex" justifyContent="space-between">
         <Link to={"/services/new"}>
           <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
@@ -153,10 +160,6 @@ export const Services = () => {
           </IconButton>
         </Box>
       </Box>
-
-      {message && (
-        <div className="alert alert-success text-center">{message}</div>
-      )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>

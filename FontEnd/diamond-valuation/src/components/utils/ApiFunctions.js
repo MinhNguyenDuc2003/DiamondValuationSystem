@@ -146,7 +146,7 @@ export async function saveCustomer(customer) {
   formData.append("last_name", customer.last_name);
   formData.append("email", customer.email);
   formData.append("password", customer.password);
-  formData.append("phone_number", customer.phone_numbe);
+  formData.append("phone_number", customer.phone_number);
   formData.append("location", customer.location);
   formData.append("enabled", customer.enabled);
 
@@ -338,7 +338,6 @@ export async function saveCertificate(certificate) {
   formData.append("flourescence", certificate.flourescence);
   formData.append("name", certificate.cert);
   formData.append("request_id", certificate.request_id);
-  formData.append("code", certificate.code);
   formData.append("photo", certificate.photo);
 
   try {
@@ -464,6 +463,26 @@ export async function deleteCaratRange(id) {
         "Content-Type": "application/json",
       },
     });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+// =========================================== REPORTS ======================================//
+export async function saveReport(report) {
+  const formData = new FormData();
+  formData.append("id", report.id);
+  formData.append("header", report.header);
+  formData.append("content", report.content);
+  formData.append("type", report.type);
+  formData.append("status", report.status);
+  formData.append("request_id", report.request_id);
+
+  try {
+    const response = await api.post("api/reports/report/save", formData);
     if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else return response.status;

@@ -1,30 +1,32 @@
-import { Box, Button, TextField, Typography, Input } from "@mui/material";
+import { Box, Button, TextField, Typography, Grid } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { saveService } from "../../components/utils/ApiFunctions";
 import { useState } from "react";
 
-const initialValues = {
-  id: "",
-  name: "",
-  money: "",
-  content: "",
-  photo: null,
-};
-
 const nameReqExp = /^[a-zA-Z\s]+$/;
 
 const serviceSchema = yup.object().shape({
   name: yup.string().matches(nameReqExp, "Invalid name").required("required"),
   money: yup.number().required("required"),
-  content: yup.string(),
+  content: yup.string().required("required"),
   photo: yup.mixed().required("Image is required"),
 });
 
 const AddService = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  const initialValues = {
+    id: "",
+    name: "",
+    money: "",
+    content: "",
+    photo: image,
+  };
 
   const handleFormSubmit = async (values) => {
     try {
@@ -43,6 +45,12 @@ const AddService = () => {
     }, 3000);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
   return (
     <Box m="20px">
       <Typography variant="h4" textAlign="center" m="20px">
@@ -59,6 +67,13 @@ const AddService = () => {
           onSubmit={handleFormSubmit}
           initialValues={initialValues}
           validationSchema={serviceSchema}
+          validate={(values) => {
+            const errors = {};
+            if (!image) {
+              errors.photo = "Image is required";
+            }
+            return errors;
+          }}
         >
           {({
             values,
@@ -111,19 +126,30 @@ const AddService = () => {
                   fullWidth
                   sx={{ gridColumn: "span 4" }}
                 />
-                <Input
-                  margin="dense"
-                  type="file"
-                  name="photo"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={!!touched.photo && !!errors.photo}
-                  inputProps={{ accept: "image/png, image/jpeg " }}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                {touched.photo && errors.photo && (
-                  <div style={{ color: "red" }}>{errors.photo}</div>
-                )}
+                <Box sx={{ gridColumn: "span 4" }}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Image
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </Button>
+                  {imagePreview && (
+                    <Box mt={2} textAlign="center">
+                      <Typography>Image Preview:</Typography>
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      />
+                    </Box>
+                  )}
+                  {errors.photo && touched.photo && (
+                    <Typography color="error">{errors.photo}</Typography>
+                  )}
+                </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">

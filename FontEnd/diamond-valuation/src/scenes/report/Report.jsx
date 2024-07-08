@@ -7,30 +7,43 @@ import {
   Paper,
   Typography,
   Container,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { saveReport } from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
 
 export const Report = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [type, setType] = useState("BLOCKREQUEST"); // Default to BLOCKREQUEST or any initial value you prefer
+  const [requestId, setRequestId] = useState("");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const reportData = {
-      title,
+      header: title,
       content,
+      type,
       status: "New",
+      request_id: requestId,
     };
-    axios
-      .post("https://665ae895003609eda45f3327.mockapi.io/Report", reportData)
-      .catch((error) => console.error("Error creating course:", error));
-    // Handle the submitted report data here (e.g., send to an API)
-    handleClear();
+
+    try {
+      await saveReport(reportData);
+      handleClear();
+    } catch (error) {
+      console.error("Error saving report:", error);
+    }
   };
 
   const handleClear = () => {
     setTitle("");
     setContent("");
+    setType("BLOCKREQUEST"); // Reset to default value
+    setRequestId(""); // Clear request_id if needed
   };
 
   return (
@@ -51,6 +64,20 @@ export const Report = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="type-label">Type</InputLabel>
+              <Select
+                labelId="type-label"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                label="Type"
+              >
+                <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
+                <MenuItem value="RETURNREQUEST">RETURNREQUEST</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <ReactQuill

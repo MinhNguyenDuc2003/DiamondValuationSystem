@@ -15,7 +15,7 @@ const UpdateAccount = () => {
     last_name: "",
     password: "",
     phone_number: "",
-    photo: null
+    photo: null,
   });
 
   const [roles, setRoles] = useState([]);
@@ -37,7 +37,7 @@ const UpdateAccount = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = localStorage.getItem("userId")
+        const userId = localStorage.getItem("userId");
         const useredit = await getUserById(userId);
         setUser({
           id: useredit.id,
