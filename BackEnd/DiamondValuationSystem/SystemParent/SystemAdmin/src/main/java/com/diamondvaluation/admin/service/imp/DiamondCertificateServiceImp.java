@@ -89,4 +89,13 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	    System.out.println (uniqueKey.toString().substring(23));
 	  }
 
+	@Override
+	public Integer findByRequestId(Integer id) {
+		Optional<DiamondCertificate> cer = repo.findByRequestId(id);
+		if(!cer.isPresent()) {
+			return null;
+		}
+		return cer.get().getId();
+	}
+
 }

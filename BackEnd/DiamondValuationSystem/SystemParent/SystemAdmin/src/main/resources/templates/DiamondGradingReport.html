@@ -7,344 +7,227 @@
 	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 <title>Diamond Grading Report</title>
 <style>
-.header {
-	background-color: #003366;
-	color: white;
-	padding: 20px;
+@page {
+	size: A4;
+	margin: 0;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+	width: 210mm;
+	height: 297mm;
+}
+
+.container {
+	padding: 10mm;
+	box-sizing: border-box;
+}
+
+.title {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #393E46;
+	margin-bottom: 10px;
+}
+
+.logo img {
+	width: 150px;
+}
+
+.titleName {
+	text-align: center;
+	margin: auto;
+}
+
+.titleName h1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.introduce {
+	margin-bottom: 10px;
+}
+
+.introduce p {
+	font-size: 8px;
+	margin: 5px 0;
+}
+
+.body {
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	gap: 10px;
+}
+
+.S-prop>p {
+	color: #FFF;
+	font-size: 8px;
+	padding: 3px;
+	font-weight: bold;
+	background-color: #393E46;
+	margin: 0;
+}
+
+.left-report .S-prop, .right-report table {
+	border: 0.5px solid #393E46;
+}
+
+.left-report .S-prop>div, .right-report table td, .right-report table th
+	{
+	border: 0.5px solid #393E46;
+	font-size: 8px;
+	padding: 2px;
+}
+
+.detail p {
+	font-size: 8px;
+	margin: 3px 0;
+}
+
+.middle-report img {
+	width: 80px;
+	height: 80px;
+	object-fit: contain;
+	display: block;
+	margin: 10px auto;
+}
+
+.right-report table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 3px 0;
+}
+
+.right-report th, .right-report td {
 	text-align: center;
 }
 
-.header img {
-	width: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.thead th {
+	font-size: 8px;
+}
+
+.empty-th, .empty-td {
+	border: none;
 }
 
 .logo-container {
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	width: 100%; /* Optional, depends on the layout */
 }
 
-.text-container {
-	margin-left: 20px;
+.characters {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 60%; /* Adjust the width as needed */
 }
 
-.certificate-title, .sub-title {
-	text-align: center;
-}
-
-.certificate-title {
-	font-size: 24px;
-	font-weight: bold;
-}
-
-.sub-title {
-	font-size: 14px;
-}
-
-.content {
-	padding: 20px;
-}
-
-.details-table {
-	width: 100%;
-}
-
-.details-table td {
-	padding: 5px;
-}
-
-.details-table .label {
-	font-weight: bold;
-}
-
-.lab-tested {
-	writing-mode: vertical-rl;
-	text-orientation: upright;
-	background: #f0f0f0;
+.characters img {
+	width: 250px;
+	height: auto;
 	padding: 10px;
-	text-align: center;
-	font-weight: bold;
-	color: #003366;
-}
-
-.signatures img {
-	width: 100px;
 }
 </style>
 </head>
-<style>
-    body {
-        padding: 20px;
-    }
-
-    .title {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        align-content: center;
-
-        .logo {
-            flex: 1;
-            width: 50px;
-
-            img {
-                width: 200px;
-            }
-
-        }
-
-        .titleName {
-            flex: 1;
-            text-align: center;
-        }
-
-        .nullBlock {
-            flex: 1;
-        }
-    }
-
-    .body {
-        display: flex;
-        justify-content: space-around;
-        align-items: flex-start;
-        margin-top: 10px;
-        gap: 40px;
-
-        .S-prop>p {
-            width: 100%;
-            color: antiquewhite;
-            font-size: 14px;
-            font-weight: bold;
-            font-family: Arial, Helvetica, sans-serif;
-            padding-left: 5px;
-            background-color: rgb(9, 70, 123);
-        }
-
-        .S-prop>div:not(.middle-report div) {
-            border: 2px solid rgb(9, 70, 123);
-            padding: 10px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .S-prop>div span:not(.comment) {
-            float: right;
-        }
-
-
-        .props,
-        .characters {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .thead>th {
-            align-items: center;
-        }
-
-        .left-report {
-            flex: 1;
-        }
-
-        .middle-report {
-            flex: 1;
-        }
-
-        .right-report {
-            flex: 1;
-
-            th {
-                width: 20%;
-            }
-
-            table {
-                width: 100%;
-            }
-
-            tr>td:not(.empty-th, .empty-td) {
-                text-align: center;
-                border: 2px solid rgb(9, 70, 123);
-                border-collapse: collapse;
-            }
-        }
-    }
-</style>
-
 <body>
-    <div class="title">
-        <div class="logo">
-            <img th:src="@{/image/logo.png}"
-						alt="MGTL Logo">
-        </div>
-        <div class="titleName">
-            <h1 style="font-size: 20px; font-weight: bold;">SHINE REPORT</h1>
-            <p>15975368427</p>
-        </div>
-        <div class="nullBlock"></div>
-    </div>
+	<div class="container">
+		<div class="logo-container">
+			<div class="logo">
+				<img
+					src="https://diamondvaluation.s3.ap-southeast-2.amazonaws.com/logo/logo.png"
+					alt="LogoShine">
+			</div>
+		</div>
+		<div class="title">
+			<div class="titleName">
+				<h1>DIAMOND GRADING REPORT</h1>
+				<p>[[${reportNumber}]]</p>
+			</div>
+		</div>
 
-    <div class="body">
-        <div class="left-report">
-            <div class="S-prop">
-                <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
-                <div class="detail">
-                    <p>September 01/2024</p>
-                    <p>SHINE Report Number <span>15975368427</span></p>
-                    <p>Shape and Cutting Style <span>Round Brilliant</span></p>
-                    <p>Measurements <span>5.65 - 5.69 x 3.54 mm</span></p>
-                </div>
-            </div>
-            <div class="S-prop">
-                <p>GRADING RESULT</p>
-                <div class="detail">
-                    <p>Carar Weight <span>0.71 carat</span></p>
-                    <p>Color Grade <span>J</span></p>
-                    <p>Clarity Grade <span>VS2</span></p>
-                    <p>Cut Grade <span>Very Good</span></p>
-                </div>
-            </div>
-            <div class="S-prop">
-                <p>ADDITIONAL GRADING INFORMATION</p>
-                <div class="detail">
-                    <p>Polish <span>Excellent</span></p>
-                    <p>Symmetry <span>Very Good</span></p>
-                    <p>Fluorescence <span>None</span></p>
-                    <p>Inscription(s) <span>SHINE 15975368427</span></p>
-                    <p><span class="comment" style="font-weight: bold;">Comments:
-                        </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>
-                    <p>Additional pinpoints are not shown</p>
-                </div>
-            </div>
-            <div class="S-prop">
-                <p>ORIGIN RESULT</p>
-                <div class="detail">
-                    <p>Country of Origin: <span>South Africa</span></p>
-                </div>
-            </div>
-        </div>
+		<div class="introduce">
+			<p>This report presents a detailed evaluation of the submitted
+				diamond, highlighting its unique qualities and overall grade. The
+				following section provides a comprehensive breakdown of the
+				diamond's key specifications, emphasizing its exceptional
+				characteristics and intrinsic value.</p>
+		</div>
 
-        <div class="middle-report">
-            <div class="S-prop">
-                <p>PROPORTIONS</p>
-                <div class="props">
-                    <img class="alt-diamond" src="Facet_part1.jpg" alt="">
-                </div>
-            </div>
-            <div class="S-prop">
-                <p>CLARITY CHARACTERISTICS</p>
-                <div class="characters">
-                    <img class="alt-diamond" src="Facet_part2.jpg" alt="">
-                </div>
-            </div>
+		<div class="body">
+			<div class="left-report">
+				<div class="S-prop">
+					<p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
+					<div class="detail">
+						<p>[[${date}]]</p>
+						<p>
+							SHINE Report Number <span>[[${reportNumber}]]</span>
+						</p>
+						<p>
+							Shape and Cutting Style <span>[[${cut}]]</span>
+						</p>
+						<p>
+							Measurements <span>[[${measurements}]]</span>
+						</p>
+					</div>
+				</div>
+				<div class="S-prop">
+					<p>GRADING RESULT</p>
+					<div class="detail">
+						<p>
+							Carat Weight <span>[[${caratWeight}]] carat</span>
+						</p>
+						<p>
+							Color Grade <span>[[${colorGrade}]]</span>
+						</p>
+						<p>
+							Clarity Grade <span>[[${clarityGrade}]]</span>
+						</p>
+					</div>
+				</div>
+				<div class="S-prop">
+					<p>ADDITIONAL GRADING INFORMATION</p>
+					<div class="detail">
+						<p>
+							Polish <span>[[${polish}]]</span>
+						</p>
+						<p>
+							Symmetry <span>[[${symmetry}]]</span>
+						</p>
+						<p>
+							Fluorescence <span>[[${fluorescence}]]</span>
+						</p>
+						<p>
+							Inscription(s) <span>SHINE [[${reportNumber}]]</span>
+						</p>
+						<p>
+							<span class="comment" style="font-weight: bold;">Comments:</span>
+							*DIAMOND**SHINE**VALUATION*
+						</p>
+						<p>Additional pinpoints are not shown</p>
+					</div>
+				</div>
+			</div>
 
-        </div>
-
-        <div class="right-report">
-            <div class="S-prop">
-                <p>GRADING SCALES</p>
-                <table>
-                    <tr class="thead">
-                        <th>SHINE COLOR SCALE</th>
-                        <th class="empty-th"></th>
-                        <th>SHINE CLARITY SCALE</th>
-                        <th class="empty-th"></th>
-                        <th>GIA CUT SCALE</th>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td class="empty-td" rowspan="23"></td>
-                        <td rowspan="3">FLAWLESS</td>
-                        <td class="empty-td" rowspan="23"></td>
-                        <td rowspan="4">EXCELLENT</td>
-                    </tr>
-                    <tr>
-                        <td>E</td>
-                    </tr>
-                    <tr>
-                        <td>F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td rowspan="2">INTERNALLY FLAWLESS</td>
-                    </tr>
-                    <tr>
-                        <td>H</td>
-                        <td rowspan="5">VERY GOOD</td>
-                    </tr>
-                    <tr>
-                        <td>I</td>
-                        <td rowspan="2">VVS1</td>
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                    </tr>
-                    <tr>
-                        <td>K</td>
-                        <td rowspan="2">VVS2</td>
-                    </tr>
-                    <tr>
-                        <td>L</td>
-                    </tr>
-                    <tr>
-                        <td>M</td>
-                        <td rowspan="2">VS1</td>
-                        <td rowspan="5">GOOD</td>
-                    </tr>
-                    <tr>
-                        <td>N</td>
-                    </tr>
-                    <tr>
-                        <td>O</td>
-                        <td rowspan="2">VS2</td>
-                    </tr>
-                    <tr>
-                        <td>P</td>
-                    </tr>
-                    <tr>
-                        <td>Q</td>
-                        <td rowspan="2">SI1</td>
-                    </tr>
-                    <tr>
-                        <td>R</td>
-                        <td rowspan="5">FAIR</td>
-                    </tr>
-                    <tr>
-                        <td>S</td>
-                        <td rowspan="2">SI2</td>
-                    </tr>
-                    <tr>
-                        <td>T</td>
-                    </tr>
-                    <tr>
-                        <td>U</td>
-                        <td rowspan="2">I1</td>
-                    </tr>
-                    <tr>
-                        <td>Y</td>
-                    </tr>
-                    <tr>
-                        <td>W</td>
-                        <td rowspan="2">I2</td>
-                        <td rowspan="4">POOR</td>
-                    </tr>
-                    <tr>
-                        <td>X</td>
-                    </tr>
-                    <tr>
-                        <td>Y</td>
-                        <td rowspan="2">I3</td>
-                    </tr>
-                    <tr>
-                        <td>Z</td>
-                    </tr>
-
-                </table>
-            </div>
-        </div>
-
-    </div>
+			<div class="middle-report">
+				<div class="S-prop">
+					<p>PROPORTIONS AND CLARITY CHARACTERISTICS</p>
+					<div class="characters">
+						<img
+							src="https://diamondvaluation.s3.ap-southeast-2.amazonaws.com/diamond/Facet_part1.jpg"
+							alt="Proportions"> 
+						<img th:src="${photo}"
+							alt="Clarity Characteristics">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

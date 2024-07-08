@@ -27,6 +27,7 @@ import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.DiamondRequestRequest;
 import com.diamondvaluation.admin.response.DiamondRequestResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
+import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
@@ -39,11 +40,13 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/diamond-requests/")
 public class DiamondRequestController {
+	private final DiamondCertificateService certificateService;
 	private final DiamondRequestService requestService;
 	private final ModelMapper modelMapper;
 
-	@Autowired
-	public DiamondRequestController(DiamondRequestService requestService, ModelMapper modelMapper) {
+	public DiamondRequestController(DiamondCertificateService certificateService, DiamondRequestService requestService,
+			ModelMapper modelMapper) {
+		this.certificateService = certificateService;
 		this.requestService = requestService;
 		this.modelMapper = modelMapper;
 	}
@@ -77,16 +80,16 @@ public class DiamondRequestController {
 		appoinment.setServices(list);
 		appoinment.setMethod(request.getPayment_method());
 		appoinment.setPaid(request.isPaid());
-		if (request.getAppointmentDate() != null && request.getAppointmentDate().toString().length()>0) {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
-            appoinment.setAppointmentDate(date);
-        }
-		if (request.getAppointmentTime() != null && request.getAppointmentTime().toString().length()>0) {
+		if (request.getAppointmentDate() != null && request.getAppointmentDate().toString().length() > 0) {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
+			appoinment.setAppointmentDate(date);
+		}
+		if (request.getAppointmentTime() != null && request.getAppointmentTime().toString().length() > 0) {
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
-            appoinment.setAppointmentTime(time);
-        }
+			LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
+			appoinment.setAppointmentTime(time);
+		}
 		return appoinment;
 	}
 
@@ -108,6 +111,8 @@ public class DiamondRequestController {
 		if (appoinment.getAppointmentTime() != null) {
 			appoinmentResponse.setAppoinment_time(appoinment.getAppointmentTime().toString());
 		}
+		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
+		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
 		return appoinmentResponse;
 	}
 
@@ -143,7 +148,7 @@ public class DiamondRequestController {
 		List<DiamondRequest> list = requestService.findAllRequest();
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("requests/status/new")
 	public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate() {
 		List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.NEW);
@@ -152,7 +157,7 @@ public class DiamondRequestController {
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
-			@PathVariable("status") RequestStatus status,  HttpServletRequest request) {
+			@PathVariable("status") RequestStatus status, HttpServletRequest request) {
 		try {
 			requestService.updateRequestStatus(id, status, request);
 			return new ResponseEntity<>(new MessageResponse("Status updated successfully for request id " + id),
@@ -161,13 +166,12 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/customer/{id}")
-	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id){
+	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id) {
 		try {
 			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
-			return new ResponseEntity<>(listEntity2Response(list),
-					HttpStatus.OK);
+			return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
 		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}

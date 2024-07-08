@@ -1,4 +1,4 @@
-package com.diamondvaluation.admin.response;
+package com.diamondvaluation.shop.response;
 
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.diamond.DiamondClarity;
