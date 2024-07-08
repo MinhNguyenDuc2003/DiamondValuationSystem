@@ -41,8 +41,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import PrintIcon from "@mui/icons-material/Print";
 import { PiCertificate } from "react-icons/pi";
 import CertificateHTML from "./CertificateHTML";
+import PrintPDF from "./PrintPDF";
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -395,6 +397,9 @@ const Certificates = () => {
                       </IconButton>
                       <IconButton onClick={() => handleOpenDialog(certificate)}>
                         <DeleteIcon sx={{ color: "#C5A773" }} />
+                      </IconButton>
+                      <IconButton onClick={() => PrintPDF(certificate)}>
+                        <PrintIcon sx={{ color: "#C5A773" }} />
                       </IconButton>
                     </TableCell>
                   </TableRow>

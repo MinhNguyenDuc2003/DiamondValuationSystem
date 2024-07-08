@@ -154,6 +154,7 @@ const EditCertificate = () => {
     width: parseFloat(certificate.measurement.split("-")[1].split("x")[0]),
     height: parseFloat(certificate.measurement.split("x")[1].replace("mm", "")),
     request_id: certificate.request_id,
+    code: certificate.code,
   };
 
   return (
