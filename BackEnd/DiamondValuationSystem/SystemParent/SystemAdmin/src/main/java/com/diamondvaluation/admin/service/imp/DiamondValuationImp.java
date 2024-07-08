@@ -54,6 +54,11 @@ public class DiamondValuationImp implements DiamondValuationService{
 		}
 		return diamond.get();
 	}
+
+	@Override
+	public void deleteAllValuation() {
+		repo.deleteAll();
+	}
 	
 	
 }

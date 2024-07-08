@@ -87,6 +87,9 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
             	.requestMatchers("/diamond-shop/customer/*").authenticated()	
             	.requestMatchers("/diamond-shop/token").authenticated()
+            	.requestMatchers("/services").authenticated()
+            	.requestMatchers("/diamond-request/**").authenticated()
+            	.requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
             .oauth2Login(form -> form
     				.userInfoEndpoint()

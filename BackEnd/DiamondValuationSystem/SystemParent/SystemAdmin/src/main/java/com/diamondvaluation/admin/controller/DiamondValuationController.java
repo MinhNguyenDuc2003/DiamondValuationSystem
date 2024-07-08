@@ -20,13 +20,13 @@ public class DiamondValuationController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@GetMapping("/get")
-	public ResponseEntity<DiamondPrice> getDiamondPrice() {
-		log.info("Starting API request...");
-		String apiUrl = "http://www.idexonline.com/DPService.asp?SID=4wp7go123jqtkdyd5f2e&cut=Round&carat=1.00&color=E&clarity=VS1&make=Excellent&cert=GIA";
-		ResponseEntity<DiamondPrice> response = restTemplate.getForEntity(apiUrl, DiamondPrice.class);
-		System.out.println(response.getBody().getAvg());
-		log.info("API request completed.");
-		return response;
-	}
+//	@GetMapping("/get")
+//	public ResponseEntity<DiamondPrice> getDiamondPrice() {
+//		log.info("Starting API request...");
+//		String apiUrl = "http://www.idexonline.com/DPService.asp?SID=4wp7go123jqtkdyd5f2e&cut=Round&carat=1.00&color=E&clarity=VS1&make=Excellent&cert=GIA";
+//		ResponseEntity<DiamondPrice> response = restTemplate.getForEntity(apiUrl, DiamondPrice.class);
+//		System.out.println(response.getBody().getAvg());
+//		log.info("API request completed.");
+//		return response;
+//	}
 }
