@@ -290,45 +290,6 @@ const Header = () => {
                     {menuUser}
                 </div>
             </div>
-
-
-            {/* {menuContact && (
-                <div className="wrapper-menu">
-                    <button onClick={() => setMenuContact(false)} className="close-button"><CloseCircleOutlined /></button>
-                    <div className="menu-content">
-                        <h2>CONTACT US</h2>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <PhoneOutlined />
-                                <span>CALL US 099999999</span>
-                            </a>
-                            <p>Our Client Services are available daily, between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <WhatsAppOutlined />
-                                <span>WHATSAPP US</span>
-                            </a>
-                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <FacebookOutlined />
-                                <span>FACEBOOK US</span>
-                            </a>
-                            <p>Our Client Services are available to answer your WhatsApp messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).</p>
-                        </div>
-                        <div className="col">
-                            <a href="https://www.facebook.com/profile.php?id=100012156048080">
-                                <EnvironmentOutlined />
-                                <span>ADDRESS US</span>
-                            </a>
-                            <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {menuContact && <div className="overlay" onClick={() => setMenuContact(false)}></div>} */}
         </div>
     );
 };

@@ -69,7 +69,8 @@ const ManageAccount = () => {
   };
 
   return (
-    <Container maxWidth="lg" className='wrapperrr' sx={{ bgcolor: 'red' }}>
+
+    <Container maxWidth="lg" className='wrapperrr' sx={{ bgcolor: '#333' }}>
       <Typography variant="h3" gutterBottom>Your Profile</Typography>
       <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 1 }}>
 

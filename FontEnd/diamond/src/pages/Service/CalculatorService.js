@@ -9,16 +9,17 @@ const CalculatorService = () => {
     const claritys = ['SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL'];
 
     const [carat, setCarat] = useState(0.3);
+    const [selectedShape, setSelectedShape] = useState('Round');
+    const [selectedColor, setSelectedColor] = useState('K');
+    const [selectedClarity, setSelectedClarity] = useState('SI2');
+    const [valueCalculator, setValueCaculator] = useState(null);
+
     const onChange = (value) => {
         if (isNaN(value)) {
             return;
         }
         setCarat(value);
     };
-    const [selectedShape, setSelectedShape] = useState('Round');
-    const [selectedColor, setSelectedColor] = useState('K');
-    const [selectedClarity, setSelectedClarity] = useState('SI2');
-    const [valueCalculator, setValueCaculator] = useState(null);
 
     const handleSubmit = () => {
         setValueCaculator({
@@ -41,6 +42,9 @@ const CalculatorService = () => {
         setSelectedClarity(clarity);
     };
     return (
+        // <div className="container">
+
+        // </div>
         <div className="wrapperrr">
 
             <div className='home-page'>
@@ -131,5 +135,14 @@ const CalculatorService = () => {
 
     )
 }
+
+/*
+rgb(255, 255, 255)
+rgb(255, 254, 249)
+rgb(255, 253, 243)
+rgb(255, 251, 237)
+rgb(255, 250, 231)
+rgb(255, 249, 225) 
+*/
 
 export default CalculatorService
