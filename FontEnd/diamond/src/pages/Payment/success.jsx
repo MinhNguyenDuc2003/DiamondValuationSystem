@@ -48,7 +48,7 @@ const Success = () => {
   return (
 
     <Box style={{ marginBottom: '12%' }} className='wrapperrr'>
-      <Paper sx={{ ml: '30%', width: '40%' }}>
+      <Paper className='wrapper-sucess' sx={{ ml: '30%', width: '40%' }}>
 
         <Typography sx={{ fontSize: '30px', color: '#3a9e6d', mb: '30px' }}>Payment Successfull!</Typography>
         <img style={{ width: '10%' }} src={successIcon} />
@@ -77,7 +77,6 @@ const Success = () => {
           </Box>
         </Box>
         <Box display={'flex'} gap={'10px'} justifyContent={'center'} mt={8} pb={5}>
-          <Button variant='contained'>PRINT</Button>
           <Button onClick={e => navigate('/')} variant='contained'>CLOSE</Button>
         </Box>
       </Paper>

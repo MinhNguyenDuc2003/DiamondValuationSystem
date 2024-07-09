@@ -283,7 +283,7 @@ const Header = () => {
           </ul>
         </div>
         <div className="diamond">
-          <button>Diamond</button>
+          <button onClick={e => navigate('/Service/calculator')}>Calculation</button>
         </div>
         {isMaxScreen767 && (
                     <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
@@ -301,13 +301,13 @@ const Header = () => {
         <div className="service">
           <button>Service</button>
           <ul className="service-content">
-            <li>
+            {/* <li>
               <button
                 onClick={() => handleNavigateToService("/Service/calculator")}
               >
                 Calculation
               </button>
-            </li>
+            </li> */}
             <li>
               <button
                 onClick={() => handleNavigateToService("/Service/Lookup")}
@@ -331,21 +331,7 @@ const Header = () => {
         </div>
 
         <div className="active">
-          <form
-            className="search-box"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch();
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Looking for blogs"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <button className="search">{<SearchIcon />}</button>
-          </form>
+          
           <div
             className="account"
             aria-label="account-menu"
@@ -353,14 +339,8 @@ const Header = () => {
             aria-haspopup="true"
             onClick={handleMenuOpen}
           >
-            <div className="account-icon">
-              {user ? (
-               
-                  <strong>{user.last_name}</strong>
-               
-              ) : (
+            <div className="account-icon">      
                 <AccountCircleIcon />
-              )}
             </div>
           </div>
           {menuUser}
