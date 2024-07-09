@@ -50,7 +50,7 @@ export async function verifyAccount(code) {
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
 
-  if (token !== undefined && token !== null && token.length > 0) {
+  if (token !== null && token.length > 0) {
     try {
       // Send the token as a query parameter
       const result = await api.post(`/diamond-shop/token`);

@@ -75,6 +75,7 @@ public class ServiceController {
 	
 	private DiamondService request2Entity(ServiceRequest request) {
 		DiamondService service = modelMapper.map(request, DiamondService.class);
+		
 		return service;
 	}
 	

@@ -125,7 +125,7 @@ const CertificateHTML = (certificate) => {
         </div>
         <div class="titleName">
             <h1 style="font-size: 20px; font-weight: bold;">SHINE REPORT</h1>
-            <p>15975368427</p>
+            <p>${certificate.code}</p>
         </div>
         <div class="nullBlock"></div>
     </div>
@@ -155,8 +155,8 @@ const CertificateHTML = (certificate) => {
                 <div class="detail">
                     <p>Polish <span>${certificate.polish}</span></p>
                     <p>Symmetry <span>${certificate.symmetry}</span></p>
-                    <p>Fluorescence <span>${certificate.flourescence}</span></p>
-                    <p>Inscription(s) <span>SHINE 15975368427</span></p>
+                    <p>Flourescence <span>${certificate.flourescence}</span></p>
+                    <p>Inscription(s) <span>SHINE ${certificate.code}</span></p>
                     <p><span class="comment" style="font-weight: bold;">Comments:
                         </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>
                     <p>Additional pinpoints are not shown</p>
@@ -180,7 +180,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src=${facet2} alt="">
+                    <img class="alt-diamond" src=${certificate.photo} alt="">
                 </div>
             </div>
 

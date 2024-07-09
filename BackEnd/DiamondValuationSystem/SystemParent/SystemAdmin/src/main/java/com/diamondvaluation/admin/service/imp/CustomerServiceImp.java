@@ -32,7 +32,7 @@ public class CustomerServiceImp implements CustomerService{
 		
 		if (isUpdatingCustomer) {
 			Customer existingUser = customerRepo.findById(customer.getId()).get();
-
+			customer.setCreatedTime(existingUser.getCreatedTime());
 			if (customer.getPassword().isEmpty()) {
 				customer.setPassword(existingUser.getPassword());
 			} else {

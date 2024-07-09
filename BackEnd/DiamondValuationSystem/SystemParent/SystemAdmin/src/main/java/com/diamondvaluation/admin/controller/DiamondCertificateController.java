@@ -2,7 +2,10 @@ package com.diamondvaluation.admin.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.ByteArrayResource;
@@ -27,6 +30,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import com.diamondvaluation.admin.AmazonS3Util;
 import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
+import com.diamondvaluation.admin.exception.DiamondRequestAlreadyExistCertificateException;
 import com.diamondvaluation.admin.request.CertificateRequest;
 import com.diamondvaluation.admin.response.CertificateResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
@@ -98,6 +102,8 @@ public class DiamondCertificateController {
 			return new ResponseEntity<>(new MessageResponse("Add/Update User successfully!"), HttpStatus.OK);
 		} catch (CertificateIsAlreadyExistException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		} catch (DiamondRequestAlreadyExistCertificateException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
 
@@ -118,6 +124,7 @@ public class DiamondCertificateController {
 		certificate.setMeasurement(request.getMeasurement());
 		DiamondRequest diamondRequest = new DiamondRequest(request.getRequest_id());
 		certificate.setRequest(diamondRequest);
+		certificate.setCode(request.getCode());
 		certificate.setId(request.getId());
 		return certificate;
 	}
@@ -133,6 +140,9 @@ public class DiamondCertificateController {
 			response.setRapPercent(valuation.getRapPercent());
 			response.setRapPrice(valuation.getRapPrice());
 			response.setValuationId(valuation.getId());
+			}
+		if(certificate.getPhoto()!=null) {
+			response.setPhoto(AmazonS3Util.S3_BASE_URI+"/certificate-photos/"+certificate.getId()+"/"+certificate.getPhoto());
 		}
 		return response;
 	}
@@ -174,11 +184,26 @@ public class DiamondCertificateController {
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
 
-	@GetMapping("/certificate/pdf")
-	public ResponseEntity<?> getPDF(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	@GetMapping("/certificate/pdf/{id}")
+	public ResponseEntity<?> getPDF(HttpServletRequest req, HttpServletResponse res, @PathVariable("id")  Integer id) throws IOException {
 		var application = JakartaServletWebApplication.buildApplication(req.getServletContext());
 	    var exchange = application.buildExchange(req, res);
 	    WebContext context = new WebContext(exchange);
+	    Map<String, Object> model = new HashMap<>();
+	    DiamondCertificate cer = service.getCertificateById(id);
+	    model.put("reportNumber", cer.getCode());
+	    Date date = new Date();
+	    model.put("date", date);
+	    model.put("cut", cer.getCut());
+	    model.put("measurements", cer.getMeasurement());
+	    model.put("caratWeight", cer.getCarat());
+	    model.put("colorGrade", cer.getColor());
+	    model.put("clarityGrade", cer.getClarity());
+	    model.put("polish", cer.getPolish());
+	    model.put("symmetry", cer.getSymmetry());
+	    model.put("fluorescence", cer.getFlourescence());
+	    model.put("photo", AmazonS3Util.S3_BASE_URI+"/certificate-photos/"+cer.getId()+"/"+cer.getPhoto());
+	    context.setVariables(model);
 		String orderHtml = templateEngine.process("DiamondGradingReport", context);
 		ByteArrayOutputStream target = new ByteArrayOutputStream();
 		ConverterProperties converterProperties = new ConverterProperties();

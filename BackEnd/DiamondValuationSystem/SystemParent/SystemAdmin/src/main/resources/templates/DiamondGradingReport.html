@@ -2,146 +2,230 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta
-	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-	name="viewport">
-<meta content="ie=edge" http-equiv="X-UA-Compatible">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css"
 	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 <title>Diamond Grading Report</title>
 <style>
-.header {
-	background-color: #003366;
-	color: white;
-	padding: 20px;
+@page {
+	size: A4;
+	margin: 0;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+	width: 210mm;
+	height: 297mm;
+}
+
+.container {
+	padding: 10mm;
+	box-sizing: border-box;
+}
+
+.title {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #393E46;
+	margin-bottom: 10px;
+}
+
+.logo img {
+	width: 150px;
+}
+
+.titleName {
+	text-align: center;
+	margin: auto;
+}
+
+.titleName h1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.introduce {
+	margin-bottom: 10px;
+}
+
+.introduce p {
+	font-size: 8px;
+	margin: 5px 0;
+}
+
+.body {
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	gap: 10px;
+}
+
+.S-prop>p {
+	color: #FFF;
+	font-size: 8px;
+	padding: 3px;
+	font-weight: bold;
+	background-color: #393E46;
+	margin: 0;
+}
+
+.left-report .S-prop, .right-report table {
+	border: 0.5px solid #393E46;
+}
+
+.left-report .S-prop>div, .right-report table td, .right-report table th
+	{
+	border: 0.5px solid #393E46;
+	font-size: 8px;
+	padding: 2px;
+}
+
+.detail p {
+	font-size: 8px;
+	margin: 3px 0;
+}
+
+.middle-report img {
+	width: 80px;
+	height: 80px;
+	object-fit: contain;
+	display: block;
+	margin: 10px auto;
+}
+
+.right-report table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 3px 0;
+}
+
+.right-report th, .right-report td {
 	text-align: center;
 }
 
-.header img {
-	width: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.thead th {
+	font-size: 8px;
+}
+
+.empty-th, .empty-td {
+	border: none;
 }
 
 .logo-container {
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	width: 100%; /* Optional, depends on the layout */
 }
 
-.text-container {
-	margin-left: 20px;
+.characters {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 60%; /* Adjust the width as needed */
 }
 
-.certificate-title, .sub-title {
-	text-align: center;
-}
-
-.certificate-title {
-	font-size: 24px;
-	font-weight: bold;
-}
-
-.sub-title {
-	font-size: 14px;
-}
-
-.content {
-	padding: 20px;
-}
-
-.details-table {
-	width: 100%;
-}
-
-.details-table td {
-	padding: 5px;
-}
-
-.details-table .label {
-	font-weight: bold;
-}
-
-.lab-tested {
-	writing-mode: vertical-rl;
-	text-orientation: upright;
-	background: #f0f0f0;
+.characters img {
+	width: 250px;
+	height: auto;
 	padding: 10px;
-	text-align: center;
-	font-weight: bold;
-	color: #003366;
-}
-
-.signatures img {
-	width: 100px;
 }
 </style>
 </head>
 <body>
-	<div class="a4 container">
-		<img style="width: 100px;filter: invert(100%)" th:src="@{/image/logo.png}"
-						alt="MGTL Logo">
-		<div class="header d-flex align-items-center justify-content-center">
-		
-			<div class="text-container" style="margin-left: 20px;">
-				<div class="certificate-title text-center">DIAMOND GRADING
-					REPORT</div>
-				<div class="sub-title text-center">
-					Gemstone Report <br>[An ISO 9001:2024 Certified] <br>Registered
-					Under The Trade Marks with SHINE. of VietNam.
+	<div class="container">
+		<div class="logo-container">
+			<div class="logo">
+				<img
+					src="https://diamondvaluation.s3.ap-southeast-2.amazonaws.com/logo/logo.png"
+					alt="LogoShine">
+			</div>
+		</div>
+		<div class="title">
+			<div class="titleName">
+				<h1>DIAMOND GRADING REPORT</h1>
+				<p>[[${reportNumber}]]</p>
+			</div>
+		</div>
+
+		<div class="introduce">
+			<p>This report presents a detailed evaluation of the submitted
+				diamond, highlighting its unique qualities and overall grade. The
+				following section provides a comprehensive breakdown of the
+				diamond's key specifications, emphasizing its exceptional
+				characteristics and intrinsic value.</p>
+		</div>
+
+		<div class="body">
+			<div class="left-report">
+				<div class="S-prop">
+					<p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
+					<div class="detail">
+						<p>[[${date}]]</p>
+						<p>
+							SHINE Report Number <span>[[${reportNumber}]]</span>
+						</p>
+						<p>
+							Shape and Cutting Style <span>[[${cut}]]</span>
+						</p>
+						<p>
+							Measurements <span>[[${measurements}]]</span>
+						</p>
+					</div>
+				</div>
+				<div class="S-prop">
+					<p>GRADING RESULT</p>
+					<div class="detail">
+						<p>
+							Carat Weight <span>[[${caratWeight}]] carat</span>
+						</p>
+						<p>
+							Color Grade <span>[[${colorGrade}]]</span>
+						</p>
+						<p>
+							Clarity Grade <span>[[${clarityGrade}]]</span>
+						</p>
+					</div>
+				</div>
+				<div class="S-prop">
+					<p>ADDITIONAL GRADING INFORMATION</p>
+					<div class="detail">
+						<p>
+							Polish <span>[[${polish}]]</span>
+						</p>
+						<p>
+							Symmetry <span>[[${symmetry}]]</span>
+						</p>
+						<p>
+							Fluorescence <span>[[${fluorescence}]]</span>
+						</p>
+						<p>
+							Inscription(s) <span>SHINE [[${reportNumber}]]</span>
+						</p>
+						<p>
+							<span class="comment" style="font-weight: bold;">Comments:</span>
+							*DIAMOND**SHINE**VALUATION*
+						</p>
+						<p>Additional pinpoints are not shown</p>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="content row">
-			<div class="col-11">
-				<table class="details-table">
-					<tr>
-						<td class="label">NAME</td>
-						<td>: TO WHOM IT MAY CONCERN</td>
-						<td rowspan="10" class="text-center"><img
-							src="https://via.placeholder.com/100" alt="Natural Diamond">
-							<br> <b>NATURAL DIAMOND</b></td>
-					</tr>
-					<tr>
-						<td class="label">REPORT NO.</td>
-						<td>: MGTLHRIMP161</td>
-					</tr>
-					<tr>
-						<td class="label">WEIGHT</td>
-						<td>: 0.45 Ct. (1 Piece)</td>
-					</tr>
-					<tr>
-						<td class="label">SHAPE/CUT</td>
-						<td>: RBC</td>
-					</tr>
-					<tr>
-						<td class="label">FINISH</td>
-						<td>: Very Good</td>
-					</tr>
-					<tr>
-						<td class="label">COLOUR</td>
-						<td>: D - E</td>
-					</tr>
-					<tr>
-						<td class="label">CLARITY</td>
-						<td>: VVS</td>
-					</tr>
-					<tr>
-						<td class="label">DIMENSIONS</td>
-						<td>: 4.74 * 3.11 mm</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-
-		<div class="signatures row mt-3">
-			<div class="col-6 text-center">
-				<br> <b>Chief Gemmologist</b>
-			</div>
-			<div class="col-6 text-center">
-				<br> <b>Gemmologist</b>
+			<div class="middle-report">
+				<div class="S-prop">
+					<p>PROPORTIONS AND CLARITY CHARACTERISTICS</p>
+					<div class="characters">
+						<img
+							src="https://diamondvaluation.s3.ap-southeast-2.amazonaws.com/diamond/Facet_part1.jpg"
+							alt="Proportions"> 
+						<img th:src="${photo}"
+							alt="Clarity Characteristics">
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

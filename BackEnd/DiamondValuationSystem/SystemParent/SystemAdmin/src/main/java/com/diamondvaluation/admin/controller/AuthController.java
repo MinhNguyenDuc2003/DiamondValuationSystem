@@ -85,15 +85,8 @@ public class AuthController {
 	}
 	
 	@PostMapping("/token")
-	public ResponseEntity<?> accessToken(@RequestParam("token") String token) {
-		try {
-			jwtUtils.validateAccessToken(token);
-			return ResponseEntity.ok().build();
-		}catch (JwtValidationException e) {
-			return ResponseEntity.status(403).build();
-		}catch (ExpiredJwtException e) {
-			return ResponseEntity.status(403).build();
-		}
+	public ResponseEntity<?> accessToken() {
+		return ResponseEntity.ok().build();
 	}
 	
 	private void setRefreshToken4Cookies(HttpServletResponse response, HttpServletRequest request, String refreshToken) {

@@ -61,4 +61,6 @@ public class CertificateResponse {
 	private double rapPrice;
 	
 	private double realPrice;
+	
+	private String photo;
 }

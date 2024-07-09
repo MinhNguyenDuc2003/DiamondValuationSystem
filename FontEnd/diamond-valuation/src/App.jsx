@@ -29,6 +29,7 @@ import Report from "./scenes/report/Report";
 import EditCertificate from "./scenes/certificates/EditCertificate";
 import ManageRequest from "./scenes/manager/ManageRequest";
 import ManageReports from "./scenes/manager/ManageReports";
+import UpdateAccount from "./scenes/users/UpdateAccount";
 
 const App = () => {
   return (
@@ -231,6 +232,14 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <ManageReports />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/account/information"
+            element={
+              <PrivateRoute>
+                <UpdateAccount />
               </PrivateRoute>
             }
           />
