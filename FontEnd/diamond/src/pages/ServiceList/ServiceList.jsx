@@ -10,27 +10,18 @@ import {
     CardMedia
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Valuation from './img/Valuation.jpg'
-import Appraisal from './img/Appraisal.jpg'
-import Sculpture from './img/Sculpture.jpg'
+import Valuation from './img/Valuation.jpg';
+import Appraisal from './img/Appraisal.jpg';
+import Sculpture from './img/Sculpture.jpg';
+import servicesData from './services.json'; // Import the JSON data
+
 const ServiceList = () => {
     const [services, setServices] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getServices = async () => {
-            try {
-                const response = await fetch(`https://6660044b5425580055b1c21d.mockapi.io/Assignment/Course`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch services');
-                }
-                const data = await response.json();
-                setServices(data);
-            } catch (error) {
-                console.error('Error fetching services:', error);
-            }
-        };
-        getServices();
+        // Instead of fetching from an API, set the services from the JSON file
+        setServices(servicesData);
     }, []);
 
     const handleOnClick = (service) => {
@@ -45,7 +36,7 @@ const ServiceList = () => {
                         component="img"
                         height="140"
                         image={Valuation}
-                        alt="green iguana"
+                        alt="Valuation"
                     />
                 )}
                 {service.name === 'Sculpture' && (
@@ -53,7 +44,7 @@ const ServiceList = () => {
                         component="img"
                         height="140"
                         image={Sculpture}
-                        alt="green iguana"
+                        alt="Sculpture"
                     />
                 )}
                 {service.name === 'Appraisal' && (
@@ -61,7 +52,7 @@ const ServiceList = () => {
                         component="img"
                         height="140"
                         image={Appraisal}
-                        alt="green iguana"
+                        alt="Appraisal"
                     />
                 )}
                 <CardContent>
@@ -88,12 +79,12 @@ const ServiceList = () => {
     };
 
     return (
-        <Container sx={{ mt: 14 ,mb: 14}}>
+        <Container sx={{ mt: 14, mb: 14 }}>
             <Typography variant="h4" component="h1" mb={4}>
                 List of Services
             </Typography>
             <Grid container spacing={7}>
-                {services.map((service, index) => (
+                {services.map((service) => (
                     <Grid item sm={6} key={service.id}>
                         <ServiceCard service={service} />
                     </Grid>

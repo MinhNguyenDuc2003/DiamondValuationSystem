@@ -38,7 +38,7 @@ const EditDiamondRequest = () => {
     note: "",
     status: "NEW",
     service_ids: [],
-    payment_method: "TM",
+    payment_method: "CASH",
     paid: false,
     appointment_date: null,
     appointment_time: "",
@@ -79,8 +79,8 @@ const EditDiamondRequest = () => {
             service_ids: requestEdit.service_ids,
             payment_method: requestEdit.payment_method,
             paid: requestEdit.paid,
-            appointment_date: requestEdit.appoinment_date || null,
-            appointment_time: requestEdit.appoinment_time,
+            appointment_date: requestEdit.appoinment_date || "",
+            appointment_time: requestEdit.appoinment_time || "",
           });
         }
       } catch (error) {
@@ -266,8 +266,8 @@ const EditDiamondRequest = () => {
                     name="payment_method"
                     label="Payment Method"
                   >
-                    <MenuItem value="TM">TM</MenuItem>
-                    <MenuItem value="CK">CK</MenuItem>
+                    <MenuItem value="CASH">CASH</MenuItem>
+                    <MenuItem value="PAYPAL">PAYPAL</MenuItem>
                   </Field>
                   {touched.payment_method && errors.payment_method && (
                     <div style={{ color: "red" }}>{errors.payment_method}</div>

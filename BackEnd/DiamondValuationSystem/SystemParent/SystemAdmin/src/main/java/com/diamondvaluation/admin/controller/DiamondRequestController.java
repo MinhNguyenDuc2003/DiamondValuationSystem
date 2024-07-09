@@ -94,6 +94,7 @@ public class DiamondRequestController {
 		DiamondRequestResponse appoinmentResponse = modelMapper.map(appoinment, DiamondRequestResponse.class);
 		Customer customer = appoinment.getCustomer();
 		appoinmentResponse.setCustomerName(customer.getFullname());
+		appoinmentResponse.setCustomerId(customer.getId());
 		appoinmentResponse.setCustomerPhone(customer.getPhoneNumber());
 		appoinmentResponse.setService_ids(appoinment.getServiceIds());
 		appoinmentResponse.setService_names(appoinment.getServiceNames());

@@ -1,45 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, Stepper, Step, StepLabel, Typography, Paper, Modal, IconButton, Pagination, TableContainer, TableHead, TableRow, TableCell, Table, TableBody, Link } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import palpayLogo from '../Service/img/PayPal_Logo.jpg'
-import cashLogo from './cash.jpg'
-
-const steps = ['Payment', 'Consultation', 'Reception', 'Appraisal', 'Completion'];
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Stepper,
+  Step,
+  StepLabel,
+  Typography,
+  Paper,
+  Modal,
+  IconButton,
+  Pagination,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  Table,
+  TableBody,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import palpayLogo from "../Service/img/PayPal_Logo.jpg";
+import cashLogo from "./cashh.jpg";
+import InputBase from '@mui/material/InputBase';
+import { styled, alpha } from '@mui/material/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import { data } from "./Requests";
+import CertificateHTML from "./CertificateHTML";
+import { sampleCertificates } from './Certificates'
+import { json } from "react-router-dom";
+const steps = ["WAIT", "NEW", "PROCESSING", "PROCESSED", "DONE"];
 
 const MyOrder = () => {
-
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [totalRequest, setTotalRequest] = useState('');
-  const [totalDone, setTotalDone] = useState('');
+  const [totalRequest, setTotalRequest] = useState(0);
+  const [totalDone, setTotalDone] = useState(0);
   const [totalCompletedSteps, setTotalCompletedSteps] = useState(0);
-  //phan trang , 3 request / 1 trang
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  // const [certificateData, setCertificateData] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const itemsPerPage = 3;
+  //style
+  const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    marginBottom: 15,
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+  }));
 
-  // Hàm để lấy một bước ngẫu nhiên từ mảng steps
-  const getRandomStep = () => {
-    const randomIndex = Math.floor(Math.random() * steps.length);
-    return steps[randomIndex];
-  };
-  //call api de lay tất cả request ở đây
+  const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }));
+
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    width: '100%',
+
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create('width'),
+      [theme.breakpoints.up('sm')]: {
+        width: '12ch',
+        '&:focus': {
+          width: '20ch',
+        },
+      },
+    },
+  }));
+  //
+
   useEffect(() => {
-    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    setOrders(storedOrders);
-    //dung để lấy ra độ dài của mảng
-    setTotalRequest(storedOrders.length);
-    const completedOrders = storedOrders.filter(order => order.paymentMethod === 'PayPal');
-    setTotalDone(completedOrders.length);
-
-    const completedSteps = storedOrders.filter(order => order.step === 'Completion');
+    setOrders(data);
+    setTotalRequest(data.length);
+    const doneRequests = data.filter((order) => order.status === "DONE");
+    setTotalDone(doneRequests.length);
+    const completedSteps = data.filter((order) => order.status === "PROCESSED");
     setTotalCompletedSteps(completedSteps.length);
   }, []);
-
-
 
   const handleShowDetails = (order) => {
     setSelectedOrder(order);
@@ -49,6 +103,7 @@ const MyOrder = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedOrder(null);
+    // setCertificateData(null);
   };
 
   const handlePageChange = (event, page) => {
@@ -56,118 +111,238 @@ const MyOrder = () => {
   };
 
   const sortByDone = () => {
-    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    const DoneList = storedOrders.filter(request => request.paymentMethod !== 'Cash')
-    setOrders(DoneList);
-  }
+    const doneList = orders.filter((request) => request.status === "DONE");
+    setOrders(doneList);
+  };
+
   const sortByTotal = () => {
-    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    setOrders(storedOrders);
-  }
+    setOrders(data);
+  };
+
   const sortByProcess = () => {
-    const completedSteps = orders.filter(orders => orders.step === 'Completion');
-    setOrders(completedSteps);
+    const processList = orders.filter((order) => order.status === "PROCESSED");
+    setOrders(processList);
+  };
+
+  const handleShowCertificate = (order) => {
+
+    const certificate = sampleCertificates.find(cert => cert.id === order);
+    console.log("Found Certificate:", certificate); // Debug log for the found certificate
+    if (certificate) {
+      openCertificateInNewTab(certificate);
+      // setModalOpen(true);
+
+
+    } else {
+      console.log(`Certificate with ID not found.`);
+    }
+  };
+  const openCertificateInNewTab = (certificate) => {
+    const newWindow = window.open("", "_about");
+    newWindow.document.write(CertificateHTML(certificate))
+    newWindow.document.close();
+  }
+  const handleSearch = (value) => {
+    const order = orders.filter(order => order.id === value)
+    setOrders(order)
   }
 
-  //các hàm khai báo phục vụ cho  phân trang
   const indexOfLastOrder = currentPage * itemsPerPage;
   const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   return (
-    <Box className='wrapperrr'>
-      <Box sx={{ margin: 2, textAlign: 'start', marginBottom: '10px', paddingTop: '10px' }}>
-        <Typography variant="h4">Tracking Request Process</Typography>
+    <Box sx={{ backgroundColor: '#dcdcdc66' }}>
+      <Box className="wrapperrr" sx={{ mt: 10, height: "80vh" }}>
+        <Box sx={{ textAlign: 'start', pt: 2, pl: 2, height: '10vh', backgroundColor: 'white' }}>
+          <Typography sx={{ display: 'flex', justifyContent: 'space-between', height: '100%', color: "gray" }}>
+            Recent Report
+            <Search >
+              <SearchIconWrapper  >
+                <Button onClick={e => handleSearch(e.target.value)} sx={{ color: 'gray', cursor: 'pointer' }}>
+                  <SearchIcon sx={{ mr: '100px' }} />
+                </Button>
+              </SearchIconWrapper>
+              <StyledInputBase
+                // onChange={e =>setSearchValue(e.target.value) }
+
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+          </Typography>
+
+        </Box>
+        {/* <Box sx={{ mb: 2 }}>
+        // <Typography variant="h4">Tracking Request Process</Typography>
         <Typography variant="body2">Manage your services you use</Typography>
       </Box>
-      <Box sx={{ ml: '17px', display: 'flex', gap: '20px', borderTop: '2px solid #eee' }}>
-        <Box sx={{ display: 'flex', gap: '4px', mt: '10px', borderLeft: 2, textAlign: 'start' }}>
-          <Typography><NotificationsNoneIcon /></Typography>
-          <Button onClick={sortByTotal}>
-            Total<br />
-            {totalRequest}
-          </Button>
-        </Box>
-        <Box sx={{ display: 'flex', gap: '7px', mt: '10px', borderLeft: 2, textAlign: 'start' }}>
-          <Typography><WorkOutlineIcon /></Typography>
-          <Button onClick={sortByProcess}>
-            Process<br />
-            {totalCompletedSteps}
-          </Button>
-        </Box>
-        <Box sx={{ display: 'flex', mt: '10px', borderLeft: 2, textAlign: 'start' }}>
-          <Typography><CheckIcon /></Typography>
-          <Button onClick={sortByDone}>
-            Done<br />
-            {totalDone}
-          </Button>
-        </Box>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', margin: 2 }}>
-        {orders.length === 0 ? (
-          <Typography>No Request to track.</Typography>
-        ) : (
-          <TableContainer  component={Paper} elevation={3} sx={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-              <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
-                <TableRow>
-                  <TableCell  sx={{fontSize : "20px"}}>ID</TableCell>
-                  <TableCell  sx={{fontSize : "20px"}}>Date</TableCell>
-                  <TableCell  sx={{fontSize : "20px"}}>Service</TableCell>
-                  <TableCell  sx={{fontSize : "20px"}}>Payment</TableCell>
-                  <TableCell  sx={{fontSize : "20px"}}>Payment Status</TableCell>
-                  <TableCell  sx={{fontSize : "20px"}}>Request Status</TableCell>
+      <Box
+        sx={{ display: "flex", gap: 3, mb: 2, borderBottom: "2px solid #eee" }}
+      >
+        <Button
+          onClick={sortByTotal}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <NotificationsNoneIcon />
+          <Typography sx={{ ml: 1 }}>Total ({totalRequest})</Typography>
+        </Button>
+        <Button
+          onClick={sortByProcess}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <WorkOutlineIcon />
+          <Typography sx={{ ml: 1 }}>
+            Process ({totalCompletedSteps})
+          </Typography>
+        </Button>
+        <Button
+          onClick={sortByDone}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <CheckIcon />
+          <Typography sx={{ ml: 1 }}>Done ({totalDone})</Typography>
+        </Button>
+      </Box> */}
+        <TableContainer component={Paper} sx={{ mb: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#dcdcdc66' }}>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">No</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Date</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Service</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Payment</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Payment Status</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Request Status</TableCell>
+                <TableCell sx={{ color: '#11375e', fontSize: '20px ' }} align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {currentOrders.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell sx={{ color: 'gray' }} align="center">{request.id}</TableCell>
+                  <TableCell sx={{ color: '#11375e' }} align="center">{request.created_date}</TableCell>
+                  <TableCell sx={{ color: 'gray' }} align="center">{request.service_names}</TableCell>
+                  <TableCell align="center">
+                    {request.payment_method === "PAYPAL" ? (
+                      <img
+                        style={{ width: "60px" }}
+                        src={palpayLogo}
+                        alt="PayPal"
+                      />
+                    ) : (
+                      <img style={{ width: "50px", height: '40px' }} src={cashLogo} alt="Cash" />
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ color: 'gray' }} align="center">
+                    {request.paid ? "Paid" : "Pending"}
+                  </TableCell>
+                  <TableCell align="center" >
+                    <Typography sx={{
+                      backgroundColor: request.status === 'DONE'
+                        ? 'green'
+                        : request.status === 'BLOCKED'
+                          ? 'red'
+                          : '#00aaff',
+                      color: 'white',
+                      borderRadius: 1,
+                      width: '50%',
+                      marginLeft: '25%'
+                    }}
+                    >
+                      {request.status}
+                    </Typography>
+                    {request.status !== "DONE" && request.status !== "BLOCKED" && (
+                      <>
+                        <br />
+                        <Button onClick={() => handleShowDetails(request)}>
+                          Details
+                        </Button>
+                      </>
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ color: 'gray' }} align="center">
+                    {request.status === "DONE" && (
+                      <Button onClick={() => handleShowCertificate(request.certicate_id)}>
+                        Show Certificate
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody >
-                {currentOrders.map((request) => (
-                  <TableRow key={request.id}>
-                    <TableCell>{request.id}</TableCell>
-                    <TableCell>{request.currentDate}</TableCell>
-                    <TableCell>{request.service.join(', ')}</TableCell>
-                    <TableCell>{request.paymentMethod === 'PayPal' ? <img style={{width:'40px'}} src={palpayLogo}/> : <img style={{width:'30px'}} src={cashLogo}/>}</TableCell>
-                    <TableCell>{request.paymentMethod === 'PayPal' ? 'Done' : 'Not Yet'}</TableCell>
-                    <TableCell>
-                      {'Wait ' + getRandomStep()}<br />
-                      <Button onClick={() => handleShowDetails(request)}>Details</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Modal open={modalOpen} onClose={handleCloseModal}>
+          <Box
+            sx={{
+              width: 600,
+              p: 3,
+              mx: "auto",
+              mt: "10%",
+              backgroundColor: "white",
+              boxShadow: 24,
+              borderRadius: 2,
+            }}
+          >
+            <IconButton
+              onClick={handleCloseModal}
+              sx={{ position: "absolute", top: 8, right: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            {selectedOrder && (
+              <>
+                <Typography variant="h5" gutterBottom>
+                  Order Step
+                </Typography>
+                {selectedOrder.status === "BLOCKED" ? (
+                  <Typography color="error">
+                    This order is currently blocked.
+                  </Typography>
+                ) : (
+                  <Stepper
+                    nonLinear
+                    activeStep={steps.indexOf(selectedOrder.status)}
+                    alternativeLabel
+                  >
+                    {steps.map((label, index) => (
+                      <Step
+                        key={label}
+                        completed={index < steps.indexOf(selectedOrder.status)}
+                      >
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                )}
+                {steps.indexOf(selectedOrder.status) >= steps.length && (
+                  <Typography>Order Completed</Typography>
+                )}
+              </>
+            )}
+            {/* {certificateData && (
+              <Box sx={{ mt: 2 }}>
+                
+                <div
+                
+                  dangerouslySetInnerHTML={{
+                    __html: CertificateHTML(certificateData),
+                  }}
+                />
+              </Box>
+            )} */}
+          </Box>
+        </Modal>
+        <Pagination
+          count={Math.ceil(orders.length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          sx={{ display: "flex", justifyContent: "center", mt: 2 }}
+        />
       </Box>
-      <Modal open={modalOpen} onClose={handleCloseModal}>
-        <Box sx={{ width: 500, padding: 2, margin: 'auto', marginTop: '10%', backgroundColor: 'white', boxShadow: 24, p: 4, borderRadius: 2 }}>
-          <IconButton onClick={handleCloseModal} sx={{ alignSelf: 'flex-end' }}>
-            <CloseIcon />
-          </IconButton>
-          {selectedOrder && (
-            <>
-              <Typography variant="h5" gutterBottom>Order Step</Typography>
-              <Stepper nonLinear activeStep={selectedOrder.step} alternativeLabel>
-                {steps.map((label, index) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              {selectedOrder.step >= steps.length && (
-                <Typography>Order Completed</Typography>
-              )}
-            </>
-          )}
-        </Box>
-      </Modal>
-      <Pagination
-        count={Math.ceil(orders.length / itemsPerPage)}
-        page={currentPage}
-        onChange={handlePageChange}
-        shape="rounded"
-        sx={{ mt: 10,mb:15, display: 'flex', justifyContent: 'center' }}
-      />
     </Box>
+
   );
 };
 

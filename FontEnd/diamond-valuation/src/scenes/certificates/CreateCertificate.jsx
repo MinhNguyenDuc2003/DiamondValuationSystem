@@ -79,6 +79,7 @@ const CreateCertificate = () => {
         ...values,
         measurement,
       };
+      console.log(certificateData);
       const result = await saveCertificate(certificateData);
       if (result.message !== undefined) {
         localStorage.setItem(
