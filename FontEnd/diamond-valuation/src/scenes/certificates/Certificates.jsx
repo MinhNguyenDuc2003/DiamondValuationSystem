@@ -74,6 +74,7 @@ const Certificates = () => {
 
   const filterOptions = {
     clarity: [
+      "",
       "IF",
       "VVS1",
       "VVS2",
@@ -86,8 +87,24 @@ const Certificates = () => {
       "I2",
       "I3",
     ],
-    color: ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"],
+    color: [
+      "",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+    ],
     cut: [
+      "",
       "Round",
       "Marquise",
       "Pear",
@@ -101,11 +118,12 @@ const Certificates = () => {
       "Asscher",
       "Cushion",
     ],
-    flourescence: ["None", "Faint", "Medium", "Strong", "Very Strong"],
-    make: ["Ideal", "Excellent", "Very Good", "Good", "Fair", "Poor"],
-    polish: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
-    symmetry: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
+    flourescence: ["", "None", "Faint", "Medium", "Strong", "Very Strong"],
+    make: ["", "Ideal", "Excellent", "Very Good", "Good", "Fair", "Poor"],
+    polish: ["", "Excellent", "Very Good", "Good", "Fair", "Poor"],
+    symmetry: ["", "Excellent", "Very Good", "Good", "Fair", "Poor"],
     cert: [
+      "",
       "AGS",
       "CEGL",
       "CGI",
@@ -230,15 +248,14 @@ const Certificates = () => {
       (filters.cut === "" ||
         certificate.cut.includes(filters.cut.replace(/\s+/g, ""))) &&
       (filters.flourescence === "" ||
-        certificate.flourescence.includes(
-          filters.flourescence.replace(/\s+/g, "")
-        )) &&
+        certificate.flourescence ===
+          filters.flourescence.replace(/\s+/g, "")) &&
       (filters.make === "" ||
-        certificate.make.includes(filters.make.replace(/\s+/g, ""))) &&
+        certificate.make === filters.make.replace(/\s+/g, "")) &&
       (filters.polish === "" ||
-        certificate.polish.includes(filters.polish.replace(/\s+/g, ""))) &&
+        certificate.polish === filters.polish.replace(/\s+/g, "")) &&
       (filters.symmetry === "" ||
-        certificate.symmetry.includes(filters.symmetry.replace(/\s+/g, ""))) &&
+        certificate.symmetry === filters.symmetry.replace(/\s+/g, "")) &&
       (filters.cert === "" ||
         certificate.cert.toLowerCase().includes(filters.cert.toLowerCase()))
     );
@@ -378,11 +395,20 @@ const Certificates = () => {
                     <TableCell align="center">{certificate.color}</TableCell>
                     <TableCell align="center">{certificate.cut}</TableCell>
                     <TableCell align="center">
-                      {certificate.flourescence}
+                      {certificate.flourescence.replace(
+                        /([a-z])([A-Z])/g,
+                        "$1 $2"
+                      )}
                     </TableCell>
-                    <TableCell align="center">{certificate.make}</TableCell>
-                    <TableCell align="center">{certificate.polish}</TableCell>
-                    <TableCell align="center">{certificate.symmetry}</TableCell>
+                    <TableCell align="center">
+                      {certificate.make.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
+                    <TableCell align="center">
+                      {certificate.polish.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
+                    <TableCell align="center">
+                      {certificate.symmetry.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
                     <TableCell align="center">
                       {certificate.measurement}
                     </TableCell>

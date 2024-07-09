@@ -21,6 +21,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import BlockIcon from "@mui/icons-material/Block";
+import { getAllReports } from "../../components/utils/ApiFunctions";
 
 const statusColors = {
   New: "default",
@@ -47,10 +48,8 @@ const ManageReports = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get(
-        "https://665ae895003609eda45f3327.mockapi.io/Report"
-      );
-      setReports(response.data);
+      const result = await getAllReports();
+      setReports(result);
     } catch (error) {
       setError("Error fetching reports.");
       console.error("Error fetching reports:", error);
@@ -139,7 +138,7 @@ const ManageReports = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    {report.title}
+                    {report.header}
                   </Typography>
                   <Chip
                     label={report.status}

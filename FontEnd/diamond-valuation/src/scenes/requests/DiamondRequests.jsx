@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   getAllRequests,
   deleteRequestById,
+  getCustomerById,
+  getAllServices,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -42,6 +44,10 @@ import DoneIcon from "@mui/icons-material/Done";
 import BlockIcon from "@mui/icons-material/Block";
 import RestorePageIcon from "@mui/icons-material/RestorePage";
 import WarningIcon from "@mui/icons-material/Warning";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+
+import ReceiptHTML from "./ReceiptHTML";
+import { renderToString } from "react-dom/server";
 
 const statusColors = {
   WAIT: "warning",
@@ -72,6 +78,7 @@ const Requests = () => {
   const [phoneFilter, setPhoneFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState("");
+  const [services, setServices] = useState([]);
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -95,6 +102,9 @@ const Requests = () => {
       .catch((error) => {
         setError(error.message);
       });
+    getAllServices().then((data) => {
+      setServices(data);
+    });
     setTimeout(() => {
       setError("");
     }, 2000);
@@ -159,6 +169,14 @@ const Requests = () => {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+
+  const openReceitInNewTab = (request) => {
+    const htmlContent = ReceiptHTML(request, services);
+    const newWindow = window.open("", "_blank");
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
   };
 
   return (
@@ -282,6 +300,9 @@ const Requests = () => {
                     </IconButton>
                     <IconButton onClick={() => handleOpenDialog(request)}>
                       <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                    <IconButton onClick={() => openReceitInNewTab(request)}>
+                      <ReceiptIcon sx={{ color: "#C5A773" }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

@@ -473,21 +473,35 @@ export async function deleteCaratRange(id) {
 
 // =========================================== REPORTS ======================================//
 export async function saveReport(report) {
-  const formData = new FormData();
-  formData.append("id", report.id);
-  formData.append("header", report.header);
-  formData.append("content", report.content);
-  formData.append("type", report.type);
-  formData.append("status", report.status);
-  formData.append("request_id", report.request_id);
+  const data = {
+    id: report.id,
+    header: report.header,
+    content: report.content,
+    type: report.type,
+    status: report.status,
+    request_id: report.request_id,
+  };
 
   try {
-    const response = await api.post("api/reports/report/save", formData);
+    const response = await api.post("api/reports/report/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else return response.status;
   } catch (error) {
     console.log(error.data);
+  }
+}
+
+export async function getAllReports() {
+  try {
+    const result = await api.get(`api/reports/all-report`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
   }
 }
 // ======================================================================================== //

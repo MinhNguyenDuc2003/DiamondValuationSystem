@@ -11,6 +11,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Alert,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -21,18 +22,26 @@ export const Report = () => {
   const [content, setContent] = useState("");
   const [type, setType] = useState("BLOCKREQUEST"); // Default to BLOCKREQUEST or any initial value you prefer
   const [requestId, setRequestId] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSave = async () => {
     const reportData = {
       header: title,
       content,
       type,
-      status: "New",
+      status: false,
       request_id: requestId,
     };
 
     try {
-      await saveReport(reportData);
+      console.log(reportData);
+      const result = await saveReport(reportData);
+      if (result.message !== undefined) {
+        setMessage("successMessage", "Add new Report successfully");
+      } else {
+        setError("Error occurred");
+      }
       handleClear();
     } catch (error) {
       console.error("Error saving report:", error);
@@ -52,6 +61,18 @@ export const Report = () => {
         <Typography variant="h4" gutterBottom>
           Write a Report
         </Typography>
+
+        {message && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -63,6 +84,18 @@ export const Report = () => {
               fullWidth
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="requestId"
+              label="Request id"
+              type="text"
+              fullWidth
+              value={requestId}
+              onChange={(e) => setRequestId(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
