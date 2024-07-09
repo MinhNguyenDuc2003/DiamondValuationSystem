@@ -37,8 +37,9 @@ public class ReportTracking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(nullable = false, unique = false)
-	private boolean status;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private ReportStatus status;
 	
 	@Column(name = "created_time")
 	@CreatedDate

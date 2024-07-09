@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diamondvaluation.common.Customer;
+import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.shop.ControllerHelper;
 import com.diamondvaluation.shop.PaypalPaymentIntent;
 import com.diamondvaluation.shop.PaypalPaymentMethod;
@@ -65,8 +66,8 @@ public class PaymentController {
 			if (checkOutRequest.getPaymentMethod().equals("PAYPAL")) {
 				isPaid = true;
 			}
-			requestService.createDiamondRequest(checkOutRequest, customer, isPaid);
-			return ResponseEntity.ok().build();
+			DiamondRequest diamondRequest = requestService.createDiamondRequest(checkOutRequest, customer, isPaid);
+			return ResponseEntity.ok(diamondRequest);
 		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().build();
 		}

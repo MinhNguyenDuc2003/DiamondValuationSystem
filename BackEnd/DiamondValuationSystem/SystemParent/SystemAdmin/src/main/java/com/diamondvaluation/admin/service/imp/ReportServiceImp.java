@@ -38,7 +38,7 @@ public class ReportServiceImp implements ReportService {
 		try {
 			User user = Utility.getIdOfAuthenticatedUser(request, userService);
 			ReportTracking track = new ReportTracking();
-			track.setStatus(report.isStatus());
+			track.setStatus(report.getStatus());
 			track.setReport(report);
 			track.setUpdatedBy(user);
 			reportTrackingRepository.save(track);
