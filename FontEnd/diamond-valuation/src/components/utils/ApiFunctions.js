@@ -504,6 +504,33 @@ export async function getAllReports() {
     throw new Error(`Error fetching services : ${error.message}`);
   }
 }
+
+export async function deleteReport(id) {
+  try {
+    const response = await api.delete(`api/reports/report/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+// =================================== Request Tracking =================================== //
+
+export async function getReportTrackingByReport(id) {
+  try {
+    const result = await api.get(`/request-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");

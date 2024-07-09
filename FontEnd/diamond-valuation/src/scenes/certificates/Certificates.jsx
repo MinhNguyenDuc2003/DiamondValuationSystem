@@ -45,6 +45,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import { PiCertificate } from "react-icons/pi";
 import CertificateHTML from "./CertificateHTML";
 import PrintPDF from "./PrintPDF";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -59,6 +60,14 @@ const Certificates = () => {
   const [openRow, setOpenRow] = useState(null);
   const CertificatesPerPage = 6;
   const navigate = useNavigate();
+
+  const auth = useAuth();
+
+  // Check if the user is an admin or manager or valuation staff
+  const isAuthorized =
+    auth.isRoleAccept("admin") ||
+    auth.isRoleAccept("manager") ||
+    auth.isRoleAccept("valuationStaff");
 
   const [filters, setFilters] = useState({
     carat: [0, 10],
@@ -287,16 +296,16 @@ const Certificates = () => {
       <Typography variant="h4" textAlign="center">
         Manage Certificates
       </Typography>
-
-      <Badge
-        color="secondary"
-        badgeContent={newRequests.length}
-        onClick={handleBadgeClick}
-        sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
-      >
-        <RequestPageIcon />
-      </Badge>
-
+      {isAuthorized && (
+        <Badge
+          color="secondary"
+          badgeContent={newRequests.length}
+          onClick={handleBadgeClick}
+          sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
+        >
+          <RequestPageIcon />
+        </Badge>
+      )}
       {message && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {message}
@@ -420,16 +429,22 @@ const Certificates = () => {
                       >
                         <PiCertificate color="#C5A773" />
                       </IconButton>
-                      <IconButton
-                        onClick={() =>
-                          navigate(`/certificates/${certificate.id}`)
-                        }
-                      >
-                        <EditIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
-                      <IconButton onClick={() => handleOpenDialog(certificate)}>
-                        <DeleteIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
+                      {isAuthorized && (
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/certificates/${certificate.id}`)
+                          }
+                        >
+                          <EditIcon sx={{ color: "#C5A773" }} />
+                        </IconButton>
+                      )}
+                      {isAuthorized && (
+                        <IconButton
+                          onClick={() => handleOpenDialog(certificate)}
+                        >
+                          <DeleteIcon sx={{ color: "#C5A773" }} />
+                        </IconButton>
+                      )}
                       <IconButton onClick={() => PrintPDF(certificate)}>
                         <PrintIcon sx={{ color: "#C5A773" }} />
                       </IconButton>

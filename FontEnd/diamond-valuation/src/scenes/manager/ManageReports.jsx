@@ -21,7 +21,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import BlockIcon from "@mui/icons-material/Block";
-import { getAllReports } from "../../components/utils/ApiFunctions";
+import {
+  deleteReport,
+  getAllReports,
+  saveReport,
+} from "../../components/utils/ApiFunctions";
 
 const statusColors = {
   New: "default",
@@ -57,6 +61,7 @@ const ManageReports = () => {
   };
 
   const handleViewReport = (report) => {
+    console.log(report);
     setSelectedReport(report);
     setOpenDialog(true);
   };
@@ -68,49 +73,55 @@ const ManageReports = () => {
 
   const handleDeleteReport = async (reportId) => {
     try {
-      await axios.delete(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`
-      );
-      setMessage("Report deleted successfully!");
-      fetchReports();
-      setTimeout(() => {
-        setMessage("");
-      }, 4000);
+      const result = await deleteReport(reportId);
+      if (result !== undefined) {
+        setMessage("Report deleted successfully!");
+        fetchReports();
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+        setOpenDialog(false);
+      }
     } catch (error) {
       setError("Error deleting report.");
       console.error("Error deleting report:", error);
     }
   };
 
-  const handleResolveReport = async (reportId) => {
+  const handleAcceptReport = async (report) => {
     try {
-      await axios.put(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`,
-        {
-          status: "Resolved",
-        }
-      );
-      fetchReports();
-      handleCloseDialog();
+      console.log({ ...report, status: "true" });
+      const result = await saveReport({ ...report, status: "true" });
+      if (result.message !== undefined) {
+        setMessage(`Accept Report ${report.id} successfully`);
+        fetchReports();
+        setOpenDialog(false);
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+      } else {
+        setError("Error occurred");
+      }
     } catch (error) {
-      setError("Error resolving report.");
-      console.error("Error resolving report:", error);
+      console.error("Error saving report:", error);
     }
   };
 
-  const handleDeclineReport = async (reportId) => {
+  const handleRejectReport = async (report) => {
     try {
-      await axios.put(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`,
-        {
-          status: "Decline",
-        }
-      );
-      fetchReports();
-      handleCloseDialog();
+      const result = await saveReport({ ...report, status: "false" });
+      if (result.message !== undefined) {
+        setMessage(`Reject Report ${report.id} successfully`);
+        fetchReports();
+        setOpenDialog(false);
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+      } else {
+        setError("Error occurred");
+      }
     } catch (error) {
-      setError("Error declining report.");
-      console.error("Error declining report:", error);
+      console.error("Error saving report:", error);
     }
   };
 
@@ -138,7 +149,10 @@ const ManageReports = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    {report.header}
+                    <strong>Title: </strong> {report.header}
+                  </Typography>
+                  <Typography variant="h6" gutterBottom>
+                    <strong>Type: </strong> {report.type}
                   </Typography>
                   <Chip
                     label={report.status}
@@ -188,9 +202,9 @@ const ManageReports = () => {
         </DialogTitle>
         <DialogContent>
           <Typography>
-            <strong>Title: </strong> {selectedReport?.title}
+            <strong>Title: </strong> {selectedReport?.header}
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography component="div" variant="body1" paragraph>
             <strong>Content: </strong>
             <div
               dangerouslySetInnerHTML={{ __html: selectedReport?.content }}
@@ -198,22 +212,22 @@ const ManageReports = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          {selectedReport?.status !== "Resolved" && (
+          {selectedReport?.status === "true" && (
             <Button
-              onClick={() => handleResolveReport(selectedReport?.id)}
-              color="success"
-              startIcon={<CheckCircleIcon />}
-            >
-              Resolve
-            </Button>
-          )}
-          {selectedReport?.status !== "Decline" && (
-            <Button
-              onClick={() => handleDeclineReport(selectedReport?.id)}
+              onClick={() => handleRejectReport(selectedReport)}
               color="error"
               startIcon={<BlockIcon />}
             >
-              Decline
+              Reject
+            </Button>
+          )}
+          {selectedReport?.status === "false" && (
+            <Button
+              onClick={() => handleAcceptReport(selectedReport)}
+              color="success"
+              startIcon={<CheckCircleIcon />}
+            >
+              Accept
             </Button>
           )}
           <Button onClick={handleCloseDialog} color="primary">

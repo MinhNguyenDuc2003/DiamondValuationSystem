@@ -33,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import ServiceDetailsDialog from "./ServiceDetailDialog";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 export const Services = () => {
   const [data, setData] = useState([]);
@@ -48,6 +49,11 @@ export const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
 
   const location = useLocation();
+
+  // Authorized
+  const auth = useAuth();
+  const isAuthorized =
+    auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
 
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
@@ -142,9 +148,11 @@ export const Services = () => {
       )}
 
       <Box display="flex" justifyContent="space-between">
-        <Link to={"/services/new"}>
-          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
-        </Link>
+        {isAuthorized && (
+          <Link to={"/services/new"}>
+            <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
+          </Link>
+        )}
         <Box
           display="flex"
           width="20%"
@@ -185,14 +193,18 @@ export const Services = () => {
                   >
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton
-                    onClick={() => navigate(`/services/${service.id}`)}
-                  >
-                    <EditIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(service.id)}>
-                    <DeleteIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+                  {isAuthorized && (
+                    <IconButton
+                      onClick={() => navigate(`/services/${service.id}`)}
+                    >
+                      <EditIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
+                  {isAuthorized && (
+                    <IconButton onClick={() => handleOpenDialog(service.id)}>
+                      <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

@@ -10,7 +10,7 @@ import { AuthProvider, useAuth } from "./components/auth/AuthProvider";
 import AddUser from "./scenes/users/AddUser";
 import EditUser from "./scenes/users/EditUser";
 import Customers from "./scenes/customers/Customers";
-import PrivateRoute from "./components/auth/PrivateRoute";
+import PrivateRoute from "./components/routes/PrivateRoute";
 import AddCustomer from "./scenes/customers/AddCustomer";
 import EditCustomer from "./scenes/customers/EditCustomer";
 import SideBar from "./scenes/global/SideBar";
@@ -30,6 +30,10 @@ import EditCertificate from "./scenes/certificates/EditCertificate";
 import ManageRequest from "./scenes/manager/ManageRequest";
 import ManageReports from "./scenes/manager/ManageReports";
 import UpdateAccount from "./scenes/users/UpdateAccount";
+import ManagerRoute from "./components/routes/ManagerRoute";
+import NotFound from "./scenes/error/NotFound";
+import ValuationRoute from "./components/routes/ValuationRoute";
+import StaffRoute from "./components/routes/StaffRoute";
 
 const App = () => {
   return (
@@ -75,7 +79,9 @@ const MainContent = () => {
             path="/users/new"
             element={
               <PrivateRoute>
-                <AddUser />
+                <ManagerRoute>
+                  <AddUser />
+                </ManagerRoute>
               </PrivateRoute>
             }
           />
@@ -129,7 +135,9 @@ const MainContent = () => {
             path="/services/new"
             element={
               <PrivateRoute>
-                <AddService />
+                <ManagerRoute>
+                  <AddService />
+                </ManagerRoute>
               </PrivateRoute>
             }
           />
@@ -137,7 +145,9 @@ const MainContent = () => {
             path="/services/:serviceid"
             element={
               <PrivateRoute>
-                <EditService />
+                <ManagerRoute>
+                  <EditService />
+                </ManagerRoute>
               </PrivateRoute>
             }
           />
@@ -157,7 +167,9 @@ const MainContent = () => {
             path="/requests/new"
             element={
               <PrivateRoute>
-                <AddDiamondRequest />
+                <StaffRoute>
+                  <AddDiamondRequest />
+                </StaffRoute>
               </PrivateRoute>
             }
           />
@@ -166,7 +178,9 @@ const MainContent = () => {
             path="/requests/:requestid"
             element={
               <PrivateRoute>
-                <EditDiamondRequest />
+                <StaffRoute>
+                  <EditDiamondRequest />
+                </StaffRoute>
               </PrivateRoute>
             }
           />
@@ -185,7 +199,9 @@ const MainContent = () => {
             path="/certificates/:certificateId"
             element={
               <PrivateRoute>
-                <EditCertificate />
+                <ValuationRoute>
+                  <EditCertificate />
+                </ValuationRoute>
               </PrivateRoute>
             }
           />
@@ -193,7 +209,9 @@ const MainContent = () => {
             path="/create-certificate/:requestId"
             element={
               <PrivateRoute>
-                <CreateCertificate />
+                <ValuationRoute>
+                  <CreateCertificate />
+                </ValuationRoute>
               </PrivateRoute>
             }
           />
@@ -243,6 +261,9 @@ const MainContent = () => {
               </PrivateRoute>
             }
           />
+
+          {/* Catch-all route for 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>

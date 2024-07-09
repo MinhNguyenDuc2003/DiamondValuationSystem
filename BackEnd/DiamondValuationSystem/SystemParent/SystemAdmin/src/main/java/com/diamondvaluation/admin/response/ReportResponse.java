@@ -13,13 +13,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@JsonPropertyOrder({"id", "content", "name", "status","type","request_id","user_id"})
+@JsonPropertyOrder({"id", "content", "header", "status","type","request_id","user_id"})
 public class ReportResponse {
 	private Integer id;
 	
 	private String content;
 	
-	private String name;
+	private String header;
 	
 	private String status;
 	
