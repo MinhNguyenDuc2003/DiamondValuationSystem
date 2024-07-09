@@ -28,15 +28,15 @@ import {
 } from "../../components/utils/ApiFunctions";
 
 const statusColors = {
-  New: "default",
-  Resolved: "success",
-  Decline: "error",
+  WAIT: "default",
+  ACCEPT: "success",
+  REJECT: "error",
 };
 
 const statusIcons = {
-  New: <CancelIcon />,
-  Resolved: <CheckCircleIcon />,
-  Decline: <BlockIcon />,
+  WAIT: <CancelIcon />,
+  ACCEPT: <CheckCircleIcon />,
+  REJECT: <BlockIcon />,
 };
 
 const ManageReports = () => {
@@ -61,7 +61,6 @@ const ManageReports = () => {
   };
 
   const handleViewReport = (report) => {
-    console.log(report);
     setSelectedReport(report);
     setOpenDialog(true);
   };
@@ -90,8 +89,7 @@ const ManageReports = () => {
 
   const handleAcceptReport = async (report) => {
     try {
-      console.log({ ...report, status: "true" });
-      const result = await saveReport({ ...report, status: "true" });
+      const result = await saveReport({ ...report, status: "ACCEPT" });
       if (result.message !== undefined) {
         setMessage(`Accept Report ${report.id} successfully`);
         fetchReports();
@@ -109,7 +107,7 @@ const ManageReports = () => {
 
   const handleRejectReport = async (report) => {
     try {
-      const result = await saveReport({ ...report, status: "false" });
+      const result = await saveReport({ ...report, status: "REJECT" });
       if (result.message !== undefined) {
         setMessage(`Reject Report ${report.id} successfully`);
         fetchReports();
@@ -159,6 +157,7 @@ const ManageReports = () => {
                     color={statusColors[report.status]}
                     icon={statusIcons[report.status]}
                     variant="outlined"
+                    sx={{ mt: 2 }}
                   />
                 </CardContent>
                 <CardActions>
@@ -212,7 +211,7 @@ const ManageReports = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          {selectedReport?.status === "true" && (
+          {selectedReport?.status === "ACCEPT" && (
             <Button
               onClick={() => handleRejectReport(selectedReport)}
               color="error"
@@ -221,7 +220,7 @@ const ManageReports = () => {
               Reject
             </Button>
           )}
-          {selectedReport?.status === "false" && (
+          {selectedReport?.status === "REJECT" && (
             <Button
               onClick={() => handleAcceptReport(selectedReport)}
               color="success"

@@ -45,7 +45,7 @@ public class ReportTracking {
 	@CreatedDate
 	private LocalDateTime createdTime;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User updatedBy;
 	

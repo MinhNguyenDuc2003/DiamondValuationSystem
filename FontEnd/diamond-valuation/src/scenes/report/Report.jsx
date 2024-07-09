@@ -30,7 +30,7 @@ export const Report = () => {
       header: title,
       content,
       type,
-      status: false,
+      status: "WAIT",
       request_id: requestId,
     };
 
