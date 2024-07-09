@@ -10,9 +10,7 @@ import {
     CardMedia
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Valuation from './img/Valuation.jpg';
-import Appraisal from './img/Appraisal.jpg';
-import Sculpture from './img/Sculpture.jpg';
+import { getAllServices } from '../../utils/ApiFunction';
 import servicesData from './services.json'; // Import the JSON data
 
 const ServiceList = () => {
@@ -20,22 +18,35 @@ const ServiceList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Instead of fetching from an API, set the services from the JSON file
-        setServices(servicesData);
-    }, []);
+        const Services = async () => {
+          try {
+            const response = await getAllServices();
+            if (response.status === 200) {
+              setServices(response.data);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        Services();
+      }, []);
 
     const handleOnClick = (service) => {
-        navigate(`/Service/${service.name}`);
+        if(service.name === 'Diamond Grading Report'){
+            navigate(`/Service/Valuation`);
+        }
+        else
+            navigate(`/Service/${service.name}`);
     };
 
     const ServiceCard = ({ service }) => {
         return (
             <Card variant="outlined" sx={{ mb: 2 }}>
-                {service.name === 'Valuation' && (
+                {service.name === 'Diamond Grading Report' && (
                     <CardMedia
                         component="img"
                         height="140"
-                        image={Valuation}
+                        src={service.photo}
                         alt="Valuation"
                     />
                 )}
@@ -43,7 +54,7 @@ const ServiceList = () => {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={Sculpture}
+                        src={service.photo}
                         alt="Sculpture"
                     />
                 )}
@@ -51,7 +62,7 @@ const ServiceList = () => {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={Appraisal}
+                        src={service.photo}
                         alt="Appraisal"
                     />
                 )}
@@ -60,13 +71,10 @@ const ServiceList = () => {
                         {service.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        <strong>Price:</strong> ${service.price}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        <strong>Execution Time:</strong> {service.time} hours
+                        <strong>Price:</strong> ${service.money}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                        {service.description}
+                        {service.content}
                     </Typography>
                 </CardContent>
                 <CardActions>
