@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, Alert, Grid, Avatar, Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPayment, getAllServices, getCustomerById, placeOrderDiamond } from '../../utils/ApiFunction';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
@@ -149,6 +149,7 @@ const Checkout = () => {
             <Typography>Phone Number: {user.phone_number}</Typography>
             <Typography>Address: {user.location}</Typography>
             <Typography>Preferred Appraisal Date (yyyy/MM/dd): {cart.selectedDate}</Typography>
+            <Link to={"/account"}>Change your information</Link>
           </Grid>
 
           <Grid item xs={12} md={6}>
