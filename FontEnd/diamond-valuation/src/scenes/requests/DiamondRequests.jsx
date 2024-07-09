@@ -4,7 +4,7 @@ import {
   getAllRequests,
   deleteRequestById,
   getAllServices,
-  getReportTrackingByReport,
+  getRequestTracking,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -194,7 +194,7 @@ const Requests = () => {
       setExpandedRow(null);
     } else {
       if (!trackingData[id]) {
-        const data = await getReportTrackingByReport(id);
+        const data = await getRequestTracking(id);
         setTrackingData((prevData) => ({ ...prevData, [id]: data }));
       }
       setExpandedRow(id);

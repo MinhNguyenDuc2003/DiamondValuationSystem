@@ -20,7 +20,7 @@ import { saveReport } from "../../components/utils/ApiFunctions"; // Adjust the 
 export const Report = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [type, setType] = useState("BLOCKREQUEST"); // Default to BLOCKREQUEST or any initial value you prefer
+  const [type, setType] = useState("BLOCKDIAMOND"); // Default to BLOCKDIAMOND or any initial value you prefer
   const [requestId, setRequestId] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
@@ -38,7 +38,10 @@ export const Report = () => {
       console.log(reportData);
       const result = await saveReport(reportData);
       if (result.message !== undefined) {
-        setMessage("successMessage", "Add new Report successfully");
+        setMessage("Add new Report successfully");
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
       } else {
         setError("Error occurred");
       }
@@ -51,7 +54,7 @@ export const Report = () => {
   const handleClear = () => {
     setTitle("");
     setContent("");
-    setType("BLOCKREQUEST"); // Reset to default value
+    setType("BLOCKDIAMOND"); // Reset to default value
     setRequestId(""); // Clear request_id if needed
   };
 
@@ -107,8 +110,8 @@ export const Report = () => {
                 onChange={(e) => setType(e.target.value)}
                 label="Type"
               >
-                <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
-                <MenuItem value="RETURNREQUEST">RETURNREQUEST</MenuItem>
+                <MenuItem value="BLOCKDIAMOND">BLOCKDIAMOND</MenuItem>
+                <MenuItem value="RETURNDIAMOND">RETURNDIAMOND</MenuItem>
               </Select>
             </FormControl>
           </Grid>

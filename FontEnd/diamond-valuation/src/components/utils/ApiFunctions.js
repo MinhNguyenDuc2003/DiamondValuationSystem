@@ -522,9 +522,20 @@ export async function deleteReport(id) {
 
 // =================================== Request Tracking =================================== //
 
-export async function getReportTrackingByReport(id) {
+export async function getRequestTracking(id) {
   try {
     const result = await api.get(`/request-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+// =================================== Report Tracking =================================== //
+
+export async function getReportTracking(id) {
+  try {
+    const result = await api.get(`/report-track/${id}`, {});
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching services : ${error.message}`);

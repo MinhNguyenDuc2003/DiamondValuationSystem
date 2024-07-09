@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Button,
   Dialog,
@@ -21,10 +20,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import BlockIcon from "@mui/icons-material/Block";
+import HistoryIcon from "@mui/icons-material/History";
 import {
   deleteReport,
   getAllReports,
   saveReport,
+  getReportTracking,
 } from "../../components/utils/ApiFunctions";
 
 const statusColors = {
@@ -45,6 +46,8 @@ const ManageReports = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [openTrackingDialog, setOpenTrackingDialog] = useState(false);
+  const [trackingData, setTrackingData] = useState(null);
 
   useEffect(() => {
     fetchReports();
@@ -123,6 +126,35 @@ const ManageReports = () => {
     }
   };
 
+  const handleViewTracking = async (report) => {
+    try {
+      const result = await getReportTracking(report.id);
+      const formattedData = result.map((item) => ({
+        ...item,
+        created_time: new Date(
+          item.created_time[0],
+          item.created_time[1] - 1,
+          item.created_time[2],
+          item.created_time[3],
+          item.created_time[4],
+          item.created_time[5]
+        ).toLocaleString(),
+      }));
+      setTrackingData(formattedData);
+      setSelectedReport(report);
+      setOpenTrackingDialog(true);
+    } catch (error) {
+      setError("Error fetching tracking data.");
+      console.error("Error fetching tracking data:", error);
+    }
+  };
+
+  const handleCloseTrackingDialog = () => {
+    setOpenTrackingDialog(false);
+    setSelectedReport(null);
+    setTrackingData(null);
+  };
+
   return (
     <Box m="20px">
       <Typography variant="h4" gutterBottom textAlign="center">
@@ -172,6 +204,12 @@ const ManageReports = () => {
                     onClick={() => handleDeleteReport(report.id)}
                   >
                     <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    color="success"
+                    onClick={() => handleViewTracking(report)}
+                  >
+                    <HistoryIcon />
                   </IconButton>
                 </CardActions>
               </Card>
@@ -230,6 +268,47 @@ const ManageReports = () => {
             </Button>
           )}
           <Button onClick={handleCloseDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openTrackingDialog}
+        onClose={handleCloseTrackingDialog}
+        aria-labelledby="view-tracking-dialog-title"
+        aria-describedby="view-tracking-dialog-description"
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          id="view-tracking-dialog-title"
+          textAlign="center"
+          sx={{ fontWeight: "bold" }}
+        >
+          Report Tracking
+        </DialogTitle>
+        <DialogContent>
+          {trackingData ? (
+            trackingData.map((item) => (
+              <Box key={item.id} sx={{ mb: 2 }}>
+                <Typography>
+                  <strong>Status: </strong> {item.status}
+                </Typography>
+                <Typography>
+                  <strong>Created Time: </strong> {item.created_time}
+                </Typography>
+                <Typography>
+                  <strong>Updated By: </strong> {item.updated_by.fullname}
+                </Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography>Loading tracking data...</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTrackingDialog} color="primary">
             Close
           </Button>
         </DialogActions>
