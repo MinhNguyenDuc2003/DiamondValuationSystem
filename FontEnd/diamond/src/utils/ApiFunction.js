@@ -247,3 +247,14 @@ export const processPayment = async (paymentId, PayerID, cart) => {
     return null;
   }
 };
+
+export const getCertificateByCode = async (code) => {
+  try {
+    const response = await api.get(`/diamond-certificate/certificate/code/${code}`);
+    return response;
+  } catch (error) {
+    return null;
+  }
+};
+
+

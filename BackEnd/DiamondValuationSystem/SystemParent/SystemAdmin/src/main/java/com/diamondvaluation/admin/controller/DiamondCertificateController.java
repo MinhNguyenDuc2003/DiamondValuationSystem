@@ -30,6 +30,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import com.diamondvaluation.admin.AmazonS3Util;
 import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
+import com.diamondvaluation.admin.exception.DiamondRequestAlreadyExistCertificateException;
 import com.diamondvaluation.admin.request.CertificateRequest;
 import com.diamondvaluation.admin.response.CertificateResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
@@ -100,6 +101,8 @@ public class DiamondCertificateController {
 			}
 			return new ResponseEntity<>(new MessageResponse("Add/Update User successfully!"), HttpStatus.OK);
 		} catch (CertificateIsAlreadyExistException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		} catch (DiamondRequestAlreadyExistCertificateException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}

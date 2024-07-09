@@ -250,7 +250,7 @@ export const Users = () => {
                   <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => navigate("/account/information")}>
+                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
                   <IconButton

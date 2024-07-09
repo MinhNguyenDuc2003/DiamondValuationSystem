@@ -3,7 +3,6 @@ import { Form } from "antd";
 import {
   Box,
   Button,
-  Chip,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -13,10 +12,11 @@ import {
   RadioGroup,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import paypal from "./img/PayPal_Logo.jpg";
 import { useNavigate } from "react-router-dom";
-import { getAllServices } from "../../utils/ApiFunction";
+import { getAllServices, getCustomerById } from "../../utils/ApiFunction";
 
 const formItemLayout = {
   labelCol: {
@@ -71,6 +71,23 @@ const ServiceForm = () => {
     Services();
   }, []);
 
+  useEffect(() => {
+    const getCustomer = async () => {
+      const data = await getCustomerById();
+      if (data !== null) {
+        setUser({
+          id: data.id,
+          email: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone_number: data.phone_number,
+          location: data.location,
+        });
+      }
+    };
+    getCustomer();
+  }, []);
+
   const onFinish = () => {
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
       return index === 0 ? service : value + "," + service;
@@ -96,8 +113,110 @@ const ServiceForm = () => {
           onFinish={onFinish}
           style={{
             maxWidth: 1000,
+            marginLeft: "15%",
           }}
         >
+          
+          {/* <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Email"
+                value={user.email || ""}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="First Name"
+            name="first_name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your first name!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="First Name"
+                value={user.first_name || ""}
+                onChange={(e) => setUser({ ...user, first_name: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your last name!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Last Name"
+                value={user.last_name || ""}
+                onChange={(e) => setUser({ ...user, last_name: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Phone Number"
+            name="phone_number"
+            rules={[
+              {
+                required: true,
+                message: "Please input your phone number!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Phone Number"
+                value={user.phone_number || ""}
+                onChange={(e) => setUser({ ...user, phone_number: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Address"
+            name="location"
+            rules={[
+              {
+                required: true,
+                message: "Please input your address!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Address"
+                value={user.location || ""}
+                onChange={(e) => setUser({ ...user, location: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item> */}
           <Form.Item
             label="Preferred Appraisal Date"
             name="date"
@@ -131,21 +250,17 @@ const ServiceForm = () => {
                 multiple
                 value={serviceSelected}
                 onChange={(event) => handleServiceChange(event)} // Pass event directly
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Service" />
-                }
+                input={<OutlinedInput id="select-multiple-chip" label="Service" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <MenuItem key={value} label={value}>
-                        {value}
-                      </MenuItem>
+                      <Typography key={value}>{value}</Typography>
                     ))}
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {services.map((service, index) => (
+                {services.map((service) => (
                   <MenuItem key={service.id} value={service.name}>
                     {service.name} - {service.content} - {service.money}
                   </MenuItem>

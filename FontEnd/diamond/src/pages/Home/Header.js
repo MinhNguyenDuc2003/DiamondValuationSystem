@@ -22,7 +22,8 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import "@fontsource/roboto/500.css";
 import { useAuth } from "../../component/Auth/AuthProvider";
 import { getCustomerById } from "../../utils/ApiFunction";
-
+import { useMediaQuery } from 'react-responsive';
+import MenuIcon from '@mui/icons-material/Menu';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,8 +37,11 @@ const Header = () => {
   const location = useLocation();
   const [totalRequest, setTotalRequest] = useState("");
   const [badgeVisible, setBadgeVisible] = useState(true);
+  
   const auth = useAuth();
 
+   //Responsive........
+   const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
   // Ẩn Badge khi click vào
   const handleBadgeClick = () => {
     setBadgeVisible(false);
@@ -149,6 +153,12 @@ const Header = () => {
             <ListItemButton onClick={() => handleNavigate("/account")}>
               <ListItemText primary="Manage Account" />
             </ListItemButton>
+            {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
+
+                        )}
             <ListItemButton onClick={() => handleNavigate("/MyRequest")}>
               <ListItemText primary="My Request" />
             </ListItemButton>
@@ -275,6 +285,9 @@ const Header = () => {
         <div className="diamond">
           <button>Diamond</button>
         </div>
+        {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
       </div>
 
       <button
@@ -342,13 +355,9 @@ const Header = () => {
           >
             <div className="account-icon">
               {user ? (
-                <Badge
-                  sx={{ gap: "5px" }}
-                  badgeContent={totalRequest}
-                  color="primary"
-                >
+               
                   <strong>{user.last_name}</strong>
-                </Badge>
+               
               ) : (
                 <AccountCircleIcon />
               )}

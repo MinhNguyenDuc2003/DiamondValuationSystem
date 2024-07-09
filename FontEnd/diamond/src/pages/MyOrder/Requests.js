@@ -9,7 +9,7 @@ export const data = [
     total: 30,
     paid: true,
     status: "DONE",
-    certicate_id: "1",
+    certicate_id: 1,
   },
   {
     id: 2,
@@ -21,6 +21,7 @@ export const data = [
     total: 30,
     paid: false,
     status: "WAIT",
+    certicate_id: 2,
   },
   {
     id: 3,
@@ -32,6 +33,7 @@ export const data = [
     total: 30,
     paid: true,
     status: "PROCESSING",
+    certicate_id: 3,
   },
   {
     id: 4,

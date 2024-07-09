@@ -160,6 +160,17 @@ const CertificateHTML = (certificate) => {
                     <p>Country of Origin: <span>South Africa</span></p>
                 </div>
             </div>
+            <div class="S-prop">
+                <p>PRICE RESULT</p>
+                <div class="detail">
+                    <p>Real Price: <span>${certificate.real_price} $</span></p>
+                    <p>Rap Price: <span>${certificate.rap_price} $</span></p>
+                    <p>Rap Percent: <span>${certificate.rap_percent} </span></p>
+                    <p>Min Price: <span>${certificate.min_price} $</span></p>
+                    <p>Max Price: <span>${certificate.max_price} $</span></p>
+                    <p>Cert: <span>${certificate.cert}</span></p>
+                </div>
+            </div>
         </div>
 
         <div class="middle-report">
