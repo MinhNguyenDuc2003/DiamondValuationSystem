@@ -36,6 +36,13 @@ public class ReportServiceImp implements ReportService {
 	@Override
 	public void saveReport(Report report, HttpServletRequest request) {
 		try {
+			if(report.getId() != null) {
+				Optional<Report> db = reportRepository.findById(report.getId());
+				if(!db.isPresent()) {
+					throw new ReportNotFoundException("cannot find any report");
+				}
+				report.setCreatedTime(db.get().getCreatedTime());
+			}
 			User user = Utility.getIdOfAuthenticatedUser(request, userService);
 			ReportTracking track = new ReportTracking();
 			track.setStatus(report.getStatus());
