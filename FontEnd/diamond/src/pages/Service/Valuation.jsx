@@ -15,24 +15,23 @@ const Valuation = () => {
   useEffect(() => {
     setDataContent(data);
   }, []);
-
+  
   if (!dataContent) {
     return <div>Loading....</div>;
   }
 
-  //check xem người dùng đã đăng nhập hay chưa
-  const handleSendForm = () => {
-    const checkUser = localStorage.getItem("userId");
-    if (checkUser) {
-      navigate("/Service/valuation/valuation-form");
-    } else {
-        navigate(`/login`);
-    }
-  };
+  // //check xem người dùng đã đăng nhập hay chưa
+  // const handleSendForm = () => {
+  //   const checkUser = localStorage.getItem("userId");
+  //   if (checkUser) {
+  //     navigate("/Service/valuation/valuation-form");
+  //   } else {
+  //       navigate(`/login`);
+  //   }
+  // };
 
   return (
     <div className="wrapperrr">
-      <ToastContainer />
       <div className="header-valuation">
         <div>
           <h2>{dataContent.ValuationIntroduction.subtle}</h2>
@@ -42,7 +41,7 @@ const Valuation = () => {
         </div>
       </div>
       <div>
-        <button onClick={handleSendForm} className="btn-form">
+        <button onClick={() => navigate('/Service/valuation/valuation-form ')} className="btn-form">
           Send Form To Valuation
         </button>
       </div>

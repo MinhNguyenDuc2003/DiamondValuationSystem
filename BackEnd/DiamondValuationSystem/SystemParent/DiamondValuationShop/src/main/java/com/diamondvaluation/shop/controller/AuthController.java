@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,11 +89,16 @@ public class AuthController {
 	}
 
 	@PostMapping("/token/refresh")
-	public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required =false) String refreshToken,
+	public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam("id") String id) {
 		try {
+<<<<<<< HEAD
+			if (refreshToken == null) {
+			    return ResponseEntity.status(403).body("Refresh token is required");
+=======
 			if(refreshToken == null) {
 				return ResponseEntity.status(403).body("Invalid refresh token");
+>>>>>>> 001d9d940db5f8a0905e711d55deec7ddde57a5a
 			}
 			TokenResponse responseToken = tokenService.refreshTokens(new RefreshTokenRequest(id, refreshToken));
 			System.out.println(responseToken.getToken());
