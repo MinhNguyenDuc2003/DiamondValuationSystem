@@ -22,6 +22,7 @@ import com.diamondvaluation.admin.response.ReportResponse;
 import com.diamondvaluation.admin.service.ReportService;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.Report;
+import com.diamondvaluation.common.ReportStatus;
 import com.diamondvaluation.common.ReportType;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,6 +57,7 @@ public class ReportController {
 		Report report = modelMapper.map(request, Report.class);
 		ReportType type = ReportType.valueOf(request.getType());
 		report.setType(type);
+		report.setStatus(ReportStatus.valueOf(request.getStatus()));
 		report.setRequest(new DiamondRequest(request.getRequest_id()));
 		return report;
 	}

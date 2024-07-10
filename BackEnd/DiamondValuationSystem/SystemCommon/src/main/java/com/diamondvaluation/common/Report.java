@@ -57,8 +57,9 @@ public class Report {
 	@LastModifiedDate
 	private LocalDateTime lastModifiedDate;
 	
-	@Column(nullable = false, unique = false)
-	private boolean status;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private ReportStatus status;
 	
 	@ManyToOne
 	@JoinColumn(name= "request_id")

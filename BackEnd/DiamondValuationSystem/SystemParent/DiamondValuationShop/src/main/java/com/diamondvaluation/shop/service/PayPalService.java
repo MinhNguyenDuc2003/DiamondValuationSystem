@@ -3,6 +3,7 @@ package com.diamondvaluation.shop.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -131,14 +132,18 @@ public class PayPalService {
 		return payment.create(apiContext);
 	}
 	
-	public Payment executePayment(String paymentId, String payerId,  HttpHeaders headers) throws PayPalRESTException{
-		apiContext.addHTTPHeader("PayPal-Request-Id", headers.getFirst("PayPal-Request-Id"));
-		Payment payment = new Payment();
-		payment.setId(paymentId);
-		PaymentExecution paymentExecute = new PaymentExecution();
-		paymentExecute.setPayerId(payerId);
-		return payment.execute(apiContext, paymentExecute);
-	}
+
+    public Payment executePayment(String paymentId, String payerId, HttpHeaders headers) throws PayPalRESTException {
+        String requestId = UUID.randomUUID().toString();
+
+        apiContext.addHTTPHeader("PayPal-Request-Id", requestId);
+        
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+        PaymentExecution paymentExecute = new PaymentExecution();
+        paymentExecute.setPayerId(payerId);
+        return payment.execute(apiContext, paymentExecute);
+    }
 	
 	
 
