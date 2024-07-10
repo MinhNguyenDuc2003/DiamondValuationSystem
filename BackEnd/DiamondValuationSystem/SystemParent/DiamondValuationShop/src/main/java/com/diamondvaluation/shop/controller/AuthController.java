@@ -92,8 +92,8 @@ public class AuthController {
 	public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam("id") String id) {
 		try {
-			if (refreshToken == null) {
-			    return ResponseEntity.status(403).body("Refresh token is required");
+			if(refreshToken == null) {
+				return ResponseEntity.status(403).body("Invalid refresh token");
 			}
 			TokenResponse responseToken = tokenService.refreshTokens(new RefreshTokenRequest(id, refreshToken));
 			System.out.println(responseToken.getToken());

@@ -35,7 +35,7 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 	}
 
 	@Override
-	public void createDiamondRequest(CheckOutRequest request, Customer customer, boolean isPaid) {
+	public DiamondRequest createDiamondRequest(CheckOutRequest request, Customer customer, boolean isPaid) {
 		DiamondRequest diamondRequest = new DiamondRequest();
 		if(!cusRepo.existsById(customer.getId())) {
 			throw new CustomerNotFoundException("Customer is not found");
@@ -61,7 +61,7 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 		}
 		diamondRequest.setServices(list);
 		diamondRequest.setPaymentTotal(total);
-		repo.save(diamondRequest);
+		return repo.save(diamondRequest);
 		
 	}
 
