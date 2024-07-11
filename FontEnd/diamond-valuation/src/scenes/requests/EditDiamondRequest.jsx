@@ -66,14 +66,10 @@ const EditDiamondRequest = () => {
     const fetchRequest = async () => {
       try {
         const requestEdit = await getRequestById(requestid);
-
-        const foundCustomer = customers.find(
-          (customer) => customer.phone_number === requestEdit.customer_phone
-        );
-        if (foundCustomer) {
+        if (requestEdit) {
           setInitialValues({
             id: requestEdit.id,
-            customer_id: foundCustomer.id,
+            customer_id: requestEdit.customer_id,
             note: requestEdit.note,
             status: requestEdit.status,
             service_ids: requestEdit.service_ids,

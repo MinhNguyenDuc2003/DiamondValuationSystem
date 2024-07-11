@@ -55,7 +55,6 @@ const CreateCertificate = () => {
     width: "",
     height: "",
     request_id: requestId,
-    photo: image,
   };
 
   const validationSchema = Yup.object().shape({
@@ -98,6 +97,7 @@ const CreateCertificate = () => {
       const certificateData = removeSpacesFromObjectValues({
         ...values,
         measurement,
+        photo: image,
       });
       console.log(certificateData);
       const result = await saveCertificate(certificateData);

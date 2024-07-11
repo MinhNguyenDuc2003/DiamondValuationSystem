@@ -137,7 +137,9 @@ const CertificateHTML = (certificate) => {
                 <div class="detail">
                     <p>September 01/2024</p>
                     <p>SHINE Report Number <span>${certificate.code}</span></p>
-                    <p>Shape and Cutting Style <span>${certificate.cut}</span></p>
+                    <p>Shape and Cutting Style <span>${
+                      certificate.cut
+                    }</span></p>
                     <p>Measurements <span>${certificate.measurement}</span></p>
                 </div>
             </div>
@@ -147,15 +149,27 @@ const CertificateHTML = (certificate) => {
                     <p>Carar Weight <span>${certificate.carat}</span></p>
                     <p>Color Grade <span>${certificate.color}</span></p>
                     <p>Clarity Grade <span>${certificate.clarity}</span></p>
-                    <p>Cut Grade <span>Very Good</span></p>
+                    <p>Cut Grade <span>${certificate.make.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
                 </div>
             </div>
             <div class="S-prop">
                 <p>ADDITIONAL GRADING INFORMATION</p>
                 <div class="detail">
-                    <p>Polish <span>${certificate.polish}</span></p>
-                    <p>Symmetry <span>${certificate.symmetry}</span></p>
-                    <p>Flourescence <span>${certificate.flourescence}</span></p>
+                    <p>Polish <span>${certificate.polish.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
+                    <p>Symmetry <span>${certificate.symmetry.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
+                    <p>Flourescence <span>${certificate.flourescence.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
                     <p>Inscription(s) <span>SHINE ${certificate.code}</span></p>
                     <p><span class="comment" style="font-weight: bold;">Comments:
                         </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>

@@ -7,30 +7,55 @@ import {
   Paper,
   Typography,
   Container,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Alert,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { saveReport } from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
 
 export const Report = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [type, setType] = useState("BLOCKDIAMOND"); // Default to BLOCKDIAMOND or any initial value you prefer
+  const [requestId, setRequestId] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const reportData = {
-      title,
+      header: title,
       content,
-      status: "New",
+      type,
+      status: "WAIT",
+      request_id: requestId,
     };
-    axios
-      .post("https://665ae895003609eda45f3327.mockapi.io/Report", reportData)
-      .catch((error) => console.error("Error creating course:", error));
-    // Handle the submitted report data here (e.g., send to an API)
-    handleClear();
+
+    try {
+      console.log(reportData);
+      const result = await saveReport(reportData);
+      if (result.message !== undefined) {
+        setMessage("Add new Report successfully");
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+      } else {
+        setError("Error occurred");
+      }
+      handleClear();
+    } catch (error) {
+      console.error("Error saving report:", error);
+    }
   };
 
   const handleClear = () => {
     setTitle("");
     setContent("");
+    setType("BLOCKDIAMOND"); // Reset to default value
+    setRequestId(""); // Clear request_id if needed
   };
 
   return (
@@ -39,6 +64,18 @@ export const Report = () => {
         <Typography variant="h4" gutterBottom>
           Write a Report
         </Typography>
+
+        {message && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -51,6 +88,32 @@ export const Report = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="requestId"
+              label="Request id"
+              type="text"
+              fullWidth
+              value={requestId}
+              onChange={(e) => setRequestId(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="type-label">Type</InputLabel>
+              <Select
+                labelId="type-label"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                label="Type"
+              >
+                <MenuItem value="BLOCKDIAMOND">BLOCKDIAMOND</MenuItem>
+                <MenuItem value="RETURNDIAMOND">RETURNDIAMOND</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <ReactQuill

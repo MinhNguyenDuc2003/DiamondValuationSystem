@@ -470,6 +470,78 @@ export async function deleteCaratRange(id) {
     console.log(error.data);
   }
 }
+
+// =========================================== REPORTS ======================================//
+export async function saveReport(report) {
+  const data = {
+    id: report.id,
+    header: report.header,
+    content: report.content,
+    type: report.type,
+    status: report.status,
+    request_id: report.request_id,
+  };
+
+  try {
+    const response = await api.post("api/reports/report/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function getAllReports() {
+  try {
+    const result = await api.get(`api/reports/all-report`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function deleteReport(id) {
+  try {
+    const response = await api.delete(`api/reports/report/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+// =================================== Request Tracking =================================== //
+
+export async function getRequestTracking(id) {
+  try {
+    const result = await api.get(`/request-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+// =================================== Report Tracking =================================== //
+
+export async function getReportTracking(id) {
+  try {
+    const result = await api.get(`/report-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
