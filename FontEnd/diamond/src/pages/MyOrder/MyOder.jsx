@@ -20,9 +20,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import palpayLogo from "../Service/img/PayPal_Logo.jpg";
 import cashLogo from "./cashh.jpg";
-import InputBase from "@mui/material/InputBase";
-import { styled, alpha } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
 import CertificateHTML from "./CertificateHTML";
 import { getAllRequest, getCertificateById } from "../../utils/ApiFunction";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -48,51 +45,8 @@ const MyOrder = () => {
   const [totalDone, setTotalDone] = useState(0);
   const [totalCompletedSteps, setTotalCompletedSteps] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
+  const [valuation, setValuation] = useState('');
   const itemsPerPage = 3;
-
-  // Style
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    marginBottom: 15,
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    width: "100%",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      [theme.breakpoints.up("sm")]: {
-        width: "12ch",
-        "&:focus": {
-          width: "20ch",
-        },
-      },
-    },
-  }));
 
   useEffect(() => {
     getAllRequest().then((result) => {
@@ -118,6 +72,7 @@ const MyOrder = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedOrder(null);
+    setValuation(null)
   };
 
   const handlePageChange = (event, page) => {
@@ -138,27 +93,28 @@ const MyOrder = () => {
     setFilteredOrders(processList);
   };
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearchValue(value);
-    if (value === "") {
-      setFilteredOrders(orders);
-    } else {
-      const filtered = orders.filter((order) =>
-        order.id.toString().includes(value)
-      );
-      setFilteredOrders(filtered);
-    }
-  };
 
   const handleShowCertificate = async (certificate_id) => {
     const result = await getCertificateById(certificate_id);
+
     if (result && result.data) {
       openCertificateInNewTab(result.data);
     } else {
       console.log(`Certificate with ID not found.`);
     }
   };
+
+
+  const handleShowPrice = async (certificate_id) => {
+    const result = await getCertificateById(certificate_id);
+
+    if (result && result.data) {
+      setValuation(result)
+      setModalOpen(true)
+    } else {
+      console.log(`not found.`);
+    }
+  }
 
   const openCertificateInNewTab = (certificate) => {
     const newWindow = window.open("", "_blank");
@@ -176,39 +132,9 @@ const MyOrder = () => {
   return (
     <Box sx={{ backgroundColor: "#dcdcdc66" }}>
       <Box className="wrapperrr" sx={{ mt: 10, height: "80vh" }}>
-        <Box
-          sx={{
-            textAlign: "start",
-            pt: 2,
-            pl: 2,
-            height: "10vh",
-            backgroundColor: "white",
-          }}
-        >
-          <Typography
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              height: "100%",
-              color: "gray",
-            }}
-          >
-            Recent Report
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon sx={{ mr: "10px" }} />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-                value={searchValue}
-                onChange={handleSearch}
-              />
-            </Search>
-          </Typography>
-        </Box>
+
         <Box sx={{ mb: 2 }}>
-          <Typography variant="body2">Manage your services you use</Typography>
+          <Typography variant="h3" color={'#254a4b'}>Request Tracking</Typography>
         </Box>
         <Box
           sx={{
@@ -327,8 +253,14 @@ const MyOrder = () => {
                           request.status === "DONE"
                             ? "green"
                             : request.status === "BLOCKED"
-                            ? "red"
-                            : "#00aaff",
+                              ? "red"
+                              : request.status === "WAIT"
+                                ? '#4682a1'
+                                : request.status === "PROCESSING"
+                                  ? '#102e60'
+                                  : request.status === "PROCESSED"
+                                    ? '#4ab1ac'
+                                    : "#00aaff",
                         color: "white",
                         borderRadius: 1,
                         width: "50%",
@@ -340,7 +272,6 @@ const MyOrder = () => {
                     {request.status !== "DONE" &&
                       request.status !== "BLOCKED" && (
                         <>
-                          <br />
                           <Button onClick={() => handleShowDetails(request)}>
                             Details
                           </Button>
@@ -349,13 +280,28 @@ const MyOrder = () => {
                   </TableCell>
                   <TableCell sx={{ color: "gray" }} align="center">
                     {request.status === "DONE" && (
-                      <Button
-                        onClick={() =>
-                          handleShowCertificate(request.certificate_id)
-                        }
-                      >
-                        Show Certificate
-                      </Button>
+                        <>
+                          <Typography>
+                            <Button
+                              onClick={() =>
+                                handleShowCertificate(request.certificate_id)
+                              }
+                            >
+                              Certificate
+                            </Button>
+                          </Typography>
+                          <Typography>
+
+                            <Button
+                              onClick={() =>
+                                handleShowPrice(request.certificate_id)
+                              }
+                            >
+                              Price
+                            </Button>
+                          </Typography>
+                        </>
+
                     )}
                   </TableCell>
                 </TableRow>
@@ -373,6 +319,7 @@ const MyOrder = () => {
               backgroundColor: "white",
               boxShadow: 24,
               borderRadius: 2,
+              position: "relative",
             }}
           >
             <IconButton
@@ -381,7 +328,52 @@ const MyOrder = () => {
             >
               <CloseIcon />
             </IconButton>
-            {selectedOrder && (
+            {valuation ? (
+              <>
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: 'bold', mb: 3, color: '#11375e', textAlign: 'center' }}
+                >
+                  Valuation Report
+                </Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>Min Price</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>Max Price</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>Rap Price</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>Rap Percent</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>Price</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold', color: ' #a51442' }}>
+                          ${valuation.data.min_price.toLocaleString()}
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: ' #009688' }}>
+                          ${valuation.data.max_price.toLocaleString()}
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#673ab7' }}>
+                          ${valuation.data.rap_price.toLocaleString()}
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color:
+                          valuation.data.rap_percent > 1 
+                          ? 'green' :
+                          '#f44336'
+                         }}>
+                          {valuation.data.rap_percent.toFixed(2)} %
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>
+                          ${valuation.data.real_price.toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            ) : selectedOrder ? (
               <>
                 <Typography variant="h5" gutterBottom>
                   Order Step
@@ -410,9 +402,10 @@ const MyOrder = () => {
                   <Typography>Order Completed</Typography>
                 )}
               </>
-            )}
+            ) : null}
           </Box>
         </Modal>
+
         <Pagination
           count={Math.ceil(filteredOrders.length / itemsPerPage)}
           page={currentPage}
