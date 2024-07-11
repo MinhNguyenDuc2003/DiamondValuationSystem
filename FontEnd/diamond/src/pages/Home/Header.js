@@ -319,7 +319,7 @@ const Header = () => {
               <button
                 onClick={() => handleNavigateToService("/Service/ServiceList")}
               >
-                Services List
+                Services
               </button>
             </li>
           </ul>
