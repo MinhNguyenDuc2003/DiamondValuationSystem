@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid,
   Box,
@@ -26,6 +27,7 @@ import {
   getAllReports,
   saveReport,
   getReportTracking,
+  updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 
 const statusColors = {
@@ -43,11 +45,13 @@ const statusIcons = {
 const ManageReports = () => {
   const [reports, setReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openTrackingDialog, setOpenTrackingDialog] = useState(false);
   const [trackingData, setTrackingData] = useState(null);
+  const [reportDeleted, setReportDeleted] = useState(null);
 
   useEffect(() => {
     fetchReports();
@@ -73,9 +77,10 @@ const ManageReports = () => {
     setSelectedReport(null);
   };
 
-  const handleDeleteReport = async (reportId) => {
+  const handleDeleteReport = async () => {
+    console.log(reportDeleted);
     try {
-      const result = await deleteReport(reportId);
+      const result = await deleteReport(reportDeleted.id);
       if (result !== undefined) {
         setMessage("Report deleted successfully!");
         fetchReports();
@@ -94,6 +99,9 @@ const ManageReports = () => {
     try {
       const result = await saveReport({ ...report, status: "ACCEPT" });
       if (result.message !== undefined) {
+        if (report.type === "BLOCKDIAMOND") {
+          await updateRequestStatus(report.request_id, "BLOCKED");
+        }
         setMessage(`Accept Report ${report.id} successfully`);
         fetchReports();
         setOpenDialog(false);
@@ -112,6 +120,9 @@ const ManageReports = () => {
     try {
       const result = await saveReport({ ...report, status: "REJECT" });
       if (result.message !== undefined) {
+        if (report.type === "BLOCKDIAMOND") {
+          await updateRequestStatus(report.request_id, "PROCESSED");
+        }
         setMessage(`Reject Report ${report.id} successfully`);
         fetchReports();
         setOpenDialog(false);
@@ -153,6 +164,16 @@ const ManageReports = () => {
     setOpenTrackingDialog(false);
     setSelectedReport(null);
     setTrackingData(null);
+  };
+
+  const handleOpenDeleteDialog = (report) => {
+    setReportDeleted(report);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setReportDeleted(null);
   };
 
   return (
@@ -201,7 +222,7 @@ const ManageReports = () => {
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => handleDeleteReport(report.id)}
+                    onClick={() => handleOpenDeleteDialog(report)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -249,6 +270,24 @@ const ManageReports = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
+          {selectedReport?.status === "WAIT" && (
+            <>
+              <Button
+                onClick={() => handleAcceptReport(selectedReport)}
+                color="success"
+                startIcon={<CheckCircleIcon />}
+              >
+                Accept
+              </Button>
+              <Button
+                onClick={() => handleRejectReport(selectedReport)}
+                color="error"
+                startIcon={<BlockIcon />}
+              >
+                Reject
+              </Button>
+            </>
+          )}
           {selectedReport?.status === "ACCEPT" && (
             <Button
               onClick={() => handleRejectReport(selectedReport)}
@@ -310,6 +349,28 @@ const ManageReports = () => {
         <DialogActions>
           <Button onClick={handleCloseTrackingDialog} color="primary">
             Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this report?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteReport} color="secondary" autoFocus>
+            Delete
+          </Button>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

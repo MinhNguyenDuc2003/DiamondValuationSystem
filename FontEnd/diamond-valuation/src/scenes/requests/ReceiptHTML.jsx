@@ -28,11 +28,6 @@ const ReceiptHTML = (request, services) => {
   const paymentStatus = request.paid ? "PAID" : "NOT PAID";
   const ribbonColor = request.paid ? "#66c591" : "red";
 
-  const filteredServices = services.filter((service) =>
-    request.service_ids.includes(service.id)
-  );
-  console.log("Filtered Services:", filteredServices);
-
   const serviceRows = services
     .filter((service) => request.service_ids.includes(String(service.id)))
     .map(
@@ -146,42 +141,7 @@ const ReceiptHTML = (request, services) => {
           }
 
           .row img {
-                width: 200px;
-            }
-
-          @media (max-width: 575px) {
-            .invoice .top-left,
-            .invoice .top-right,
-            .invoice .payment-details {
-              text-align: center;
-            }
-
-            .invoice .from,
-            .invoice .to,
-            .invoice .payment-details {
-              float: none;
-              width: 100%;
-              text-align: center;
-              margin-bottom: 25px;
-            }
-
-            .invoice p.lead,
-            .invoice .from p.lead,
-            .invoice .to p.lead,
-            .invoice .payment-details p.lead {
-              font-size: 22px;
-            }
-
-            .invoice .btn {
-              margin-top: 10px;
-            }
-          }
-
-          @media print {
-            .invoice {
-              width: 900px;
-              height: 800px;
-            }
+            width: 200px;
           }
         </style>
       </head>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   getAllCertificates,
   deleteCertificateById,
-  getAllRequestsNew,
+  getAllRequestsStatus,
   updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
@@ -169,7 +169,7 @@ const Certificates = () => {
       .catch((error) => {
         setError(error.message);
       });
-    getAllRequestsNew()
+    getAllRequestsStatus("NEW")
       .then((data) => {
         setRequests(data);
       })

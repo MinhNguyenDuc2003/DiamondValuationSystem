@@ -149,11 +149,12 @@ public class DiamondRequestController {
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
 
-	@GetMapping("requests/status/new")
-	public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate() {
-		List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.NEW);
-		return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
-	}
+	@GetMapping("requests/status/{status}")
+    public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate(@PathVariable("status") String status) {
+
+        List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.valueOf(status.toUpperCase()));
+        return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
+    }
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,

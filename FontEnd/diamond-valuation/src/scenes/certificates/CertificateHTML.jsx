@@ -3,14 +3,6 @@ import logo from "../../../image/logo.png";
 import facet1 from "../../../image/Facet_part1.jpg";
 import facet2 from "../../../image/Facet_part2.jpg";
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
-};
-
 const CertificateHTML = (certificate) => {
   return `
     <html>
@@ -135,7 +127,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
                 <div class="detail">
-                    <p>September 01/2024</p>
+                    <p>${certificate.created_time}</p>
                     <p>SHINE Report Number <span>${certificate.code}</span></p>
                     <p>Shape and Cutting Style <span>${
                       certificate.cut

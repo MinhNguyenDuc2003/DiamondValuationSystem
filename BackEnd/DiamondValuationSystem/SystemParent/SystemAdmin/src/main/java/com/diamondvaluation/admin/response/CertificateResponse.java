@@ -1,5 +1,7 @@
 package com.diamondvaluation.admin.response;
 
+import java.time.LocalDateTime;
+
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.diamond.DiamondClarity;
 import com.diamondvaluation.common.diamond.DiamondColor;
@@ -29,6 +31,8 @@ public class CertificateResponse {
 	private float carat;
 	
 	private String code;
+	
+	private LocalDateTime created_date;
 	
 	private DiamondClarity clarity;
 	

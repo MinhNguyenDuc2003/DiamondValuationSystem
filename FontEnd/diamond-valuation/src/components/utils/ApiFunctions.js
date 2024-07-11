@@ -195,6 +195,7 @@ export async function saveService(service) {
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
+  formData.append("status", true);
   formData.append("photo", service.photo);
 
   try {
@@ -269,10 +270,10 @@ export async function getRequestById(id) {
   }
 }
 
-export async function getAllRequestsNew() {
+export async function getAllRequestsStatus(status) {
   try {
     const result = await api.get(
-      `api/diamond-requests/requests/status/new`,
+      `api/diamond-requests/requests/status/${status}`,
       {}
     );
     return result.data;

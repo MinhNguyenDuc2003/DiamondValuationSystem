@@ -47,9 +47,12 @@ import {
   Receipt as ReceiptIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
+  Flag as FlagIcon,
+  Flag,
 } from "@mui/icons-material";
 import ReceiptHTML from "./ReceiptHTML";
 import { useAuth } from "../../components/auth/AuthProvider";
+import PrintPDF from "./PrintPDF";
 
 const statusColors = {
   WAIT: "warning",
@@ -320,7 +323,10 @@ const Requests = () => {
                       {request.appoinment_date} {request.appoinment_time}
                     </TableCell>
                     <TableCell align="center">
-                      {request.service_names}
+                      {request.service_names.replace(
+                        /([a-z])([A-Z])/g,
+                        "$1, $2"
+                      )}
                     </TableCell>
                     <TableCell align="center">{request.note}</TableCell>
                     <TableCell align="center">
@@ -353,7 +359,14 @@ const Requests = () => {
                           <DeleteIcon sx={{ color: "#C5A773" }} />
                         </IconButton>
                       )}
-                      <IconButton onClick={() => openReceiptInNewTab(request)}>
+                      {isAuthorized && (
+                        <IconButton
+                          onClick={() => navigate(`/report/${request.id}`)}
+                        >
+                          <Flag sx={{ color: "#C5A773" }} />
+                        </IconButton>
+                      )}
+                      <IconButton onClick={() => PrintPDF(request, services)}>
                         <ReceiptIcon sx={{ color: "#C5A773" }} />
                       </IconButton>
                     </TableCell>

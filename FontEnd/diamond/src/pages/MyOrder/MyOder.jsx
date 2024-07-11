@@ -95,15 +95,13 @@ const MyOrder = () => {
   }));
 
   useEffect(() => {
-    getAllRequest().then((result) => {
-      setOrders(result.data);
-      setFilteredOrders(result.data);
-      setTotalRequest(result.data.length);
-      const doneRequests = result.data.filter(
-        (order) => order.status === "DONE"
-      );
+    getAllRequest().then((data) => {
+      setOrders(data);
+      setFilteredOrders(data);
+      setTotalRequest(data.length);
+      const doneRequests = data.filter((order) => order.status === "DONE");
       setTotalDone(doneRequests.length);
-      const completedSteps = result.data.filter(
+      const completedSteps = data.filter(
         (order) => order.status === "PROCESSED"
       );
       setTotalCompletedSteps(completedSteps.length);
@@ -153,8 +151,8 @@ const MyOrder = () => {
 
   const handleShowCertificate = async (certificate_id) => {
     const result = await getCertificateById(certificate_id);
-    if (result && result.data) {
-      openCertificateInNewTab(result.data);
+    if (result) {
+      openCertificateInNewTab(result);
     } else {
       console.log(`Certificate with ID not found.`);
     }
