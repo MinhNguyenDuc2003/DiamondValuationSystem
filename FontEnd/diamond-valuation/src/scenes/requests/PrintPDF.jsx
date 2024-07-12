@@ -31,7 +31,7 @@ const PrintPDF = (request, services) => {
       }
 
       pdf.save(`Receipt.pdf`);
-      printWindow.close();
+      //   printWindow.close();
     });
   };
 };

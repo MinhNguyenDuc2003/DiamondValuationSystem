@@ -108,19 +108,24 @@ const Requests = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getAllRequests()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        // Fetch requests
+        const requests = await getAllRequests();
+        setData(requests);
+
+        // Fetch services
+        const services = await getAllServices();
+        setServices(services);
+      } catch (error) {
         setError(error.message);
-      });
-    getAllServices().then((data) => {
-      setServices(data);
-    });
-    setTimeout(() => {
-      setError("");
-    }, 2000);
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleDelete = async () => {

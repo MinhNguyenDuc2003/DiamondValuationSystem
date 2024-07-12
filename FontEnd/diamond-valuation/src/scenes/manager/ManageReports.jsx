@@ -87,7 +87,7 @@ const ManageReports = () => {
         setTimeout(() => {
           setMessage("");
         }, 4000);
-        setOpenDialog(false);
+        setOpenDeleteDialog(false);
       }
     } catch (error) {
       setError("Error deleting report.");

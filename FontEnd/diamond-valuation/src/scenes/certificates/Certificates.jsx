@@ -160,25 +160,32 @@ const Certificates = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getAllCertificates()
-      .then((data) => {
-        if (data !== undefined) {
-          setCertificates(data);
+    const fetchCertificatesAndRequests = async () => {
+      try {
+        // Fetch certificates
+        const certificates = await getAllCertificates();
+        if (certificates !== undefined) {
+          setCertificates(certificates);
         }
-      })
-      .catch((error) => {
+
+        // Fetch requests status
+        const requests = await getAllRequestsStatus("NEW");
+        setRequests(requests);
+
+        // Clear error after a timeout
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      } catch (error) {
         setError(error.message);
-      });
-    getAllRequestsStatus("NEW")
-      .then((data) => {
-        setRequests(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching requests: ", error);
-      });
-    setTimeout(() => {
-      setError("");
-    }, 2000);
+        // Clear error after a timeout
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+
+    fetchCertificatesAndRequests();
   }, []);
 
   const handleDelete = async () => {
@@ -187,6 +194,7 @@ const Certificates = () => {
       setMessage(
         `Delete certificate with id ${certificateToDelete}  successfully!`
       );
+      updateRequestStatus(certificateToDelete.request_id, "NEW");
       getAllCertificates()
         .then((data) => {
           setCertificates(data);

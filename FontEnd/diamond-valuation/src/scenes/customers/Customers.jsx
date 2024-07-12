@@ -75,16 +75,24 @@ export const Customers = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getCustomersPerPage(currentPage, filteredData)
-      .then((data) => {
-        setData({
-          list_customers: data.list_customers,
-          total_page: data.total_page,
-        });
-      })
-      .catch((error) => {
+    const fetchCustomers = async () => {
+      try {
+        const customers = await getCustomersPerPage(currentPage, filteredData);
+        if (customers !== undefined) {
+          setData({
+            list_customers: customers.list_customers,
+            total_page: customers.total_page,
+          });
+        }
+      } catch (error) {
         setError(error.message);
-      });
+        // Clear error after a timeout
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+    fetchCustomers();
   }, [currentPage, filteredData]);
 
   function debounce(func, timeout = 300) {

@@ -2,6 +2,27 @@ import React from "react";
 import logo from "../../../image/logo.png";
 import facet1 from "../../../image/Facet_part1.jpg";
 import facet2 from "../../../image/Facet_part2.jpg";
+import diamond from "../../../image/diamondFrame.png";
+
+const formatDate = (dateStr) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const [month, day, year] = dateStr.split(" ");
+  return `${months[parseInt(month, 10) - 1]} ${day}, ${year}`;
+};
 
 const CertificateHTML = (certificate) => {
   return `
@@ -127,7 +148,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
                 <div class="detail">
-                    <p>${certificate.created_time}</p>
+                    <p>${formatDate(certificate.created_date)}</p>
                     <p>SHINE Report Number <span>${certificate.code}</span></p>
                     <p>Shape and Cutting Style <span>${
                       certificate.cut
@@ -186,7 +207,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src=${certificate.photo} alt="">
+                    <img class="alt-diamond" src=${diamond} alt="">
                 </div>
             </div>
 

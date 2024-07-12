@@ -58,8 +58,17 @@ const ReceiptHTML = (request, services) => {
             margin-top: 20px;
             background: #eee;
           }
+          
+          .container {
+            width: 100%;
+          }
+
+          .panel {
+            margin: 0;
+          }
 
           /*Invoice*/
+
           .invoice .top-left {
             font-size: 65px;
             color: #3ba0ff;
