@@ -100,7 +100,6 @@ public class CustomerServiceImp implements CustomerService{
 		}
 		customers = (List<Customer>) customerRepo.findAll();
 		return customers;
-		return null;
 	}
 	
 	
