@@ -54,18 +54,17 @@ const ManageReports = () => {
   const [reportDeleted, setReportDeleted] = useState(null);
 
   useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const result = await getAllReports();
+        setReports(result);
+      } catch (error) {
+        setError("Error fetching reports.");
+        console.error("Error fetching reports:", error);
+      }
+    };
     fetchReports();
   }, []);
-
-  const fetchReports = async () => {
-    try {
-      const result = await getAllReports();
-      setReports(result);
-    } catch (error) {
-      setError("Error fetching reports.");
-      console.error("Error fetching reports:", error);
-    }
-  };
 
   const handleViewReport = (report) => {
     setSelectedReport(report);

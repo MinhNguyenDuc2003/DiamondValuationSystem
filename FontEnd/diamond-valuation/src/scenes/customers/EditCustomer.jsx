@@ -10,17 +10,9 @@ import { useState, useEffect } from "react";
 
 const phoneRegExp = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 
-const nameReqExp = /(^[a-zA-Z][a-zA-Z\s]{0,20}[a-zA-Z]$)/;
-
 const userSchema = yup.object().shape({
-  first_name: yup
-    .string()
-    .matches(nameReqExp, "Invalid name")
-    .required("required"),
-  last_name: yup
-    .string()
-    .matches(nameReqExp, "Invalid name")
-    .required("required"),
+  first_name: yup.string().required("required"),
+  last_name: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
   password: yup.string(),
   phone_number: yup
