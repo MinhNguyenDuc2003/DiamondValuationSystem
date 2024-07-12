@@ -7,6 +7,7 @@ import {
   getRequestTracking,
 } from "../../components/utils/ApiFunctions";
 import {
+  Avatar,
   Box,
   Button,
   IconButton,
@@ -32,6 +33,10 @@ import {
   Alert,
   Chip,
   Collapse,
+  Badge,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -49,6 +54,8 @@ import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   Flag as FlagIcon,
   Flag,
+  AssignmentLate as AssignmentLateIcon,
+  CalendarToday as CalendarTodayIcon,
 } from "@mui/icons-material";
 import ReceiptHTML from "./ReceiptHTML";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -86,6 +93,7 @@ const Requests = () => {
   const [services, setServices] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
+  const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -189,14 +197,6 @@ const Requests = () => {
     setCurrentPage(value);
   };
 
-  const openReceiptInNewTab = (request) => {
-    const htmlContent = ReceiptHTML(request, services);
-    const newWindow = window.open("", "_blank");
-    newWindow.document.open();
-    newWindow.document.write(htmlContent);
-    newWindow.document.close();
-  };
-
   const handleRowClick = async (id) => {
     if (expandedRow === id) {
       setExpandedRow(null);
@@ -207,6 +207,28 @@ const Requests = () => {
       }
       setExpandedRow(id);
     }
+  };
+
+  const isAppointmentLate = (appointmentDate) => {
+    const today = new Date();
+    const appointment = new Date(appointmentDate);
+    const diffTime = Math.abs(today - appointment);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 7;
+  };
+
+  const lateRequests = data.filter(
+    (request) =>
+      isAppointmentLate(request.appoinment_date) &&
+      request.appoinment_date !== null
+  );
+
+  const handleBadgeClick = () => {
+    setLateRequestsDialogOpen(true);
+  };
+
+  const handleCloseLateRequestsDialog = () => {
+    setLateRequestsDialogOpen(false);
   };
 
   return (
@@ -231,6 +253,15 @@ const Requests = () => {
             </Button>
           </Link>
         )}
+
+        <Badge
+          color="secondary"
+          badgeContent={lateRequests.length}
+          onClick={handleBadgeClick}
+          sx={{ cursor: "pointer" }}
+        >
+          <AssignmentLateIcon sx={{ fontSize: "25px" }} />
+        </Badge>
 
         <Box>
           <TextField
@@ -463,6 +494,45 @@ const Requests = () => {
             Delete
           </Button>
           <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={lateRequestsDialogOpen}
+        onClose={handleCloseLateRequestsDialog}
+        variant="contained"
+      >
+        <DialogTitle>Select Request</DialogTitle>
+        <DialogContent>
+          <List>
+            {lateRequests.map((request) => (
+              <ListItem
+                button
+                key={request.id}
+                onClick={() => navigate(`/requests/${request.id}`)}
+              >
+                <Avatar sx={{ bgcolor: "#C5A773", mr: 2 }}>
+                  <CalendarTodayIcon />
+                </Avatar>
+                <ListItemText
+                  primary={`Request ID: ${request.id}`}
+                  secondary={`Customer: ${request.customer_name}`}
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ml: 2 }}
+                >
+                  Appointment Date: {request.appoinment_date}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseLateRequestsDialog} color="primary">
             Cancel
           </Button>
         </DialogActions>
