@@ -77,9 +77,10 @@ public class TokenService {
 		if (foundRefreshToken.getExpiryTime().before(currentTime))
 			throw new RefreshTokenExpiredException();
 		try {
-			
+			System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             TokenResponse response = generateTokens(foundRefreshToken.getCustomer());
             refreshTokenRepo.delete(foundRefreshToken);
+            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
             return response;
         } catch (OptimisticLockingFailureException e) {
             throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);

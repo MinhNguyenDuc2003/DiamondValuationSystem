@@ -111,7 +111,6 @@ api.interceptors.response.use(
 
       try {
         const resp = await refreshToken();
-
         if (resp.token) {
           const access_token = resp.token;
           localStorage.setItem("token", access_token);
