@@ -12,6 +12,7 @@ const VerifyAccount = () => {
 
   useEffect(() => {
     const VerifyAccount = async () => {
+
       const code = searchParams.get('code');
       console.log("Verification code:", code); // Debugging line
       if (code) {
@@ -48,24 +49,28 @@ const VerifyAccount = () => {
           <Typography variant="h4" gutterBottom>
             Verify Account Successfully
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            component={RouterLink}
-            to="/login"
-            sx={{ mt: 2 }}
-          >
-            Back to Login
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            component={RouterLink}
-            to="/"
-            sx={{ mt: 1 }}
-          >
-            Back to Home Page
-          </Button>
+          <Box display={'flex'} justifyContent={'center'} gap={'10px'}>
+
+            <Button
+              variant="contained"
+              color="primary"
+              component={RouterLink}
+              to="/login"
+              sx={{ mt: 2 }}
+            >
+              Back to Login
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              component={RouterLink}
+              to="/"
+              sx={{ mt: 2 }}
+            >
+              Back to Home Page
+            </Button>
+          </Box>
+
         </Box>
       ) : (
         <Box textAlign="center">
