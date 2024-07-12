@@ -52,6 +52,7 @@ public class AuthController {
 	public ResponseEntity<?> signIn(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response
 			, HttpServletRequest request) throws BadRequestException{
 		try {
+			
 			TokenResponse token = authService.login(authRequest);
 			if(token!=null) {
 				setRefreshToken4Cookies(response, request, token.getRefreshToken());

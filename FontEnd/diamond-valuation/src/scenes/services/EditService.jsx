@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography, Input } from "@mui/material";
+import { Box, Button, TextField, Typography, Grid } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,6 +26,8 @@ const EditService = () => {
     content: "",
     photo: null,
   });
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
     const fetchService = async () => {
@@ -36,8 +38,9 @@ const EditService = () => {
           name: serviceEdit.name,
           money: serviceEdit.money,
           content: serviceEdit.content,
-          photo: serviceEdit.photo,
         });
+        setImagePreview(serviceEdit.photo);
+        setImage(serviceEdit.photo);
       } catch (error) {
         console.log(error);
       }
@@ -66,6 +69,12 @@ const EditService = () => {
     setTimeout(() => {
       setErrorMessage("");
     }, 3000);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   return (
@@ -137,19 +146,30 @@ const EditService = () => {
                   fullWidth
                   sx={{ gridColumn: "span 4" }}
                 />
-                <Input
-                  margin="dense"
-                  type="file"
-                  name="photo"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={!!touched.photo && !!errors.photo}
-                  inputProps={{ accept: "image/png, image/jpeg " }}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                {touched.photo && errors.photo && (
-                  <div style={{ color: "red" }}>{errors.photo}</div>
-                )}
+                <Box sx={{ gridColumn: "span 4" }}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Image
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </Button>
+                  {imagePreview && (
+                    <Box mt={2} textAlign="center">
+                      <Typography>Image Preview:</Typography>
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      />
+                    </Box>
+                  )}
+                  {errors.photo && touched.photo && (
+                    <Typography color="error">{errors.photo}</Typography>
+                  )}
+                </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">

@@ -27,7 +27,6 @@ import Dashboard from "./scenes/home/Dashboard";
 import Rapaport from "./scenes/rapaport/Rapaport";
 import Report from "./scenes/report/Report";
 import EditCertificate from "./scenes/certificates/EditCertificate";
-import ManageRequest from "./scenes/manager/ManageRequest";
 import ManageReports from "./scenes/manager/ManageReports";
 import UpdateAccount from "./scenes/users/UpdateAccount";
 import ManagerRoute from "./components/routes/ManagerRoute";
@@ -228,23 +227,17 @@ const MainContent = () => {
 
           {/* Report */}
           <Route
-            path="/report"
+            path="/report/:requestId"
             element={
               <PrivateRoute>
-                <Report />
+                <StaffRoute>
+                  <Report />
+                </StaffRoute>
               </PrivateRoute>
             }
           />
 
           {/* Manager */}
-          <Route
-            path="/managerequests"
-            element={
-              <PrivateRoute>
-                <ManageRequest />
-              </PrivateRoute>
-            }
-          />
           <Route
             path="/managereports"
             element={

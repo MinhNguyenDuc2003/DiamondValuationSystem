@@ -59,6 +59,7 @@ const EditCertificate = () => {
       .then((data) => {
         setCertificate(data);
         setImagePreview(data.photo);
+        setImage(data.image);
       })
       .catch((error) => {
         console.error("Error fetching certificate: ", error);
