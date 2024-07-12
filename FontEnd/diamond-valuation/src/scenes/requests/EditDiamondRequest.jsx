@@ -49,23 +49,11 @@ const EditDiamondRequest = () => {
       try {
         const customersData = await getCustomersPerPage(1, "");
         setCustomers(customersData.list_customers);
-        console.log("Fetched Customers:", customersData.list_customers); // Debug log
 
         const servicesData = await getAllServices();
         setServices(servicesData);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchRequest = async () => {
-      try {
         const requestEdit = await getRequestById(requestid);
-        console.log("Request Edit Data:", requestEdit); // Debug log
         if (requestEdit) {
           setInitialValues({
             id: requestEdit.id,
@@ -83,8 +71,9 @@ const EditDiamondRequest = () => {
         setError(error.message);
       }
     };
-    fetchRequest();
-  }, [requestid, customers]);
+
+    fetchData();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string().required("Customer is required"),
@@ -175,7 +164,9 @@ const EditDiamondRequest = () => {
                     }}
                     value={
                       customers.find(
-                        (customer) => customer.id === values.customer_id
+                        (customer) =>
+                          Number(customer.id) ===
+                          Number(initialValues.customer_id)
                       ) || null
                     }
                     renderInput={(params) => (
