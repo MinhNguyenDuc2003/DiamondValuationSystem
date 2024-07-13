@@ -265,7 +265,7 @@ const ServiceForm = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Typography key={value}>{value}</Typography>
+                      <Typography key={value}>{value} <>&nbsp;</> <>&nbsp;</></Typography> 
                     ))}
                   </Box>
                 )}

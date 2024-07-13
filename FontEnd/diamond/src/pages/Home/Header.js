@@ -48,7 +48,6 @@ const Header = () => {
   };
   const handleLogoutClick = () => {
     auth.handleLogout();
-    window.location.reload();
     navigate("/login");
   };
 

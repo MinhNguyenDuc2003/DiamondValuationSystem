@@ -16,6 +16,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout(){
+  try {
+    const id = localStorage.getItem("userId");
+    if(id.length>0 && id !== null){
+      const response = await api.get(`/diamond-shop/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function createNewAccount(account) {
   try {
     const response = await api.post("/diamond-shop/signup", account);

@@ -30,6 +30,7 @@ const AddService = () => {
   };
 
   const handleFormSubmit = async (values) => {
+
     console.log({ ...values, photo: image });
     try {
       const result = await saveService({ ...values, photo: image });

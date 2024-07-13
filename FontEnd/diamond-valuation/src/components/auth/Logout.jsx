@@ -5,9 +5,14 @@ import { AuthContext, useAuth } from "./AuthProvider";
 export const Logout = () => {
   const navigate = useNavigate();
   const auth = useAuth();
-  const handleLogout = () => {
-    auth.handleLogout();
-    navigate("/login", { replace: true });
+  const handleLogout = async () => {
+    try {
+      await auth.handleLogout(); // Wait for the logout to complete
+      // navigate("/login", { replace: true }); // Then navigate to the login page
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Optionally handle the error, e.g., show a message to the user
+    }
   };
 
   return (

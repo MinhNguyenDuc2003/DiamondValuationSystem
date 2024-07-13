@@ -14,6 +14,8 @@ import com.diamondvaluation.common.RequestStatus;
 public interface DiamondRequestRepository extends CrudRepository<DiamondRequest, Integer>, PagingAndSortingRepository<DiamondRequest, Integer>{
 	List<DiamondRequest> findByStatusOrderByCreatedDateAsc(RequestStatus status);
     Optional<DiamondRequest> findByStatus(RequestStatus status);
-    @Query(value = "SELECT * FROM diamond_request d WHERE d.customer_id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM diamond_request d WHERE d.customer_id = :id ORDER BY d.created_date DESC", nativeQuery = true)
     List<DiamondRequest> getDiamondRequestByCustomerId(Integer id);
+    @Query(value = "SELECT * FROM diamond_request d ORDER BY d.created_date DESC", nativeQuery = true)
+    List<DiamondRequest> findAllOrderByCreatedDateDesc();
 }

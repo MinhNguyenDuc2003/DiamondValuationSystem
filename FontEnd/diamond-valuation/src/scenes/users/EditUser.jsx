@@ -26,39 +26,47 @@ export const EditUser = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
-    const fetchRoles = async () => {
+    const fetchPage = async () => {
       try {
-        const roles = await getRoles();
-        setRoles(roles);
+        const fetchRoles = async () => {
+          try {
+            const roles = await getRoles();
+            setRoles(roles);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+  
+        const fetchUser = async () => {
+          try {
+            const useredit = await getUserById(userid);
+            setUser({
+              id: useredit.id,
+              email: useredit.email,
+              first_name: useredit.first_name,
+              last_name: useredit.last_name,
+              password: "",
+              phone_number: useredit.phone_number,
+              enabled: useredit.enabled,
+              photo: useredit.photo,
+              role_ids: useredit.role_ids,
+            });
+            setImagePreview(useredit.photo);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+  
+        // Fetch user first, then fetch roles
+        await fetchUser();
+        await fetchRoles();
       } catch (error) {
         console.log(error);
       }
     };
-    fetchRoles();
-  }, []);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const useredit = await getUserById(userid);
-        setUser({
-          id: useredit.id,
-          email: useredit.email,
-          first_name: useredit.first_name,
-          last_name: useredit.last_name,
-          password: "",
-          phone_number: useredit.phone_number,
-          enabled: useredit.enabled,
-          photo: useredit.photo,
-          role_ids: useredit.role_ids,
-        });
-        setImagePreview(useredit.photo);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUser();
-  }, []);
+  
+    fetchPage();
+  }, [userid]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

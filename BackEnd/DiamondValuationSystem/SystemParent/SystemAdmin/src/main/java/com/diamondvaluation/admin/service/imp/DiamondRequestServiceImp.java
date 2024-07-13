@@ -95,7 +95,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 
 	@Override
 	public List<DiamondRequest> findAllRequest() {
-		return (List<DiamondRequest>) repo.findAll();
+		return repo.findAllOrderByCreatedDateDesc();
 	}
 
 	public List<DiamondRequest> findRequestsByStatusSortedByCreatedDate(RequestStatus status) {

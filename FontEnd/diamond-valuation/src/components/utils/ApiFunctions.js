@@ -27,6 +27,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout(){
+  try {
+    const id = localStorage.getItem("userId");
+    if(id.length>0 && id !== null){
+      const response = await api.get(`/api/auth/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 // =========================== USER ================================================
 export async function getUsersPerPage(pageNum, keyword) {
   try {
@@ -125,6 +137,19 @@ export async function getCustomersPerPage(pageNum, keyword) {
       `/api/customers/page/${page}?keyword=${keyword}`
     );
     return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
+export async function searchCustomerByKeyword(keyword) {
+  try {
+    if (keyword.length > 0) {
+      const result = await api.get(
+        `/api/customers/search/customer?keyword=${keyword}`
+      );
+      return result.data;
+    }
   } catch (error) {
     throw new Error(`Error fetching users : ${error.message}`);
   }

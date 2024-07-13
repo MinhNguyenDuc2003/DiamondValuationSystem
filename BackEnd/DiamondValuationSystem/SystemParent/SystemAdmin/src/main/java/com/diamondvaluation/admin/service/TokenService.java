@@ -81,10 +81,13 @@ public class TokenService {
 
 	    try {
 	        TokenResponse response = generateTokens(foundRefreshToken.getUser());
-	        refreshTokenRepo.delete(foundRefreshToken);
 	        return response;
 	    } catch (OptimisticLockingFailureException e) {
 	        throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);
 	    }
+	}
+	
+	public void deleteAllRefreshTokenById(Integer id) {
+		refreshTokenRepo.deleteAllByUserId(id);
 	}
 }
