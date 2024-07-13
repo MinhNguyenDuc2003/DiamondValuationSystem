@@ -76,7 +76,7 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 		if(!customer.isPresent()) {
 			throw new CustomerNotFoundException("Cannot find any customer with email:" + email);
 		}
-		return repo.findByCustomer(customer.get());
+		return repo.findByCustomer(customer.get().getId());
 	}
 
 }

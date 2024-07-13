@@ -49,17 +49,20 @@ const MyOrder = () => {
   const itemsPerPage = 3;
 
   useEffect(() => {
-    getAllRequest().then((data) => {
-      setOrders(data);
-      setFilteredOrders(data);
-      setTotalRequest(data.length);
-      const doneRequests = data.filter((order) => order.status === "DONE");
-      setTotalDone(doneRequests.length);
-      const completedSteps = data.filter(
-        (order) => order.status === "PROCESSED"
-      );
-      setTotalCompletedSteps(completedSteps.length);
-    });
+    const fetchData = async () => {
+      getAllRequest().then((data) => {
+        setOrders(data);
+        setFilteredOrders(data);
+        setTotalRequest(data.length);
+        const doneRequests = data.filter((order) => order.status === "DONE");
+        setTotalDone(doneRequests.length);
+        const completedSteps = data.filter(
+          (order) => order.status === "PROCESSED"
+        );
+        setTotalCompletedSteps(completedSteps.length);
+      });
+    }
+    fetchData()
   }, []);
 
   const handleShowDetails = (order) => {

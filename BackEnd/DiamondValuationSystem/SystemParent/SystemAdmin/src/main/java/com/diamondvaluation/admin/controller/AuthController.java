@@ -99,7 +99,7 @@ public class AuthController {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 		    for (Cookie cookie : cookies) {
-		        if (cookie.getName().equals("refreshToken")) {
+		        if (cookie.getName().equals("adminRefreshToken")) {
 		            // Update the existing refreshTokenCookie
 		            cookie.setValue(refreshToken);
 		            cookie.setPath("/");
@@ -111,7 +111,7 @@ public class AuthController {
 		}
 
 		// If the cookie doesn't exist, create a new one
-		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		Cookie refreshTokenCookie = new Cookie("adminRefreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setPath("/");

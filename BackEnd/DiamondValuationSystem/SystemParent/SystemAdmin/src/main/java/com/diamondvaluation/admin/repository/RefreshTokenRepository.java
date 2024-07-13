@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.diamondvaluation.common.RefreshToken;
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Integer>{
-	@Query("SELECT rt FROM RefreshToken rt WHERE rt.user.id = ?1 AND rt.userType='user'")
+	@Query("SELECT rt FROM RefreshToken rt WHERE rt.user.id = ?1")
 	public List<RefreshToken> findByUserId(Integer id);
 	
 	@Query("DELETE FROM RefreshToken rt WHERE rt.expiryTime <= CURRENT_TIME")

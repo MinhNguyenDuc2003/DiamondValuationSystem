@@ -57,7 +57,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
   try {
-    const result = await api.get(`/api/users/user/${id}`);
+    const result = await api.get(`/api/users/user/${id}`);F
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -216,7 +216,10 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  formData.append("id", service.id);
+  if(service.id !== null && service.id !== undefined){
+    formData.append("id", service.id);
+  }
+  
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
