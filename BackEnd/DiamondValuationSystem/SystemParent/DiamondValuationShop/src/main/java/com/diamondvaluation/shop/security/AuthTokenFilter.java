@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -40,8 +41,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 				filterChain.doFilter(request, response);
 				return;
 			}
-
 			String jwt = parseJwt(request);
+			if (jwt == null) {
+				filterChain.doFilter(request, response);
+				return;
+			}
 			if (!jwtUtils.isExpiredToken(jwt)) {
 				if (jwt != null && !jwtUtils.validateAccessToken(jwt).isEmpty()) {
 					String email = getUserDetails(jwt).getUsername();
@@ -75,12 +79,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 		return new CustomUserDetails(cusDetails);
 	}
-	
+
 	private boolean hasAuthorizationBearer(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-		
+
 		logger.info("Authorization Header: " + header);
-		
+
 		if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
 			return false;
 		}

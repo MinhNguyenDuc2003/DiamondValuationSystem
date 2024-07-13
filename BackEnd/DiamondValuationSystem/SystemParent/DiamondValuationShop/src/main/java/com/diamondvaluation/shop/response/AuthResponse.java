@@ -1,7 +1,5 @@
 package com.diamondvaluation.shop.response;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
@@ -10,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@JsonPropertyOrder({"id","email", "full_name", "token", "refresh_token"})
+@JsonPropertyOrder({"id","email", "token", "refresh_token"})
 @Getter
 public class AuthResponse {
 	private String id;

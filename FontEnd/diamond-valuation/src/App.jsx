@@ -5,8 +5,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Login from "./components/auth/Login";
-import Home from "./scenes/home/Home";
-import NavBar from "./scenes/global/NavBar";
 import Users from "./scenes/users/Users";
 import { AuthProvider, useAuth } from "./components/auth/AuthProvider";
 import AddUser from "./scenes/users/AddUser";
@@ -25,6 +23,12 @@ import AddDiamondRequest from "./scenes/requests/AddDiamondRequest";
 import EditDiamondRequest from "./scenes/requests/EditDiamondRequest";
 import Certificates from "./scenes/certificates/Certificates";
 import CreateCertificate from "./scenes/certificates/CreateCertificate";
+import Dashboard from "./scenes/home/Dashboard";
+import Rapaport from "./scenes/rapaport/Rapaport";
+import Report from "./scenes/report/Report";
+import EditCertificate from "./scenes/certificates/EditCertificate";
+import ManageRequest from "./scenes/manager/ManageRequest";
+import ManageReports from "./scenes/manager/ManageReports";
 
 const App = () => {
   return (
@@ -51,7 +55,7 @@ const MainContent = () => {
             path="/"
             element={
               <PrivateRoute>
-                <Home />
+                <Dashboard />
               </PrivateRoute>
             }
           />
@@ -177,10 +181,56 @@ const MainContent = () => {
             }
           />
           <Route
+            path="/certificates/:certificateId"
+            element={
+              <PrivateRoute>
+                <EditCertificate />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/create-certificate/:requestId"
             element={
               <PrivateRoute>
                 <CreateCertificate />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Rapaport */}
+          <Route
+            path="/rapaport"
+            element={
+              <PrivateRoute>
+                <Rapaport />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Report */}
+          <Route
+            path="/report"
+            element={
+              <PrivateRoute>
+                <Report />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Manager */}
+          <Route
+            path="/managerequests"
+            element={
+              <PrivateRoute>
+                <ManageRequest />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/managereports"
+            element={
+              <PrivateRoute>
+                <ManageReports />
               </PrivateRoute>
             }
           />

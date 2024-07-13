@@ -7,18 +7,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.admin.Utility;
+import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.exception.ServiceNotFoundException;
+import com.diamondvaluation.admin.repository.CustomerRepository;
 import com.diamondvaluation.admin.repository.DiamondRequestRepository;
 import com.diamondvaluation.admin.repository.RequestTrackRepository;
 import com.diamondvaluation.admin.repository.ServiceRepository;
 import com.diamondvaluation.admin.service.DiamondRequestService;
+import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
-<<<<<<< HEAD
-import com.diamondvaluation.common.RequestStatus;
-=======
 import com.diamondvaluation.common.DiamondService;
->>>>>>> f1eae3c546cbb705823b3e813c1b369cc6cd71bd
+import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.RequestTrack;
 import com.diamondvaluation.common.User;
 
@@ -30,13 +30,14 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 	private final DiamondRequestRepository repo;
 	private final ServiceRepository serviceRepo;
 	private final RequestTrackRepository trackingRepo;
+	private final CustomerRepository cusRepo;
 	
-
 	public DiamondRequestServiceImp(DiamondRequestRepository repo, RequestTrackRepository trackingRepo,
-			ServiceRepository serviceRepo) {
+			ServiceRepository serviceRepo, CustomerRepository cusRepo) {
 		this.repo = repo;
 		this.trackingRepo = trackingRepo;
 		this.serviceRepo = serviceRepo;
+		this.cusRepo = cusRepo;
 	}
 
 	@Transactional
@@ -107,10 +108,27 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 
     @Transactional
     @Override
-    public void updateRequestStatus(Integer id, RequestStatus status) {
-        DiamondRequest request = getRequestById(id);
-        request.setStatus(status);
-        repo.save(request);
+    public void updateRequestStatus(Integer id, RequestStatus status, HttpServletRequest request) {
+    	DiamondRequest diamondRequest = getRequestById(id);
+    	RequestTrack track = new RequestTrack();
+		Date date = new Date();
+		track.setUpdatedTime(date);
+		User user = Utility.getIdOfAuthenticatedUser(request);
+		track.setUpdatedBy(user);
+		track.setNote(diamondRequest.getNote());
+		track.setRequest(diamondRequest);
+		track.setStatus(diamondRequest.getStatus());
+		diamondRequest.setStatus(status);
+        repo.save(diamondRequest);
     }
+
+	@Override
+	public List<DiamondRequest> getRequestByCustomerId(Integer id) {
+		Optional<Customer> customer = cusRepo.findById(id);
+		if(!customer.isPresent()) {
+			throw new CustomerNotFoundException("Cannot find any Customer with id" + id);
+		}
+		return repo.getDiamondRequestByCustomerId(id);
+	}
 
 }

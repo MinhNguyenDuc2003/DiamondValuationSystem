@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Project\DiamondValuationSystem\FontEnd\diamond-valuation\src\tests\CreateUser.test.js">
+        <testCase name="AddUser Component Handle Image Upload and Preview" duration="72"/>
+        <testCase name="AddUser Component Submit Form with Valid Data" duration="39"/>
+        <testCase name="AddUser Component Submit Form with Existed Email or Invalid Email" duration="46"/>
+        <testCase name="AddUser Component Cancel Form Submission" duration="74"/>
+    </file>
+</testExecutions>

@@ -16,6 +16,9 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 	@Query("SELECT c FROM Customer c WHERE c.email = ?1 AND c.enabled = true")
 	Optional<Customer> findByEmail(String email);
 	
+	@Query("SELECT c FROM Customer c WHERE c.email = ?1 AND c.enabled = true AND c.authenticationType = DATABASE")
+	Optional<Customer> findByEmailDatabase(String email);
+	
 	@Query("SELECT c FROM Customer c WHERE c.email = ?1")
 	Optional<Customer> findByEmailAll(String email);
 
@@ -28,5 +31,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 	@Query("UPDATE Customer c SET c.authenticationType = ?2 WHERE c.id = ?1")
 	@Modifying
 	public void updateAuthenticationType(Integer customerId, AuthenticationType type);
+
+	Optional<Customer> findByResetPasswordCode(String token);
 	
 }

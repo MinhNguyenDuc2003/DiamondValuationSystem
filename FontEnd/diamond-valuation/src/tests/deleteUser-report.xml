@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Project\DiamondValuationSystem\FontEnd\diamond-valuation\src\tests\DeleteUser.test.js">
+        <testCase name="Users Component Open Delete Confirmation Dialog" duration="238"/>
+        <testCase name="Users Component Confirm Delete Action" duration="112"/>
+        <testCase name="Users Component opens delete confirmation dialog and cancels delete action" duration="326"/>
+    </file>
+</testExecutions>

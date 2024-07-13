@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="D:\Project\DiamondValuationSystem\FontEnd\diamond-valuation\src\tests\Login.test.js">
+        <testCase name="should redirect after successful login" duration="223"/>
+        <testCase name="should display error message for invalid credentials" duration="149"/>
+    </file>
+</testExecutions>

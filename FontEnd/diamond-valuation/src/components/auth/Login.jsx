@@ -31,7 +31,10 @@ export const Login = () => {
         navigate("/");
       }
     };
-    checkToken();
+    const token = localStorage.getItem("token");
+    if (token !== null || token.length > 0) {
+      checkToken();
+    }
   }, []);
 
   const handleInputChange = (e) => {

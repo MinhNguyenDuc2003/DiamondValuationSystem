@@ -35,9 +35,15 @@ public class DiamondService {
 	
 	@Column(length = 128)
 	private String photo;
+	
+	private boolean status;
 
 	public DiamondService(Integer id) {
 		this.id = id;
+	}
+
+	public DiamondService(String name) {
+		this.name = name;
 	}
 	
 	

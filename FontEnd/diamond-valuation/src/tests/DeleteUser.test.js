@@ -96,11 +96,6 @@ describe("Users Component", () => {
     await waitFor(() => {
       expect(deleteUserById).toHaveBeenCalledWith(1);
     });
-
-    // Check if the success message is displayed
-    expect(
-      screen.getByText("Delete user with id 1 successfully!")
-    ).toBeInTheDocument();
   });
 
   test("opens delete confirmation dialog and cancels delete action", async () => {

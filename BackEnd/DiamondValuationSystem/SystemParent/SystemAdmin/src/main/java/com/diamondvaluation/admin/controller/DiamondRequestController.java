@@ -1,5 +1,8 @@
 package com.diamondvaluation.admin.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.DiamondRequestRequest;
 import com.diamondvaluation.admin.response.DiamondRequestResponse;
@@ -72,12 +76,13 @@ public class DiamondRequestController {
 		appoinment.setStatus(status);
 		appoinment.setServices(list);
 		appoinment.setMethod(request.getPayment_method());
-		if (request.getAppointmentDate() != null) {
+		appoinment.setPaid(request.isPaid());
+		if (request.getAppointmentDate() != null && request.getAppointmentDate().toString().length()>0) {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
             appoinment.setAppointmentDate(date);
         }
-		if (request.getAppointmentTime() != null) {
+		if (request.getAppointmentTime() != null && request.getAppointmentTime().toString().length()>0) {
 			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
             appoinment.setAppointmentTime(time);
@@ -89,6 +94,7 @@ public class DiamondRequestController {
 		DiamondRequestResponse appoinmentResponse = modelMapper.map(appoinment, DiamondRequestResponse.class);
 		Customer customer = appoinment.getCustomer();
 		appoinmentResponse.setCustomerName(customer.getFullname());
+		appoinmentResponse.setCustomerId(customer.getId());
 		appoinmentResponse.setCustomerPhone(customer.getPhoneNumber());
 		appoinmentResponse.setService_ids(appoinment.getServiceIds());
 		appoinmentResponse.setService_names(appoinment.getServiceNames());
@@ -146,12 +152,23 @@ public class DiamondRequestController {
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
-			@PathVariable("status") RequestStatus status) {
+			@PathVariable("status") RequestStatus status,  HttpServletRequest request) {
 		try {
-			requestService.updateRequestStatus(id, status);
+			requestService.updateRequestStatus(id, status, request);
 			return new ResponseEntity<>(new MessageResponse("Status updated successfully for request id " + id),
 					HttpStatus.OK);
 		} catch (RequestNotFoundException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/customer/{id}")
+	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id){
+		try {
+			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
+			return new ResponseEntity<>(listEntity2Response(list),
+					HttpStatus.OK);
+		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}

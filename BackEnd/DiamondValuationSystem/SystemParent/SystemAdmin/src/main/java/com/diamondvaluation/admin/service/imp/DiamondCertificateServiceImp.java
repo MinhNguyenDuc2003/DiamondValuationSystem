@@ -3,9 +3,11 @@ package com.diamondvaluation.admin.service.imp;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
 import com.diamondvaluation.admin.repository.DiamondCertificateRepository;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
@@ -20,6 +22,31 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 
 	@Override
 	public DiamondCertificate save(DiamondCertificate certificate) {
+
+		boolean isUpdate = certificate.getId()!=null && certificate.getId()!=0;
+		if(!isUpdate) {
+			boolean isDuplicated = true;
+			while(isDuplicated) {
+				UUID uniqueKey = UUID.randomUUID();
+				String code = "SH"+uniqueKey.toString().substring(23);
+				certificate.setCode(code);
+				if(!repo.findByCode(code).isPresent()) {
+					isDuplicated = false;
+				}
+			}
+		}else {
+			Optional<DiamondCertificate> certificateInDb = repo.findById(certificate.getId());
+			if(!certificateInDb.isPresent()) {
+				throw new CertificateNotFoundException("Cannot found certificate with id" +certificate.getId());
+			}else {
+				if(certificateInDb.get().getRequest().getId() != certificate.getRequest().getId()) {
+					if(repo.findByRequestId(certificate.getRequest().getId()).isPresent()){
+						throw new CertificateIsAlreadyExistException("certificate with this id already exist!");
+					}
+				}
+			}
+		}
+		certificate.setRequest(null);
 		return repo.save(certificate);
 	}
 
@@ -48,6 +75,9 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 		return  (List<DiamondCertificate>) repo.findAll();
 	}
 	
-	
+	public static void main(String[] args) {
+	    UUID uniqueKey = UUID.randomUUID();
+	    System.out.println (uniqueKey.toString().substring(23));
+	  }
 
 }

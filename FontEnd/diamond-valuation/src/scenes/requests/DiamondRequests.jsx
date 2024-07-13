@@ -28,10 +28,38 @@ import {
   Pagination,
   Paper,
   Alert,
+  Chip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PaidIcon from "@mui/icons-material/Paid";
+import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import BuildIcon from "@mui/icons-material/Build";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import DoneIcon from "@mui/icons-material/Done";
+import BlockIcon from "@mui/icons-material/Block";
+
+const statusColors = {
+  WAIT: "warning",
+  NEW: "primary",
+  PROCESSING: "info",
+  PROCESSED: "secondary",
+  DONE: "success",
+  BLOCKREQUEST: "error",
+  BLOCKED: "error",
+};
+
+const statusIcons = {
+  WAIT: <WatchLaterIcon />,
+  NEW: <NewReleasesIcon />,
+  PROCESSING: <BuildIcon />,
+  PROCESSED: <DoneAllIcon />,
+  DONE: <DoneIcon />,
+  BLOCKREQUEST: <BlockIcon />,
+  BLOCKED: <BlockIcon />,
+};
 
 const Requests = () => {
   const [data, setData] = useState([]);
@@ -136,6 +164,9 @@ const Requests = () => {
       <Typography variant="h4" textAlign="center">
         Manage Requests
       </Typography>
+      <Typography variant="body1" textAlign="center" mb={4}>
+        Here you can view, edit, and manage all customer requests.
+      </Typography>
 
       <Box
         display="flex"
@@ -144,7 +175,9 @@ const Requests = () => {
         sx={{ mt: 2, mb: 2 }}
       >
         <Link to={"/requests/new"}>
-          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
+          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+            Add New Request
+          </Button>
         </Link>
 
         <Box>
@@ -196,8 +229,12 @@ const Requests = () => {
               <TableCell align="center">Customer Name</TableCell>
               <TableCell align="center">Customer Phone</TableCell>
               <TableCell align="center">Created Date</TableCell>
-              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Payment method</TableCell>
+              <TableCell align="center">Appointment Date</TableCell>
               <TableCell align="center">Service</TableCell>
+              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">Total</TableCell>
+              <TableCell align="center">Paid</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -212,9 +249,30 @@ const Requests = () => {
                   <TableCell align="center">
                     {formatDate(request.created_date)}
                   </TableCell>
-                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">{request.payment_method}</TableCell>
+                  <TableCell align="center">
+                    {request.appoinment_date} {request.appoinment_time}
+                  </TableCell>
                   <TableCell align="center">{request.service_names}</TableCell>
-                  <TableCell align="center">{request.status}</TableCell>
+                  <TableCell align="center">{request.note}</TableCell>
+                  <TableCell align="center">
+                    ${request.total.toFixed(2)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {request.paid ? (
+                      <PaidIcon sx={{ color: "green", fontSize: "25px" }} />
+                    ) : (
+                      <PaidIcon sx={{ fontSize: "25px" }} />
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      icon={statusIcons[request.status]}
+                      label={request.status}
+                      color={statusColors[request.status]}
+                      // sx={{ width: "100px" }}
+                    />
+                  </TableCell>
                   <TableCell align="center">
                     <IconButton
                       onClick={() => navigate(`/requests/${request.id}`)}
@@ -229,7 +287,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={12} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>

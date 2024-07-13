@@ -15,11 +15,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@JsonPropertyOrder({"id", "customer_name", "phone_number", "created_time","note","service_ids","service_names", "status", "payment_method","total", "paid"})
+@JsonPropertyOrder({"id", "customer_name", "customer_id","phone_number", "created_time","note","service_ids","service_names", "status", "payment_method","total", "paid"})
 public class DiamondRequestResponse {
 	private Integer id;
 	
 	private String customerName;
+	
+	private Integer customerId;
 	
 	private String customerPhone;
 	

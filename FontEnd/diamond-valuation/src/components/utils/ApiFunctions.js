@@ -126,7 +126,7 @@ export async function saveCustomer(customer) {
   formData.append("last_name", customer.last_name);
   formData.append("email", customer.email);
   formData.append("password", customer.password);
-  formData.append("phone_number", customer.phone_number);
+  formData.append("phone_number", customer.phone_numbe);
   formData.append("location", customer.location);
   formData.append("enabled", customer.enabled);
 
@@ -221,10 +221,11 @@ export async function saveRequest(request) {
   formData.append("customer_id", request.customer_id);
   formData.append("note", request.note);
   formData.append("status", request.status);
-  // Append service_ids correctly
-  if (request.service_ids && request.service_ids.length > 0) {
-    formData.append("service_ids", request.service_ids.join(","));
-  }
+  formData.append("service_ids", request.service_ids);
+  formData.append("payment_method", request.payment_method);
+  formData.append("appointmentDate", request.appointment_date);
+  formData.append("appointmentTime", request.appointment_time);
+  formData.append("paid", request.paid);
 
   try {
     const response = await api.post(
@@ -284,6 +285,15 @@ export async function getAllCertificates() {
   }
 }
 
+export async function getCertificateById(id) {
+  try {
+    const result = await api.get(`api/certificates/certificate/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 export async function deleteCertificateById(id) {
   try {
     const result = await api.delete(`api/certificates/delete/${id}`);
@@ -320,7 +330,124 @@ export async function saveCertificate(certificate) {
     console.log(error.data);
   }
 }
+// ====================================== RAPAPORT ========================================= //
 
+export async function getAllRapaport() {
+  try {
+    const result = await api.get(`api/attribute/all`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function updateDiamondAttribute(attr) {
+  const data = {
+    color: attr.color,
+    clarity: attr.clarity,
+    number: attr.number,
+  };
+
+  try {
+    const response = await api.put(`api/attribute/update/${attr.id}`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function deleteDiamondAttributeById(id) {
+  try {
+    const result = await api.delete(`api/attribute/delete/${id}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error delete certificate : ${error.message}`);
+  }
+}
+
+export async function addDiamondAttribute(attr, caratId) {
+  const data = {
+    color: attr.color,
+    clarity: attr.clarity,
+    number: attr.number,
+  };
+
+  try {
+    const response = await api.post(`api/attribute/add/${caratId}`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function addCaratRange(caratRange) {
+  const data = {
+    begin_carat: caratRange.begin_carat,
+    end_carat: caratRange.end_carat,
+  };
+
+  try {
+    const response = await api.post("api/carat/add", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function updateCaratRange(id, caratRange) {
+  const data = {
+    id: id,
+    begin_carat: caratRange.begin_carat,
+    end_carat: caratRange.end_carat,
+  };
+
+  try {
+    console.log(data);
+    const response = await api.put(`api/carat/update`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function deleteCaratRange(id) {
+  try {
+    const response = await api.delete(`api/carat/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
