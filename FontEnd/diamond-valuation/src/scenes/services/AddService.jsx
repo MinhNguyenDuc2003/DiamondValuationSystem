@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography, Alert } from "@mui/material";
-import { Formik } from "formik";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { saveService } from "../../components/utils/ApiFunctions";
@@ -13,7 +13,7 @@ const serviceSchema = yup.object().shape({
   name: yup.string().matches(nameReqExp, "Invalid name").required("Required"),
   money: yup.number().required("Required"),
   content: yup.string().required("Required"),
-  photo: yup.mixed().required("Image is required"),
+  // Photo field is not needed in validation schema, handled separately
 });
 
 const AddService = () => {
@@ -23,31 +23,31 @@ const AddService = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   const initialValues = {
-    id: "",
     name: "",
     money: "",
     content: "",
   };
 
   const handleFormSubmit = async (values) => {
-
-    console.log({ ...values, photo: image });
     try {
-      const result = await saveService({ ...values, photo: image });
-      console.log(result); // Debug: Log the API response
+      if (!image) {
+        setErrorMessage("Image is required");
+        return;
+      }
+      const result = await saveService({
+        ...values,
+        photo: image,
+      });
       if (result.message !== undefined) {
-        localStorage.setItem("successMessage", "Add new Service successfully");
+        localStorage.setItem("successMessage", "Add New Service Successfully");
         navigate("/services");
       } else {
-        setErrorMessage("Failed to add new service");
+        setErrorMessage("Failed to add service");
       }
     } catch (error) {
-      console.error(error); // Debug: Log the error
+      console.error("Error occurred while saving service:", error);
       setErrorMessage("An error occurred while saving the service");
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 3000);
   };
 
   const handleImageChange = (e) => {
@@ -78,13 +78,6 @@ const AddService = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={serviceSchema}
-          validate={(values) => {
-            const errors = {};
-            if (!image) {
-              errors.photo = "Image is required";
-            }
-            return errors;
-          }}
           onSubmit={handleFormSubmit}
         >
           {({
@@ -95,7 +88,7 @@ const AddService = () => {
             handleChange,
             handleSubmit,
           }) => (
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Box
                 display="grid"
                 gap="20px"
@@ -158,9 +151,6 @@ const AddService = () => {
                       />
                     </Box>
                   )}
-                  {errors.photo && touched.photo && (
-                    <Typography color="error">{errors.photo}</Typography>
-                  )}
                 </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
@@ -175,7 +165,7 @@ const AddService = () => {
                   Cancel
                 </Button>
               </Box>
-            </form>
+            </Form>
           )}
         </Formik>
       </Box>
