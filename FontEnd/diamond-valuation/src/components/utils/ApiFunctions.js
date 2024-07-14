@@ -27,6 +27,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout(){
+  try {
+    const id = localStorage.getItem("userId");
+    if(id.length>0 && id !== null){
+      const response = await api.get(`/api/auth/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 // =========================== USER ================================================
 export async function getUsersPerPage(pageNum, keyword) {
   try {
@@ -45,7 +57,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
   try {
-    const result = await api.get(`/api/users/user/${id}`);
+    const result = await api.get(`/api/users/user/${id}`);F
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -130,6 +142,19 @@ export async function getCustomersPerPage(pageNum, keyword) {
   }
 }
 
+export async function searchCustomerByKeyword(keyword) {
+  try {
+    if (keyword.length > 0) {
+      const result = await api.get(
+        `/api/customers/search/customer?keyword=${keyword}`
+      );
+      return result.data;
+    }
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
 export async function deleteCustomerById(id) {
   try {
     const result = await api.delete(`/api/customers/delete/${id}`);
@@ -191,10 +216,14 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  formData.append("id", service.id);
+  if(service.id !== null && service.id !== undefined){
+    formData.append("id", service.id);
+  }
+  
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
+  formData.append("status", true);
   formData.append("photo", service.photo);
 
   try {
@@ -269,10 +298,10 @@ export async function getRequestById(id) {
   }
 }
 
-export async function getAllRequestsNew() {
+export async function getAllRequestsStatus(status) {
   try {
     const result = await api.get(
-      `api/diamond-requests/requests/status/new`,
+      `api/diamond-requests/requests/status/${status}`,
       {}
     );
     return result.data;
@@ -473,16 +502,21 @@ export async function deleteCaratRange(id) {
 
 // =========================================== REPORTS ======================================//
 export async function saveReport(report) {
-  const formData = new FormData();
-  formData.append("id", report.id);
-  formData.append("header", report.header);
-  formData.append("content", report.content);
-  formData.append("type", report.type);
-  formData.append("status", report.status);
-  formData.append("request_id", report.request_id);
+  const data = {
+    id: report.id,
+    header: report.header,
+    content: report.content,
+    type: report.type,
+    status: report.status,
+    request_id: report.request_id,
+  };
 
   try {
-    const response = await api.post("api/reports/report/save", formData);
+    const response = await api.post("api/reports/report/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (response.status >= 200 && response.status < 300) {
       return response.data;
     } else return response.status;
@@ -490,6 +524,53 @@ export async function saveReport(report) {
     console.log(error.data);
   }
 }
+
+export async function getAllReports() {
+  try {
+    const result = await api.get(`api/reports/all-report`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function deleteReport(id) {
+  try {
+    const response = await api.delete(`api/reports/report/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+// =================================== Request Tracking =================================== //
+
+export async function getRequestTracking(id) {
+  try {
+    const result = await api.get(`/request-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+// =================================== Report Tracking =================================== //
+
+export async function getReportTracking(id) {
+  try {
+    const result = await api.get(`/report-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
@@ -504,10 +585,12 @@ export const validateToken = async () => {
 const refreshToken = async () => {
   try {
     const id = localStorage.getItem("userId");
+    if (id !== null && id > 0) {
     const formData = new FormData();
     formData.append("id", id);
     const response = await api.post("/api/auth/token/refresh", formData);
     return response.data;
+    }
   } catch (error) {
     console.log("Error", error);
   }

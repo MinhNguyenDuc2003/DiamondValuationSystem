@@ -51,7 +51,7 @@ const ManageAccount = () => {
     };
     getCustomer();
   }, [navigate]);
-
+  
   // Function to handle form input change
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });

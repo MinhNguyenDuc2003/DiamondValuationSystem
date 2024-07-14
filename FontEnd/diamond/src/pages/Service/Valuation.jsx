@@ -15,21 +15,17 @@ const Valuation = () => {
   useEffect(() => {
     setDataContent(data);
   }, []);
-
+  
   if (!dataContent) {
     return <div>Loading....</div>;
   }
 
-  //check xem người dùng đã đăng nhập hay chưa
   const handleSendForm = () => {
-    const checkUser = localStorage.getItem("userId");
+    const checkUser = window.localStorage.getItem("userId");
     if (checkUser) {
       navigate("/Service/valuation/valuation-form");
     } else {
-      toast.error("You need to login", { autoClose: 3000 });
-      setTimeout(() => {
-        navigate(`/login`);
-      }, 4000);
+      toast.error(`You need to login`, { autoClose: 3000 });
     }
   };
 

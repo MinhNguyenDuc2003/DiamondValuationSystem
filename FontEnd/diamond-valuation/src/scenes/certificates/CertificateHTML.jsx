@@ -2,13 +2,26 @@ import React from "react";
 import logo from "../../../image/logo.png";
 import facet1 from "../../../image/Facet_part1.jpg";
 import facet2 from "../../../image/Facet_part2.jpg";
+import diamond from "../../../image/diamondFrame.png";
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
+const formatDate = (dateStr) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const [month, day, year] = dateStr.split(" ");
+  return `${months[parseInt(month, 10) - 1]} ${day}, ${year}`;
 };
 
 const CertificateHTML = (certificate) => {
@@ -135,9 +148,11 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
                 <div class="detail">
-                    <p>September 01/2024</p>
+                    <p>${formatDate(certificate.created_date)}</p>
                     <p>SHINE Report Number <span>${certificate.code}</span></p>
-                    <p>Shape and Cutting Style <span>${certificate.cut}</span></p>
+                    <p>Shape and Cutting Style <span>${
+                      certificate.cut
+                    }</span></p>
                     <p>Measurements <span>${certificate.measurement}</span></p>
                 </div>
             </div>
@@ -147,15 +162,27 @@ const CertificateHTML = (certificate) => {
                     <p>Carar Weight <span>${certificate.carat}</span></p>
                     <p>Color Grade <span>${certificate.color}</span></p>
                     <p>Clarity Grade <span>${certificate.clarity}</span></p>
-                    <p>Cut Grade <span>Very Good</span></p>
+                    <p>Cut Grade <span>${certificate.make.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
                 </div>
             </div>
             <div class="S-prop">
                 <p>ADDITIONAL GRADING INFORMATION</p>
                 <div class="detail">
-                    <p>Polish <span>${certificate.polish}</span></p>
-                    <p>Symmetry <span>${certificate.symmetry}</span></p>
-                    <p>Flourescence <span>${certificate.flourescence}</span></p>
+                    <p>Polish <span>${certificate.polish.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
+                    <p>Symmetry <span>${certificate.symmetry.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
+                    <p>Flourescence <span>${certificate.flourescence.replace(
+                      /([a-z])([A-Z])/g,
+                      "$1 $2"
+                    )}</span></p>
                     <p>Inscription(s) <span>SHINE ${certificate.code}</span></p>
                     <p><span class="comment" style="font-weight: bold;">Comments:
                         </span>*SAMPLE**SAMPLE**SAMPLE**SAMPLE*</p>
@@ -180,7 +207,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src=${certificate.photo} alt="">
+                    <img class="alt-diamond" src=${diamond} alt="">
                 </div>
             </div>
 

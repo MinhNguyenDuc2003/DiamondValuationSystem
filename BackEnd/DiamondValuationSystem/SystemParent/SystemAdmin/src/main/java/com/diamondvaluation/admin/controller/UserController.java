@@ -67,8 +67,9 @@ public class UserController {
 					AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 				}
 			} else {
-				if (user.getPhoto()==null || user.getPhoto().isEmpty())
+				if (user.getPhoto()==null || user.getPhoto().isEmpty()) {
 					user.setPhoto(null);
+				}
 				savedUser = userService.addNewUser(user);
 			}
 

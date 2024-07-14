@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { jwtDecode } from "jwt-decode"; // Ensure you import it correctly
 import { idID } from "@mui/material/locale";
-
+import { logout } from "../utils/ApiFunctions";
 export const AuthContext = createContext({
   user: null,
   handleLogin: (token) => {},
@@ -37,12 +37,16 @@ export const AuthProvider = ({ children }) => {
     return foundRoles.length > 0 ? foundRoles : null;
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userRoles");
-    localStorage.removeItem("token");
-    setUser(null);
+  const handleLogout = async () => {
+      const id = localStorage.getItem("userId");
+      const response = await logout(id);
+      if(response.status === 200){
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userRoles");
+        localStorage.removeItem("token");
+        setUser(null);
+      }
   };
 
   return (

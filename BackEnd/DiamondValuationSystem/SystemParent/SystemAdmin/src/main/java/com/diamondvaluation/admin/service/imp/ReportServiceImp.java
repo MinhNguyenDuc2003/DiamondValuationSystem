@@ -11,6 +11,7 @@ import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.repository.ReportRepository;
 import com.diamondvaluation.admin.repository.ReportTrackingRepository;
 import com.diamondvaluation.admin.service.ReportService;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Report;
 import com.diamondvaluation.common.ReportTracking;
 import com.diamondvaluation.common.User;
@@ -19,22 +20,32 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ReportServiceImp implements ReportService{
+public class ReportServiceImp implements ReportService {
 	private final ReportRepository reportRepository;
 	private final ReportTrackingRepository reportTrackingRepository;
-	
-	public ReportServiceImp(ReportRepository reportRepo, ReportTrackingRepository reportTrackingRepository) {
-		this.reportRepository = reportRepo;
+	private final UserService userService;
+
+	public ReportServiceImp(ReportRepository reportRepository, ReportTrackingRepository reportTrackingRepository,
+			UserService userService) {
+		this.reportRepository = reportRepository;
 		this.reportTrackingRepository = reportTrackingRepository;
+		this.userService = userService;
 	}
-	
+
 	@Transactional
 	@Override
 	public void saveReport(Report report, HttpServletRequest request) {
 		try {
-			User user = Utility.getIdOfAuthenticatedUser(request);
+			if(report.getId() != null) {
+				Optional<Report> db = reportRepository.findById(report.getId());
+				if(!db.isPresent()) {
+					throw new ReportNotFoundException("cannot find any report");
+				}
+				report.setCreatedTime(db.get().getCreatedTime());
+			}
+			User user = Utility.getIdOfAuthenticatedUser(request, userService);
 			ReportTracking track = new ReportTracking();
-			track.setStatus(report.isStatus());
+			track.setStatus(report.getStatus());
 			track.setReport(report);
 			track.setUpdatedBy(user);
 			reportTrackingRepository.save(track);
@@ -61,15 +72,14 @@ public class ReportServiceImp implements ReportService{
 			throw new RuntimeException("Error retrieving all reports: " + e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public Report getReportById(Integer id) {
 		Optional<Report> report = reportRepository.findById(id);
-		if(!report.isPresent()) {
+		if (!report.isPresent()) {
 			throw new RequestNotFoundException("Can not find any report with id: " + id);
 		}
 		return report.get();
 	}
-	
-	
+
 }

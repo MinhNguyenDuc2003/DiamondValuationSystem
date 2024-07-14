@@ -6,15 +6,12 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DiamondIcon from "@mui/icons-material/Diamond";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
-import BlockIcon from "@mui/icons-material/Block";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
@@ -41,15 +38,14 @@ const SideBar = () => {
     full_name: "",
     roles_name: "",
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Authorized
+  const auth = useAuth();
+  const isAuthorized =
+    auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     const roles = localStorage.getItem("userRoles");
-    const token = localStorage.getItem("token") ? true : false;
-    if (token) {
-      setIsLoggedIn(true);
-    }
     setUser({
       full_name: userName,
       roles_name: roles,
@@ -118,7 +114,11 @@ const SideBar = () => {
                   variant="h6"
                   // color={colors.greenAccent[500]}
                 >
-                  {user.roles_name}
+                  {user.roles_name.split("/").map((role, index) => (
+                    <Typography key={index}>
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </Typography>
+                  ))}
                 </Typography>
               </Box>
             </Box>
@@ -183,34 +183,24 @@ const SideBar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Report"
-              to="/report"
-              icon={<ReportIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              //   color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Manager
-            </Typography>
-            <Item
-              title="Manage Requests"
-              to="/managerequests"
-              icon={<BlockIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Manage Reports"
-              to="/managereports"
-              icon={<ReportIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {isAuthorized && (
+              <Box>
+                <Typography
+                  variant="h6"
+                  //   color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Manager
+                </Typography>
+                <Item
+                  title="Manage Reports"
+                  to="/managereports"
+                  icon={<ReportIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </Box>
+            )}
           </Box>
         </Menu>
       </Sidebar>

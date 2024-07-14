@@ -22,7 +22,8 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import "@fontsource/roboto/500.css";
 import { useAuth } from "../../component/Auth/AuthProvider";
 import { getCustomerById } from "../../utils/ApiFunction";
-
+import { useMediaQuery } from 'react-responsive';
+import MenuIcon from '@mui/icons-material/Menu';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,8 +37,11 @@ const Header = () => {
   const location = useLocation();
   const [totalRequest, setTotalRequest] = useState("");
   const [badgeVisible, setBadgeVisible] = useState(true);
+  
   const auth = useAuth();
 
+   //Responsive........
+   const isMaxScreen767 = useMediaQuery({ query: '(max-width: 767px)' });
   // Ẩn Badge khi click vào
   const handleBadgeClick = () => {
     setBadgeVisible(false);
@@ -149,6 +153,12 @@ const Header = () => {
             <ListItemButton onClick={() => handleNavigate("/account")}>
               <ListItemText primary="Manage Account" />
             </ListItemButton>
+            {isMaxScreen767 && (
+                        <ListItemButton onClick={() => handleNavigate('/Service/ServiceList')}>
+                            <ListItemText primary="Service"/>
+                        </ListItemButton>
+
+                        )}
             <ListItemButton onClick={() => handleNavigate("/MyRequest")}>
               <ListItemText primary="My Request" />
             </ListItemButton>
@@ -187,7 +197,7 @@ const Header = () => {
           {/* {menuContact && ( */}
           <div className="contact-content">
             <div className="col">
-              <a href="https://www.facebook.com/profile.php?id=100012156048080">
+              <a href="https://www.facebook.com/fptcorp">
                 <CallOutlinedIcon className="icon-contact" />
                 <span>CALL US 099999999</span>
               </a>
@@ -197,7 +207,7 @@ const Header = () => {
               </p>
             </div>
             <div className="col">
-              <a href="https://www.facebook.com/profile.php?id=100012156048080">
+              <a href="https://www.facebook.com/fptcorp">
                 <WhatsAppIcon className="icon-contact" />
                 <span>WHATSAPP US</span>
               </a>
@@ -207,17 +217,16 @@ const Header = () => {
               </p>
             </div>
             <div className="col">
-              <a href="https://www.facebook.com/profile.php?id=100012156048080">
+              <a href="https://www.facebook.com/fptcorp">
                 <FacebookOutlinedIcon className="icon-contact" />
                 <span>FACEBOOK US</span>
               </a>
               <p>
-                Our Client Services are available to answer your WhatsApp
-                messages at +65-3138-2024 daily between 10 AM to 10 PM (GMT+8).
+                Our Client Services are available to answer your Facebook daily between 10 AM to 10 PM (GMT+8).
               </p>
             </div>
             <div className="col">
-              <a href="https://www.facebook.com/profile.php?id=100012156048080">
+              <a href="https://www.facebook.com/fptcorp">
                 <FmdGoodIcon className="icon-contact" />
                 <span>ADDRESS US</span>
               </a>
@@ -273,8 +282,11 @@ const Header = () => {
           </ul>
         </div>
         <div className="diamond">
-          <button>Diamond</button>
+          <button onClick={e => navigate('/Service/calculator')}>Calculation</button>
         </div>
+        {isMaxScreen767 && (
+                    <MenuIcon onClick={handleMenuOpen} className='iconMenu' />
+                )}
       </div>
 
       <button
@@ -288,13 +300,13 @@ const Header = () => {
         <div className="service">
           <button>Service</button>
           <ul className="service-content">
-            <li>
+            {/* <li>
               <button
                 onClick={() => handleNavigateToService("/Service/calculator")}
               >
                 Calculation
               </button>
-            </li>
+            </li> */}
             <li>
               <button
                 onClick={() => handleNavigateToService("/Service/Lookup")}
@@ -306,7 +318,7 @@ const Header = () => {
               <button
                 onClick={() => handleNavigateToService("/Service/ServiceList")}
               >
-                Services List
+                Services
               </button>
             </li>
           </ul>
@@ -318,21 +330,7 @@ const Header = () => {
         </div>
 
         <div className="active">
-          <form
-            className="search-box"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch();
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Looking for blogs"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <button className="search">{<SearchIcon />}</button>
-          </form>
+          
           <div
             className="account"
             aria-label="account-menu"
@@ -340,18 +338,8 @@ const Header = () => {
             aria-haspopup="true"
             onClick={handleMenuOpen}
           >
-            <div className="account-icon">
-              {user ? (
-                <Badge
-                  sx={{ gap: "5px" }}
-                  badgeContent={totalRequest}
-                  color="primary"
-                >
-                  <strong>{user.last_name}</strong>
-                </Badge>
-              ) : (
+            <div className="account-icon">      
                 <AccountCircleIcon />
-              )}
             </div>
           </div>
           {menuUser}

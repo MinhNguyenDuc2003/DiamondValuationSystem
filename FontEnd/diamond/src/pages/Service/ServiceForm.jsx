@@ -3,7 +3,6 @@ import { Form } from "antd";
 import {
   Box,
   Button,
-  Chip,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -13,10 +12,11 @@ import {
   RadioGroup,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import paypal from "./img/PayPal_Logo.jpg";
 import { useNavigate } from "react-router-dom";
-import { getAllServices } from "../../utils/ApiFunction";
+import { getAllServices, getCustomerById } from "../../utils/ApiFunction";
 
 const formItemLayout = {
   labelCol: {
@@ -58,17 +58,32 @@ const ServiceForm = () => {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    const Services = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getAllServices();
-        if (response.status === 200) {
-          setServices(response.data);
+        // Lấy danh sách dịch vụ
+        const serviceResponse = await getAllServices();
+        if (serviceResponse.status === 200) {
+          setServices(serviceResponse.data);
         }
+  
+        // // Sau khi lấy danh sách dịch vụ xong, lấy thông tin khách hàng
+        // const customerData = await getCustomerById();
+        // if (customerData !== null) {
+        //   setUser({
+        //     id: customerData.id,
+        //     email: customerData.email,
+        //     first_name: customerData.first_name,
+        //     last_name: customerData.last_name,
+        //     phone_number: customerData.phone_number,
+        //     location: customerData.location,
+        //   });
+        // }
       } catch (error) {
         console.log(error);
       }
     };
-    Services();
+  
+    fetchData();
   }, []);
 
   const onFinish = () => {
@@ -80,6 +95,19 @@ const ServiceForm = () => {
     localStorage.setItem("paymentMethod", payMentSelected);
 
     navigate("/Payment-checkout");
+  };
+
+  const handleDateChange = (e) => {
+    const chosenDate = new Date(e.target.value);
+    const today = new Date();
+    // Set hours to 0 to compare only the date part
+    today.setHours(0, 0, 0, 0);
+
+    if (chosenDate >= today) {
+      setSelectedDate(e.target.value);
+    } else {
+      alert('Please select a date that is today or in the future.');
+    }
   };
 
   const handleServiceChange = (event) => {
@@ -96,8 +124,110 @@ const ServiceForm = () => {
           onFinish={onFinish}
           style={{
             maxWidth: 1000,
+            marginLeft: "15%",
           }}
         >
+          
+          {/* <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Email"
+                value={user.email || ""}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="First Name"
+            name="first_name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your first name!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="First Name"
+                value={user.first_name || ""}
+                onChange={(e) => setUser({ ...user, first_name: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your last name!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Last Name"
+                value={user.last_name || ""}
+                onChange={(e) => setUser({ ...user, last_name: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Phone Number"
+            name="phone_number"
+            rules={[
+              {
+                required: true,
+                message: "Please input your phone number!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Phone Number"
+                value={user.phone_number || ""}
+                onChange={(e) => setUser({ ...user, phone_number: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item>
+          <Form.Item
+            label="Address"
+            name="location"
+            rules={[
+              {
+                required: true,
+                message: "Please input your address!",
+              },
+            ]}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label="Address"
+                value={user.location || ""}
+                onChange={(e) => setUser({ ...user, location: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+            </FormControl>
+          </Form.Item> */}
           <Form.Item
             label="Preferred Appraisal Date"
             name="date"
@@ -112,7 +242,7 @@ const ServiceForm = () => {
               <TextField
                 label="Preferred Appraisal Date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => handleDateChange(e)}
                 fullWidth
                 margin="normal"
                 type="date"
@@ -131,23 +261,19 @@ const ServiceForm = () => {
                 multiple
                 value={serviceSelected}
                 onChange={(event) => handleServiceChange(event)} // Pass event directly
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Service" />
-                }
+                input={<OutlinedInput id="select-multiple-chip" label="Service" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <MenuItem key={value} label={value}>
-                        {value}
-                      </MenuItem>
+                      <Typography key={value}>{value} <>&nbsp;</> <>&nbsp;</></Typography> 
                     ))}
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {services.map((service, index) => (
+                {services.map((service) => (
                   <MenuItem key={service.id} value={service.name}>
-                    {service.name} - {service.content} - {service.money}
+                    {service.name} - {service.money}
                   </MenuItem>
                 ))}
               </Select>
@@ -196,7 +322,7 @@ const ServiceForm = () => {
           <Form.Item>
             <Box
               marginTop={2}
-              marginLeft={45}
+              marginLeft={5}
               display="flex"
               justifyContent="center"
             >

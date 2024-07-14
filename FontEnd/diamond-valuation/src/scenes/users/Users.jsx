@@ -54,7 +54,11 @@ export const Users = () => {
 
   const [openUserDetailDialog, setOpenUserDetailDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  // Authorized
   const auth = useAuth();
+  const isAuthorized =
+    auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
 
   const handleOpenDialog = (user) => {
     setUserToDelete(user);
@@ -147,16 +151,16 @@ export const Users = () => {
     setCurrentPage(value);
   };
 
-  const handleButtonAddUser = () => {
-    if (
-      auth.isRoleAccept("admin") !== null ||
-      auth.isRoleAccept("manager") !== null
-    ) {
-      navigate("/users/new");
-    } else {
-      alert("you don't have permission to add new user");
-    }
-  };
+  // const handleButtonAddUser = () => {
+  //   if (
+  //     auth.isRoleAccept("admin") !== null ||
+  //     auth.isRoleAccept("manager") !== null
+  //   ) {
+  //     navigate("/users/new");
+  //   } else {
+  //     alert("you don't have permission to add new user");
+  //   }
+  // };
 
   return (
     <Box m="20px" overflow="auto">
@@ -177,15 +181,17 @@ export const Users = () => {
       )}
 
       <Box display="flex" justifyContent="space-between">
-        <Button onClick={handleButtonAddUser}>
-          <PersonAddAlt1Icon
-            sx={{
-              ml: "10px",
-              fontSize: "40px",
-              color: "black",
-            }}
-          />
-        </Button>
+        {isAuthorized && (
+          <Button onClick={() => navigate("/users/new")}>
+            <PersonAddAlt1Icon
+              sx={{
+                ml: "10px",
+                fontSize: "40px",
+                color: "black",
+              }}
+            />
+          </Button>
+        )}
         <Box
           display="flex"
           width="20%"
@@ -250,15 +256,17 @@ export const Users = () => {
                   <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => navigate("/account/information")}>
+                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
                     <EditIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton
-                    data-testid={`delete-button-${user.id}`}
-                    onClick={() => handleOpenDialog(user.id)}
-                  >
-                    <DeleteIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+                  {isAuthorized && (
+                    <IconButton
+                      data-testid={`delete-button-${user.id}`}
+                      onClick={() => handleOpenDialog(user.id)}
+                    >
+                      <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

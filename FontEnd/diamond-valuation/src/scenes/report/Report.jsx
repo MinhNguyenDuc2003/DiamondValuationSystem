@@ -11,28 +11,44 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Alert,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { saveReport } from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
+import { useNavigate, useParams } from "react-router-dom";
 
 export const Report = () => {
+  const { requestId } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [type, setType] = useState("BLOCKREQUEST"); // Default to BLOCKREQUEST or any initial value you prefer
-  const [requestId, setRequestId] = useState("");
+  const [type, setType] = useState("BLOCKDIAMOND"); // Default to BLOCKDIAMOND or any initial value you prefer
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     const reportData = {
       header: title,
       content,
       type,
-      status: "New",
+      status: "WAIT",
       request_id: requestId,
     };
 
     try {
-      await saveReport(reportData);
+      console.log(reportData);
+      const result = await saveReport(reportData);
+      if (result.message !== undefined) {
+        localStorage.setItem(
+          "successMessage",
+          "Send Report for manager successfully"
+        );
+        navigate("/requests");
+      } else {
+        setError("Error occurred");
+      }
       handleClear();
     } catch (error) {
       console.error("Error saving report:", error);
@@ -42,16 +58,27 @@ export const Report = () => {
   const handleClear = () => {
     setTitle("");
     setContent("");
-    setType("BLOCKREQUEST"); // Reset to default value
-    setRequestId(""); // Clear request_id if needed
+    setType("BLOCKDIAMOND"); // Reset to default value
   };
 
   return (
     <Container maxWidth="md" style={{ marginTop: "2rem" }}>
       <Paper style={{ padding: "2rem" }}>
         <Typography variant="h4" gutterBottom>
-          Write a Report
+          Write a Report for Request {requestId}
         </Typography>
+
+        {message && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -74,8 +101,8 @@ export const Report = () => {
                 onChange={(e) => setType(e.target.value)}
                 label="Type"
               >
-                <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
-                <MenuItem value="RETURNREQUEST">RETURNREQUEST</MenuItem>
+                <MenuItem value="BLOCKDIAMOND">BLOCKDIAMOND</MenuItem>
+                <MenuItem value="RETURNDIAMOND">RETURNDIAMOND</MenuItem>
               </Select>
             </FormControl>
           </Grid>

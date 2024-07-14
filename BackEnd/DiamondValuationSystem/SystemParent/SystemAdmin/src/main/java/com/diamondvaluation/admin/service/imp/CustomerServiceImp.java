@@ -1,10 +1,14 @@
 package com.diamondvaluation.admin.service.imp;
 
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.Year;
 import java.util.LinkedHashMap;
+
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +42,7 @@ public class CustomerServiceImp implements CustomerService {
 
 		if (isUpdatingCustomer) {
 			Customer existingUser = customerRepo.findById(customer.getId()).get();
-
+			customer.setCreatedTime(existingUser.getCreatedTime());
 			if (customer.getPassword().isEmpty()) {
 				customer.setPassword(existingUser.getPassword());
 			} else {
@@ -96,6 +100,7 @@ public class CustomerServiceImp implements CustomerService {
 		return customers;
 	}
 
+
 	// new
 
 	@Override
@@ -115,5 +120,20 @@ public class CustomerServiceImp implements CustomerService {
 		monthlyCounts.put("Total", totalRequests);
 		return monthlyCounts;
 	}
+
+
+	@Override
+	public List<Customer> listCustomerByKeyword(String keyword) {
+		List<Customer> customers = new ArrayList<>();
+		if(keyword!=null && keyword.trim().length()>0) {
+			customers = customerRepo.findAllByKeyword(keyword);
+			return customers;
+		}
+		customers = (List<Customer>) customerRepo.findAll();
+		return customers;
+	}
+	
+	
+	
 
 }

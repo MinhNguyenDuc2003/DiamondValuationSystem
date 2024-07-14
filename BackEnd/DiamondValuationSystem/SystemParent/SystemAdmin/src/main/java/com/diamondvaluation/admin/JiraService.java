@@ -39,8 +39,12 @@ public class JiraService {
     }
     
     public void addComment(Issue issue, String commentBody) {
-    	jiraRestClient.getIssueClient()
-          .addComment(issue.getCommentsUri(), Comment.valueOf(commentBody));
+        try {
+        	jiraRestClient.getIssueClient().addComment(issue.getCommentsUri(), Comment.valueOf(commentBody)).claim();
+        } catch (Exception e) {
+            System.err.println("Error adding comment: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     public Issue getIssue(String issueKey) {

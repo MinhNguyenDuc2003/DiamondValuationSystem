@@ -134,8 +134,8 @@ const Topbar = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    auth.handleLogout();
+  const handleLogout = async() => {
+    await auth.handleLogout();
     navigate("/login", { replace: true });
   };
 

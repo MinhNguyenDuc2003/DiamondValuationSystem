@@ -1,26 +1,30 @@
 package com.diamondvaluation.admin;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import com.diamondvaluation.admin.security.user.CustomUserDetails;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 public class Utility {
-	public static User getIdOfAuthenticatedUser(HttpServletRequest request) {
+	public static User getIdOfAuthenticatedUser(HttpServletRequest request, UserService service) {
 		Object principal = request.getUserPrincipal();
-		if (principal == null)
+		if (principal == null) {
+			System.out.println("abc");
 			return null;
-
-		User user = null;
-
-		if (principal instanceof UsernamePasswordAuthenticationToken
-				|| principal instanceof RememberMeAuthenticationToken) {
-			CustomUserDetails userDetail = (CustomUserDetails) request.getUserPrincipal();
-			user = userDetail.getUser();
 		}
-		return user;
+		
+		String customerEmail = null;
+		
+		if (principal instanceof UsernamePasswordAuthenticationToken 
+				|| principal instanceof RememberMeAuthenticationToken) {
+			customerEmail = request.getUserPrincipal().getName();
+		}else {
+			return null;
+		}
+		return service.findByUserName(customerEmail);
 	}
 }

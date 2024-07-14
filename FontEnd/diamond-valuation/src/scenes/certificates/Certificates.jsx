@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   getAllCertificates,
   deleteCertificateById,
-  getAllRequestsNew,
+  getAllRequestsStatus,
   updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
@@ -45,6 +45,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import { PiCertificate } from "react-icons/pi";
 import CertificateHTML from "./CertificateHTML";
 import PrintPDF from "./PrintPDF";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -60,6 +61,14 @@ const Certificates = () => {
   const CertificatesPerPage = 6;
   const navigate = useNavigate();
 
+  const auth = useAuth();
+
+  // Check if the user is an admin or manager or valuation staff
+  const isAuthorized =
+    auth.isRoleAccept("admin") ||
+    auth.isRoleAccept("manager") ||
+    auth.isRoleAccept("valuationStaff");
+
   const [filters, setFilters] = useState({
     carat: [0, 10],
     clarity: "",
@@ -74,6 +83,7 @@ const Certificates = () => {
 
   const filterOptions = {
     clarity: [
+      "",
       "IF",
       "VVS1",
       "VVS2",
@@ -86,8 +96,24 @@ const Certificates = () => {
       "I2",
       "I3",
     ],
-    color: ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"],
+    color: [
+      "",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+    ],
     cut: [
+      "",
       "Round",
       "Marquise",
       "Pear",
@@ -101,11 +127,12 @@ const Certificates = () => {
       "Asscher",
       "Cushion",
     ],
-    flourescence: ["None", "Faint", "Medium", "Strong", "Very Strong"],
-    make: ["Ideal", "Excellent", "Very Good", "Good", "Fair", "Poor"],
-    polish: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
-    symmetry: ["Excellent", "Very Good", "Good", "Fair", "Poor"],
+    flourescence: ["", "None", "Faint", "Medium", "Strong", "Very Strong"],
+    make: ["", "Ideal", "Excellent", "Very Good", "Good", "Fair", "Poor"],
+    polish: ["", "Excellent", "Very Good", "Good", "Fair", "Poor"],
+    symmetry: ["", "Excellent", "Very Good", "Good", "Fair", "Poor"],
     cert: [
+      "",
       "AGS",
       "CEGL",
       "CGI",
@@ -133,25 +160,32 @@ const Certificates = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getAllCertificates()
-      .then((data) => {
-        if (data !== undefined) {
-          setCertificates(data);
+    const fetchCertificatesAndRequests = async () => {
+      try {
+        // Fetch certificates
+        const certificates = await getAllCertificates();
+        if (certificates !== undefined) {
+          setCertificates(certificates);
         }
-      })
-      .catch((error) => {
+
+        // Fetch requests status
+        const requests = await getAllRequestsStatus("NEW");
+        setRequests(requests);
+
+        // Clear error after a timeout
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      } catch (error) {
         setError(error.message);
-      });
-    getAllRequestsNew()
-      .then((data) => {
-        setRequests(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching requests: ", error);
-      });
-    setTimeout(() => {
-      setError("");
-    }, 2000);
+        // Clear error after a timeout
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+
+    fetchCertificatesAndRequests();
   }, []);
 
   const handleDelete = async () => {
@@ -160,6 +194,7 @@ const Certificates = () => {
       setMessage(
         `Delete certificate with id ${certificateToDelete}  successfully!`
       );
+      updateRequestStatus(certificateToDelete.request_id, "NEW");
       getAllCertificates()
         .then((data) => {
           setCertificates(data);
@@ -230,15 +265,14 @@ const Certificates = () => {
       (filters.cut === "" ||
         certificate.cut.includes(filters.cut.replace(/\s+/g, ""))) &&
       (filters.flourescence === "" ||
-        certificate.flourescence.includes(
-          filters.flourescence.replace(/\s+/g, "")
-        )) &&
+        certificate.flourescence ===
+          filters.flourescence.replace(/\s+/g, "")) &&
       (filters.make === "" ||
-        certificate.make.includes(filters.make.replace(/\s+/g, ""))) &&
+        certificate.make === filters.make.replace(/\s+/g, "")) &&
       (filters.polish === "" ||
-        certificate.polish.includes(filters.polish.replace(/\s+/g, ""))) &&
+        certificate.polish === filters.polish.replace(/\s+/g, "")) &&
       (filters.symmetry === "" ||
-        certificate.symmetry.includes(filters.symmetry.replace(/\s+/g, ""))) &&
+        certificate.symmetry === filters.symmetry.replace(/\s+/g, "")) &&
       (filters.cert === "" ||
         certificate.cert.toLowerCase().includes(filters.cert.toLowerCase()))
     );
@@ -270,16 +304,16 @@ const Certificates = () => {
       <Typography variant="h4" textAlign="center">
         Manage Certificates
       </Typography>
-
-      <Badge
-        color="secondary"
-        badgeContent={newRequests.length}
-        onClick={handleBadgeClick}
-        sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
-      >
-        <RequestPageIcon />
-      </Badge>
-
+      {isAuthorized && (
+        <Badge
+          color="secondary"
+          badgeContent={newRequests.length}
+          onClick={handleBadgeClick}
+          sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
+        >
+          <RequestPageIcon />
+        </Badge>
+      )}
       {message && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {message}
@@ -378,11 +412,20 @@ const Certificates = () => {
                     <TableCell align="center">{certificate.color}</TableCell>
                     <TableCell align="center">{certificate.cut}</TableCell>
                     <TableCell align="center">
-                      {certificate.flourescence}
+                      {certificate.flourescence.replace(
+                        /([a-z])([A-Z])/g,
+                        "$1 $2"
+                      )}
                     </TableCell>
-                    <TableCell align="center">{certificate.make}</TableCell>
-                    <TableCell align="center">{certificate.polish}</TableCell>
-                    <TableCell align="center">{certificate.symmetry}</TableCell>
+                    <TableCell align="center">
+                      {certificate.make.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
+                    <TableCell align="center">
+                      {certificate.polish.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
+                    <TableCell align="center">
+                      {certificate.symmetry.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </TableCell>
                     <TableCell align="center">
                       {certificate.measurement}
                     </TableCell>
@@ -394,16 +437,22 @@ const Certificates = () => {
                       >
                         <PiCertificate color="#C5A773" />
                       </IconButton>
-                      <IconButton
-                        onClick={() =>
-                          navigate(`/certificates/${certificate.id}`)
-                        }
-                      >
-                        <EditIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
-                      <IconButton onClick={() => handleOpenDialog(certificate)}>
-                        <DeleteIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
+                      {isAuthorized && (
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/certificates/${certificate.id}`)
+                          }
+                        >
+                          <EditIcon sx={{ color: "#C5A773" }} />
+                        </IconButton>
+                      )}
+                      {isAuthorized && (
+                        <IconButton
+                          onClick={() => handleOpenDialog(certificate)}
+                        >
+                          <DeleteIcon sx={{ color: "#C5A773" }} />
+                        </IconButton>
+                      )}
                       <IconButton onClick={() => PrintPDF(certificate)}>
                         <PrintIcon sx={{ color: "#C5A773" }} />
                       </IconButton>

@@ -40,7 +40,7 @@ public class RequestTrack {
 	@Column(name = "updated_time")
 	private Date updatedTime;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User updatedBy;
 	

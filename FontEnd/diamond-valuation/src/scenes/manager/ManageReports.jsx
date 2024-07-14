@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid,
   Box,
@@ -21,41 +21,50 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import BlockIcon from "@mui/icons-material/Block";
+import HistoryIcon from "@mui/icons-material/History";
+import {
+  deleteReport,
+  getAllReports,
+  saveReport,
+  getReportTracking,
+  updateRequestStatus,
+} from "../../components/utils/ApiFunctions";
 
 const statusColors = {
-  New: "default",
-  Resolved: "success",
-  Decline: "error",
+  WAIT: "default",
+  ACCEPT: "success",
+  REJECT: "error",
 };
 
 const statusIcons = {
-  New: <CancelIcon />,
-  Resolved: <CheckCircleIcon />,
-  Decline: <BlockIcon />,
+  WAIT: <CancelIcon />,
+  ACCEPT: <CheckCircleIcon />,
+  REJECT: <BlockIcon />,
 };
 
 const ManageReports = () => {
   const [reports, setReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openTrackingDialog, setOpenTrackingDialog] = useState(false);
+  const [trackingData, setTrackingData] = useState(null);
+  const [reportDeleted, setReportDeleted] = useState(null);
 
   useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const result = await getAllReports();
+        setReports(result);
+      } catch (error) {
+        setError("Error fetching reports.");
+        console.error("Error fetching reports:", error);
+      }
+    };
     fetchReports();
   }, []);
-
-  const fetchReports = async () => {
-    try {
-      const response = await axios.get(
-        "https://665ae895003609eda45f3327.mockapi.io/Report"
-      );
-      setReports(response.data);
-    } catch (error) {
-      setError("Error fetching reports.");
-      console.error("Error fetching reports:", error);
-    }
-  };
 
   const handleViewReport = (report) => {
     setSelectedReport(report);
@@ -67,52 +76,103 @@ const ManageReports = () => {
     setSelectedReport(null);
   };
 
-  const handleDeleteReport = async (reportId) => {
+  const handleDeleteReport = async () => {
+    console.log(reportDeleted);
     try {
-      await axios.delete(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`
-      );
-      setMessage("Report deleted successfully!");
-      fetchReports();
-      setTimeout(() => {
-        setMessage("");
-      }, 4000);
+      const result = await deleteReport(reportDeleted.id);
+      if (result !== undefined) {
+        setMessage("Report deleted successfully!");
+        fetchReports();
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+        setOpenDeleteDialog(false);
+      }
     } catch (error) {
       setError("Error deleting report.");
       console.error("Error deleting report:", error);
     }
   };
 
-  const handleResolveReport = async (reportId) => {
+  const handleAcceptReport = async (report) => {
     try {
-      await axios.put(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`,
-        {
-          status: "Resolved",
+      const result = await saveReport({ ...report, status: "ACCEPT" });
+      if (result.message !== undefined) {
+        if (report.type === "BLOCKDIAMOND") {
+          await updateRequestStatus(report.request_id, "BLOCKED");
         }
-      );
-      fetchReports();
-      handleCloseDialog();
+        setMessage(`Accept Report ${report.id} successfully`);
+        fetchReports();
+        setOpenDialog(false);
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+      } else {
+        setError("Error occurred");
+      }
     } catch (error) {
-      setError("Error resolving report.");
-      console.error("Error resolving report:", error);
+      console.error("Error saving report:", error);
     }
   };
 
-  const handleDeclineReport = async (reportId) => {
+  const handleRejectReport = async (report) => {
     try {
-      await axios.put(
-        `https://665ae895003609eda45f3327.mockapi.io/Report/${reportId}`,
-        {
-          status: "Decline",
+      const result = await saveReport({ ...report, status: "REJECT" });
+      if (result.message !== undefined) {
+        if (report.type === "BLOCKDIAMOND") {
+          await updateRequestStatus(report.request_id, "PROCESSED");
         }
-      );
-      fetchReports();
-      handleCloseDialog();
+        setMessage(`Reject Report ${report.id} successfully`);
+        fetchReports();
+        setOpenDialog(false);
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+      } else {
+        setError("Error occurred");
+      }
     } catch (error) {
-      setError("Error declining report.");
-      console.error("Error declining report:", error);
+      console.error("Error saving report:", error);
     }
+  };
+
+  const handleViewTracking = async (report) => {
+    try {
+      const result = await getReportTracking(report.id);
+      const formattedData = result.map((item) => ({
+        ...item,
+        created_time: new Date(
+          item.created_time[0],
+          item.created_time[1] - 1,
+          item.created_time[2],
+          item.created_time[3],
+          item.created_time[4],
+          item.created_time[5]
+        ).toLocaleString(),
+      }));
+      setTrackingData(formattedData);
+      setSelectedReport(report);
+      setOpenTrackingDialog(true);
+    } catch (error) {
+      setError("Error fetching tracking data.");
+      console.error("Error fetching tracking data:", error);
+    }
+  };
+
+  const handleCloseTrackingDialog = () => {
+    setOpenTrackingDialog(false);
+    setSelectedReport(null);
+    setTrackingData(null);
+  };
+
+  const handleOpenDeleteDialog = (report) => {
+    setReportDeleted(report);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setReportDeleted(null);
   };
 
   return (
@@ -139,13 +199,17 @@ const ManageReports = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    {report.title}
+                    <strong>Title: </strong> {report.header}
+                  </Typography>
+                  <Typography variant="h6" gutterBottom>
+                    <strong>Type: </strong> {report.type}
                   </Typography>
                   <Chip
                     label={report.status}
                     color={statusColors[report.status]}
                     icon={statusIcons[report.status]}
                     variant="outlined"
+                    sx={{ mt: 2 }}
                   />
                 </CardContent>
                 <CardActions>
@@ -157,9 +221,15 @@ const ManageReports = () => {
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => handleDeleteReport(report.id)}
+                    onClick={() => handleOpenDeleteDialog(report)}
                   >
                     <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    color="success"
+                    onClick={() => handleViewTracking(report)}
+                  >
+                    <HistoryIcon />
                   </IconButton>
                 </CardActions>
               </Card>
@@ -189,9 +259,9 @@ const ManageReports = () => {
         </DialogTitle>
         <DialogContent>
           <Typography>
-            <strong>Title: </strong> {selectedReport?.title}
+            <strong>Title: </strong> {selectedReport?.header}
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography component="div" variant="body1" paragraph>
             <strong>Content: </strong>
             <div
               dangerouslySetInnerHTML={{ __html: selectedReport?.content }}
@@ -199,26 +269,107 @@ const ManageReports = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          {selectedReport?.status !== "Resolved" && (
-            <Button
-              onClick={() => handleResolveReport(selectedReport?.id)}
-              color="success"
-              startIcon={<CheckCircleIcon />}
-            >
-              Resolve
-            </Button>
+          {selectedReport?.status === "WAIT" && (
+            <>
+              <Button
+                onClick={() => handleAcceptReport(selectedReport)}
+                color="success"
+                startIcon={<CheckCircleIcon />}
+              >
+                Accept
+              </Button>
+              <Button
+                onClick={() => handleRejectReport(selectedReport)}
+                color="error"
+                startIcon={<BlockIcon />}
+              >
+                Reject
+              </Button>
+            </>
           )}
-          {selectedReport?.status !== "Decline" && (
+          {selectedReport?.status === "ACCEPT" && (
             <Button
-              onClick={() => handleDeclineReport(selectedReport?.id)}
+              onClick={() => handleRejectReport(selectedReport)}
               color="error"
               startIcon={<BlockIcon />}
             >
-              Decline
+              Reject
+            </Button>
+          )}
+          {selectedReport?.status === "REJECT" && (
+            <Button
+              onClick={() => handleAcceptReport(selectedReport)}
+              color="success"
+              startIcon={<CheckCircleIcon />}
+            >
+              Accept
             </Button>
           )}
           <Button onClick={handleCloseDialog} color="primary">
             Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openTrackingDialog}
+        onClose={handleCloseTrackingDialog}
+        aria-labelledby="view-tracking-dialog-title"
+        aria-describedby="view-tracking-dialog-description"
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          id="view-tracking-dialog-title"
+          textAlign="center"
+          sx={{ fontWeight: "bold" }}
+        >
+          Report Tracking
+        </DialogTitle>
+        <DialogContent>
+          {trackingData ? (
+            trackingData.map((item) => (
+              <Box key={item.id} sx={{ mb: 2 }}>
+                <Typography>
+                  <strong>Status: </strong> {item.status}
+                </Typography>
+                <Typography>
+                  <strong>Created Time: </strong> {item.created_time}
+                </Typography>
+                <Typography>
+                  <strong>Updated By: </strong> {item.updated_by.fullname}
+                </Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography>Loading tracking data...</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTrackingDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this report?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteReport} color="secondary" autoFocus>
+            Delete
+          </Button>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

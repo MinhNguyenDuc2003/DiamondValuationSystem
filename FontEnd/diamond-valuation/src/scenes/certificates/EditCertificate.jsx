@@ -19,6 +19,17 @@ import {
   saveCertificate,
 } from "../../components/utils/ApiFunctions";
 
+// Utility function to remove spaces from object values
+const removeSpacesFromObjectValues = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) =>
+      typeof value === "string"
+        ? [key, value.replace(/\s+/g, "")]
+        : [key, value]
+    )
+  );
+};
+
 const EditCertificate = () => {
   const { certificateId } = useParams();
   const [certificate, setCertificate] = useState(null);
@@ -48,6 +59,7 @@ const EditCertificate = () => {
       .then((data) => {
         setCertificate(data);
         setImagePreview(data.photo);
+        setImage(data.image);
       })
       .catch((error) => {
         console.error("Error fetching certificate: ", error);
@@ -63,11 +75,11 @@ const EditCertificate = () => {
   const handleSubmit = async (values) => {
     try {
       const measurement = `${values.length}-${values.width}x${values.height}mm`;
-      const updatedCertificateData = {
+      const updatedCertificateData = removeSpacesFromObjectValues({
         ...values,
         measurement,
         photo: image,
-      };
+      });
       const result = await saveCertificate(updatedCertificateData);
       if (result.message !== undefined) {
         localStorage.setItem(
@@ -211,7 +223,10 @@ const EditCertificate = () => {
                       <Field
                         as={Select}
                         name={filterKey}
-                        value={values[filterKey]}
+                        value={values[filterKey].replace(
+                          /([a-z])([A-Z])/g,
+                          "$1 $2"
+                        )}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         label={

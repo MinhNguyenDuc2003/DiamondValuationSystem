@@ -171,13 +171,18 @@
 		<dependency>
 			<groupId>com.atlassian.jira</groupId>
 			<artifactId>jira-rest-java-client-core</artifactId>
-			<version>4.0.0</version>
+			<version>5.2.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.atlassian.fugue/fugue -->
+		<!-- https://mvnrepository.com/artifact/io.atlassian.fugue/fugue -->
 		<dependency>
-			<groupId>com.atlassian.fugue</groupId>
+			<groupId>io.atlassian.fugue</groupId>
 			<artifactId>fugue</artifactId>
-			<version>2.6.1</version>
+			<version>5.0.0</version>
+			<scope>provided</scope>
 		</dependency>
+
+
 		<dependency>
 			<groupId>org.codehaus.jettison</groupId>
 			<artifactId>jettison</artifactId>
