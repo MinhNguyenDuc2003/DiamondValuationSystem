@@ -59,6 +59,7 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 					}
 				}
 				certificate.setRequest(request.get());
+				certificate.setCreatedDate(certificateInDb.get().getCreatedDate());
 			}
 		}
 		return repo.save(certificate);

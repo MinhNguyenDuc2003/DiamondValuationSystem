@@ -90,7 +90,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/token/refresh")
-	public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,
+	public ResponseEntity<?> refreshToken(@CookieValue(name = "shopRefreshToken", required = false) String refreshToken,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam("id") String id) {
 		try {
 			if (refreshToken == null) {

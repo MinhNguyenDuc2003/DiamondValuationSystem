@@ -21,7 +21,7 @@ const Lookup = () => {
 
   const handleSearch = async () => {
     const result = await getCertificateByCode(idCef);
-    if (result) {
+    if (result !== null) {
       openCertificateInNewTab(result);
     } else {
       toast.error(`Certificate with ID ${idCef} not found.`, {

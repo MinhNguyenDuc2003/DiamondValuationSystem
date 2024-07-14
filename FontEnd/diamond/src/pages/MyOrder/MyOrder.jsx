@@ -50,7 +50,7 @@ const MyOrder = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      getAllRequest().then((data) => {
+     await getAllRequest().then((data) => {
         setOrders(data);
         setFilteredOrders(data);
         setTotalRequest(data.length);
@@ -98,8 +98,8 @@ const MyOrder = () => {
   const handleShowCertificate = async (certificate_id) => {
     const result = await getCertificateById(certificate_id);
 
-    if (result && result.data) {
-      openCertificateInNewTab(result.data);
+    if (result !== null) {
+      openCertificateInNewTab(result);
     } else {
       console.log(`Certificate with ID not found.`);
     }
@@ -107,9 +107,10 @@ const MyOrder = () => {
 
 
   const handleShowPrice = async (certificate_id) => {
+    console.log(certificate_id);
     const result = await getCertificateById(certificate_id);
 
-    if (result && result.data) {
+    if (result !== null) {
       setValuation(result)
       setModalOpen(true)
     } else {

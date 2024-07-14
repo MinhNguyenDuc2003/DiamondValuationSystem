@@ -265,7 +265,7 @@ export const getCertificateByCode = async (code) => {
     const response = await api.get(
       `/diamond-certificate/certificate/code/${code}`
     );
-    return response;
+    return response.data;
   } catch (error) {
     return null;
   }

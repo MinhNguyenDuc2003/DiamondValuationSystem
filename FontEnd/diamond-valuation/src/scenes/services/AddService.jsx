@@ -23,7 +23,7 @@ const AddService = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   const initialValues = {
-    id:"",
+    
     name: "",
     money: "",
     content: "",

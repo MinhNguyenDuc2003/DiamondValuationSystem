@@ -34,7 +34,7 @@ public class CertificateResponse {
 	private String code;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM dd yyyy")
-	private LocalDateTime created_date; 
+	private String created_date; 
 	
 	private DiamondClarity clarity;
 	
@@ -69,4 +69,5 @@ public class CertificateResponse {
 	private double realPrice;
 	
 	private String photo;
+	
 }
