@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diamondvaluation.admin.exception.CustomerNotFoundException;
@@ -176,5 +178,20 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	
+	//new method
+		@GetMapping("requests/count/year")
+	    public ResponseEntity<?> getCountsByMonthForYear(@RequestParam("year") int year) {
+	        Map<String, Integer> counts = requestService.countRequestsByMonthForYear(year);
+	        return new ResponseEntity<>(counts, HttpStatus.OK);
+	    }
+		
+		
+		@GetMapping("requests/revenue/year")
+	    public ResponseEntity<Map<String, Object>> getRevenueByMonthForYear(@RequestParam("year") int year) {
+	        Map<String, Object> counts = requestService.countRevenuesByMonthForYear(year);
+	        return new ResponseEntity<>(counts, HttpStatus.OK);
+	    }
 
 }

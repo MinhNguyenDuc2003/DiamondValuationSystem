@@ -1,6 +1,7 @@
 package com.diamondvaluation.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.RequestStatus;
@@ -23,5 +24,10 @@ public interface DiamondRequestService {
     
     List<DiamondRequest> getRequestByCustomerId(Integer id);
     
+ // New method to count requests by month
+    Map<String, Integer> countRequestsByMonthForYear(int year);
+
     
+    Map<String, Object> countRevenuesByMonthForYear(int year);
+
 }

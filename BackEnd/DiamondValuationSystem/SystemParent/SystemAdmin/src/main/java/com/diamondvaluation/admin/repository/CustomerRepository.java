@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,4 +21,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 			+ " c.lastName, ' ', c.location, ' ', c.phoneNumber) LIKE %?1%")
 	Page<Customer> findAll(String keyword, Pageable pageable);
 	
+	//new
+		int countByCreatedTimeBetween(LocalDateTime start, LocalDateTime end);
+
 }

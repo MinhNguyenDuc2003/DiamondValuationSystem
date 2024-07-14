@@ -1,7 +1,13 @@
-package com.diamondvaluation.admin.service.imp;
+	package com.diamondvaluation.admin.service.imp;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.Year;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -130,5 +136,47 @@ public class DiamondRequestServiceImp implements DiamondRequestService{
 		}
 		return repo.getDiamondRequestByCustomerId(id);
 	}
+
+	
+	//new
+    @Override
+    public Map<String, Integer> countRequestsByMonthForYear(int year) {
+        Map<String, Integer> monthlyCounts = new LinkedHashMap<>();
+        int totalRequests = 0;
+
+        for (Month month : Month.values()) {
+            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+            int count = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
+            monthlyCounts.put(month.name(), count);
+            totalRequests += count;
+        }
+
+        monthlyCounts.put("Total", totalRequests);
+        return monthlyCounts;
+    }
+    
+    @Override
+    public Map<String, Object> countRevenuesByMonthForYear(int year) {
+        Map<String, Object> monthlyStats = new LinkedHashMap<>();
+        int totalRequests = 0;
+        double totalRevenue = 0.0;
+
+        for (Month month : Month.values()) {
+            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+
+            int count = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
+            Optional<Double> revenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndStatus(startOfMonth, endOfMonth, RequestStatus.DONE);
+            double revenue = revenueOptional.orElse(0.0); // Default to 0.0 if revenueOptional is empty
+
+            monthlyStats.put(month.name(), Map.of("count", count, "revenue", revenue));
+            totalRequests += count;
+            totalRevenue += revenue;
+        }
+
+        monthlyStats.put("Total", Map.of("count", totalRequests, "revenue", totalRevenue));
+        return monthlyStats;
+    }
 
 }
