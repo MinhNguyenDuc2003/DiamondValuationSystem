@@ -27,6 +27,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout(){
+  try {
+    const id = localStorage.getItem("userId");
+    if(id.length>0 && id !== null){
+      const response = await api.get(`/api/auth/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 // =========================== USER ================================================
 export async function getUsersPerPage(pageNum, keyword) {
   try {
@@ -45,7 +57,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
   try {
-    const result = await api.get(`/api/users/user/${id}`);
+    const result = await api.get(`/api/users/user/${id}`);F
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -130,6 +142,19 @@ export async function getCustomersPerPage(pageNum, keyword) {
   }
 }
 
+export async function searchCustomerByKeyword(keyword) {
+  try {
+    if (keyword.length > 0) {
+      const result = await api.get(
+        `/api/customers/search/customer?keyword=${keyword}`
+      );
+      return result.data;
+    }
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
 export async function deleteCustomerById(id) {
   try {
     const result = await api.delete(`/api/customers/delete/${id}`);
@@ -191,7 +216,10 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  formData.append("id", service.id);
+  if(service.id !== null && service.id !== undefined){
+    formData.append("id", service.id);
+  }
+  
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
@@ -557,10 +585,12 @@ export const validateToken = async () => {
 const refreshToken = async () => {
   try {
     const id = localStorage.getItem("userId");
+    if (id !== null && id > 0) {
     const formData = new FormData();
     formData.append("id", id);
     const response = await api.post("/api/auth/token/refresh", formData);
     return response.data;
+    }
   } catch (error) {
     console.log("Error", error);
   }

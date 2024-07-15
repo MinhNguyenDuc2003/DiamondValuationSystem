@@ -4,6 +4,7 @@ import {
   getCustomersPerPage,
   getAllServices,
   saveRequest,
+  searchCustomerByKeyword,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -28,17 +29,10 @@ const AddDiamondRequest = () => {
   const [services, setServices] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCustomersPerPage(1, "")
-      .then((data) => {
-        setCustomers(data.list_customers);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-
     getAllServices()
       .then((data) => {
         setServices(data);
@@ -47,6 +41,28 @@ const AddDiamondRequest = () => {
         setError(error.message);
       });
   }, []);
+
+  function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, timeout);
+    };
+  }
+
+  const processChange = debounce((e) => getCustomerByKeyWord(e));
+
+  const getCustomerByKeyWord = async (e) => {
+    const keyword = e.target.value;
+    if (!keyword) {
+      setCustomers([]); // Clear customers if keyword is empty
+      return;
+    }
+    const response = await searchCustomerByKeyword(keyword);
+    setCustomers(response);
+  };
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string().required("Customer is required"),
@@ -140,6 +156,9 @@ const AddDiamondRequest = () => {
                     isOptionEqualToValue={(option, value) =>
                       option.id === value.id
                     }
+                    onInputChange={(event) => {
+                      processChange(event);
+                    }}
                     onChange={(event, value) => {
                       setFieldValue("customer_id", value ? value.id : "");
                     }}

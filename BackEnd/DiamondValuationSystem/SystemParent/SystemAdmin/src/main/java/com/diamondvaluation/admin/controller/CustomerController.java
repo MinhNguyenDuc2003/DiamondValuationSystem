@@ -2,7 +2,6 @@ package com.diamondvaluation.admin.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,11 @@ import jakarta.validation.Valid;
 public class CustomerController {
 	private final CustomerService customerService;
 	private final ModelMapper modelMapper;
-	private final CustomerRepository customerRepository;
 
 	@Autowired
-	public CustomerController(CustomerService customerService, ModelMapper modelMapper, CustomerRepository customerRepository) {
+	public CustomerController(CustomerService customerService, ModelMapper modelMapper) {
 		this.customerService = customerService;
 		this.modelMapper = modelMapper;
-		this.customerRepository = customerRepository;
 	}
 
 	@PostMapping("customer/save")
@@ -106,6 +103,13 @@ public class CustomerController {
 		List<CustomerResponse> customerResponses = new ArrayList<>();
 		customers.forEach(customer -> customerResponses.add(entity2Response(customer)));
 		return customerResponses;
+	}
+	
+	@GetMapping("search/customer")
+	public ResponseEntity<?> findByKeyword(@RequestParam("keyword") String keyword){
+		List<Customer> listCustomers = customerService.listCustomerByKeyword(keyword);
+		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
+		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
 	}
 	
 	

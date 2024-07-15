@@ -58,9 +58,7 @@ public class DiamondRequestController {
 		if (appoinment.getAppointmentDate() != null) {
 			appoinmentResponse.setAppoinment_date(appoinment.getAppointmentDate().toString());
 		}
-		if (appoinment.getAppointmentTime() != null) {
-			appoinmentResponse.setAppoinment_time(appoinment.getAppointmentTime().toString());
-		}
+		appoinmentResponse.setSlot(appoinment.getSlot().getTime());
 		appoinmentResponse.setCertificate_id(cerService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
 		return appoinmentResponse;

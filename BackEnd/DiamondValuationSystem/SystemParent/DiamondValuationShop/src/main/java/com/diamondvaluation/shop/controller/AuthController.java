@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,7 +90,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/token/refresh")
-	public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken,
+	public ResponseEntity<?> refreshToken(@CookieValue(name = "shopRefreshToken", required = false) String refreshToken,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam("id") String id) {
 		try {
 			if (refreshToken == null) {
@@ -147,7 +148,7 @@ public class AuthController {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("refreshToken")) {
+				if (cookie.getName().equals("shopRefreshToken")) {
 					// Update the existing refreshTokenCookie
 					cookie.setValue(refreshToken);
 					cookie.setPath("/");
@@ -159,7 +160,7 @@ public class AuthController {
 		}
 
 		// If the cookie doesn't exist, create a new one
-		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		Cookie refreshTokenCookie = new Cookie("shopRefreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setPath("/");
@@ -270,5 +271,11 @@ public class AuthController {
 
 		helper.setText(content, true);
 		mailSender.send(message);
+	}
+	
+	@GetMapping("logout/{id}")
+	public ResponseEntity<?> logout(@PathVariable("id") String id){
+		tokenService.deleteAllRefreshTokenById(Integer.parseInt(id));
+		return ResponseEntity.ok().build();
 	}
 }

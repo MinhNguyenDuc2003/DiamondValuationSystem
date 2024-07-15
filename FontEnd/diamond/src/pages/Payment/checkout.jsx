@@ -27,41 +27,49 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    const getCustomer = async () => {
-      const data = await getCustomerById();
-      if (data) {
-        setUser({
-          fullname: `${data.first_name} ${data.last_name}`,
-          email: data.email,
-          phone_number: data.phone_number,
-          location: data.location
-        });
-      }
-    };
-
-    const Services = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getAllServices();
-        if (response.status === 200) {
-          setServices(response.data);
-        }
+        // Fetch all services
+        const fetchServices = async () => {
+          const response = await getAllServices();
+          if (response.status === 200) {
+            setServices(response.data);
+          }
+        };
+  
+        // Fetch customer data
+        const fetchUser = async () => {
+          const data = await getCustomerById();
+          if (data) {
+            setUser({
+              fullname: `${data.first_name} ${data.last_name}`,
+              email: data.email,
+              phone_number: data.phone_number,
+              location: data.location
+            });
+          }
+        };
+  
+        await fetchServices();
+        await fetchUser();
+        
+        // Retrieve data from localStorage
+        const date = localStorage.getItem("selectedDate");
+        const serviceSelect = localStorage.getItem("serviceSelected");
+        const paymentMethod = localStorage.getItem("paymentMethod");
+        const serviceSelected = serviceSelect ? serviceSelect.split(",") : [];
+  
+        setCart({
+          selectedDate: date,
+          serviceSelected: serviceSelected,
+          paymentMethod: paymentMethod
+        });
       } catch (error) {
         console.log(error);
       }
     };
-
-    Services();
-    const date = localStorage.getItem("selectedDate");
-    const serviceSelect = localStorage.getItem("serviceSelected");
-    const paymentMethod = localStorage.getItem("paymentMethod");
-    const serviceSelected = serviceSelect.split(",");
-
-    setCart({
-      selectedDate: date,
-      serviceSelected: serviceSelected,
-      paymentMethod: paymentMethod
-    });
-    getCustomer();
+  
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -185,7 +193,7 @@ const Checkout = () => {
         <Divider style={{ margin: '20px 0', backgroundColor: '#444' }} />
 
         <Box mt={4}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>Total: ${total}</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>Total: ${total.toFixed(2)}</Typography>
         </Box>
 
         <Box mt={4} display="flex" justifyContent="center">

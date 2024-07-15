@@ -4,23 +4,8 @@ import facet1 from "../Home/image/Facet_part1.jpg";
 import facet2 from "../Home/image/Facet_part2.jpg";
 
 const formatDate = (dateStr) => {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const [month, day, year] = dateStr.split(" ");
-  return `${months[parseInt(month, 10) - 1]} ${day}, ${year}`;
+  const date = dateStr.split("T");
+  return date[0];
 };
 
 const CertificateHTML = (certificate) => {

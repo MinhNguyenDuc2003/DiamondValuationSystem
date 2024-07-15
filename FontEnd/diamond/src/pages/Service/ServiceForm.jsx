@@ -58,34 +58,32 @@ const ServiceForm = () => {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    const Services = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getAllServices();
-        if (response.status === 200) {
-          setServices(response.data);
+        // Lấy danh sách dịch vụ
+        const serviceResponse = await getAllServices();
+        if (serviceResponse.status === 200) {
+          setServices(serviceResponse.data);
         }
+  
+        // // Sau khi lấy danh sách dịch vụ xong, lấy thông tin khách hàng
+        // const customerData = await getCustomerById();
+        // if (customerData !== null) {
+        //   setUser({
+        //     id: customerData.id,
+        //     email: customerData.email,
+        //     first_name: customerData.first_name,
+        //     last_name: customerData.last_name,
+        //     phone_number: customerData.phone_number,
+        //     location: customerData.location,
+        //   });
+        // }
       } catch (error) {
         console.log(error);
       }
     };
-    Services();
-  }, []);
-
-  useEffect(() => {
-    const getCustomer = async () => {
-      const data = await getCustomerById();
-      if (data !== null) {
-        setUser({
-          id: data.id,
-          email: data.email,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          phone_number: data.phone_number,
-          location: data.location,
-        });
-      }
-    };
-    getCustomer();
+  
+    fetchData();
   }, []);
 
   const onFinish = () => {
@@ -97,6 +95,19 @@ const ServiceForm = () => {
     localStorage.setItem("paymentMethod", payMentSelected);
 
     navigate("/Payment-checkout");
+  };
+
+  const handleDateChange = (e) => {
+    const chosenDate = new Date(e.target.value);
+    const today = new Date();
+    // Set hours to 0 to compare only the date part
+    today.setHours(0, 0, 0, 0);
+
+    if (chosenDate >= today) {
+      setSelectedDate(e.target.value);
+    } else {
+      alert('Please select a date that is today or in the future.');
+    }
   };
 
   const handleServiceChange = (event) => {
@@ -231,7 +242,7 @@ const ServiceForm = () => {
               <TextField
                 label="Preferred Appraisal Date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => handleDateChange(e)}
                 fullWidth
                 margin="normal"
                 type="date"
@@ -254,7 +265,7 @@ const ServiceForm = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Typography key={value}>{value}</Typography>
+                      <Typography key={value}>{value} <>&nbsp;</> <>&nbsp;</></Typography> 
                     ))}
                   </Box>
                 )}

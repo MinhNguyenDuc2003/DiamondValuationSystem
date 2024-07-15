@@ -57,31 +57,37 @@ public class TokenService {
 	}
 	@Transactional
 	public TokenResponse refreshTokens(RefreshTokenRequest request) throws RefreshTokenNotFoundException, RefreshTokenExpiredException {
-		String rawRefreshToken = request.getRefreshToken();
-		
-		List<RefreshToken> listRefreshTokens = refreshTokenRepo.findByUserId(Integer.parseInt(request.getId()));
-		
-		RefreshToken foundRefreshToken = null;
-		
-		for (RefreshToken token : listRefreshTokens) {
-			if (passwordEncoder.matches(rawRefreshToken, token.getToken())) {
-				foundRefreshToken = token;
-			}
-		}
-		
-		if (foundRefreshToken == null)
-			throw new RefreshTokenNotFoundException();
-		
-		Date currentTime = new Date();
-		
-		if (foundRefreshToken.getExpiryTime().before(currentTime))
-			throw new RefreshTokenExpiredException();
-		try {
-            TokenResponse response = generateTokens(foundRefreshToken.getUser());
-            refreshTokenRepo.delete(foundRefreshToken);
-            return response;
-        } catch (OptimisticLockingFailureException e) {
-            throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);
-        }
+	    String rawRefreshToken = request.getRefreshToken();
+
+	    List<RefreshToken> listRefreshTokens = refreshTokenRepo.findByUserId(Integer.parseInt(request.getId()));
+
+	    RefreshToken foundRefreshToken = null;
+
+	    for (RefreshToken token : listRefreshTokens) {
+	        if (passwordEncoder.matches(rawRefreshToken, token.getToken())) {
+	            foundRefreshToken = token;
+	        }
+	    }
+
+	    if (foundRefreshToken == null) {
+	        throw new RefreshTokenNotFoundException();
+	    }
+
+	    Date currentTime = new Date();
+
+	    if (foundRefreshToken.getExpiryTime().before(currentTime)) {
+	        throw new RefreshTokenExpiredException();
+	    }
+
+	    try {
+	        TokenResponse response = generateTokens(foundRefreshToken.getUser());
+	        return response;
+	    } catch (OptimisticLockingFailureException e) {
+	        throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);
+	    }
+	}
+	
+	public void deleteAllRefreshTokenById(Integer id) {
+		refreshTokenRepo.deleteAllByUserId(id);
 	}
 }

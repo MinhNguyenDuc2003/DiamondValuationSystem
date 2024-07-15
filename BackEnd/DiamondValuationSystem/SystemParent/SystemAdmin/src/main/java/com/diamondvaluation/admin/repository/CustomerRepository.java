@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,5 +20,9 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 	@Query("SELECT c FROM Customer c WHERE CONCAT(c.id, ' ', c.email, ' ', c.firstName, ' ',"
 			+ " c.lastName, ' ', c.location, ' ', c.phoneNumber) LIKE %?1%")
 	Page<Customer> findAll(String keyword, Pageable pageable);
+	
+	@Query("SELECT c FROM Customer c WHERE CONCAT(c.email, ' ', c.firstName, ' ',"
+			+ " c.lastName, ' ', c.phoneNumber) LIKE %?1%")
+	List<Customer> findAllByKeyword(String keyword);
 	
 }

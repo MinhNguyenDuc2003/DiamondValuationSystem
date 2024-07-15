@@ -98,6 +98,7 @@ return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage
 		ReportResponse reportResponse = modelMapper.map(report, ReportResponse.class);
 	    DiamondRequest diamondRequest = report.getRequest();
 	    reportResponse.setRequest_id(diamondRequest.getId());
+	    reportResponse.setCreated_date(report.getCreatedTime().toString());
 	    return reportResponse;
 	}
 

@@ -1,12 +1,16 @@
 package com.diamondvaluation.common;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,39 +18,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "services")
+@Table(name="slot_time")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiamondService {
+public class SlotTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(length = 64, nullable = false, unique = false)
-	private String name;
+	@Column(nullable = false, unique = true)
+	private String time;
 	
-	@Column(length = 128, nullable = false)
-	private String content;
+	@Column(nullable = false, unique = false, name = "number_request")
+	private int number;
 	
-	@Column(length = 64, nullable = false, unique = false)
-	private double money;
-	
-	@Column(length = 128)
-	private String photo;
-	
-	private boolean status;
+	@OneToMany(mappedBy = "slot")
+	@JsonIgnore
+	private List<DiamondRequest> requests;
 
-	public DiamondService(Integer id) {
+	public SlotTime(Integer id) {
 		this.id = id;
 	}
-
-	public DiamondService(String name) {
-		this.name = name;
-	}
-	
-	
 	
 	
 }
