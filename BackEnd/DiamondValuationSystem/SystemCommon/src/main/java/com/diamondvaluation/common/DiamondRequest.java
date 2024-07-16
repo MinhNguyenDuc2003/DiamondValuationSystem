@@ -83,7 +83,7 @@ public class DiamondRequest {
 	List<DiamondService> services = new ArrayList<>();
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "slot_id", nullable = false)
+	@JoinColumn(name = "slot_id", nullable = true)
 	private SlotTime slot;
 	
 

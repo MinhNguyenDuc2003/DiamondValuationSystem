@@ -5,7 +5,7 @@ app:
   security:
     jwt:
       access-token:
-        expiration: 1
+        expiration: 30
       issuer: DiamondValuation
       refresh-token:
         expiration: 7200

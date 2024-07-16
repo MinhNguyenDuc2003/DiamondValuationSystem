@@ -168,7 +168,7 @@ public class DiamondRequestController {
 		}
 	}
 
-	@GetMapping("/customer/{id}")
+	@GetMapping("customer/{id}")
 	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id) {
 		try {
 			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
@@ -178,7 +178,7 @@ public class DiamondRequestController {
 		}
 	}
 	
-	@GetMapping("/request/date")
+	@GetMapping("request/date")
 	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
 		try {
 			List<SlotTime> slotTime = slotService.getAllSlot();
