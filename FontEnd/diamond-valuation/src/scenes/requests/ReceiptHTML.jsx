@@ -193,7 +193,7 @@ const ReceiptHTML = (request, services) => {
                     <div class="col-xs-4 to">
                       <p class="lead marginbottom">Appointment</p>
                       <p>Date: ${request.appoinment_date}</p>
-                      <p>Time: ${request.appoinment_time}</p>
+                      <p>Time: ${request.slot}</p>
                       <p>Service: ${request.service_names}</p>
                     </div>
                     <div class="col-xs-4 text-right payment-details">

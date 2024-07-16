@@ -113,6 +113,7 @@ public class DiamondRequestController {
 		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
 		appoinmentResponse.setSlot(appoinment.getSlot().getTime());
+		appoinmentResponse.setSlotId(appoinment.getSlot().getId());
 		return appoinmentResponse;
 	}
 
@@ -195,7 +196,7 @@ public class DiamondRequestController {
 		}
 	}
 	
-	@GetMapping("/request/slot-available")
+	@GetMapping("request/slot-available")
 	public ResponseEntity<?> getSlotAvailableByDate(@RequestParam("date") String date){
 		try {
 			List<SlotTime> list = requestService.getSlotAvailableByDate(date);

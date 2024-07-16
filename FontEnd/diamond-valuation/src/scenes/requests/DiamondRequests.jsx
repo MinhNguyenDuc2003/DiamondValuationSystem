@@ -6,6 +6,7 @@ import {
   getAllServices,
   getRequestTracking,
 } from "../../components/utils/ApiFunctions";
+
 import {
   Avatar,
   Box,
@@ -37,6 +38,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -56,6 +58,7 @@ import {
   Flag,
   AssignmentLate as AssignmentLateIcon,
   CalendarToday as CalendarTodayIcon,
+  MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
 import ReceiptHTML from "./ReceiptHTML";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -94,6 +97,7 @@ const Requests = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
   const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -231,6 +235,14 @@ const Requests = () => {
     setLateRequestsDialogOpen(false);
   };
 
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -314,6 +326,7 @@ const Requests = () => {
               <TableCell align="center">Created Date</TableCell>
               <TableCell align="center">Payment Method</TableCell>
               <TableCell align="center">Appointment Date</TableCell>
+              <TableCell align="center">Appointment Time</TableCell>
               <TableCell align="center">Service</TableCell>
               <TableCell align="center">Note</TableCell>
               <TableCell align="center">Total</TableCell>
@@ -356,8 +369,9 @@ const Requests = () => {
                       {request.payment_method}
                     </TableCell>
                     <TableCell align="center">
-                      {request.appoinment_date} {request.appoinment_time}
+                      {request.appoinment_date}
                     </TableCell>
+                    <TableCell align="center">{request.slot}</TableCell>
                     <TableCell align="center">
                       {request.service_names.replace(
                         /([a-z])([A-Z])/g,
@@ -384,27 +398,59 @@ const Requests = () => {
                     </TableCell>
                     <TableCell align="center">
                       {isAuthorized && (
-                        <IconButton
-                          onClick={() => navigate(`/requests/${request.id}`)}
-                        >
-                          <EditIcon sx={{ color: "#C5A773" }} />
+                        <>
+                          <IconButton onClick={handleMenuOpen}>
+                            <MoreVertIcon sx={{ color: "#C5A773" }} />
+                          </IconButton>
+                          <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                navigate(`/requests/${request.id}`);
+                                handleMenuClose();
+                              }}
+                            >
+                              <EditIcon sx={{ color: "#C5A773", mr: 1 }} />
+                              Edit
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleOpenDialog(request);
+                                handleMenuClose();
+                              }}
+                            >
+                              <DeleteIcon sx={{ color: "#C5A773", mr: 1 }} />
+                              Delete
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                navigate(`/report/${request.id}`);
+                                handleMenuClose();
+                              }}
+                            >
+                              <Flag sx={{ color: "#C5A773", mr: 1 }} />
+                              Report
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                PrintPDF(request, services);
+                                handleMenuClose();
+                              }}
+                            >
+                              <ReceiptIcon sx={{ color: "#C5A773", mr: 1 }} />
+                              Receipt
+                            </MenuItem>
+                          </Menu>
+                        </>
+                      )}
+                      {!isAuthorized && (
+                        <IconButton onClick={() => PrintPDF(request, services)}>
+                          <ReceiptIcon sx={{ color: "#C5A773" }} />
                         </IconButton>
                       )}
-                      {isAuthorized && (
-                        <IconButton onClick={() => handleOpenDialog(request)}>
-                          <DeleteIcon sx={{ color: "#C5A773" }} />
-                        </IconButton>
-                      )}
-                      {isAuthorized && (
-                        <IconButton
-                          onClick={() => navigate(`/report/${request.id}`)}
-                        >
-                          <Flag sx={{ color: "#C5A773" }} />
-                        </IconButton>
-                      )}
-                      <IconButton onClick={() => PrintPDF(request, services)}>
-                        <ReceiptIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
                     </TableCell>
                   </TableRow>
                   <TableRow>

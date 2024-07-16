@@ -33,6 +33,7 @@ import ManagerRoute from "./components/routes/ManagerRoute";
 import NotFound from "./scenes/error/NotFound";
 import ValuationRoute from "./components/routes/ValuationRoute";
 import StaffRoute from "./components/routes/StaffRoute";
+import Overview from "./scenes/overview/Overview";
 
 const App = () => {
   return (
@@ -251,6 +252,14 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <UpdateAccount />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/overview"
+            element={
+              <PrivateRoute>
+                <Overview />
               </PrivateRoute>
             }
           />
