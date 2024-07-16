@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +28,25 @@ public interface DiamondRequestService {
     
 
  // New method to count requests by month
-    Map<String, Integer> countRequestsByMonthForYear(int year);
-
-    
-    Map<String, Object> countRevenuesByMonthForYear(int year);
+  
 
 
     List<DiamondRequest> getRequestByDateAndSlot(String date, Integer slotId);
 
 	List<SlotTime> getSlotAvailableByDate(String date);
 
+	
+	
+	//new
+//	Map<String, Map<String, Object>> countRequestsByMonthWeekDayForYear(int year);
+//	Map<String, Map<String, Object>> countRevenuesByMonthWeekDayForYear(int year);
+
+	List<Object> countRequestsAndRevenueByDay(LocalDate date);
+
+	List<Object> countRevenuesByMonthWeekForYear(int year);
+
+	List<Object> countRequestsAndRevenueByDateRange(LocalDate startDate, LocalDate endDate);
+
+	
+	
 }

@@ -2,7 +2,7 @@ package com.diamondvaluation.admin.service;
 
 
 import java.util.Map;
-
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -26,11 +26,14 @@ public interface CustomerService {
 
 
 	List<Customer> listCustomerByKeyword(String keyword);
-
 	
+	//new
 
+	List<Object> countCustomerAndRevenueByDay(LocalDate date);
 
-	
-
+	List<Object> countCustomerByMonthWeekForYear(int year);
 
 }
+
+	
+

@@ -1,0 +1,1 @@
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed

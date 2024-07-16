@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -178,22 +179,6 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
-
-	
-	//new method
-		@GetMapping("requests/count/year")
-	    public ResponseEntity<?> getCountsByMonthForYear(@RequestParam("year") int year) {
-	        Map<String, Integer> counts = requestService.countRequestsByMonthForYear(year);
-	        return new ResponseEntity<>(counts, HttpStatus.OK);
-	    }
-		
-		
-		@GetMapping("requests/revenue/year")
-	    public ResponseEntity<Map<String, Object>> getRevenueByMonthForYear(@RequestParam("year") int year) {
-	        Map<String, Object> counts = requestService.countRevenuesByMonthForYear(year);
-	        return new ResponseEntity<>(counts, HttpStatus.OK);
-	    }
 
 	@GetMapping("/request/date")
 	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
@@ -221,6 +206,52 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
-
+	
+	//New method
+//	@GetMapping("requests/count/year")
+//	public ResponseEntity<?> getCountsByMonthWeekDayForYear(@RequestParam("year") int year) {
+//	    Map<String, Map<String, Object>> counts = requestService.countRequestsByMonthWeekDayForYear(year);
+//	    return new ResponseEntity<>(counts, HttpStatus.OK);
+//	}
+//
+//	@GetMapping("requests/revenue/years")
+//	public ResponseEntity<?> getRevenueByMonthWeekDayForYear(@RequestParam("year") int year) {
+//	    Map<String, Map<String, Object>> counts = requestService.countRevenuesByMonthWeekDayForYear(year);
+//	    return new ResponseEntity<>(counts, HttpStatus.OK);
+//	}
+	
+	
+	
+	@GetMapping("/requests/revenue/day")
+	public ResponseEntity<?> getRequestStatsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	    try {
+	    	List<Object> list = (List<Object>) requestService.countRequestsAndRevenueByDay(date);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/requests/revenues/year")
+    public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
+        try {
+            List<Object> list = requestService.countRevenuesByMonthWeekForYear(year);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
+	@GetMapping("/requests/revenue/daterange")
+    public ResponseEntity<?> getRequestStatsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        try {
+            List<Object> stats = requestService.countRequestsAndRevenueByDateRange(startDate, endDate);
+            return new ResponseEntity<>(stats, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
 }

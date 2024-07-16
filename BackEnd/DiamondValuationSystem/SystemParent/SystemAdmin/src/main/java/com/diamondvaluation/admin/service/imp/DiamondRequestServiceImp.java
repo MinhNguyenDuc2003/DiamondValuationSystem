@@ -1,6 +1,7 @@
 	package com.diamondvaluation.admin.service.imp;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -158,45 +159,8 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 
 	
 	//new
-    @Override
-    public Map<String, Integer> countRequestsByMonthForYear(int year) {
-        Map<String, Integer> monthlyCounts = new LinkedHashMap<>();
-        int totalRequests = 0;
-
-        for (Month month : Month.values()) {
-            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
-            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
-            int count = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
-            monthlyCounts.put(month.name(), count);
-            totalRequests += count;
-        }
-
-        monthlyCounts.put("Total", totalRequests);
-        return monthlyCounts;
-    }
+	
     
-    @Override
-    public Map<String, Object> countRevenuesByMonthForYear(int year) {
-        Map<String, Object> monthlyStats = new LinkedHashMap<>();
-        int totalRequests = 0;
-        double totalRevenue = 0.0;
-
-        for (Month month : Month.values()) {
-            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
-            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
-
-            int count = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
-            Optional<Double> revenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndStatus(startOfMonth, endOfMonth, RequestStatus.DONE);
-            double revenue = revenueOptional.orElse(0.0); // Default to 0.0 if revenueOptional is empty
-
-            monthlyStats.put(month.name(), Map.of("count", count, "revenue", revenue));
-            totalRequests += count;
-            totalRevenue += revenue;
-        }
-
-        monthlyStats.put("Total", Map.of("count", totalRequests, "revenue", totalRevenue));
-        return monthlyStats;
-    }
 
 	@Override
 	public List<DiamondRequest> getRequestByDateAndSlot(String date, Integer slotId) {
@@ -216,6 +180,177 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		}
 		return available;
 	}
+	
+	
+	//new 
+//	@Override
+//	public Map<String, Map<String, Object>> countRevenuesByMonthWeekDayForYear(int year) {
+//	    Map<String, Map<String, Object>> monthlyStats = new LinkedHashMap<>();
+//	    for (Month month : Month.values()) {
+//	        LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+//	        LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+//	        Map<String, Object> stats = new LinkedHashMap<>();
+//
+//	        int totalCount = 0;
+//	        double totalRevenue = 0.0;
+//	        int weekNumber = 1;
+//	        LocalDateTime startOfWeek = startOfMonth;
+//	        while (startOfWeek.isBefore(endOfMonth)) {
+//	            LocalDateTime endOfWeek = startOfWeek.plusDays(6).with(LocalTime.MAX);
+//	            if (endOfWeek.isAfter(endOfMonth)) {
+//	                endOfWeek = endOfMonth;
+//	            }
+//	            int weeklyCount = repo.countByCreatedDateBetween(startOfWeek, endOfWeek);
+//	            Optional<Double> weeklyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndStatus(startOfWeek, endOfWeek, Boolean.TRUE);
+//	            double weeklyRevenue = weeklyRevenueOptional.orElse(0.0);
+//
+//	            stats.put("Week " + weekNumber, Map.of("count", weeklyCount, "revenue", weeklyRevenue));
+//	            totalCount += weeklyCount;
+//	            totalRevenue += weeklyRevenue;
+//	            weekNumber++;
+//	            startOfWeek = endOfWeek.plusDays(1).with(LocalTime.MIN);
+//	        }
+//
+//	        int dayOfMonth = 1;
+//	        LocalDateTime startOfDay = startOfMonth;
+//	        while (startOfDay.isBefore(endOfMonth)) {
+//	            LocalDateTime endOfDay = startOfDay.with(LocalTime.MAX);
+//	            int dailyCount = repo.countByCreatedDateBetween(startOfDay, endOfDay);
+//	            Optional<Double> dailyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndStatus(startOfDay, endOfDay, Boolean.TRUE);
+//	            double dailyRevenue = dailyRevenueOptional.orElse(0.0);
+//
+//	            stats.put("Day " + dayOfMonth, Map.of("count", dailyCount, "revenue", dailyRevenue));
+//	            dayOfMonth++;
+//	            startOfDay = endOfDay.plusDays(1).with(LocalTime.MIN);
+//	        }
+//
+//	        stats.put("Total", Map.of("count", totalCount, "revenue", totalRevenue));
+//	        monthlyStats.put(month.name(), stats);
+//	    }
+//	    return monthlyStats;
+//	}
+	
+	
+	public List<Object> countRequestsAndRevenueByDay(LocalDate date) {
+	    // Calculate start and end of the day
+	    LocalDateTime startOfDay = date.atStartOfDay();
+	    LocalDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
 
+	    // Count requests
+	    int requestCount = repo.countByCreatedDateBetween(startOfDay, endOfDay);
 
+	    // Calculate revenue
+	    Optional<Double> totalRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfDay, endOfDay, true);
+	    double totalRevenue = totalRevenueOptional.orElse(0.0);
+
+	    // Create a list to store results
+	    List<Object> result = new ArrayList<>();
+
+	    // Add requestCount as an object
+	    result.add("Count Request: " + requestCount);
+
+	    // Add totalRevenue as an object
+	    result.add("Total Revenue Paided: " + totalRevenue);
+
+	    return result;
+	}
+	
+	
+	public List<Object> countRevenuesByMonthWeekForYear(int year) {
+        List<Object> monthlyStats = new ArrayList<>();
+        int yearlyTotalCount = 0;
+        double yearlyTotalRevenue = 0.0;
+
+        for (Month month : Month.values()) {
+            List<Object> monthStats = new ArrayList<>();
+            monthStats.add("Month " + month.getValue());
+
+            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+
+            List<Object> weekStatsList = new ArrayList<>();
+
+            int monthlyTotalCount = 0;
+            double monthlyTotalRevenue = 0.0;
+
+            int weekNumber = 1;
+            LocalDateTime startOfWeek = startOfMonth;
+            while (startOfWeek.isBefore(endOfMonth)) {
+                LocalDateTime endOfWeek = startOfWeek.plusDays(6).with(LocalTime.MAX);
+                if (endOfWeek.isAfter(endOfMonth)) {
+                    endOfWeek = endOfMonth;
+                }
+                int weeklyCount = repo.countByCreatedDateBetween(startOfWeek, endOfWeek);
+                Optional<Double> weeklyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfWeek, endOfWeek, Boolean.TRUE);
+                double weeklyRevenue = weeklyRevenueOptional.orElse(0.0);
+
+                List<Object> weekStats = new ArrayList<>();
+                weekStats.add("Week " + weekNumber);
+                weekStats.add("Number of Request: " + weeklyCount);
+                weekStats.add("Revenues in Week: " + weeklyRevenue);
+                weekStatsList.add(weekStats);
+
+                monthlyTotalCount += weeklyCount;
+                monthlyTotalRevenue += weeklyRevenue;
+                weekNumber++;
+                startOfWeek = endOfWeek.plusDays(1).with(LocalTime.MIN);
+            }
+
+            // Add total stats for the month
+            List<Object> totalStats = new ArrayList<>();
+            totalStats.add("Total");
+            totalStats.add("Number of Request: " + monthlyTotalCount);
+            totalStats.add("Revenues in Month: " + monthlyTotalRevenue);
+            weekStatsList.add(totalStats);
+
+            monthStats.add(weekStatsList);
+            monthlyStats.add(monthStats);
+
+            yearlyTotalCount += monthlyTotalCount;
+            yearlyTotalRevenue += monthlyTotalRevenue;
+        }
+
+        // Add total stats for the year
+        List<Object> yearlyTotalStats = new ArrayList<>();
+        yearlyTotalStats.add("Year Total");
+        yearlyTotalStats.add("Number of Request: " + yearlyTotalCount);
+        yearlyTotalStats.add("Revenues in Year: " +yearlyTotalRevenue);
+        monthlyStats.add(yearlyTotalStats);
+
+        return monthlyStats;
+    }
+	
+	public List<Object> countRequestsAndRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
+        // Create a list to store results
+        List<Object> result = new ArrayList<>();
+
+        // Loop through each date in the range
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            LocalDateTime startOfDay = currentDate.atStartOfDay();
+            LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
+
+            // Count requests
+            int requestCount = repo.countByCreatedDateBetween(startOfDay, endOfDay);
+
+            // Calculate revenue
+            Optional<Double> totalRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfDay, endOfDay, true);
+            double totalRevenue = totalRevenueOptional.orElse(0.0);
+
+            // Create a list to store the daily results
+            List<Object> dailyResult = new ArrayList<>();
+            dailyResult.add("Date: " + currentDate);
+            dailyResult.add("Total Request: " + requestCount);
+            dailyResult.add("Total Revenue Paid: " + totalRevenue);
+
+            // Add daily results to the main result list
+            result.add(dailyResult);
+
+            // Move to the next date
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return result;
+    }
+	
 }

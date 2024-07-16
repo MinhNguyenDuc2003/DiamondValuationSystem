@@ -1,6 +1,7 @@
 package com.diamondvaluation.admin.service.imp;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -134,6 +135,95 @@ public class CustomerServiceImp implements CustomerService {
 	}
 	
 	
+	//new
+	public List<Object> countCustomerAndRevenueByDay(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.with(LocalTime.MAX);
+
+        int dailyCount = customerRepo.countByCreatedTimeBetween(startOfDay, endOfDay);
+
+        List<Object> dailyStats = new ArrayList<>();
+        dailyStats.add("Date: " + date);
+        dailyStats.add("Count Request: " + dailyCount);
+
+        return dailyStats;
+    }
+
+    // Method for counting customers by month, week, and day for a year
+    public List<Object> countCustomerByMonthWeekForYear(int year) {
+        List<Object> yearlyStats = new ArrayList<>();
+        int yearlyTotalCount = 0;
+
+        for (Month month : Month.values()) {
+            List<Object> monthStats = new ArrayList<>();
+            monthStats.add("Month " + month.getValue());
+
+            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+
+            List<Object> weekStatsList = new ArrayList<>();
+
+            int monthlyTotalCount = 0;
+
+            int weekNumber = 1;
+            LocalDateTime startOfWeek = startOfMonth;
+            while (startOfWeek.isBefore(endOfMonth)) {
+                LocalDateTime endOfWeek = startOfWeek.plusDays(6).with(LocalTime.MAX);
+                if (endOfWeek.isAfter(endOfMonth)) {
+                    endOfWeek = endOfMonth;
+                }
+                int weeklyCount = customerRepo.countByCreatedTimeBetween(startOfWeek, endOfWeek);
+
+                List<Object> weekStats = new ArrayList<>();
+                weekStats.add("Week " + weekNumber);
+                weekStats.add("Number of Request: " + weeklyCount);
+
+                // Add daily stats for the week
+                List<Object> dailyStatsList = new ArrayList<>();
+                LocalDateTime startOfDay = startOfWeek;
+                for (int day = 1; day <= 7; day++) {
+                    if (startOfDay.isAfter(endOfWeek)) {
+                        break;
+                    }
+                    LocalDateTime endOfDay = startOfDay.with(LocalTime.MAX);
+                    int dailyCount = customerRepo.countByCreatedTimeBetween(startOfDay, endOfDay);
+
+                    List<Object> dailyStats = new ArrayList<>();
+                    dailyStats.add("Day " + day);
+                    dailyStats.add("Count Request: " + dailyCount);
+                    dailyStatsList.add(dailyStats);
+
+                    startOfDay = startOfDay.plusDays(1).with(LocalTime.MIN);
+                }
+                weekStats.add(dailyStatsList);
+
+                weekStatsList.add(weekStats);
+
+                monthlyTotalCount += weeklyCount;
+                weekNumber++;
+                startOfWeek = endOfWeek.plusDays(1).with(LocalTime.MIN);
+            }
+
+            // Add total stats for the month
+            List<Object> totalStats = new ArrayList<>();
+            totalStats.add("Total");
+            totalStats.add("Number of Request: " + monthlyTotalCount);
+            weekStatsList.add(totalStats);
+
+            monthStats.add(weekStatsList);
+            yearlyStats.add(monthStats);
+
+            yearlyTotalCount += monthlyTotalCount;
+        }
+
+        // Add total stats for the year
+        List<Object> yearlyTotalStats = new ArrayList<>();
+        yearlyTotalStats.add("Year Total");
+        yearlyTotalStats.add("Number of Request: " + yearlyTotalCount);
+        yearlyStats.add(yearlyTotalStats);
+
+        return yearlyStats;
+    }
 	
 
 }

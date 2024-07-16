@@ -22,8 +22,8 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     
     //new
     int countByCreatedDateBetween(LocalDateTime start, LocalDateTime end);
-    @Query("SELECT SUM(dr.paymentTotal) FROM DiamondRequest dr WHERE dr.createdDate BETWEEN :start AND :end AND dr.status = :status")
-    Optional<Double> sumPaymentTotalByCreatedDateBetweenAndStatus(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("status") RequestStatus status);
+    @Query("SELECT SUM(dr.paymentTotal) FROM DiamondRequest dr WHERE dr.createdDate BETWEEN :start AND :end AND dr.isPaid = :isPaid")
+    Optional<Double> sumPaymentTotalByCreatedDateBetweenAndPaid(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("isPaid") Boolean isPaid);
 
 
     @Query(value = "SELECT * FROM diamond_request d ORDER BY d.created_date DESC", nativeQuery = true)
