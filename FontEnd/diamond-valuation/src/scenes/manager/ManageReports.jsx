@@ -192,7 +192,7 @@ const ManageReports = () => {
         </Alert>
       )}
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mt: "10px" }}>
         {reports.length > 0 ? (
           reports.map((report) => (
             <Grid item xs={12} sm={6} md={4} key={report.id}>
