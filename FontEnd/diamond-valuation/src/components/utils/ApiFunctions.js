@@ -556,10 +556,12 @@ export const validateToken = async () => {
 const refreshToken = async () => {
   try {
     const id = localStorage.getItem("userId");
-    const formData = new FormData();
-    formData.append("id", id);
-    const response = await api.post("/api/auth/token/refresh", formData);
-    return response.data;
+    if (id !== null && id > 0) {
+      const formData = new FormData();
+      formData.append("id", id);
+      const response = await api.post("/api/auth/token/refresh", formData);
+      return response.data;
+    }
   } catch (error) {
     console.log("Error", error);
   }

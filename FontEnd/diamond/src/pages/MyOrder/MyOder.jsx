@@ -206,6 +206,12 @@ const MyOrder = () => {
                   sx={{ color: "#11375e", fontSize: "20px " }}
                   align="center"
                 >
+                  Total
+                </TableCell>
+                <TableCell
+                  sx={{ color: "#11375e", fontSize: "20px " }}
+                  align="center"
+                >
                   Request Status
                 </TableCell>
                 <TableCell
@@ -245,6 +251,9 @@ const MyOrder = () => {
                   </TableCell>
                   <TableCell sx={{ color: "gray" }} align="center">
                     {request.paid ? "Paid" : "Pending"}
+                  </TableCell>
+                  <TableCell sx={{ color: "gray" }} align="center">
+                    {request.total.toFixed(2)}
                   </TableCell>
                   <TableCell align="center">
                     <Typography
