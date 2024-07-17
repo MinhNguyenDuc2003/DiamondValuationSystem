@@ -15,5 +15,6 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
 	@Query("UPDATE DiamondRequest d SET d.isPaid = ?2 WHERE d.id = ?1")
 	void updatePayStatus(Integer id ,boolean status);
 	
-	List<DiamondRequest> findByCustomer(Customer customer);
+	@Query(value = "SELECT * FROM diamond_request d WHERE d.customer_id = ?1 ORDER BY d.created_date DESC", nativeQuery = true)
+	List<DiamondRequest> findByCustomer(Integer id);
 }

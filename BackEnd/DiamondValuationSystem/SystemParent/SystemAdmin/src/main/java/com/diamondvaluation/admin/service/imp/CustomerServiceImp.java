@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.service.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class CustomerServiceImp implements CustomerService{
 		
 		if (isUpdatingCustomer) {
 			Customer existingUser = customerRepo.findById(customer.getId()).get();
-
+			customer.setCreatedTime(existingUser.getCreatedTime());
 			if (customer.getPassword().isEmpty()) {
 				customer.setPassword(existingUser.getPassword());
 			} else {
@@ -87,6 +88,17 @@ public class CustomerServiceImp implements CustomerService{
 			return customers;
 		}
 		customers = customerRepo.findAll(pageable);
+		return customers;
+	}
+
+	@Override
+	public List<Customer> listCustomerByKeyword(String keyword) {
+		List<Customer> customers = new ArrayList<>();
+		if(keyword!=null && keyword.trim().length()>0) {
+			customers = customerRepo.findAllByKeyword(keyword);
+			return customers;
+		}
+		customers = (List<Customer>) customerRepo.findAll();
 		return customers;
 	}
 	

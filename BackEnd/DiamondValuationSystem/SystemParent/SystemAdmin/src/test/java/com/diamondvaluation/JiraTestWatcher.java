@@ -35,7 +35,7 @@ public class JiraTestWatcher implements BeforeEachCallback, AfterEachCallback {
 	    public void afterEach(ExtensionContext context) throws Exception {
 	        String projectKey = "N5NJS1806";
 	        Long issueType = 10004L;
-	        String summary = "Test Username not Found Successfully";
+	        String summary = "Successful Addition of Carat";
 	        String comment;
 
 	        if (context.getExecutionException().isPresent()) {
@@ -46,13 +46,13 @@ public class JiraTestWatcher implements BeforeEachCallback, AfterEachCallback {
 
 	        try {
 	            // Create issue in Jira
-	            String issueKey = jiraService.createIssue(projectKey, issueType, summary);
-	            System.out.println("Created issue with key: " + issueKey);
-
-	            // Add comment to the created issue
-	            Issue issue = jiraService.getIssue(issueKey);
-	            jiraService.addComment(issue, comment);
-	            System.out.println("Added comment to issue: " + issueKey);
+//	            String issueKey = jiraService.createIssue(projectKey, issueType, summary);
+//	            System.out.println("Created issue with key: " + issueKey);
+//
+//	            // Add comment to the created issue
+//	            Issue issue = jiraService.getIssue(issueKey);
+//	            jiraService.addComment(issue, comment);
+//	            System.out.println("Added comment to issue: " + issueKey);
 	        } catch (Exception e) {
 	            System.err.println("Error processing Jira operations: " + e.getMessage());
 	            e.printStackTrace();

@@ -1,46 +1,60 @@
-import { Box, Button, TextField, Typography, Input } from "@mui/material";
-import { Formik } from "formik";
+import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { saveService } from "../../components/utils/ApiFunctions";
 import { useState } from "react";
 
-const initialValues = {
-  id: "",
-  name: "",
-  money: "",
-  content: "",
-  photo: null,
-};
-
+// Regular expression for name validation
 const nameReqExp = /^[a-zA-Z\s]+$/;
 
+// Validation schema using Yup
 const serviceSchema = yup.object().shape({
-  name: yup.string().matches(nameReqExp, "Invalid name").required("required"),
-  money: yup.number().required("required"),
-  content: yup.string(),
-  photo: yup.mixed().required("Image is required"),
+  name: yup.string().matches(nameReqExp, "Invalid name").required("Required"),
+  money: yup.number().required("Required"),
+  content: yup.string().required("Required"),
+  // Photo field is not needed in validation schema, handled separately
 });
 
 const AddService = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  const initialValues = {
+    
+    name: "",
+    money: "",
+    content: "",
+  };
 
   const handleFormSubmit = async (values) => {
     try {
-      const result = await saveService(values);
+      if (!image) {
+        setErrorMessage("Image is required");
+        return;
+      }
+      const result = await saveService({
+        ...values,
+        photo: image,
+      });
       if (result.message !== undefined) {
-        localStorage.setItem("successMessage", "Add new Service successfully");
+        localStorage.setItem("successMessage", "Add New Service Successfully");
         navigate("/services");
       } else {
-        setErrorMessage("Your email is invalid");
+        setErrorMessage("Failed to add service");
       }
     } catch (error) {
-      setErrorMessage(error);
+      console.error("Error occurred while saving service:", error);
+      setErrorMessage("An error occurred while saving the service");
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 3000);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   return (
@@ -48,6 +62,13 @@ const AddService = () => {
       <Typography variant="h4" textAlign="center" m="20px">
         Add Service
       </Typography>
+
+      {errorMessage && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errorMessage}
+        </Alert>
+      )}
+
       <Box
         maxWidth="700px"
         m="0 auto"
@@ -56,9 +77,9 @@ const AddService = () => {
         p="16px"
       >
         <Formik
-          onSubmit={handleFormSubmit}
           initialValues={initialValues}
           validationSchema={serviceSchema}
+          onSubmit={handleFormSubmit}
         >
           {({
             values,
@@ -68,7 +89,7 @@ const AddService = () => {
             handleChange,
             handleSubmit,
           }) => (
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Box
                 display="grid"
                 gap="20px"
@@ -111,19 +132,27 @@ const AddService = () => {
                   fullWidth
                   sx={{ gridColumn: "span 4" }}
                 />
-                <Input
-                  margin="dense"
-                  type="file"
-                  name="photo"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={!!touched.photo && !!errors.photo}
-                  inputProps={{ accept: "image/png, image/jpeg " }}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                {touched.photo && errors.photo && (
-                  <div style={{ color: "red" }}>{errors.photo}</div>
-                )}
+                <Box sx={{ gridColumn: "span 4" }}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Image
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </Button>
+                  {imagePreview && (
+                    <Box mt={2} textAlign="center">
+                      <Typography>Image Preview:</Typography>
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      />
+                    </Box>
+                  )}
+                </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">
@@ -137,7 +166,7 @@ const AddService = () => {
                   Cancel
                 </Button>
               </Box>
-            </form>
+            </Form>
           )}
         </Formik>
       </Box>

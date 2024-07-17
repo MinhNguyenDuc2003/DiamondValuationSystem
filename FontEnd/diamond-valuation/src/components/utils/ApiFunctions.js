@@ -27,6 +27,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout(){
+  try {
+    const id = localStorage.getItem("userId");
+    if(id.length>0 && id !== null){
+      const response = await api.get(`/api/auth/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 // =========================== USER ================================================
 export async function getUsersPerPage(pageNum, keyword) {
   try {
@@ -45,7 +57,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
   try {
-    const result = await api.get(`/api/users/user/${id}`);
+    const result = await api.get(`/api/users/user/${id}`);F
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -83,6 +95,26 @@ export async function saveUser(user) {
   }
 }
 
+export async function updateUser(user) {
+  const formData = new FormData();
+  formData.append("id", user.id);
+  formData.append("first_name", user.first_name);
+  formData.append("last_name", user.last_name);
+  formData.append("email", user.email);
+  formData.append("password", user.password);
+  formData.append("phone_number", user.phone_number);
+  formData.append("photo", user.photo);
+
+  try {
+    const response = await api.post("api/users/user/update", formData);
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
 export async function deleteUserById(id) {
   try {
     const result = await api.delete(`/api/users/delete/${id}`);
@@ -110,6 +142,19 @@ export async function getCustomersPerPage(pageNum, keyword) {
   }
 }
 
+export async function searchCustomerByKeyword(keyword) {
+  try {
+    if (keyword.length > 0) {
+      const result = await api.get(
+        `/api/customers/search/customer?keyword=${keyword}`
+      );
+      return result.data;
+    }
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
 export async function deleteCustomerById(id) {
   try {
     const result = await api.delete(`/api/customers/delete/${id}`);
@@ -126,7 +171,7 @@ export async function saveCustomer(customer) {
   formData.append("last_name", customer.last_name);
   formData.append("email", customer.email);
   formData.append("password", customer.password);
-  formData.append("phone_number", customer.phone_numbe);
+  formData.append("phone_number", customer.phone_number);
   formData.append("location", customer.location);
   formData.append("enabled", customer.enabled);
 
@@ -171,10 +216,14 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  formData.append("id", service.id);
+  if(service.id !== null && service.id !== undefined){
+    formData.append("id", service.id);
+  }
+  
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
+  formData.append("status", true);
   formData.append("photo", service.photo);
 
   try {
@@ -249,10 +298,10 @@ export async function getRequestById(id) {
   }
 }
 
-export async function getAllRequestsNew() {
+export async function getAllRequestsStatus(status) {
   try {
     const result = await api.get(
-      `api/diamond-requests/requests/status/new`,
+      `api/diamond-requests/requests/status/${status}`,
       {}
     );
     return result.data;
@@ -306,6 +355,7 @@ export async function deleteCertificateById(id) {
 export async function saveCertificate(certificate) {
   const formData = new FormData();
   formData.append("id", certificate.id);
+  formData.append("code", certificate.code);
   formData.append("cut", certificate.cut);
   formData.append("carat", certificate.carat);
   formData.append("color", certificate.color);
@@ -317,6 +367,7 @@ export async function saveCertificate(certificate) {
   formData.append("flourescence", certificate.flourescence);
   formData.append("name", certificate.cert);
   formData.append("request_id", certificate.request_id);
+  formData.append("photo", certificate.photo);
 
   try {
     const response = await api.post(
@@ -448,26 +499,98 @@ export async function deleteCaratRange(id) {
     console.log(error.data);
   }
 }
+
+// =========================================== REPORTS ======================================//
+export async function saveReport(report) {
+  const data = {
+    id: report.id,
+    header: report.header,
+    content: report.content,
+    type: report.type,
+    status: report.status,
+    request_id: report.request_id,
+  };
+
+  try {
+    const response = await api.post("api/reports/report/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function getAllReports() {
+  try {
+    const result = await api.get(`api/reports/all-report`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function deleteReport(id) {
+  try {
+    const response = await api.delete(`api/reports/report/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+// =================================== Request Tracking =================================== //
+
+export async function getRequestTracking(id) {
+  try {
+    const result = await api.get(`/request-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+// =================================== Report Tracking =================================== //
+
+export async function getReportTracking(id) {
+  try {
+    const result = await api.get(`/report-track/${id}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
-  const formData = new FormData();
-  formData.append("token", token);
   if (token != null && token.length > 0) {
-    const result = await api.post("/api/auth/token", formData);
-    console.log("abc");
+    const result = await api.post("/api/auth/token");
     return result;
   } else {
-    return false;
+    const result = await api.post("/api/auth/token");
+    return result;
   }
 };
 const refreshToken = async () => {
   try {
     const id = localStorage.getItem("userId");
+    if (id !== null && id > 0) {
     const formData = new FormData();
     formData.append("id", id);
     const response = await api.post("/api/auth/token/refresh", formData);
     return response.data;
+    }
   } catch (error) {
     console.log("Error", error);
   }
@@ -515,7 +638,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // If refreshToken() fails, redirect to login
-        window.location.href = "/login"; // Redirect to login page
+        // window.location.href = "/login"; // Redirect to login page
         return Promise.reject(error); // Reject the promise to avoid further processing
       }
     }

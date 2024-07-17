@@ -50,6 +50,7 @@ public class UserServiceImp implements UserService {
 			} else {
 				encodePassword(user);
 			}
+			user.setPhoto(existingUser.getPhoto());
 
 		} else {
 			if(isUsernameExist(user.getEmail())) {

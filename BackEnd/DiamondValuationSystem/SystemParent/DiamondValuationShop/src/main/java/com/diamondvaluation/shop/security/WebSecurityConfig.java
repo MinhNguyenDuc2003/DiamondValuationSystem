@@ -85,8 +85,10 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider());
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            	.requestMatchers("/diamond-shop/customer/*").authenticated()
+            	.requestMatchers("/diamond-shop/customer/*").authenticated()	
             	.requestMatchers("/diamond-shop/token").authenticated()
+            	.requestMatchers("/diamond-request/**").authenticated()
+            	.requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
             .oauth2Login(form -> form
     				.userInfoEndpoint()

@@ -67,8 +67,9 @@ public class UserController {
 					AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 				}
 			} else {
-				if (user.getPhoto()==null || user.getPhoto().isEmpty())
+				if (user.getPhoto()==null || user.getPhoto().isEmpty()) {
 					user.setPhoto(null);
+				}
 				savedUser = userService.addNewUser(user);
 			}
 
@@ -81,16 +82,55 @@ public class UserController {
 		}
 		
 	}
+	
+	@PostMapping("user/update")
+	public ResponseEntity<?> updateAccount(@ModelAttribute @Valid UserRequest userRequest,
+			@RequestParam(name = "photo", required = false) MultipartFile multipartFile)
+			throws S3Exception, AwsServiceException, SdkClientException, IOException {
+		try {
+			if(userRequest.getId() != null && userRequest.getId().length()>0) {
+				User user = request2Entity(userRequest);
+				User savedUser = null;
+				if (multipartFile!=null && !multipartFile.isEmpty()) {
+					String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+					user.setPhoto(fileName);
+					savedUser = userService.addNewUser(user);
+					if (savedUser != null) {
+						String uploadDir = "user-photos/" + savedUser.getId();
+						AmazonS3Util.removeFolder(uploadDir);
+						AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+					}
+				} else {
+					if (user.getPhoto()==null || user.getPhoto().isEmpty())
+						user.setPhoto(null);
+					savedUser = userService.addNewUser(user);
+				}
+
+				if (savedUser == null) {
+					return ResponseEntity.badRequest().build();
+				}
+			}else {
+				return ResponseEntity.badRequest().build();
+			}
+			
+			return new ResponseEntity<>(new MessageResponse("Add/Update User successfully!"), HttpStatus.OK);
+		} catch (EmailIsAlreadyExistException e) {
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+		}
+		
+	}
 
 	private User request2Entity(UserRequest request) {
 		User user = modelMapper.map(request, User.class);
 		List<String> roleRequest = request.getRoles();
 		Set<Role> roles = new HashSet<>();
-		for(int i=0 ; i < roleRequest.size(); i++) {
-			Role role = new Role(Integer.parseInt(roleRequest.get(i)));
-			roles.add(role);
+		if(roleRequest!=null) {
+			for(int i=0 ; i < roleRequest.size(); i++) {
+				Role role = new Role(Integer.parseInt(roleRequest.get(i)));
+				roles.add(role);
+			}
+			user.setRoles(roles);
 		}
-		user.setRoles(roles);
 		user.setFirstName(request.getFirst_name());
 		user.setLastName(request.getLast_name());
 		user.setPhoneNumber(request.getPhone_number());

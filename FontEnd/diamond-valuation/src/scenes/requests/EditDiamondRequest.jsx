@@ -45,35 +45,19 @@ const EditDiamondRequest = () => {
   });
 
   useEffect(() => {
-    getCustomersPerPage(1, "")
-      .then((data) => {
-        setCustomers(data.list_customers);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-
-    getAllServices()
-      .then((data) => {
-        setServices(data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    const fetchRequest = async () => {
+    const fetchData = async () => {
       try {
-        const requestEdit = await getRequestById(requestid);
+        const customersData = await getCustomersPerPage(1, "");
+        setCustomers(customersData.list_customers);
 
-        const foundCustomer = customers.find(
-          (customer) => customer.phone_number === requestEdit.customer_phone
-        );
-        if (foundCustomer) {
+        const servicesData = await getAllServices();
+        setServices(servicesData);
+
+        const requestEdit = await getRequestById(requestid);
+        if (requestEdit) {
           setInitialValues({
             id: requestEdit.id,
-            customer_id: foundCustomer.id,
+            customer_id: requestEdit.customer_id,
             note: requestEdit.note,
             status: requestEdit.status,
             service_ids: requestEdit.service_ids,
@@ -87,9 +71,9 @@ const EditDiamondRequest = () => {
         setError(error.message);
       }
     };
-    fetchRequest();
-  }, [requestid, customers]);
-  console.log(initialValues);
+
+    fetchData();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string().required("Customer is required"),
@@ -180,7 +164,9 @@ const EditDiamondRequest = () => {
                     }}
                     value={
                       customers.find(
-                        (customer) => customer.id === values.customer_id
+                        (customer) =>
+                          Number(customer.id) ===
+                          Number(initialValues.customer_id)
                       ) || null
                     }
                     renderInput={(params) => (

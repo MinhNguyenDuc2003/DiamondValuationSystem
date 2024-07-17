@@ -132,7 +132,11 @@ p {
 }
 
 .submit {
+<<<<<<< HEAD
     background-color: #82cfff;
+=======
+    background-color: #f1f1f1;
+>>>>>>> b2d141de4e9de793f8e8450098c16aee0cc0e9f7
     width: 90%;
     height: 6%;
     border-radius: 10px;
@@ -212,4 +216,65 @@ p {
 
 
     }
+<<<<<<< HEAD
+=======
+}
+
+@media (max-width: 1200px) {
+    .calculator-wrapper {
+        display: block;
+    }
+
+    .wrapper-input .wrapper-input-content .shape .input-content button {
+        width: 60px;
+    }
+    .ant-input-number.css-dev-only-do-not-override-zg0ahe.ant-input-number-outlined {
+        width: 60px;
+    }
+}
+
+@media (max-width: 992px) {
+    .wrapper-input .shape .input-content {
+        grid-template-columns: auto auto auto;
+    }
+    .wrapper-input .carat .slider-input {
+        grid-template-columns: 70% 30%;
+    }
+    .result-output-2 .wrapper-block {
+        width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper-input .shape .input-content {
+        grid-template-columns: auto auto;
+    }
+    .wrapper-input .carat .slider-input {
+        grid-template-columns: 100%;
+    }
+  
+    .result-output-2 .wrapper-block {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .wrapper-output  {
+        margin-bottom: 70px;
+    }
+    .wrapper-output .output {
+        height: 40vh;
+
+    }
+}
+
+@media (max-width: 576px) {
+    .wrapper-input .shape .input-content {
+        grid-template-columns: auto;
+    }
+    .wrapper-input {
+        margin: 10% 0 5%;
+    }
+    .result-output-1 .total-price p {
+        font-size: 3rem;
+    }
+>>>>>>> b2d141de4e9de793f8e8450098c16aee0cc0e9f7
 }

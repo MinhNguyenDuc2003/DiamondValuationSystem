@@ -5,7 +5,7 @@ app:
   security:
     jwt:
       access-token:
-        expiration: 1
+        expiration: 30
       issuer: DiamondValuation
       refresh-token:
         expiration: 7200
@@ -17,7 +17,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 123456
+    password: minh01672527656
     url: jdbc:mysql://localhost:3306/diamond_db
     username: root
     hikari:      

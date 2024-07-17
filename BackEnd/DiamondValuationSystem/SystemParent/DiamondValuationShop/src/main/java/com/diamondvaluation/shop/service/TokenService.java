@@ -77,12 +77,14 @@ public class TokenService {
 		if (foundRefreshToken.getExpiryTime().before(currentTime))
 			throw new RefreshTokenExpiredException();
 		try {
-			
             TokenResponse response = generateTokens(foundRefreshToken.getCustomer());
-            refreshTokenRepo.delete(foundRefreshToken);
             return response;
         } catch (OptimisticLockingFailureException e) {
             throw new RuntimeException("Failed to update refresh token due to concurrent modification", e);
         }
+	}
+	
+	public void deleteAllRefreshTokenById(Integer id) {
+		refreshTokenRepo.deleteAllByCustomerId(id);
 	}
 }

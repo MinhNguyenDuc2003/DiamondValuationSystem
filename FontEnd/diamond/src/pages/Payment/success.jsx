@@ -1,13 +1,109 @@
 import React from 'react'
 import successIcon from './successsss.jpg'
+<<<<<<< HEAD
 import { Link, Typography } from '@mui/material'
 const Success = () => {
+=======
+import { Box, Button, Link, Paper, Typography } from '@mui/material'
+import { processPayment, getCustomerById } from '../../utils/ApiFunction';
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import PayPall from '../Service/img/PayPal_Logo.jpg'
+const Success = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [cart, setCart] = useState({
+    selectedDate: "",
+    serviceSelected: [],
+    paymentMethod: ""
+  });
+  const [request , setRequest] = useState({});
+  useEffect(() => {
+    const date = localStorage.getItem("selectedDate");
+    const serviceSelect = localStorage.getItem("serviceSelected");
+    const paymentMethod = localStorage.getItem("paymentMethod");
+    const serviceSelected = serviceSelect ? serviceSelect.split(",") : [];
+    const getCustomer = async () => {
+      const data = await getCustomerById();
+      if (data !== null) {
+        setUser({
+          fullname: `${data.first_name} ${data.last_name}`,
+          email: data.email,
+          phone_number: data.phone_number,
+          location: data.location
+        });
+      }
+      
+    };
+    getCustomer();
+    setCart({
+      selectedDate: date,
+      serviceSelected: serviceSelected,
+      paymentMethod: paymentMethod
+    });
+  }, []); // Only run once, on mount
+
+  useEffect(() => {
+    const executePayment = async () => {
+      const paymentId = searchParams.get('paymentId');
+      const PayerID = searchParams.get('PayerID');
+
+      if (cart.selectedDate && cart.serviceSelected.length && cart.paymentMethod) { // Check if cart is populated
+        const response = await processPayment(paymentId, PayerID, cart);
+
+        if (response && response.status === 200) {
+          setRequest(response.data)
+          localStorage.removeItem('serviceSelected');
+          localStorage.removeItem('paymentMethod');
+          localStorage.removeItem('selectedDate');
+        }
+      }
+    };
+
+    executePayment();
+  }, [cart]); // Run when cart is updated
+
+
+
+>>>>>>> b2d141de4e9de793f8e8450098c16aee0cc0e9f7
   return (
-    <div style={{marginBottom : '12%'}} className='wrapperrr'>
-        <img style={{width : '10%'}} src={successIcon}/>
-        <Typography>Payment Success. Thanks for use Service</Typography>
-        <Link href="/">Back to HomePage</Link>
-        </div>
+
+    <Box style={{ marginBottom: '12%' }} className='wrapperrr'>
+      <Paper className='wrapper-sucess' sx={{ ml: '30%', width: '40%' }}>
+
+        <Typography sx={{ fontSize: '30px', color: '#3a9e6d', mb: '30px' }}>Payment Successfull!</Typography>
+        <img style={{ width: '10%' }} src={successIcon} />
+        <Box display={'flex'} sx={{ justifyContent: 'space-between', pl: 7, pr: 7 }} >
+          <Box textAlign={'start'}>
+            <Typography sx={{pb:'7px', color:'gray'}}>Payment type</Typography>
+            <Typography sx={{pb:'7px', color:'gray'}}>Bank</Typography>
+            <Typography sx={{pb:'7px', color:'gray'}}>Moblie</Typography>
+            <Typography sx={{pb:'7px', color:'gray'}}>Email</Typography>
+            <Typography sx={{pb:'7px', color:'gray'}}>FullName</Typography>
+            <br />
+            <Typography sx={{fontSize:'19px' ,fontWeight:600,color:'gray'}}>Amount Paid</Typography>
+            <br />
+
+          </Box>
+          <Box textAlign={'end'}>
+            <Typography sx={{pb:'7px' ,color :'#504747'}}>Net Banking </Typography>
+            <Typography sx={{pb:'7px',color :'#504747'}}><img src={PayPall} style={{width: '60px'}}></img></Typography>
+            <Typography sx={{pb:'7px',color :'#504747'}}>{user.fullname}</Typography>
+            <Typography sx={{pb:'7px',color :'#504747'}}>{user.email}</Typography>
+            <Typography sx={{pb:'7px',color :'#504747'}}>{user.fullname}</Typography>
+            <br />
+            <Typography sx={{fontWeight:600}}>{request.payment_total} $ </Typography>
+            <br />
+
+          </Box>
+        </Box>
+        <Box display={'flex'} gap={'10px'} justifyContent={'center'} mt={8} pb={5}>
+          <Button onClick={e => navigate('/')} variant='contained'>CLOSE</Button>
+        </Box>
+      </Paper>
+    </Box>
+
+
   )
 }
 export default Success

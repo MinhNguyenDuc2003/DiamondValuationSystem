@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -35,17 +37,19 @@ public class ReportTracking {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(nullable = false, unique = false)
-	private boolean status;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private ReportStatus status;
 	
 	@Column(name = "created_time")
 	@CreatedDate
 	private LocalDateTime createdTime;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User updatedBy;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "report_id")
 	private Report report;

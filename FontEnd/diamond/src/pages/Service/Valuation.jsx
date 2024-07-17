@@ -11,6 +11,7 @@ const Valuation = () => {
     const [dataContent, setDataContent] = useState(null);
     const navigate = useNavigate();
 
+<<<<<<< HEAD
     //call data từ Json
     useEffect(() => {
         setDataContent(data);
@@ -18,6 +19,23 @@ const Valuation = () => {
 
     if (!dataContent) {
         return <div>Loading....</div>;
+=======
+  //call data từ Json
+  useEffect(() => {
+    setDataContent(data);
+  }, []);
+  
+  if (!dataContent) {
+    return <div>Loading....</div>;
+  }
+
+  const handleSendForm = () => {
+    const checkUser = window.localStorage.getItem("userId");
+    if (checkUser) {
+      navigate("/Service/valuation/valuation-form");
+    } else {
+      toast.error(`You need to login`, { autoClose: 3000 });
+>>>>>>> b2d141de4e9de793f8e8450098c16aee0cc0e9f7
     }
 
     //check xem người dùng đã đăng nhập hay chưa

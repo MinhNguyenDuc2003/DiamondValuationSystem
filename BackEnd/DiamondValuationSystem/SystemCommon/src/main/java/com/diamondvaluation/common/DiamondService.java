@@ -24,10 +24,10 @@ public class DiamondService {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(length = 64, nullable = false, unique = true)
+	@Column(length = 64, nullable = false, unique = false)
 	private String name;
 	
-	@Column(length = 128, nullable = false, unique = true)
+	@Column(length = 128, nullable = false)
 	private String content;
 	
 	@Column(length = 64, nullable = false, unique = false)

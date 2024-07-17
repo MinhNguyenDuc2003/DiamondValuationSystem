@@ -17,6 +17,8 @@ public class CertificateRequest {
 	
 	@NotBlank(message = "Cut is mandatory")
     private String cut;
+	
+    private String code;
 
     @NotBlank(message = "Name is mandatory")
     private String name;
@@ -45,6 +47,5 @@ public class CertificateRequest {
     @NotBlank(message = "Flourescence is mandatory")
     private String flourescence;
 	
-    @NotNull(message = "requestId is mandatory")
 	private int request_id;
 }

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { getRoles, saveUser } from "../../components/utils/ApiFunctions";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 export const AddUser = () => {
   const [user, setUser] = useState({
@@ -20,7 +21,7 @@ export const AddUser = () => {
 
   const [imagePreview, setImagePreview] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const auth = useAuth();
   useEffect(() => {
     const fetchRoles = async () => {
       try {
@@ -40,7 +41,7 @@ export const AddUser = () => {
 
   const handleEnabledChange = (event) => {
     const { name, checked } = event.target;
-    if (!checked) {
+    if (checked) {
       setUser({ ...user, [name]: true });
     } else {
       setUser({ ...user, [name]: false });
@@ -68,20 +69,29 @@ export const AddUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const result = await saveUser(user);
-      if (result.message !== undefined) {
-        localStorage.setItem("successMessage", "Add new User successfully");
-        navigate("/users");
-      } else {
-        setErrorMessage("Your email is invalid");
+    if (
+      auth.isRoleAccept("admin") !== null ||
+      auth.isRoleAccept("manager") !== null
+    ) {
+      try {
+        console.log(user);
+        const result = await saveUser(user);
+        if (result.message !== undefined) {
+          localStorage.setItem("successMessage", "Add new User successfully");
+          navigate("/users");
+        } else {
+          setErrorMessage("Your email is invalid");
+        }
+      } catch (error) {
+        setErrorMessage(error);
       }
-    } catch (error) {
-      setErrorMessage(error);
+    } else {
+      alert("you don't have permission to add new user");
     }
-    // setTimeout(() => {
-    //   setErrorMessage("");
-    // }, 4000);
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
   };
 
   const handleCancelClick = () => {
@@ -205,6 +215,7 @@ export const AddUser = () => {
                 type="checkbox"
                 id="enabled"
                 name="enabled"
+                checked={user.enabled}
               />
             </div>
           </div>

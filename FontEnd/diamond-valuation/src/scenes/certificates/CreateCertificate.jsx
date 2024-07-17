@@ -20,10 +20,23 @@ import {
   updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 
+// Utility function to remove spaces from object values
+const removeSpacesFromObjectValues = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) =>
+      typeof value === "string"
+        ? [key, value.replace(/\s+/g, "")]
+        : [key, value]
+    )
+  );
+};
+
 const CreateCertificate = () => {
   const { requestId } = useParams();
   const [request, setRequest] = useState(null);
   const [error, setError] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const navigate = useNavigate();
 
@@ -72,13 +85,20 @@ const CreateCertificate = () => {
     }, 2000);
   }, [requestId]);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (values) => {
     try {
       const measurement = `${values.length}-${values.width}x${values.height}mm`;
-      const certificateData = {
+      const certificateData = removeSpacesFromObjectValues({
         ...values,
         measurement,
-      };
+        photo: image,
+      });
       console.log(certificateData);
       const result = await saveCertificate(certificateData);
       if (result.message !== undefined) {
@@ -282,6 +302,27 @@ const CreateCertificate = () => {
                     error={touched.height && Boolean(errors.height)}
                     helperText={touched.height && errors.height}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Image
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </Button>
+                  {imagePreview && (
+                    <Box mt={2} textAlign="center">
+                      <Typography>Image Preview:</Typography>
+                      <img
+                        src={imagePreview}
+                        alt="Image Preview"
+                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      />
+                    </Box>
+                  )}
                 </Grid>
               </Grid>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">

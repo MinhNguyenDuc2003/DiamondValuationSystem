@@ -24,6 +24,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -32,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import ServiceDetailsDialog from "./ServiceDetailDialog";
+import { useAuth } from "../../components/auth/AuthProvider";
 
 export const Services = () => {
   const [data, setData] = useState([]);
@@ -48,6 +50,11 @@ export const Services = () => {
 
   const location = useLocation();
 
+  // Authorized
+  const auth = useAuth();
+  const isAuthorized =
+    auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
+
   useEffect(() => {
     const successMessage = localStorage.getItem("successMessage");
     if (successMessage) {
@@ -60,13 +67,25 @@ export const Services = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getAllServices()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
+    const fetchServices = async () => {
+      try {
+        // Fetch services
+        const services = await getAllServices();
+        if (services !== undefined) {
+          setData(services);
+        }
+
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      } catch (error) {
         setError(error.message);
-      });
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+    fetchServices();
   }, []);
 
   function debounce(func, timeout = 300) {
@@ -134,10 +153,18 @@ export const Services = () => {
         Manage services
       </Typography>
 
+      {message && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {message}
+        </Alert>
+      )}
+
       <Box display="flex" justifyContent="space-between">
-        <Link to={"/services/new"}>
-          <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
-        </Link>
+        {isAuthorized && (
+          <Link to={"/services/new"}>
+            <AddIcon sx={{ ml: "10px", fontSize: "40px", color: "black" }} />
+          </Link>
+        )}
         <Box
           display="flex"
           width="20%"
@@ -153,10 +180,6 @@ export const Services = () => {
           </IconButton>
         </Box>
       </Box>
-
-      {message && (
-        <div className="alert alert-success text-center">{message}</div>
-      )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table sx={{ minWidth: 650 }}>
@@ -182,14 +205,18 @@ export const Services = () => {
                   >
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton
-                    onClick={() => navigate(`/services/${service.id}`)}
-                  >
-                    <EditIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(service.id)}>
-                    <DeleteIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+                  {isAuthorized && (
+                    <IconButton
+                      onClick={() => navigate(`/services/${service.id}`)}
+                    >
+                      <EditIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
+                  {isAuthorized && (
+                    <IconButton onClick={() => handleOpenDialog(service.id)}>
+                      <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

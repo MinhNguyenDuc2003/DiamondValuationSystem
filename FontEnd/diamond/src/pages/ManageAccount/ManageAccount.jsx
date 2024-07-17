@@ -3,6 +3,7 @@ import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 const ManageAccount = () => {
   const navigate = useNavigate();
+<<<<<<< HEAD
   const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('user')) || {}); // Parse user object from localStorage
   const [editMode, setEditMode] = useState(false); // State to manage edit mode
   const [formData, setFormData] = useState({
@@ -14,6 +15,26 @@ const ManageAccount = () => {
     phone: user.Phone || ''
   });
 
+=======
+  useEffect(() => {
+    const getCustomer = async () => {
+      const data = await getCustomerById();
+      if (data !== null) {
+        setUser({
+          id: data.id,
+          email: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone_number: data.phone_number,
+          location: data.location,
+        });
+      }
+    };
+    getCustomer();
+  }, [navigate]);
+  
+  // Function to handle form input change
+>>>>>>> b2d141de4e9de793f8e8450098c16aee0cc0e9f7
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.ReportNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.request.ReportRequest;
@@ -23,8 +22,8 @@ import com.diamondvaluation.admin.response.ReportResponse;
 import com.diamondvaluation.admin.service.ReportService;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.Report;
+import com.diamondvaluation.common.ReportStatus;
 import com.diamondvaluation.common.ReportType;
-import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -58,6 +57,7 @@ public class ReportController {
 		Report report = modelMapper.map(request, Report.class);
 		ReportType type = ReportType.valueOf(request.getType());
 		report.setType(type);
+		report.setStatus(ReportStatus.valueOf(request.getStatus()));
 		report.setRequest(new DiamondRequest(request.getRequest_id()));
 		return report;
 	}
@@ -98,6 +98,7 @@ return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage
 		ReportResponse reportResponse = modelMapper.map(report, ReportResponse.class);
 	    DiamondRequest diamondRequest = report.getRequest();
 	    reportResponse.setRequest_id(diamondRequest.getId());
+	    reportResponse.setCreated_date(report.getCreatedTime().toString());
 	    return reportResponse;
 	}
 

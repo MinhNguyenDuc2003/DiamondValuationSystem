@@ -77,3 +77,20 @@
     text-align: center;
   }
 }
+
+
+@media (max-width: 767px) {
+  .footer .footer-content .footer-prop p {
+    font-size: 17px;
+}
+.footer .footer-content .footer-prop ul {
+  font-size: 12px;
+}
+.footer .footer-content .footer-props {
+   display: flex; 
+}
+.footer .footer-content .footer-prop p {
+  text-align: center;
+  font-size: 13px;
+}
+}
