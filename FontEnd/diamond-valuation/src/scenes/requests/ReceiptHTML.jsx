@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
 import logo from "../../../image/logo.png";
-import { getCustomerById } from "../../components/utils/ApiFunctions";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);

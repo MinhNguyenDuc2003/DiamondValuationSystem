@@ -84,7 +84,7 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
-const RequestActionsMenu = ({ request, navigate }) => {
+const RequestActionsMenu = ({ request, navigate, services }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -130,7 +130,16 @@ const RequestActionsMenu = ({ request, navigate }) => {
           }}
         >
           <Flag sx={{ color: "#C5A773", mr: 1 }} />
-          Report
+          Block Diamond Report
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/report/${request.id}`);
+            handleMenuClose();
+          }}
+        >
+          <Flag sx={{ color: "#C5A773", mr: 1 }} />
+          Return Diamond Report
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -366,15 +375,14 @@ const Requests = () => {
       </Box>
 
       {message && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {message}
-        </Alert>
+        <Collapse in={Boolean(message)} sx={{ mt: 2, mb: 2 }}>
+          <Alert severity="success">{message}</Alert>
+        </Collapse>
       )}
-
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
+        <Collapse in={Boolean(error)} sx={{ mt: 2, mb: 2 }}>
+          <Alert severity="error">{error}</Alert>
+        </Collapse>
       )}
 
       <TableContainer component={Paper} sx={{ mt: 2 }}>
@@ -463,6 +471,7 @@ const Requests = () => {
                         <RequestActionsMenu
                           request={request}
                           navigate={navigate}
+                          services={services}
                         />
                       )}
                     </TableCell>
