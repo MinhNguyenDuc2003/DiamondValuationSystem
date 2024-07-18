@@ -40,6 +40,7 @@ const getTodayDate = () => {
 const SlotTimeManagement = () => {
   const [slotTimes, setSlotTimes] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
+  const [date, setDate] = useState(getTodayDate());
   const [fromTime, setFromTime] = useState("");
   const [toTime, setToTime] = useState("");
   const [number, setNumber] = useState("");
@@ -53,7 +54,7 @@ const SlotTimeManagement = () => {
     const fetchSlotTimes = async () => {
       try {
         const data = await getAllSlotTime();
-        const schedule = await getAllRequestPerDate(getTodayDate());
+        const schedule = await getAllRequestPerDate(date);
         setSlotTimes(data);
         setScheduleData(schedule);
         setIsLoading(false);
@@ -132,6 +133,19 @@ const SlotTimeManagement = () => {
     setSlotToDelete(null);
   };
 
+  const handleDateChange = async (event) => {
+    const date = event.target.value;
+    setDate(date);
+
+    try {
+      const schedule = await getAllRequestPerDate(date);
+
+      setScheduleData(schedule);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
@@ -145,110 +159,128 @@ const SlotTimeManagement = () => {
       )}
 
       {/* Form to add new slot time */}
-      <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="From Time"
-              type="time"
-              value={fromTime}
-              onChange={(e) => setFromTime(e.target.value)}
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="To Time"
-              type="time"
-              value={toTime}
-              onChange={(e) => setToTime(e.target.value)}
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Number"
-              type="number"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={2} alignContent="center">
-            {error && (
-              <Typography color="error" variant="body2">
-                {error}
-              </Typography>
-            )}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddSlotTime}
-            >
-              Add Slot Time
-            </Button>
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={3}>
+          <Paper
+            elevation={3}
+            style={{ padding: "20px", marginBottom: "20px", maxHeight: "25vh" }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="From Time"
+                  type="time"
+                  value={fromTime}
+                  onChange={(e) => setFromTime(e.target.value)}
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="To Time"
+                  type="time"
+                  value={toTime}
+                  onChange={(e) => setToTime(e.target.value)}
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Number"
+                  type="number"
+                  value={number}
+                  onChange={(e) => setNumber(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {error && (
+                  <Typography color="error" variant="body2">
+                    {error}
+                  </Typography>
+                )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddSlotTime}
+                >
+                  Add Slot Time
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
-      </Paper>
 
-      {/* List of current slot times */}
-      <Paper
-        elevation={3}
-        style={{
-          padding: "20px",
-          marginBottom: "20px",
-          maxHeight: "25vh",
-          overflow: "auto",
-        }}
-      >
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Time</TableCell>
-                <TableCell>Number Slot </TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {slotTimes.map((slot) => (
-                <TableRow key={slot.id}>
-                  <TableCell>{slot.time}</TableCell>
-                  <TableCell>{slot.number}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleOpenDialog(slot)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </Paper>
+        <Grid item xs={12} sm={9}>
+          {/* List of current slot times */}
+          <Paper
+            elevation={3}
+            style={{
+              padding: "10px",
+              marginBottom: "20px",
+              maxHeight: "25vh",
+              overflow: "auto",
+            }}
+          >
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Time</TableCell>
+                    <TableCell>Number Slot </TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {slotTimes.map((slot) => (
+                    <TableRow key={slot.id}>
+                      <TableCell>{slot.time}</TableCell>
+                      <TableCell>{slot.number}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleOpenDialog(slot)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </Paper>
+        </Grid>
+      </Grid>
 
-      <Typography variant="h4" gutterBottom>
-        Schedule
-      </Typography>
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="h4">Schedule</Typography>
+        <TextField
+          type="date"
+          margin="dense"
+          label="Date"
+          name="date"
+          value={date}
+          onChange={(event) => handleDateChange(event)}
+          InputLabelProps={{ shrink: true }}
+        />
+      </Box>
 
       <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
         <Table>
           <TableHead>
             <TableRow>
               {scheduleData.map((slotItem, index) => (
-                <TableCell key={index}>
+                <TableCell key={index} align="center">
                   <Typography variant="h6">{slotItem.slot}</Typography>
                 </TableCell>
               ))}
@@ -263,8 +295,7 @@ const SlotTimeManagement = () => {
                       {slotItem.list.map((request) => (
                         <li key={request.id}>
                           <Typography variant="subtitle1">
-                            Customer Name: {request.customer_name} <br />
-                            Service: {request.service_names} <br />
+                            Request Id: {request.id} <br />
                             Status: {request.status}
                           </Typography>
                         </li>
