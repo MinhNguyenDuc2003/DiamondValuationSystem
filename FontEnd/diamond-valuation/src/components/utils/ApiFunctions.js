@@ -707,6 +707,41 @@ export async function getAllRequestPerDate(data) {
   }
 }
 
+export async function saveSlotTime(slottime) {
+  const data = {
+    time: slottime.time,
+    number: slottime.number,
+  };
+
+  try {
+    const response = await api.post("slot-times/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function deleteSlotTime(id) {
+  try {
+    const response = await api.delete(`slot-times/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");

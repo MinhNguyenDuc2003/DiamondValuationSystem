@@ -82,7 +82,12 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
-const RequestActionsMenu = ({ request, navigate }) => {
+const RequestActionsMenu = ({
+  request,
+  navigate,
+  services,
+  handleOpenDialog,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -508,6 +513,8 @@ const Requests = () => {
                         <RequestActionsMenu
                           request={request}
                           navigate={navigate}
+                          services={services}
+                          handleOpenDialog={handleOpenDialog}
                         />
                       )}
                     </TableCell>
@@ -515,7 +522,7 @@ const Requests = () => {
                   <TableRow>
                     <TableCell
                       style={{ paddingBottom: 0, paddingTop: 0 }}
-                      colSpan={13}
+                      colSpan={14}
                     >
                       <Collapse
                         in={expandedRow === request.id}
@@ -564,7 +571,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={isAuthorized ? 13 : 12} align="center">
+                <TableCell colSpan={isAuthorized ? 14 : 13} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>

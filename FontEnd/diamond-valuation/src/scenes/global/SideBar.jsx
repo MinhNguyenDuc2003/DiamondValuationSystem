@@ -12,6 +12,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
 import TodayIcon from "@mui/icons-material/Today";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useAuth } from "../../components/auth/AuthProvider";
 
 const Item = ({ title, to, icon, selected, setSelected, badgeContent }) => {
@@ -236,6 +237,13 @@ const SideBar = () => {
                   title="Work Assignment"
                   to="/workassignment"
                   icon={<TodayIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Slot Time"
+                  to="/slottime"
+                  icon={<EventNoteIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
