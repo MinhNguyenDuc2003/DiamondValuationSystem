@@ -1,6 +1,7 @@
 package com.diamondvaluation.admin.service;
 import java.util.List;
 
+import com.diamondvaluation.common.User;
 import com.diamondvaluation.common.diamond.DiamondCertificate;
 
 public interface DiamondCertificateService {
@@ -14,5 +15,7 @@ public interface DiamondCertificateService {
 	List<DiamondCertificate> findAllCertificate();
 
 	Integer findByRequestId(Integer id);
+
+	List<DiamondCertificate> findAllCertificateByUser(User user);
 
 }

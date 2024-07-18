@@ -111,6 +111,4 @@ public class CustomerController {
 		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
 		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
 	}
-	
-	
 }

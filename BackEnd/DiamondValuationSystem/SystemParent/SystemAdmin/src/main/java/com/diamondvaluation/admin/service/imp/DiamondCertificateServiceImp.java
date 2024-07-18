@@ -17,6 +17,7 @@ import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondValuationService;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondValuation;
+import com.diamondvaluation.common.User;
 import com.diamondvaluation.common.diamond.DiamondCertificate;
 
 import lombok.RequiredArgsConstructor;
@@ -105,6 +106,12 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 			return null;
 		}
 		return cer.get().getId();
+	}
+
+
+	@Override
+	public List<DiamondCertificate> findAllCertificateByUser(User user) {
+		return repo.findAllCertificateByValuationStaffId(user.getId());
 	}
 
 }

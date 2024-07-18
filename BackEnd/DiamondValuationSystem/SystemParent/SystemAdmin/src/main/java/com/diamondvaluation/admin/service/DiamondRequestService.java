@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.SlotTime;
+import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -30,4 +31,6 @@ public interface DiamondRequestService {
 	List<SlotTime> getSlotAvailableByDate(String date);
 
 	Optional<DiamondRequest> findById(Integer requestId);
+
+	List<DiamondRequest> findAllRequestNewByUser(User user);
 }

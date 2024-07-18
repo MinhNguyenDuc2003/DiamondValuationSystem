@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,13 @@ public interface DiamondCertificateRepository extends CrudRepository<DiamondCert
 	
 	@Query(value = "SELECT * FROM diamond_certificates d WHERE d.request_id = :requestId", nativeQuery = true)
     Optional<DiamondCertificate> findByRequestId(@Param("requestId") Integer requestId);
+	
+	@Query(value = "SELECT dc.*\n"
+			+ "FROM diamond_certificates dc\n"
+			+ "JOIN diamond_request dr ON dc.request_id = dr.id\n"
+			+ "JOIN assignment_request ar ON dr.id = ar.request_id\n"
+			+ "JOIN assignments ass ON ar.assignment_id = ass.id\n"
+			+ "JOIN users u ON ass.user_id = u.id\n"
+			+ "WHERE u.id = ?1 order by dc.created_date;", nativeQuery = true)
+	List<DiamondCertificate> findAllCertificateByValuationStaffId(Integer id);
 }
