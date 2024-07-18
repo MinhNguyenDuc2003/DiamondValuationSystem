@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, Alert, Grid, Avatar, Container, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { createPayment, getAllServices, getCustomerById, placeOrderDiamond } from '../../utils/ApiFunction';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
@@ -19,7 +19,7 @@ const Checkout = () => {
   const [total, setTotal] = useState(0);
   const [services, setServices] = useState([]);
   const [error, setError] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("CASH");
 
   const navigate = useNavigate();
 
@@ -143,15 +143,7 @@ const Checkout = () => {
               </Avatar>
               <Box>
                 <Typography variant="h6" sx={{ color: '#56758d' }}>Customer Information</Typography>
-                <Button
-                  onClick={e => navigate('/account')}
-                  variant="outlined"
-                  size="small"
-                  startIcon={<EditIcon />}
-                  sx={{ fontSize: '11px', marginTop: '4px', borderColor: '#56758d', color: '#56758d' }}
-                >
-                  Edit
-                </Button>
+               
               </Box>
             </Box>
             <Typography>Name: {user.fullname}</Typography>

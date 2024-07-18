@@ -4,20 +4,16 @@ import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
-import paypal from "./img/PayPal_Logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { getAllServices, getCustomerById } from "../../utils/ApiFunction";
-
+import EditIcon from '@mui/icons-material/Edit'
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -56,6 +52,7 @@ const ServiceForm = () => {
   const [serviceSelected, setServiceSelected] = useState([]);
   // const [payMentSelected, setPayMentSelected] = useState("");
   const [services, setServices] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const Services = async () => {
@@ -89,6 +86,16 @@ const ServiceForm = () => {
   }, []);
 
   const onFinish = () => {
+    const currentDate = new Date();
+    const selected = new Date(selectedDate);
+     // Clear time portion for comparison(Make sure user can choose a current date)
+    currentDate.setHours(0, 0, 0, 0);
+    selected.setHours(0, 0, 0, 0);
+    // Check if the selected date is in the past
+    if (selected < currentDate) {
+      setErrorMessage("Selected date cannot be in the past.");
+      return;
+    }
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
       return index === 0 ? service : value + "," + service;
     }, "");
@@ -106,34 +113,35 @@ const ServiceForm = () => {
 
   return (
     <div className="wrapperrr">
-      <div className="body-content">
+      <Typography variant="h4">Send Form For Us</Typography>
         <Form
           {...formItemLayout}
           className="form-valuation"
           onFinish={onFinish}
           style={{
-            maxWidth: 1000,
-            marginLeft: "15%",
+            maxWidth: 500,
+            marginLeft: "34%",
           }}
         >
-          
-          <Form.Item
-            label="Email"
-            name="email"
-          >
-            <FormControl fullWidth>
-              <TextField
-                label="Email"
-                value={user.email || ""}
-                fullWidth
-                margin="normal"
-              />
-            </FormControl>
-          </Form.Item>
-          <Form.Item
-            label="First Name"
-            name="first_name"
-          >
+           <Box
+        sx={{
+          bgcolor: "background.paper",
+          p: 2,
+          borderRadius: 1,
+          boxShadow: 1,
+          mb: 10
+        }}
+      >
+       
+          <FormControl fullWidth>
+            <TextField
+              label="Email"
+              value={user.email || ""}
+              fullWidth
+              margin="normal"
+            />
+          </FormControl>
+
             <FormControl fullWidth>
               <TextField
                 label="First Name"
@@ -142,11 +150,6 @@ const ServiceForm = () => {
                 margin="normal"
               />
             </FormControl>
-          </Form.Item>
-          <Form.Item
-            label="Last Name"
-            name="last_name"
-          >
             <FormControl fullWidth>
               <TextField
                 label="Last Name"
@@ -155,11 +158,7 @@ const ServiceForm = () => {
                 margin="normal"
               />
             </FormControl>
-          </Form.Item>
-          <Form.Item
-            label="Phone Number"
-            name="phone_number"
-          >
+          
             <FormControl fullWidth>
               <TextField
                 label="Phone Number"
@@ -168,11 +167,7 @@ const ServiceForm = () => {
                 margin="normal"
               />
             </FormControl>
-          </Form.Item>
-          <Form.Item
-            label="Address"
-            name="location"
-          >
+        
             <FormControl fullWidth>
               <TextField
                 label="Address"
@@ -181,17 +176,6 @@ const ServiceForm = () => {
                 margin="normal"
               />
             </FormControl>
-          </Form.Item>
-          <Form.Item
-            label="Preferred Appraisal Date"
-            name="date"
-            rules={[
-              {
-                required: true,
-                message: "Please input date!",
-              },
-            ]}
-          >
             <FormControl fullWidth>
               <TextField
                 label="Preferred Appraisal Date"
@@ -200,13 +184,16 @@ const ServiceForm = () => {
                 fullWidth
                 margin="normal"
                 type="date"
+                required
+                error= {!!errorMessage}
+                helperText = {errorMessage}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </FormControl>
-          </Form.Item>
-          <Form.Item label="Choose Service" name="service">
+        
+          
             <FormControl fullWidth>
               <InputLabel id="demo-multiple-chip-label">Service</InputLabel>
               <Select
@@ -216,6 +203,7 @@ const ServiceForm = () => {
                 value={serviceSelected}
                 onChange={(event) => handleServiceChange(event)} // Pass event directly
                 input={<OutlinedInput id="select-multiple-chip" label="Service" />}
+                required
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
@@ -232,7 +220,6 @@ const ServiceForm = () => {
                 ))}
               </Select>
             </FormControl>
-          </Form.Item>
           {/* <Form.Item
             label="Payment Methods"
             name="paymentMethod"
@@ -273,10 +260,10 @@ const ServiceForm = () => {
               </RadioGroup>
             </FormControl>
           </Form.Item> */}
-          <Form.Item>
+          
             <Box
               marginTop={2}
-              marginLeft={5}
+             
               display="flex"
               justifyContent="center"
             >
@@ -284,9 +271,8 @@ const ServiceForm = () => {
                 Submit
               </Button>
             </Box>
-          </Form.Item>
+            </Box>
         </Form>
-      </div>
     </div>
   );
 };
