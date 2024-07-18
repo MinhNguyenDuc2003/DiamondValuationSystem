@@ -26,4 +26,8 @@ public interface UserRepository extends CrudRepository<User, Integer>, PagingAnd
 	
 	@Query("SELECT u FROM User u WHERE u.enabled = true")
 	List<User> findAllUserEnabled();
+	
+	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ',"
+			+ " u.lastName, ' ', u.phoneNumber) LIKE %?1%")
+	List<User> listUsersByKeyword(String keyword);
 }

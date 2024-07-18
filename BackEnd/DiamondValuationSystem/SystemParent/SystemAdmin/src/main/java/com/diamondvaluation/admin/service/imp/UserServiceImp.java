@@ -130,4 +130,9 @@ public class UserServiceImp implements UserService {
 		return userRepository.findAllUserEnabled();
 	}
 
+	@Override
+	public List<User> listUsersByKeyword(String keyword) {
+		return userRepository.listUsersByKeyword(keyword);
+	}
+
 }
