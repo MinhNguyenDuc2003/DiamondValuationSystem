@@ -165,4 +165,9 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		return available;
 	}
 
+	@Override
+	public Optional<DiamondRequest> findById(Integer requestId) {
+		return repo.findById(requestId);
+	}
+
 }

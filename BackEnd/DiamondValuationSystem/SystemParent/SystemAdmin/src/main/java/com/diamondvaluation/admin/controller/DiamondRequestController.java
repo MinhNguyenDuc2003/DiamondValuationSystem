@@ -112,8 +112,10 @@ public class DiamondRequestController {
 		}
 		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
-		appoinmentResponse.setSlot(appoinment.getSlot().getTime());
-		appoinmentResponse.setSlotId(appoinment.getSlot().getId());
+		if(appoinment.getSlot()!=null) {
+			appoinmentResponse.setSlot(appoinment.getSlot().getTime());
+			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
+		}
 		return appoinmentResponse;
 	}
 
@@ -169,7 +171,7 @@ public class DiamondRequestController {
 		}
 	}
 
-	@GetMapping("/customer/{id}")
+	@GetMapping("customer/{id}")
 	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id) {
 		try {
 			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);

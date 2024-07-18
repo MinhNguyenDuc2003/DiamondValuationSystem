@@ -1,6 +1,7 @@
 package com.diamondvaluation.admin.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.RequestStatus;
@@ -27,4 +28,6 @@ public interface DiamondRequestService {
     List<DiamondRequest> getRequestByDateAndSlot(String date, Integer slotId);
 
 	List<SlotTime> getSlotAvailableByDate(String date);
+
+	Optional<DiamondRequest> findById(Integer requestId);
 }
