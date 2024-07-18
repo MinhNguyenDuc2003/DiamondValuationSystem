@@ -5,7 +5,7 @@ import './userLogin.scss';
 import { loginGoogleAccount, loginUser, validateToken } from '../../utils/ApiFunction';
 import { useAuth } from '../../component/Auth/AuthProvider';
 import Alert from 'react-bootstrap/Alert';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 const UserLogin = () => {
     const [error, setError] = useState("");
@@ -87,6 +87,7 @@ const UserLogin = () => {
             {error &&  (<Alert key='danger' variant='danger'>
                             {error}
                     </Alert>)}
+                    <Typography sx={{mb: 4}} variant='h4'>Login</Typography>
                 <div className='form-group' >
                     <label htmlFor='email' className='text-start'>Email</label>
                     <input 

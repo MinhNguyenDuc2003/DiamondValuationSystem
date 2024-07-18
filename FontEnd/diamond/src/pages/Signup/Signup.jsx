@@ -204,7 +204,7 @@
 import React, { useState } from 'react';
 import './Signup.scss';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Alert, Grid, Box, CircularProgress } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Alert, Grid, Box, CircularProgress, Typography } from '@mui/material';
 import { createNewAccount } from '../../utils/ApiFunction';
 
 const Signup = () => {
@@ -310,12 +310,16 @@ const Signup = () => {
 
 
     return (
+        <>
+       
+
         <Box className='wrapperrrr' sx={{ p: 3, maxWidth: '600px', mx: 'auto', backgroundColor: '#f9f9f9', borderRadius: 2, boxShadow: 3 }}>
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
             )}
+             <Typography sx={{mb: 4}} variant='h4'>Sign Up</Typography>
             <form className='login-form' onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -443,6 +447,8 @@ const Signup = () => {
                 </DialogActions>
             </Dialog>
         </Box>
+        </>
+
     );
 }
 
