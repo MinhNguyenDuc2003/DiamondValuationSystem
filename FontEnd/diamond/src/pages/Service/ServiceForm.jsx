@@ -88,7 +88,7 @@ const ServiceForm = () => {
   const onFinish = () => {
     const currentDate = new Date();
     const selected = new Date(selectedDate);
-     // Clear time portion for comparison(Make sure user can choose a current date)
+    // Clear time portion for comparison(Make sure user can choose a current date)
     currentDate.setHours(0, 0, 0, 0);
     selected.setHours(0, 0, 0, 0);
     // Check if the selected date is in the past
@@ -112,27 +112,44 @@ const ServiceForm = () => {
   };
 
   return (
-    <div className="wrapperrr">
+    <Box className="wrapperrr" mt = {9}>
       <Typography variant="h4">Send Form For Us</Typography>
-        <Form
-          {...formItemLayout}
-          className="form-valuation"
-          onFinish={onFinish}
-          style={{
-            maxWidth: 500,
-            marginLeft: "34%",
-          }}
+      <Box display={'flex'} justifyContent={'center'} gap={2} mt = {2}>
+
+        <Typography color={'gray'}>*Your Information Must Be Same With Your Account
+
+        </Typography>
+        <Button
+          onClick={e => navigate('/account')}
+          variant="outlined"
+          size="small"
+          startIcon={<EditIcon />}
+          sx={{ fontSize: '11px', borderColor: '#56758d', color: '#56758d' }}
         >
-           <Box
-        sx={{
-          bgcolor: "background.paper",
-          p: 2,
-          borderRadius: 1,
-          boxShadow: 1,
-          mb: 10
+          Edit
+        </Button>
+      </Box>
+
+      <Form
+        {...formItemLayout}
+        className="form-valuation"
+        onFinish={onFinish}
+        style={{
+          maxWidth: 500,
+          marginLeft: "34%",
         }}
       >
-       
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            p: 2,
+            borderRadius: 1,
+            boxShadow: 1,
+            mb: 5
+
+          }}
+        >
+
           <FormControl fullWidth>
             <TextField
               label="Email"
@@ -142,84 +159,84 @@ const ServiceForm = () => {
             />
           </FormControl>
 
-            <FormControl fullWidth>
-              <TextField
-                label="First Name"
-                value={user.first_name || ""}
-                fullWidth
-                margin="normal"
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <TextField
-                label="Last Name"
-                value={user.last_name || ""}
-                fullWidth
-                margin="normal"
-              />
-            </FormControl>
-          
-            <FormControl fullWidth>
-              <TextField
-                label="Phone Number"
-                value={user.phone_number || ""}
-                fullWidth
-                margin="normal"
-              />
-            </FormControl>
-        
-            <FormControl fullWidth>
-              <TextField
-                label="Address"
-                value={user.location || ""}
-                fullWidth
-                margin="normal"
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <TextField
-                label="Preferred Appraisal Date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                fullWidth
-                margin="normal"
-                type="date"
-                required
-                error= {!!errorMessage}
-                helperText = {errorMessage}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </FormControl>
-        
-          
-            <FormControl fullWidth>
-              <InputLabel id="demo-multiple-chip-label">Service</InputLabel>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                value={serviceSelected}
-                onChange={(event) => handleServiceChange(event)} // Pass event directly
-                input={<OutlinedInput id="select-multiple-chip" label="Service" />}
-                required
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Typography key={value}>{value}</Typography>
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {services.map((service) => (
-                  <MenuItem key={service.id} value={service.name}>
-                    {service.name} - {service.money}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              label="First Name"
+              value={user.first_name || ""}
+              fullWidth
+              margin="normal"
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              label="Last Name"
+              value={user.last_name || ""}
+              fullWidth
+              margin="normal"
+            />
+          </FormControl>
+
+          <FormControl fullWidth>
+            <TextField
+              label="Phone Number"
+              value={user.phone_number || ""}
+              fullWidth
+              margin="normal"
+            />
+          </FormControl>
+
+          <FormControl fullWidth>
+            <TextField
+              label="Address"
+              value={user.location || ""}
+              fullWidth
+              margin="normal"
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              label="Preferred Appraisal Date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              fullWidth
+              margin="normal"
+              type="date"
+              required
+              error={!!errorMessage}
+              helperText={errorMessage}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
+
+
+          <FormControl fullWidth>
+            <InputLabel id="demo-multiple-chip-label">Service</InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={serviceSelected}
+              onChange={(event) => handleServiceChange(event)} // Pass event directly
+              input={<OutlinedInput id="select-multiple-chip" label="Service" />}
+              required
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Typography key={value}>{value}</Typography>
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {services.map((service) => (
+                <MenuItem key={service.id} value={service.name}>
+                  {service.name} - {service.money}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           {/* <Form.Item
             label="Payment Methods"
             name="paymentMethod"
@@ -260,20 +277,20 @@ const ServiceForm = () => {
               </RadioGroup>
             </FormControl>
           </Form.Item> */}
-          
-            <Box
-              marginTop={2}
-             
-              display="flex"
-              justifyContent="center"
-            >
-              <Button variant="contained" type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Box>
-            </Box>
-        </Form>
-    </div>
+
+          <Box
+            marginTop={2}
+
+            display="flex"
+            justifyContent="center"
+          >
+            <Button variant="contained" type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Form>
+    </Box>
   );
 };
 

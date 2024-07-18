@@ -204,10 +204,11 @@
 import React, { useState } from 'react';
 import './Signup.scss';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Alert, Grid, Box } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField, Alert, Grid, Box, CircularProgress } from '@mui/material';
 import { createNewAccount } from '../../utils/ApiFunction';
 
 const Signup = () => {
+    const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         email: "",
         password: "",
@@ -253,9 +254,10 @@ const Signup = () => {
 
         return true;
     };
-
+  
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
             if (user.password === passwordConfirm) {
                 if (!validate()) {
@@ -278,6 +280,8 @@ const Signup = () => {
         } catch (error) {
             console.log(error);
             setError("Email already exists!");
+        }finally{
+            setLoading(false)
         }
         setTimeout(() => {
             setError("");
@@ -292,6 +296,18 @@ const Signup = () => {
         setOpen(false);
         navigate("/");
     };
+
+    if (loading) {
+        return (
+          <Box mt={20} mb={38} textAlign={'center'}>
+             <CircularProgress size={50} color="primary" />
+                  <Box mt={2}>
+                    <h3>LOADING. . .</h3>
+                  </Box>
+          </Box>
+        );
+      }
+
 
     return (
         <Box className='wrapperrrr' sx={{ p: 3, maxWidth: '600px', mx: 'auto', backgroundColor: '#f9f9f9', borderRadius: 2, boxShadow: 3 }}>

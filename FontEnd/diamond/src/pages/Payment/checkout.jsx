@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, Alert, Grid, Avatar, Container, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Box, Button, Typography, Paper, List, ListItem, ListItemText, Divider, Alert, Grid, Avatar, Container, FormControl, RadioGroup, FormControlLabel, Radio, CircularProgress } from '@mui/material';
 import {  useNavigate } from 'react-router-dom';
 import { createPayment, getAllServices, getCustomerById, placeOrderDiamond } from '../../utils/ApiFunction';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
@@ -20,6 +20,7 @@ const Checkout = () => {
   const [services, setServices] = useState([]);
   const [error, setError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -78,6 +79,7 @@ const Checkout = () => {
 
   const handleBookingClick = async () => {
     console.log(paymentMethod)
+    setLoading(true)
     try {
       const response = await placeOrderDiamond(cart);
       if (response.status === 200) {
@@ -90,6 +92,8 @@ const Checkout = () => {
       }
     } catch (error) {
       setError("Sorry, some problem happen with your order please try again!");
+    }finally{
+      setLoading(false)
     }
     setTimeout(() => {
       setError("");
@@ -98,7 +102,7 @@ const Checkout = () => {
 
   const handlePayClick = async () => {
     console.log(paymentMethod)
-
+    setLoading(true)
     try {
       const response = await createPayment(total);
       if (response.status === 200) {
@@ -108,6 +112,8 @@ const Checkout = () => {
       }
     } catch (error) {
       setError("Sorry, some problem happen with your order please try again!");
+    }finally{
+      setLoading(false)
     }
     setTimeout(() => {
       setError("");
@@ -123,6 +129,17 @@ const Checkout = () => {
     setPaymentMethod(event.target.value);
     // localStorage.setItem("paymentMethod", event.target.value);
   };
+
+  if (loading) {
+    return (
+      <Box mt={20} mb={38} textAlign={'center'}>
+         <CircularProgress size={50} color="primary" />
+              <Box mt={2}>
+                <h3>LOADING. . .</h3>
+              </Box>
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ padding: 4, mt: '100px' }}>
