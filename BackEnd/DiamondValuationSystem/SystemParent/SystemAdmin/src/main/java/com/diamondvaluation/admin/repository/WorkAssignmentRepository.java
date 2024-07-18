@@ -32,4 +32,6 @@ public interface WorkAssignmentRepository extends CrudRepository<WorkAssignment,
 	@Query("SELECT w FROM WorkAssignment w WHERE date=?1 AND w.status=true")
 	List<WorkAssignment> findAllByDateAndOn(LocalDate date);
 	
+	@Query(value = "SELECT a.* FROM assignments a JOIN assignment_request ar ON a.id = ar.assignment_id JOIN diamond_request dr ON ar.request_id = dr.id WHERE ar.request_id=?1", nativeQuery = true)
+	Optional<WorkAssignment> findByRequestId(Integer id);
 }
