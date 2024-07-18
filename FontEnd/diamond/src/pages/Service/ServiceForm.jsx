@@ -55,34 +55,32 @@ const ServiceForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const Services = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getAllServices();
-        if (response.status === 200) {
-          setServices(response.data);
+        // Lấy danh sách dịch vụ
+        const serviceResponse = await getAllServices();
+        if (serviceResponse.status === 200) {
+          setServices(serviceResponse.data);
+        }
+  
+        // // Sau khi lấy danh sách dịch vụ xong, lấy thông tin khách hàng
+        const customerData = await getCustomerById();
+        if (customerData !== null) {
+          setUser({
+            id: customerData.id,
+            email: customerData.email,
+            first_name: customerData.first_name,
+            last_name: customerData.last_name,
+            phone_number: customerData.phone_number,
+            location: customerData.location,
+          });
         }
       } catch (error) {
         console.log(error);
       }
     };
-    Services();
-  }, []);
-
-  useEffect(() => {
-    const getCustomer = async () => {
-      const data = await getCustomerById();
-      if (data !== null) {
-        setUser({
-          id: data.id,
-          email: data.email,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          phone_number: data.phone_number,
-          location: data.location,
-        });
-      }
-    };
-    getCustomer();
+  
+    fetchData();
   }, []);
 
   const onFinish = () => {
@@ -104,6 +102,19 @@ const ServiceForm = () => {
     // localStorage.setItem("paymentMethod", payMentSelected);
 
     navigate("/Payment-checkout");
+  };
+
+  const handleDateChange = (e) => {
+    const chosenDate = new Date(e.target.value);
+    const today = new Date();
+    // Set hours to 0 to compare only the date part
+    today.setHours(0, 0, 0, 0);
+
+    if (chosenDate >= today) {
+      setSelectedDate(e.target.value);
+    } else {
+      alert('Please select a date that is today or in the future.');
+    }
   };
 
   const handleServiceChange = (event) => {
@@ -148,49 +159,62 @@ const ServiceForm = () => {
             mb: 5
 
           }}
-        >
-
+        > 
           <FormControl fullWidth>
             <TextField
               label="Email"
-              value={user.email || ""}
+              value={user.email }
               fullWidth
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </FormControl>
-
           <FormControl fullWidth>
             <TextField
               label="First Name"
-              value={user.first_name || ""}
+              value={user.first_name}
               fullWidth
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </FormControl>
           <FormControl fullWidth>
             <TextField
               label="Last Name"
-              value={user.last_name || ""}
+              value={user.last_name}
               fullWidth
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </FormControl>
 
           <FormControl fullWidth>
             <TextField
               label="Phone Number"
-              value={user.phone_number || ""}
+              value={user.phone_number}
               fullWidth
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </FormControl>
 
           <FormControl fullWidth>
             <TextField
               label="Address"
-              value={user.location || ""}
+              value={user.location}
               fullWidth
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </FormControl>
           <FormControl fullWidth>
@@ -237,47 +261,7 @@ const ServiceForm = () => {
               ))}
             </Select>
           </FormControl>
-          {/* <Form.Item
-            label="Payment Methods"
-            name="paymentMethod"
-            rules={[
-              {
-                required: true,
-                message: "Please choose your Method Payment!",
-              },
-            ]}
-          >
-            <FormControl component="fieldset">
-              <RadioGroup
-                row
-                aria-labelledby="payment-method-radio-group-label"
-                name="paymentMethod"
-                value={payMentSelected}
-                onChange={(e) => setPayMentSelected(e.target.value)}
-              >
-                <FormControlLabel
-                  value="CASH"
-                  control={<Radio />}
-                  label="Cash"
-                />
-                <FormControlLabel
-                  value="PAYPAL"
-                  control={<Radio />}
-                  label={
-                    <Box display="flex" alignItems="center">
-                      <img
-                        src={paypal}
-                        alt="PayPal"
-                        height="20"
-                        style={{ marginRight: 5 }}
-                      />
-                    </Box>
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
-          </Form.Item> */}
-
+        
           <Box
             marginTop={2}
 

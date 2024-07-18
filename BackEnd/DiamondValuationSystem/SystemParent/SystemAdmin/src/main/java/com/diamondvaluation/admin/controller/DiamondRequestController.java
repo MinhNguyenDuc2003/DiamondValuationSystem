@@ -1,16 +1,11 @@
 package com.diamondvaluation.admin.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,36 +15,42 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
+import com.diamondvaluation.admin.exception.SlotTimeIsAlreadyFull;
+import com.diamondvaluation.admin.exception.SlotTimeNotFoundException;
 import com.diamondvaluation.admin.request.DiamondRequestRequest;
 import com.diamondvaluation.admin.response.DiamondRequestResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
+import com.diamondvaluation.admin.response.RequestPerDateResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
+import com.diamondvaluation.admin.service.SlotTimeService;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
 import com.diamondvaluation.common.RequestStatus;
+import com.diamondvaluation.common.SlotTime;
+import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/diamond-requests/")
+@RequiredArgsConstructor
 public class DiamondRequestController {
 	private final DiamondCertificateService certificateService;
 	private final DiamondRequestService requestService;
+	private final SlotTimeService slotService;
 	private final ModelMapper modelMapper;
-
-	public DiamondRequestController(DiamondCertificateService certificateService, DiamondRequestService requestService,
-			ModelMapper modelMapper) {
-		this.certificateService = certificateService;
-		this.requestService = requestService;
-		this.modelMapper = modelMapper;
-	}
+	private final UserService userService;
 
 	@PostMapping("request/save")
 	public ResponseEntity<?> addNewRequest(@ModelAttribute @Valid DiamondRequestRequest appoinmentRequest,
@@ -59,7 +60,9 @@ public class DiamondRequestController {
 			requestService.save(appoinment, request);
 
 			return new ResponseEntity<>(new MessageResponse("Add/Update Appoinment successfully!"), HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (SlotTimeNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		} catch (SlotTimeIsAlreadyFull e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
@@ -85,11 +88,8 @@ public class DiamondRequestController {
 			LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
 			appoinment.setAppointmentDate(date);
 		}
-		if (request.getAppointmentTime() != null && request.getAppointmentTime().toString().length() > 0) {
-			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-			LocalTime time = LocalTime.parse(request.getAppointmentTime(), timeFormatter);
-			appoinment.setAppointmentTime(time);
-		}
+		SlotTime slotTime = new SlotTime(Integer.parseInt(request.getSlotId()));
+		appoinment.setSlot(slotTime);
 		return appoinment;
 	}
 
@@ -108,11 +108,12 @@ public class DiamondRequestController {
 		if (appoinment.getAppointmentDate() != null) {
 			appoinmentResponse.setAppoinment_date(appoinment.getAppointmentDate().toString());
 		}
-		if (appoinment.getAppointmentTime() != null) {
-			appoinmentResponse.setAppoinment_time(appoinment.getAppointmentTime().toString());
-		}
 		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
+		if(appoinment.getSlot()!=null) {
+			appoinmentResponse.setSlot(appoinment.getSlot().getTime());
+			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
+		}
 		return appoinmentResponse;
 	}
 
@@ -149,11 +150,12 @@ public class DiamondRequestController {
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
 
-	@GetMapping("requests/status/new")
-	public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate() {
-		List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.NEW);
-		return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
-	}
+	@GetMapping("requests/status/{status}")
+    public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate(@PathVariable("status") String status) {
+
+        List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.valueOf(status.toUpperCase()));
+        return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
+    }
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
@@ -167,7 +169,7 @@ public class DiamondRequestController {
 		}
 	}
 
-	@GetMapping("/customer/{id}")
+	@GetMapping("customer/{id}")
 	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id) {
 		try {
 			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
@@ -176,5 +178,41 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
+	
+	@GetMapping("request/date")
+	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
+		try {
+			List<SlotTime> slotTime = slotService.getAllSlot();
+			List<RequestPerDateResponse> list = new ArrayList<>();
+			for(SlotTime s : slotTime) {
+				RequestPerDateResponse response = new RequestPerDateResponse();
+				response.setSlot(s.getTime());
+				response.setList(listEntity2Response(requestService.getRequestByDateAndSlot(date, s.getId())));
+				list.add(response);
+			}
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("request/slot-available")
+	public ResponseEntity<?> getSlotAvailableByDate(@RequestParam("date") String date){
+		try {
+			List<SlotTime> list = requestService.getSlotAvailableByDate(date);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("all-request-valuation-staff")
+	public ResponseEntity<?> getAllRequestByValuationStaff(HttpServletRequest request) {
+		User user = Utility.getIdOfAuthenticatedUser(request, userService);
+		List<DiamondRequest> list = requestService.findAllRequestNewByUser(user);
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+	}
+	
+	
+	
 }

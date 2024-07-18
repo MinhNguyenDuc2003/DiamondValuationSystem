@@ -89,7 +89,7 @@ public class DiamondCertificate {
 	@Enumerated(EnumType.STRING)
 	private DiamondFluorescence flourescence;
 	
-	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinColumn(name = "valuation_id")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "valuation_id")
 	private DiamondValuation valuation;
 }

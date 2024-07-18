@@ -6,15 +6,11 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DiamondIcon from "@mui/icons-material/Diamond";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
-import BlockIcon from "@mui/icons-material/Block";
 import { useAuth } from "../../components/auth/AuthProvider";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -187,13 +183,6 @@ const SideBar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Report"
-              to="/report"
-              icon={<ReportIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             {isAuthorized && (
               <Box>
                 <Typography
@@ -203,13 +192,6 @@ const SideBar = () => {
                 >
                   Manager
                 </Typography>
-                <Item
-                  title="Manage Requests"
-                  to="/managerequests"
-                  icon={<BlockIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
                 <Item
                   title="Manage Reports"
                   to="/managereports"

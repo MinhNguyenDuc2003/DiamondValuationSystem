@@ -28,6 +28,15 @@ public class ServiceServiceImp implements ServiceService{
 	@Override
 	public DiamondService save(DiamondService service) {
 		try {
+			if(service.getId()!=null) {
+				if(service.getPhoto()==null) {
+					Optional<DiamondService> db = serviceRepo.findById(service.getId());
+					if(!db.isPresent()) {
+						throw new ServiceNotFoundException("Cannot find any service with id");
+					}
+					service.setPhoto(db.get().getPhoto());
+				}
+			}
 			return serviceRepo.save(service);
 		} catch (Exception e) {
 			throw new ServiceNameIsAlreadyExistException("Your service name is already exist!");

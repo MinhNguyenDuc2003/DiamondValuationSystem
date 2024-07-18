@@ -14,6 +14,24 @@ import com.diamondvaluation.common.RequestStatus;
 public interface DiamondRequestRepository extends CrudRepository<DiamondRequest, Integer>, PagingAndSortingRepository<DiamondRequest, Integer>{
 	List<DiamondRequest> findByStatusOrderByCreatedDateAsc(RequestStatus status);
     Optional<DiamondRequest> findByStatus(RequestStatus status);
-    @Query(value = "SELECT * FROM diamond_request d WHERE d.customer_id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM diamond_request d WHERE d.customer_id = :id ORDER BY d.created_date DESC", nativeQuery = true)
     List<DiamondRequest> getDiamondRequestByCustomerId(Integer id);
+    @Query(value = "SELECT * FROM diamond_request d ORDER BY d.created_date DESC", nativeQuery = true)
+    List<DiamondRequest> findAllOrderByCreatedDateDesc();
+    @Query(value = "SELECT COUNT(id)\n"
+    		+ "FROM diamond_request d\n"
+    		+ "WHERE appointment_date = ?1 AND slot_id = ?2", nativeQuery = true)
+    int countRequestByDateAndSlot(String date, Integer slotId);
+    
+    @Query(value = "SELECT *\n"
+    		+ "FROM diamond_request d\n"
+    		+ "WHERE appointment_date = ?1 AND slot_id = ?2", nativeQuery = true)
+	List<DiamondRequest> getRequestByDateAndSlotId(String date, Integer slotId);
+    @Query(value = "SELECT dr.*\n"
+    		+ "FROM diamond_request dr\n"
+    		+ "JOIN assignment_request ar ON dr.id = ar.request_id AND dr.status = \"NEW\"\n"
+    		+ "JOIN assignments ass ON ar.assignment_id = ass.id\n"
+    		+ "JOIN users u ON ass.user_id = u.id\n"
+    		+ "WHERE u.id = 9 order by dr.created_date", nativeQuery = true)
+	List<DiamondRequest> findAllRequestNewByUserId(Integer id);
 }

@@ -5,6 +5,7 @@ import {
   getAllServices,
   getRequestById,
   saveRequest,
+  getSlotAvailable,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -29,6 +30,7 @@ const EditDiamondRequest = () => {
   const [customers, setCustomers] = useState([]);
   const [services, setServices] = useState([]);
   const [message, setMessage] = useState("");
+  const [slots, setSlots] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -41,30 +43,18 @@ const EditDiamondRequest = () => {
     payment_method: "CASH",
     paid: false,
     appointment_date: null,
-    appointment_time: "",
+    slotId: "",
   });
 
   useEffect(() => {
-    getCustomersPerPage(1, "")
-      .then((data) => {
-        setCustomers(data.list_customers);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-
-    getAllServices()
-      .then((data) => {
-        setServices(data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    const fetchRequest = async () => {
+    const fetchData = async () => {
       try {
+        const customersData = await getCustomersPerPage(1, "");
+        setCustomers(customersData.list_customers);
+
+        const servicesData = await getAllServices();
+        setServices(servicesData);
+
         const requestEdit = await getRequestById(requestid);
         if (requestEdit) {
           setInitialValues({
@@ -76,16 +66,24 @@ const EditDiamondRequest = () => {
             payment_method: requestEdit.payment_method,
             paid: requestEdit.paid,
             appointment_date: requestEdit.appoinment_date || "",
-            appointment_time: requestEdit.appoinment_time || "",
+            slotId: requestEdit.slot_id || "",
           });
+
+          // Fetch slots for the existing appointment date
+          if (requestEdit.appoinment_date) {
+            const availableSlots = await getSlotAvailable(
+              requestEdit.appoinment_date
+            );
+            setSlots(availableSlots);
+          }
         }
       } catch (error) {
         setError(error.message);
       }
     };
-    fetchRequest();
-  }, [requestid, customers]);
-  console.log(initialValues);
+
+    fetchData();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string().required("Customer is required"),
@@ -94,8 +92,8 @@ const EditDiamondRequest = () => {
     service_ids: Yup.array().min(1, "At least one service must be selected"),
     payment_method: Yup.string().required("Payment method is required"),
     paid: Yup.boolean().required("Paid status is required"),
-    appointment_date: Yup.date().nullable(),
-    appointment_time: Yup.string().nullable(),
+    appointment_date: Yup.string().required("Appointment date is required"),
+    slotId: Yup.string().required("Slot time is required"),
   });
 
   const handleSubmit = async (values) => {
@@ -114,6 +112,18 @@ const EditDiamondRequest = () => {
     setTimeout(() => {
       setError(null);
     }, 3000);
+  };
+
+  const handleDateChange = async (event, setFieldValue) => {
+    const date = event.target.value;
+    setFieldValue("appointment_date", date);
+
+    try {
+      const availableSlots = await getSlotAvailable(date);
+      setSlots(availableSlots);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -176,7 +186,9 @@ const EditDiamondRequest = () => {
                     }}
                     value={
                       customers.find(
-                        (customer) => customer.id === values.customer_id
+                        (customer) =>
+                          Number(customer.id) ===
+                          Number(initialValues.customer_id)
                       ) || null
                     }
                     renderInput={(params) => (
@@ -255,6 +267,7 @@ const EditDiamondRequest = () => {
                     {errors.service_ids}
                   </div>
                 )}
+
                 <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
                   <InputLabel>Payment Method</InputLabel>
                   <Field
@@ -287,7 +300,7 @@ const EditDiamondRequest = () => {
                   label="Appointment Date"
                   name="appointment_date"
                   value={values.appointment_date || ""}
-                  onChange={handleChange}
+                  onChange={(event) => handleDateChange(event, setFieldValue)}
                   onBlur={handleBlur}
                   error={
                     touched.appointment_date && Boolean(errors.appointment_date)
@@ -299,24 +312,21 @@ const EditDiamondRequest = () => {
                   InputLabelProps={{ shrink: true }}
                 />
 
-                <TextField
-                  fullWidth
-                  type="time"
-                  margin="dense"
-                  label="Appointment Time"
-                  name="appointment_time"
-                  value={values.appointment_time || ""}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={
-                    touched.appointment_time && Boolean(errors.appointment_time)
-                  }
-                  helperText={
-                    touched.appointment_time && errors.appointment_time
-                  }
-                  sx={{ gridColumn: "span 2" }}
-                  InputLabelProps={{ shrink: true }}
-                />
+                {slots.length > 0 && (
+                  <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                    <InputLabel>Slot Time</InputLabel>
+                    <Field as={Select} name="slotId" label="Slot Time">
+                      {slots.map((slot) => (
+                        <MenuItem key={slot.id} value={slot.id}>
+                          {slot.time}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                    {touched.slotId && errors.slotId && (
+                      <div style={{ color: "red" }}>{errors.slotId}</div>
+                    )}
+                  </FormControl>
+                )}
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">

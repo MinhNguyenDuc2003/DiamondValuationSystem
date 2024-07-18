@@ -27,13 +27,13 @@ import Dashboard from "./scenes/home/Dashboard";
 import Rapaport from "./scenes/rapaport/Rapaport";
 import Report from "./scenes/report/Report";
 import EditCertificate from "./scenes/certificates/EditCertificate";
-import ManageRequest from "./scenes/manager/ManageRequest";
 import ManageReports from "./scenes/manager/ManageReports";
 import UpdateAccount from "./scenes/users/UpdateAccount";
 import ManagerRoute from "./components/routes/ManagerRoute";
 import NotFound from "./scenes/error/NotFound";
 import ValuationRoute from "./components/routes/ValuationRoute";
 import StaffRoute from "./components/routes/StaffRoute";
+import Overview from "./scenes/overview/Overview";
 
 const App = () => {
   return (
@@ -51,9 +51,15 @@ const MainContent = () => {
 
   return (
     <div className="app">
+<<<<<<< HEAD
       {!isLoginPage && <PrivateRoute><SideBar /></PrivateRoute> }
       <main className={"content"}>
         {!isLoginPage && <PrivateRoute><Topbar /></PrivateRoute>}
+=======
+      <PrivateRoute>{!isLoginPage && <SideBar />}</PrivateRoute>
+      <main className={"content"}>
+        <PrivateRoute>{!isLoginPage && <Topbar />}</PrivateRoute>
+>>>>>>> fed9d1e4254cbbae98a61cd5ad98012a32bde99a
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -228,23 +234,17 @@ const MainContent = () => {
 
           {/* Report */}
           <Route
-            path="/report"
+            path="/report/:requestId"
             element={
               <PrivateRoute>
-                <Report />
+                <StaffRoute>
+                  <Report />
+                </StaffRoute>
               </PrivateRoute>
             }
           />
 
           {/* Manager */}
-          <Route
-            path="/managerequests"
-            element={
-              <PrivateRoute>
-                <ManageRequest />
-              </PrivateRoute>
-            }
-          />
           <Route
             path="/managereports"
             element={
@@ -258,6 +258,14 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <UpdateAccount />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/overview"
+            element={
+              <PrivateRoute>
+                <Overview />
               </PrivateRoute>
             }
           />

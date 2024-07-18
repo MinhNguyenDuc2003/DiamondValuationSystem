@@ -43,7 +43,9 @@ public class DiamondRequestResponse {
 	
 	private String appoinment_date;
 	
-	private String appoinment_time;
+	private String slot;
+	
+	private Integer slotId;
 	
 	private Integer certificate_id;
 	

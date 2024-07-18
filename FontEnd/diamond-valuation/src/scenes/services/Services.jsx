@@ -67,13 +67,25 @@ export const Services = () => {
   }, [location.state?.message]);
 
   useEffect(() => {
-    getAllServices()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
+    const fetchServices = async () => {
+      try {
+        // Fetch services
+        const services = await getAllServices();
+        if (services !== undefined) {
+          setData(services);
+        }
+
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      } catch (error) {
         setError(error.message);
-      });
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+    fetchServices();
   }, []);
 
   function debounce(func, timeout = 300) {

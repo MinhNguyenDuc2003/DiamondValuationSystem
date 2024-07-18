@@ -1,6 +1,5 @@
 package com.diamondvaluation.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -13,7 +12,6 @@ public class Utility {
 	public static User getIdOfAuthenticatedUser(HttpServletRequest request, UserService service) {
 		Object principal = request.getUserPrincipal();
 		if (principal == null) {
-			System.out.println("abc");
 			return null;
 		}
 		
@@ -22,8 +20,6 @@ public class Utility {
 		if (principal instanceof UsernamePasswordAuthenticationToken 
 				|| principal instanceof RememberMeAuthenticationToken) {
 			customerEmail = request.getUserPrincipal().getName();
-		}else {
-			return null;
 		}
 		return service.findByUserName(customerEmail);
 	}

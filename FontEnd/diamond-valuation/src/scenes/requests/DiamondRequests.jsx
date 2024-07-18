@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getAllRequests,
@@ -6,7 +6,10 @@ import {
   getAllServices,
   getRequestTracking,
 } from "../../components/utils/ApiFunctions";
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 import {
+  Avatar,
   Box,
   Button,
   IconButton,
@@ -32,6 +35,11 @@ import {
   Alert,
   Chip,
   Collapse,
+  Badge,
+  List,
+  ListItem,
+  ListItemText,
+  Menu,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -47,9 +55,15 @@ import {
   Receipt as ReceiptIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
+  Flag as FlagIcon,
+  Flag,
+  AssignmentLate as AssignmentLateIcon,
+  CalendarToday as CalendarTodayIcon,
+  MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
 import ReceiptHTML from "./ReceiptHTML";
 import { useAuth } from "../../components/auth/AuthProvider";
+import PrintPDF from "./PrintPDF";
 
 const statusColors = {
   WAIT: "warning",
@@ -71,6 +85,68 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
+const RequestActionsMenu = ({ request, navigate }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton onClick={handleMenuOpen}>
+        <MoreVertIcon sx={{ color: "#C5A773" }} />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            navigate(`/requests/${request.id}`);
+            handleMenuClose();
+          }}
+        >
+          <EditIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleOpenDialog(request);
+            handleMenuClose();
+          }}
+        >
+          <DeleteIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Delete
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/report/${request.id}`);
+            handleMenuClose();
+          }}
+        >
+          <Flag sx={{ color: "#C5A773", mr: 1 }} />
+          Report
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            PrintPDF(request, services);
+            handleMenuClose();
+          }}
+        >
+          <ReceiptIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Receipt
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
 const Requests = () => {
   const [data, setData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -83,6 +159,10 @@ const Requests = () => {
   const [services, setServices] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
+  const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [numberMessage, setNumberMessage] = useState("0");
+  const [number , setNumber] = useState(0)
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -93,32 +173,76 @@ const Requests = () => {
     auth.isRoleAccept("manager") ||
     auth.isRoleAccept("staff");
 
-  useEffect(() => {
-    const successMessage = localStorage.getItem("successMessage");
-    if (successMessage) {
-      setMessage(successMessage);
-      localStorage.removeItem("successMessage");
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
-    }
-  }, [location.state?.message]);
+    const socketRef = useRef(null);
 
-  useEffect(() => {
-    getAllRequests()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-    getAllServices().then((data) => {
-      setServices(data);
-    });
-    setTimeout(() => {
-      setError("");
-    }, 2000);
-  }, []);
+    useEffect(() => {
+      const successMessage = localStorage.getItem("successMessage");
+      if (successMessage) {
+        setMessage(successMessage);
+        localStorage.removeItem("successMessage");
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
+      }
+    }, [location.state?.message]);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          console.log('fetchData called');
+  
+          // Fetch requests
+          const requests = await getAllRequests();
+          setData(requests);
+  
+          // Fetch services
+          const services = await getAllServices();
+          setServices(services);
+  
+          if (socketRef.current) {
+            // Close existing WebSocket if any
+            socketRef.current.close();
+          }
+  
+          const socket = new WebSocket('ws://localhost:8081/DiamondShop/ws');
+          socketRef.current = socket;
+  
+          socket.onopen = () => {
+            console.log('Connected to WebSocket server');
+          };
+  
+          socket.onmessage = (event) => {
+            setNumber((prevNumber) => {
+              const newNumber = prevNumber + 1;
+              setNumberMessage(`You have ${newNumber} new requests!`);
+              return newNumber;
+            });
+          };
+  
+          socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+          };
+  
+          socket.onclose = (event) => {
+            console.log('WebSocket connection closed:', event);
+          };
+  
+          return () => {
+            if (socketRef.current) {
+              socketRef.current.close();
+            }
+          };
+        } catch (error) {
+          console.error('Error in fetchData:', error);
+          setError(error.message);
+          setTimeout(() => {
+            setError('');
+          }, 2000);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   const handleDelete = async () => {
     const result = await deleteRequestById(requestToDelete);
@@ -181,14 +305,6 @@ const Requests = () => {
     setCurrentPage(value);
   };
 
-  const openReceiptInNewTab = (request) => {
-    const htmlContent = ReceiptHTML(request, services);
-    const newWindow = window.open("", "_blank");
-    newWindow.document.open();
-    newWindow.document.write(htmlContent);
-    newWindow.document.close();
-  };
-
   const handleRowClick = async (id) => {
     if (expandedRow === id) {
       setExpandedRow(null);
@@ -199,6 +315,42 @@ const Requests = () => {
       }
       setExpandedRow(id);
     }
+  };
+
+  const isAppointmentLate = (appointmentDate) => {
+    const today = new Date();
+    const appointment = new Date(appointmentDate);
+    const diffTime = Math.abs(today - appointment);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 7;
+  };
+
+  const lateRequests = data.filter(
+    (request) =>
+      isAppointmentLate(request.appoinment_date) &&
+      request.appoinment_date !== null
+  );
+
+  const handleBadgeClick = () => {
+    setLateRequestsDialogOpen(true);
+  };
+
+  const handleCloseLateRequestsDialog = () => {
+    setLateRequestsDialogOpen(false);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMessageClick = () => {
+    setNumber(0);
+    setNumberMessage("0")
+    window.location.reload();
   };
 
   return (
@@ -224,6 +376,24 @@ const Requests = () => {
           </Link>
         )}
 
+        <Badge
+          color="secondary"
+          badgeContent={lateRequests.length}
+          onClick={handleBadgeClick}
+          sx={{ cursor: "pointer" }}
+        >
+          <AssignmentLateIcon sx={{ fontSize: "25px" }} />
+        </Badge>
+
+        <Badge
+          color="secondary"
+          badgeContent={numberMessage}
+          onClick={handleMessageClick}
+          sx={{ cursor: "pointer" }}
+        >
+          <AssignmentLateIcon sx={{ fontSize: "25px" }} />
+        </Badge>
+
         <Box>
           <TextField
             label="Customer Phone"
@@ -231,6 +401,8 @@ const Requests = () => {
             value={phoneFilter}
             onChange={handlePhoneFilterChange}
           />
+
+
 
           <FormControl sx={{ minWidth: 120, ml: "10px" }}>
             <InputLabel>Status Filter</InputLabel>
@@ -275,6 +447,7 @@ const Requests = () => {
               <TableCell align="center">Created Date</TableCell>
               <TableCell align="center">Payment Method</TableCell>
               <TableCell align="center">Appointment Date</TableCell>
+              <TableCell align="center">Appointment Time</TableCell>
               <TableCell align="center">Service</TableCell>
               <TableCell align="center">Note</TableCell>
               <TableCell align="center">Total</TableCell>
@@ -317,10 +490,14 @@ const Requests = () => {
                       {request.payment_method}
                     </TableCell>
                     <TableCell align="center">
-                      {request.appoinment_date} {request.appoinment_time}
+                      {request.appoinment_date}
                     </TableCell>
+                    <TableCell align="center">{request.slot}</TableCell>
                     <TableCell align="center">
-                      {request.service_names}
+                      {request.service_names.replace(
+                        /([a-z])([A-Z])/g,
+                        "$1, $2"
+                      )}
                     </TableCell>
                     <TableCell align="center">{request.note}</TableCell>
                     <TableCell align="center">
@@ -342,26 +519,17 @@ const Requests = () => {
                     </TableCell>
                     <TableCell align="center">
                       {isAuthorized && (
-                        <IconButton
-                          onClick={() => navigate(`/requests/${request.id}`)}
-                        >
-                          <EditIcon sx={{ color: "#C5A773" }} />
-                        </IconButton>
+                        <RequestActionsMenu
+                          request={request}
+                          navigate={navigate}
+                        />
                       )}
-                      {isAuthorized && (
-                        <IconButton onClick={() => handleOpenDialog(request)}>
-                          <DeleteIcon sx={{ color: "#C5A773" }} />
-                        </IconButton>
-                      )}
-                      <IconButton onClick={() => openReceiptInNewTab(request)}>
-                        <ReceiptIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell
                       style={{ paddingBottom: 0, paddingTop: 0 }}
-                      colSpan={13}
+                      colSpan={14}
                     >
                       <Collapse
                         in={expandedRow === request.id}
@@ -410,7 +578,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={isAuthorized ? 13 : 12} align="center">
+                <TableCell colSpan={isAuthorized ? 14 : 13} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>
@@ -445,6 +613,45 @@ const Requests = () => {
             Delete
           </Button>
           <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={lateRequestsDialogOpen}
+        onClose={handleCloseLateRequestsDialog}
+        variant="contained"
+      >
+        <DialogTitle>Select Request</DialogTitle>
+        <DialogContent>
+          <List>
+            {lateRequests.map((request) => (
+              <ListItem
+                button
+                key={request.id}
+                onClick={() => navigate(`/requests/${request.id}`)}
+              >
+                <Avatar sx={{ bgcolor: "#C5A773", mr: 2 }}>
+                  <CalendarTodayIcon />
+                </Avatar>
+                <ListItemText
+                  primary={`Request ID: ${request.id}`}
+                  secondary={`Customer: ${request.customer_name}`}
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ml: 2 }}
+                >
+                  Appointment Date: {request.appoinment_date}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseLateRequestsDialog} color="primary">
             Cancel
           </Button>
         </DialogActions>

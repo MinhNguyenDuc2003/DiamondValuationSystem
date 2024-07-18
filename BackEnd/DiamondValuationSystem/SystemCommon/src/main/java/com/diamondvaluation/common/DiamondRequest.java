@@ -58,8 +58,6 @@ public class DiamondRequest {
 	
 	private LocalDate appointmentDate;
 	
-    private LocalTime appointmentTime;
-	
 	@Column(name = "payment_method",nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod method;
@@ -83,6 +81,10 @@ public class DiamondRequest {
 	@ManyToMany
 	@JoinTable(name = "request_services",joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
 	List<DiamondService> services = new ArrayList<>();
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "slot_id", nullable = true)
+	private SlotTime slot;
 	
 
 

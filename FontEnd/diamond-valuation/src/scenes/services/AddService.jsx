@@ -1,17 +1,19 @@
-import { Box, Button, TextField, Typography, Grid } from "@mui/material";
-import { Formik } from "formik";
+import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { saveService } from "../../components/utils/ApiFunctions";
 import { useState } from "react";
 
+// Regular expression for name validation
 const nameReqExp = /^[a-zA-Z\s]+$/;
 
+// Validation schema using Yup
 const serviceSchema = yup.object().shape({
-  name: yup.string().matches(nameReqExp, "Invalid name").required("required"),
-  money: yup.number().required("required"),
-  content: yup.string().required("required"),
-  photo: yup.mixed().required("Image is required"),
+  name: yup.string().matches(nameReqExp, "Invalid name").required("Required"),
+  money: yup.number().required("Required"),
+  content: yup.string().required("Required"),
+  // Photo field is not needed in validation schema, handled separately
 });
 
 const AddService = () => {
@@ -21,28 +23,32 @@ const AddService = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   const initialValues = {
-    id: "",
+    
     name: "",
     money: "",
     content: "",
-    photo: image,
   };
 
   const handleFormSubmit = async (values) => {
     try {
-      const result = await saveService(values);
+      if (!image) {
+        setErrorMessage("Image is required");
+        return;
+      }
+      const result = await saveService({
+        ...values,
+        photo: image,
+      });
       if (result.message !== undefined) {
-        localStorage.setItem("successMessage", "Add new Service successfully");
+        localStorage.setItem("successMessage", "Add New Service Successfully");
         navigate("/services");
       } else {
-        setErrorMessage("Your email is invalid");
+        setErrorMessage("Failed to add service");
       }
     } catch (error) {
-      setErrorMessage(error);
+      console.error("Error occurred while saving service:", error);
+      setErrorMessage("An error occurred while saving the service");
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 3000);
   };
 
   const handleImageChange = (e) => {
@@ -56,6 +62,13 @@ const AddService = () => {
       <Typography variant="h4" textAlign="center" m="20px">
         Add Service
       </Typography>
+
+      {errorMessage && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errorMessage}
+        </Alert>
+      )}
+
       <Box
         maxWidth="700px"
         m="0 auto"
@@ -64,16 +77,9 @@ const AddService = () => {
         p="16px"
       >
         <Formik
-          onSubmit={handleFormSubmit}
           initialValues={initialValues}
           validationSchema={serviceSchema}
-          validate={(values) => {
-            const errors = {};
-            if (!image) {
-              errors.photo = "Image is required";
-            }
-            return errors;
-          }}
+          onSubmit={handleFormSubmit}
         >
           {({
             values,
@@ -83,7 +89,7 @@ const AddService = () => {
             handleChange,
             handleSubmit,
           }) => (
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Box
                 display="grid"
                 gap="20px"
@@ -146,9 +152,6 @@ const AddService = () => {
                       />
                     </Box>
                   )}
-                  {errors.photo && touched.photo && (
-                    <Typography color="error">{errors.photo}</Typography>
-                  )}
                 </Box>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
@@ -163,7 +166,7 @@ const AddService = () => {
                   Cancel
                 </Button>
               </Box>
-            </form>
+            </Form>
           )}
         </Formik>
       </Box>

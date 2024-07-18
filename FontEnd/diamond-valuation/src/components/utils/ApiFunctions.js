@@ -27,6 +27,18 @@ export async function loginUser(login) {
   }
 }
 
+export async function logout() {
+  try {
+    const id = localStorage.getItem("userId");
+    if (id.length > 0 && id !== null) {
+      const response = await api.get(`/api/auth/logout/${id}`);
+      return response;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 // =========================== USER ================================================
 export async function getUsersPerPage(pageNum, keyword) {
   try {
@@ -46,6 +58,7 @@ export async function getUsersPerPage(pageNum, keyword) {
 export async function getUserById(id) {
   try {
     const result = await api.get(`/api/users/user/${id}`);
+    F;
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -130,6 +143,19 @@ export async function getCustomersPerPage(pageNum, keyword) {
   }
 }
 
+export async function searchCustomerByKeyword(keyword) {
+  try {
+    if (keyword.length > 0) {
+      const result = await api.get(
+        `/api/customers/search/customer?keyword=${keyword}`
+      );
+      return result.data;
+    }
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
 export async function deleteCustomerById(id) {
   try {
     const result = await api.delete(`/api/customers/delete/${id}`);
@@ -191,10 +217,14 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  formData.append("id", service.id);
+  if (service.id !== null && service.id !== undefined) {
+    formData.append("id", service.id);
+  }
+
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
+  formData.append("status", true);
   formData.append("photo", service.photo);
 
   try {
@@ -244,7 +274,9 @@ export async function saveRequest(request) {
   formData.append("service_ids", request.service_ids);
   formData.append("payment_method", request.payment_method);
   formData.append("appointmentDate", request.appointment_date);
-  formData.append("appointmentTime", request.appointment_time);
+  formData.append("slotId", request.slotId);
+  // formData.append("appointmentTime", request.appointment_time);
+
   formData.append("paid", request.paid);
 
   try {
@@ -269,10 +301,10 @@ export async function getRequestById(id) {
   }
 }
 
-export async function getAllRequestsNew() {
+export async function getAllRequestsStatus(status) {
   try {
     const result = await api.get(
-      `api/diamond-requests/requests/status/new`,
+      `api/diamond-requests/requests/status/${status}`,
       {}
     );
     return result.data;
@@ -291,6 +323,18 @@ export async function updateRequestStatus(id, status) {
     throw new Error(
       `Error update request status with id ${id} : ${error.message}`
     );
+  }
+}
+
+export async function getSlotAvailable(date) {
+  try {
+    const result = await api.get(
+      `api/diamond-requests/request/slot-available?date=${date}`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching requests : ${error.message}`);
   }
 }
 
