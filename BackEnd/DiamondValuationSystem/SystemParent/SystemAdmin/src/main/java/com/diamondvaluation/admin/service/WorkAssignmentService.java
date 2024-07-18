@@ -26,4 +26,6 @@ public interface WorkAssignmentService {
 
 	List<ValuationStaffAssignmentResponse> getAllValuationStaffAvailable(LocalDate date);
 	
+	List<WorkAssignment> findByRequestId(Integer id);
+	
 }

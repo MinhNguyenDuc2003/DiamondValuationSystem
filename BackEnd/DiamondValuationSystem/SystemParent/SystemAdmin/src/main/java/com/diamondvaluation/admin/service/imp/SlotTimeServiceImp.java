@@ -22,12 +22,13 @@ public class SlotTimeServiceImp implements SlotTimeService{
 	public void save(SlotTime slotTime) {
 		boolean isUpdate = slotTime.getId() != null && slotTime.getId()>0;
 		List<SlotTime> list = repo.findByTime(slotTime.getTime());
-		Optional<SlotTime> slot = repo.findById(slotTime.getId());
+
 		if(!isUpdate) {
 			if(!list.isEmpty()) {
 				throw new SlotTimeAlredyExistException("SlotTime already exist!");
 			}
 		}else {
+			Optional<SlotTime> slot = repo.findById(slotTime.getId());
 			if(!slot.isPresent()) {
 				throw new SlotTimeAlredyExistException("SlotTime not found with id!");
 			}

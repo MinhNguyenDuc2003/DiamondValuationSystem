@@ -2,6 +2,7 @@ package com.diamondvaluation.admin.response;
 
 import java.util.List;
 
+import com.diamondvaluation.common.WorkAssignment;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -50,4 +51,6 @@ public class DiamondRequestResponse {
 	private Integer certificate_id;
 	
 	private String customer_email;
+	
+	private List<WorkAssignment> assignment;
 }

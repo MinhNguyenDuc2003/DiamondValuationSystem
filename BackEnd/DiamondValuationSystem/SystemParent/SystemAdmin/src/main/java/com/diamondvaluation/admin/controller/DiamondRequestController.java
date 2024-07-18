@@ -32,6 +32,7 @@ import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.admin.service.SlotTimeService;
 import com.diamondvaluation.admin.service.UserService;
+import com.diamondvaluation.admin.service.WorkAssignmentService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
@@ -52,6 +53,7 @@ public class DiamondRequestController {
 	private final SlotTimeService slotService;
 	private final ModelMapper modelMapper;
 	private final UserService userService;
+	private final WorkAssignmentService assignmentService;
 
 	@PostMapping("request/save")
 	public ResponseEntity<?> addNewRequest(@ModelAttribute @Valid DiamondRequestRequest appoinmentRequest,
@@ -115,6 +117,7 @@ public class DiamondRequestController {
 			appoinmentResponse.setSlot(appoinment.getSlot().getTime());
 			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
 		}
+		appoinmentResponse.setAssignment(assignmentService.findByRequestId(appoinment.getId()));
 		return appoinmentResponse;
 	}
 
