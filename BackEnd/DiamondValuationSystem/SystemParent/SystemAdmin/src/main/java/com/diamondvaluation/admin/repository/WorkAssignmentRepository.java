@@ -33,5 +33,9 @@ public interface WorkAssignmentRepository extends CrudRepository<WorkAssignment,
 	List<WorkAssignment> findAllByDateAndOn(LocalDate date);
 	
 	@Query(value = "SELECT a.* FROM assignments a JOIN assignment_request ar ON a.id = ar.assignment_id JOIN diamond_request dr ON ar.request_id = dr.id WHERE ar.request_id=?1", nativeQuery = true)
-	Optional<WorkAssignment> findByRequestId(Integer id);
+	List<WorkAssignment> findByRequestId(Integer id);
+	@Query(value = "SELECT a.* FROM assignments a JOIN assignment_request ar ON a.id = ar.assignment_id "
+			+ "JOIN diamond_request dr ON ar.request_id = dr.id "
+			+ "WHERE ar.request_id=?1 AND a.id = ?2", nativeQuery = true)
+	Optional<WorkAssignment> findByRequestIdAndUserId(Integer requestId, Integer assignmentId);
 }
