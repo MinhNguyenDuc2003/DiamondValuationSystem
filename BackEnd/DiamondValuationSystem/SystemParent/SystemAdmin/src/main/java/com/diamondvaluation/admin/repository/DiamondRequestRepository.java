@@ -43,6 +43,6 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     		+ "JOIN assignment_request ar ON dr.id = ar.request_id AND dr.status = \"NEW\"\n"
     		+ "JOIN assignments ass ON ar.assignment_id = ass.id\n"
     		+ "JOIN users u ON ass.user_id = u.id\n"
-    		+ "WHERE u.id = 9 order by dr.created_date", nativeQuery = true)
+    		+ "WHERE u.id = ?1 order by dr.created_date", nativeQuery = true)
 	List<DiamondRequest> findAllRequestNewByUserId(Integer id);
 }

@@ -133,7 +133,7 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 		int count = 0;
 		List<DiamondRequest> list = existAssignment.get().getRequests();
 		for(DiamondRequest d : list) {
-			if(d.getStatus().equals(RequestStatus.PROCESSING)) {
+			if(d.getStatus().equals(RequestStatus.NEW)) {
 				count++;
 			}
 		}
