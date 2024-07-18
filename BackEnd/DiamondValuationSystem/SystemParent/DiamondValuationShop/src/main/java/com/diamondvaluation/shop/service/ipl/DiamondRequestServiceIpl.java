@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.diamondvaluation.common.Customer;
@@ -21,19 +22,16 @@ import com.diamondvaluation.shop.repository.ServiceRepository;
 import com.diamondvaluation.shop.request.CheckOutRequest;
 import com.diamondvaluation.shop.service.DiamondRequestService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class DiamondRequestServiceIpl implements DiamondRequestService{
 	private final DiamondRequestRepository repo;
 	private final CustomerRepository cusRepo;
 	private final ServiceRepository serviceRepo;
-	
-	public DiamondRequestServiceIpl(DiamondRequestRepository repo, CustomerRepository cusRepo,
-			ServiceRepository serviceRepo) {
-		this.repo = repo;
-		this.cusRepo = cusRepo;
-		this.serviceRepo = serviceRepo;
-	}
 
+	
 	@Override
 	public DiamondRequest createDiamondRequest(CheckOutRequest request, Customer customer, boolean isPaid) {
 		DiamondRequest diamondRequest = new DiamondRequest();

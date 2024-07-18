@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.exception.SlotTimeIsAlreadyFull;
@@ -31,30 +31,27 @@ import com.diamondvaluation.admin.response.RequestPerDateResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.admin.service.SlotTimeService;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
 import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.SlotTime;
+import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/diamond-requests/")
+@RequiredArgsConstructor
 public class DiamondRequestController {
 	private final DiamondCertificateService certificateService;
 	private final DiamondRequestService requestService;
 	private final SlotTimeService slotService;
 	private final ModelMapper modelMapper;
-
-	public DiamondRequestController(DiamondCertificateService certificateService, DiamondRequestService requestService,
-			SlotTimeService slotService, ModelMapper modelMapper) {
-		this.certificateService = certificateService;
-		this.requestService = requestService;
-		this.slotService = slotService;
-		this.modelMapper = modelMapper;
-	}
+	private final UserService userService;
 
 	@PostMapping("request/save")
 	public ResponseEntity<?> addNewRequest(@ModelAttribute @Valid DiamondRequestRequest appoinmentRequest,
@@ -114,7 +111,10 @@ public class DiamondRequestController {
 		}
 		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
-		appoinmentResponse.setSlot(appoinment.getSlot().getTime());
+		if(appoinment.getSlot()!=null) {
+			appoinmentResponse.setSlot(appoinment.getSlot().getTime());
+			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
+		}
 		return appoinmentResponse;
 	}
 
@@ -170,7 +170,7 @@ public class DiamondRequestController {
 		}
 	}
 
-	@GetMapping("/customer/{id}")
+	@GetMapping("customer/{id}")
 	public ResponseEntity<?> getRequestByCustomerId(@PathVariable("id") Integer id) {
 		try {
 			List<DiamondRequest> list = requestService.getRequestByCustomerId(id);
@@ -178,9 +178,8 @@ public class DiamondRequestController {
 		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-	}
-
-	@GetMapping("/request/date")
+	}	
+	@GetMapping("request/date")
 	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
 		try {
 			List<SlotTime> slotTime = slotService.getAllSlot();
@@ -197,7 +196,7 @@ public class DiamondRequestController {
 		}
 	}
 	
-	@GetMapping("/request/slot-available")
+	@GetMapping("request/slot-available")
 	public ResponseEntity<?> getSlotAvailableByDate(@RequestParam("date") String date){
 		try {
 			List<SlotTime> list = requestService.getSlotAvailableByDate(date);
@@ -253,5 +252,13 @@ public class DiamondRequestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+	@GetMapping("all-request-valuation-staff")
+	public ResponseEntity<?> getAllRequestByValuationStaff(HttpServletRequest request) {
+		User user = Utility.getIdOfAuthenticatedUser(request, userService);
+		List<DiamondRequest> list = requestService.findAllRequestNewByUser(user);
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+	}
+	
 	
 }

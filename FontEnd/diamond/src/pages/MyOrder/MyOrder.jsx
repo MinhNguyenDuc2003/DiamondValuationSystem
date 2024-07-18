@@ -96,6 +96,8 @@ const MyOrder = () => {
 
 
   const handleShowCertificate = async (certificate_id) => {
+    console.log(certificate_id)
+    console.log(orders);
     const result = await getCertificateById(certificate_id);
 
     if (result !== null) {
@@ -107,7 +109,7 @@ const MyOrder = () => {
 
 
   const handleShowPrice = async (certificate_id) => {
-    console.log(certificate_id);
+    
     const result = await getCertificateById(certificate_id);
 
     if (result !== null) {
@@ -120,7 +122,8 @@ const MyOrder = () => {
 
   const openCertificateInNewTab = (certificate) => {
     const newWindow = window.open("", "_blank");
-    newWindow.document.write(CertificateHTML(certificate));
+    console.log(certificate)
+    newWindow.document.write(CertificateHTML(certificate.data));
     newWindow.document.close();
   };
 
@@ -134,7 +137,7 @@ const MyOrder = () => {
   return (
     <Box sx={{ backgroundColor: "#dcdcdc66" }}>
       <Box className="wrapperrr" sx={{ mt: 10, height: "80vh" }}>
-
+     
         <Box sx={{ mb: 2 }}>
           <Typography variant="h3" color={'#254a4b'}>Request Tracking</Typography>
         </Box>
@@ -208,6 +211,12 @@ const MyOrder = () => {
                   sx={{ color: "#11375e", fontSize: "20px " }}
                   align="center"
                 >
+                  Total
+                </TableCell>
+                <TableCell
+                  sx={{ color: "#11375e", fontSize: "20px " }}
+                  align="center"
+                >
                   Request Status
                 </TableCell>
                 <TableCell
@@ -247,6 +256,9 @@ const MyOrder = () => {
                   </TableCell>
                   <TableCell sx={{ color: "gray" }} align="center">
                     {request.paid ? "Paid" : "Pending"}
+                  </TableCell>
+                  <TableCell sx={{ color: "gray" }} align="center">
+                    {request.total.toFixed(2)}
                   </TableCell>
                   <TableCell align="center">
                     <Typography

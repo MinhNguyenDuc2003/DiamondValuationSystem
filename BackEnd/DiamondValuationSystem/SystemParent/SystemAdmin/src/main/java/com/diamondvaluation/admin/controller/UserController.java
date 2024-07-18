@@ -26,10 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.diamondvaluation.admin.AmazonS3Util;
 import com.diamondvaluation.admin.exception.EmailIsAlreadyExistException;
 import com.diamondvaluation.admin.request.UserRequest;
+import com.diamondvaluation.admin.response.CustomerResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
 import com.diamondvaluation.admin.response.UserPageResponse;
 import com.diamondvaluation.admin.response.UserResponse;
 import com.diamondvaluation.admin.service.UserService;
+import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.Role;
 import com.diamondvaluation.common.User;
 
@@ -193,6 +195,11 @@ public class UserController {
 		return new ResponseEntity<List<Role>>(userService.getAllRoles(), HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("search/user")
+	public ResponseEntity<?> findByKeyword(@RequestParam("keyword") String keyword){
+		List<User> listUsers = userService.listUsersByKeyword(keyword);
+		List<UserResponse> list = listEntity2ListResposne(listUsers);
+		return new ResponseEntity<List<UserResponse>>(list, HttpStatus.OK);
+	}
 	
 }

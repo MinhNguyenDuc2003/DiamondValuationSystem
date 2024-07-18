@@ -28,6 +28,7 @@ import org.thymeleaf.spring6.SpringWebFluxTemplateEngine;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import com.diamondvaluation.admin.AmazonS3Util;
+import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.CertificateIsAlreadyExistException;
 import com.diamondvaluation.admin.exception.CertificateNotFoundException;
 import com.diamondvaluation.admin.exception.DiamondRequestAlreadyExistCertificateException;
@@ -36,8 +37,10 @@ import com.diamondvaluation.admin.response.CertificateResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondValuationService;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondValuation;
+import com.diamondvaluation.common.User;
 import com.diamondvaluation.common.diamond.DiamondCertificate;
 import com.diamondvaluation.common.diamond.DiamondClarity;
 import com.diamondvaluation.common.diamond.DiamondColor;
@@ -51,25 +54,20 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @RestController
 @RequestMapping("/api/certificates/")
+@RequiredArgsConstructor
 public class DiamondCertificateController {
 	private final DiamondCertificateService service;
 	private final ModelMapper modelMapper;
 	private final SpringWebFluxTemplateEngine templateEngine;
 	private final DiamondValuationService valuationService;
-	
-	public DiamondCertificateController(DiamondCertificateService service, ModelMapper modelMapper,
-			SpringWebFluxTemplateEngine templateEngine, DiamondValuationService valuationService) {
-		this.service = service;
-		this.modelMapper = modelMapper;
-		this.templateEngine = templateEngine;
-		this.valuationService = valuationService;
-	}
+	private final UserService userService;
 
 	@PostMapping("certificate/save")
 	public ResponseEntity<?> addNewCertificate(@ModelAttribute @Valid CertificateRequest request
@@ -222,5 +220,14 @@ public class DiamondCertificateController {
                 .body(resource);
 
 	}
+	
+	@GetMapping("all/staff-valuation")
+	public ResponseEntity<?> getAllCertificateByStaff(HttpServletRequest request) {
+		User user = Utility.getIdOfAuthenticatedUser(request, userService);
+		List<DiamondCertificate> list = service.findAllCertificateByUser(user);
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+	}
+	
+	
 
 }

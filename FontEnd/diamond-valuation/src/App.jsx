@@ -33,6 +33,7 @@ import ManagerRoute from "./components/routes/ManagerRoute";
 import NotFound from "./scenes/error/NotFound";
 import ValuationRoute from "./components/routes/ValuationRoute";
 import StaffRoute from "./components/routes/StaffRoute";
+import Overview from "./scenes/overview/Overview";
 
 const App = () => {
   return (
@@ -50,9 +51,15 @@ const MainContent = () => {
 
   return (
     <div className="app">
+<<<<<<< HEAD
+      {!isLoginPage && <PrivateRoute><SideBar /></PrivateRoute> }
+      <main className={"content"}>
+        {!isLoginPage && <PrivateRoute><Topbar /></PrivateRoute>}
+=======
       <PrivateRoute>{!isLoginPage && <SideBar />}</PrivateRoute>
       <main className={"content"}>
         <PrivateRoute>{!isLoginPage && <Topbar />}</PrivateRoute>
+>>>>>>> fed9d1e4254cbbae98a61cd5ad98012a32bde99a
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -251,6 +258,14 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <UpdateAccount />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/overview"
+            element={
+              <PrivateRoute>
+                <Overview />
               </PrivateRoute>
             }
           />

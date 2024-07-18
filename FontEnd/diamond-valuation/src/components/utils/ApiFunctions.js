@@ -27,10 +27,10 @@ export async function loginUser(login) {
   }
 }
 
-export async function logout(){
+export async function logout() {
   try {
     const id = localStorage.getItem("userId");
-    if(id.length>0 && id !== null){
+    if (id.length > 0 && id !== null) {
       const response = await api.get(`/api/auth/logout/${id}`);
       return response;
     }
@@ -57,7 +57,8 @@ export async function getUsersPerPage(pageNum, keyword) {
 
 export async function getUserById(id) {
   try {
-    const result = await api.get(`/api/users/user/${id}`);F
+    const result = await api.get(`/api/users/user/${id}`);
+    F;
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -216,10 +217,10 @@ export async function deleteServiceById(id) {
 
 export async function saveService(service) {
   const formData = new FormData();
-  if(service.id !== null && service.id !== undefined){
+  if (service.id !== null && service.id !== undefined) {
     formData.append("id", service.id);
   }
-  
+
   formData.append("name", service.name);
   formData.append("money", service.money);
   formData.append("content", service.content);
@@ -273,7 +274,9 @@ export async function saveRequest(request) {
   formData.append("service_ids", request.service_ids);
   formData.append("payment_method", request.payment_method);
   formData.append("appointmentDate", request.appointment_date);
-  formData.append("appointmentTime", request.appointment_time);
+  formData.append("slotId", request.slotId);
+  // formData.append("appointmentTime", request.appointment_time);
+
   formData.append("paid", request.paid);
 
   try {
@@ -320,6 +323,18 @@ export async function updateRequestStatus(id, status) {
     throw new Error(
       `Error update request status with id ${id} : ${error.message}`
     );
+  }
+}
+
+export async function getSlotAvailable(date) {
+  try {
+    const result = await api.get(
+      `api/diamond-requests/request/slot-available?date=${date}`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching requests : ${error.message}`);
   }
 }
 
@@ -586,10 +601,10 @@ const refreshToken = async () => {
   try {
     const id = localStorage.getItem("userId");
     if (id !== null && id > 0) {
-    const formData = new FormData();
-    formData.append("id", id);
-    const response = await api.post("/api/auth/token/refresh", formData);
-    return response.data;
+      const formData = new FormData();
+      formData.append("id", id);
+      const response = await api.post("/api/auth/token/refresh", formData);
+      return response.data;
     }
   } catch (error) {
     console.log("Error", error);

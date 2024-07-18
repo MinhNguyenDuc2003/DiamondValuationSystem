@@ -5,7 +5,7 @@ app:
   security:
     jwt:
       access-token:
-        expiration: 1
+        expiration: 30
       issuer: DiamondValuation
       refresh-token:
         expiration: 7200
@@ -62,3 +62,13 @@ paypal:
     secret: EHigX7VbvIswP2ToWPJiPg-A0ZVni0AXe_UDPnfjxgUXMHQt86Xdjl2oYHumwSdoYzKW012o4NbOQYT-   
   mode: sandbox
 baseUrl: http://localhost:3000/
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+        messaging:
+          simp:
+            stomp: DEBUG

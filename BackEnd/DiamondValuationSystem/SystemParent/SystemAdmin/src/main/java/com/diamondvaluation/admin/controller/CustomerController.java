@@ -127,6 +127,7 @@ public class CustomerController {
 		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
 		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
 	}
+<<<<<<< HEAD
 	
 	//new
 	
@@ -149,4 +150,6 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+=======
+>>>>>>> e638293bb0c9985e42210e7e4b0feefb962e902d
 }

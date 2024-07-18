@@ -21,4 +21,8 @@ public interface UserService {
 	List<Role> getAllRoles();
 	
 	User findUserById(Integer id);
+	
+	List<User> getAllUserEnabled();
+
+	List<User> listUsersByKeyword(String keyword);
 }

@@ -3,11 +3,6 @@ import logo from "../Home/image/logot.png";
 import facet1 from "../Home/image/Facet_part1.jpg";
 import facet2 from "../Home/image/Facet_part2.jpg";
 
-const formatDate = (dateStr) => {
-  const date = dateStr.split("T");
-  return date[0];
-};
-
 const CertificateHTML = (certificate) => {
   return `
       <html>
@@ -132,7 +127,7 @@ const CertificateHTML = (certificate) => {
               <div class="S-prop">
                   <p>SHINE NATURAL DIAMOND ORIGIN REPORT</p>
                   <div class="detail">
-                      <p>${formatDate(certificate.created_date)}</p>
+                      <p>September 01/2024</p>
                       <p>SHINE Report Number <span>${
                         certificate.code
                       }</span></p>

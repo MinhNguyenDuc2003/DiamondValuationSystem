@@ -45,6 +45,8 @@ public class DiamondRequestResponse {
 	
 	private String slot;
 	
+	private Integer slotId;
+	
 	private Integer certificate_id;
 	
 	private String customer_email;

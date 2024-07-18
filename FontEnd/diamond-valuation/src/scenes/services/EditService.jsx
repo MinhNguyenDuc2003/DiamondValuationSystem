@@ -14,7 +14,6 @@ const serviceSchema = yup.object().shape({
   name: yup.string().matches(nameReqExp, "Invalid name").required("Required"),
   money: yup.number().required("Required"),
   content: yup.string(),
-  photo: yup.mixed().required("Image is required"),
 });
 
 const EditService = () => {

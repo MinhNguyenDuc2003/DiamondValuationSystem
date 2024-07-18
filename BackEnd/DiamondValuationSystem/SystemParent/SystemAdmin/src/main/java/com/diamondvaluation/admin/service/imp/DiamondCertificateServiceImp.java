@@ -14,17 +14,20 @@ import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.repository.DiamondCertificateRepository;
 import com.diamondvaluation.admin.repository.DiamondRequestRepository;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
+import com.diamondvaluation.admin.service.DiamondValuationService;
 import com.diamondvaluation.common.DiamondRequest;
+import com.diamondvaluation.common.DiamondValuation;
+import com.diamondvaluation.common.User;
 import com.diamondvaluation.common.diamond.DiamondCertificate;
+
+import lombok.RequiredArgsConstructor;
 @Service
+@RequiredArgsConstructor
 public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	private final DiamondCertificateRepository repo;
 	private final DiamondRequestRepository requestRepo;
+	private final DiamondValuationService valuationService;
 
-	public DiamondCertificateServiceImp(DiamondCertificateRepository repo, DiamondRequestRepository requestRepo) {
-		this.repo = repo;
-		this.requestRepo = requestRepo;
-	}
 
 	@Override
 	public DiamondCertificate save(DiamondCertificate certificate) {
@@ -60,6 +63,7 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 				}
 				certificate.setRequest(request.get());
 				certificate.setCreatedDate(certificateInDb.get().getCreatedDate());
+				valuationService.deletebyId(certificateInDb.get().getValuation().getId());
 			}
 		}
 		return repo.save(certificate);
@@ -102,6 +106,12 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 			return null;
 		}
 		return cer.get().getId();
+	}
+
+
+	@Override
+	public List<DiamondCertificate> findAllCertificateByUser(User user) {
+		return repo.findAllCertificateByValuationStaffId(user.getId());
 	}
 
 }

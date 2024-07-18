@@ -54,17 +54,18 @@ const ManageReports = () => {
   const [reportDeleted, setReportDeleted] = useState(null);
 
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const result = await getAllReports();
-        setReports(result);
-      } catch (error) {
-        setError("Error fetching reports.");
-        console.error("Error fetching reports:", error);
-      }
-    };
     fetchReports();
   }, []);
+
+  const fetchReports = async () => {
+    try {
+      const result = await getAllReports();
+      setReports(result);
+    } catch (error) {
+      setError("Error fetching reports.");
+      console.error("Error fetching reports:", error);
+    }
+  };
 
   const handleViewReport = (report) => {
     setSelectedReport(report);
@@ -192,7 +193,7 @@ const ManageReports = () => {
         </Alert>
       )}
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mt: "10px" }}>
         {reports.length > 0 ? (
           reports.map((report) => (
             <Grid item xs={12} sm={6} md={4} key={report.id}>
@@ -337,7 +338,7 @@ const ManageReports = () => {
                   <strong>Created Time: </strong> {item.created_time}
                 </Typography>
                 <Typography>
-                  <strong>Updated By: </strong> {item.updated_by.fullname}
+                  <strong>Updated By: </strong> {item.updated_by}
                 </Typography>
               </Box>
             ))
