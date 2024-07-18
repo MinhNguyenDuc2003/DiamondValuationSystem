@@ -284,7 +284,7 @@ export const getAllRequest = async () => {
 export const getCertificateById = async (id) => {
   try {
     const response = await api.get(`diamond-certificate/certificate/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     return null;
   }

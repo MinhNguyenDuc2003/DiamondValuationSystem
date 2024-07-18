@@ -17,7 +17,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 123456
+    password: minh01672527656
     url: jdbc:mysql://localhost:3306/diamond_db
     username: root
     hikari:      
@@ -62,3 +62,13 @@ paypal:
     secret: EHigX7VbvIswP2ToWPJiPg-A0ZVni0AXe_UDPnfjxgUXMHQt86Xdjl2oYHumwSdoYzKW012o4NbOQYT-   
   mode: sandbox
 baseUrl: http://localhost:3000/
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+        messaging:
+          simp:
+            stomp: DEBUG

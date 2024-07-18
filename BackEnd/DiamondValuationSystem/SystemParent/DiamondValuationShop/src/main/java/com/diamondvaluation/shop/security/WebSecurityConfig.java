@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -80,29 +79,29 @@ public class WebSecurityConfig {
 		return authConfig.getAuthenticationManager();
 	}
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authenticationProvider(authenticationProvider());
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-            	.requestMatchers("/diamond-shop/customer/*").authenticated()	
-            	.requestMatchers("/diamond-shop/token").authenticated()
-            	.requestMatchers("/diamond-request/**").authenticated()
-            	.requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll())
-            .oauth2Login(form -> form
-    				.userInfoEndpoint()
-    					.userService(oAuth2UserService)
-    				.and().successHandler(oauthLoginHandler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exh -> exh.authenticationEntryPoint((request, response, exception) -> {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
-            }))
-            ;
-        http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	    http.authenticationProvider(authenticationProvider());
+	    http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+	        .authorizeHttpRequests(auth -> auth
+	            .requestMatchers("/diamond-shop/customer/*").authenticated()    
+	            .requestMatchers("/diamond-shop/token").authenticated()
+	            .requestMatchers("/diamond-request/**").authenticated()
+	            .requestMatchers("/api/**").authenticated()
+	            .anyRequest().permitAll())
+	        .oauth2Login(form -> form
+	                .userInfoEndpoint()
+	                    .userService(oAuth2UserService)
+	                .and().successHandler(oauthLoginHandler))
+	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	        .csrf(AbstractHttpConfigurer::disable)
+	        .exceptionHandling(exh -> exh.authenticationEntryPoint((request, response, exception) -> {
+	            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
+	        }))
+	        ;
+	    http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+	    return http.build();
+	}
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

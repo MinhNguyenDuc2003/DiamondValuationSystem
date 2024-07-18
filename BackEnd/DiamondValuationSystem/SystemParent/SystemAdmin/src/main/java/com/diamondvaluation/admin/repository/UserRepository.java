@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -22,4 +23,7 @@ public interface UserRepository extends CrudRepository<User, Integer>, PagingAnd
 	
 	@Query("SELECT u FROM User u WHERE u.id = :id AND u.password = :password")
     Optional<User> checkPasswordByUserId(@Param("id") Integer id, @Param("password") String password);
+	
+	@Query("SELECT u FROM User u WHERE u.enabled = true")
+	List<User> findAllUserEnabled();
 }

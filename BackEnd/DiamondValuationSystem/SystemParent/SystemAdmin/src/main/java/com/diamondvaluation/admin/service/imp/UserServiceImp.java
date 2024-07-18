@@ -92,11 +92,11 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public User getUserById(Integer id) {
-		User user = userRepository.findById(id).get();
-		if(user==null) {
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
 			throw new UsernameNotFoundException("Can not find any user with Id "+id);
 		}
-		return user;
+		return user.get();
 	}
 	
 	@Override
@@ -123,6 +123,11 @@ public class UserServiceImp implements UserService {
 	@Override
 	public User findUserById(Integer id) {
 		return userRepository.findById(id).get();
+	}
+
+	@Override
+	public List<User> getAllUserEnabled() {
+		return userRepository.findAllUserEnabled();
 	}
 
 }
