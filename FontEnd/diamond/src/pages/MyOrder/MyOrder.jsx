@@ -122,7 +122,8 @@ const MyOrder = () => {
 
   const openCertificateInNewTab = (certificate) => {
     const newWindow = window.open("", "_blank");
-    newWindow.document.write(CertificateHTML(certificate));
+    console.log(certificate)
+    newWindow.document.write(CertificateHTML(certificate.data));
     newWindow.document.close();
   };
 
