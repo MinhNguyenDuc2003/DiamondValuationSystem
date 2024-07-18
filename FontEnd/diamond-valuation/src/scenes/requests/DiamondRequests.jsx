@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getAllRequests,
@@ -6,8 +6,6 @@ import {
   getAllServices,
   getRequestTracking,
 } from "../../components/utils/ApiFunctions";
-import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
 import {
   Avatar,
   Box,
@@ -61,7 +59,6 @@ import {
   CalendarToday as CalendarTodayIcon,
   MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
-import ReceiptHTML from "./ReceiptHTML";
 import { useAuth } from "../../components/auth/AuthProvider";
 import PrintPDF from "./PrintPDF";
 
@@ -169,9 +166,7 @@ const Requests = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
   const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [numberMessage, setNumberMessage] = useState("0");
-  const [number , setNumber] = useState(0)
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -182,76 +177,76 @@ const Requests = () => {
     auth.isRoleAccept("manager") ||
     auth.isRoleAccept("staff");
 
-    const socketRef = useRef(null);
+  const socketRef = useRef(null);
 
-    useEffect(() => {
-      const successMessage = localStorage.getItem("successMessage");
-      if (successMessage) {
-        setMessage(successMessage);
-        localStorage.removeItem("successMessage");
-        setTimeout(() => {
-          setMessage("");
-        }, 3000);
-      }
-    }, [location.state?.message]);
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          console.log('fetchData called');
-  
-          // Fetch requests
-          const requests = await getAllRequests();
-          setData(requests);
-  
-          // Fetch services
-          const services = await getAllServices();
-          setServices(services);
-  
+  useEffect(() => {
+    const successMessage = localStorage.getItem("successMessage");
+    if (successMessage) {
+      setMessage(successMessage);
+      localStorage.removeItem("successMessage");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    }
+  }, [location.state?.message]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log("fetchData called");
+
+        // Fetch requests
+        const requests = await getAllRequests();
+        setData(requests);
+
+        // Fetch services
+        const services = await getAllServices();
+        setServices(services);
+
+        if (socketRef.current) {
+          // Close existing WebSocket if any
+          socketRef.current.close();
+        }
+
+        const socket = new WebSocket("ws://localhost:8081/DiamondShop/ws");
+        socketRef.current = socket;
+
+        socket.onopen = () => {
+          console.log("Connected to WebSocket server");
+        };
+
+        socket.onmessage = (event) => {
+          setNumber((prevNumber) => {
+            const newNumber = prevNumber + 1;
+            setNumberMessage(`You have ${newNumber} new requests!`);
+            return newNumber;
+          });
+        };
+
+        socket.onerror = (error) => {
+          console.error("WebSocket error:", error);
+        };
+
+        socket.onclose = (event) => {
+          console.log("WebSocket connection closed:", event);
+        };
+
+        return () => {
           if (socketRef.current) {
-            // Close existing WebSocket if any
             socketRef.current.close();
           }
-  
-          const socket = new WebSocket('ws://localhost:8081/DiamondShop/ws');
-          socketRef.current = socket;
-  
-          socket.onopen = () => {
-            console.log('Connected to WebSocket server');
-          };
-  
-          socket.onmessage = (event) => {
-            setNumber((prevNumber) => {
-              const newNumber = prevNumber + 1;
-              setNumberMessage(`You have ${newNumber} new requests!`);
-              return newNumber;
-            });
-          };
-  
-          socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-          };
-  
-          socket.onclose = (event) => {
-            console.log('WebSocket connection closed:', event);
-          };
-  
-          return () => {
-            if (socketRef.current) {
-              socketRef.current.close();
-            }
-          };
-        } catch (error) {
-          console.error('Error in fetchData:', error);
-          setError(error.message);
-          setTimeout(() => {
-            setError('');
-          }, 2000);
-        }
-      };
-  
-      fetchData();
-    }, []);
+        };
+      } catch (error) {
+        console.error("Error in fetchData:", error);
+        setError(error.message);
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleDelete = async () => {
     const result = await deleteRequestById(requestToDelete);
@@ -348,17 +343,9 @@ const Requests = () => {
     setLateRequestsDialogOpen(false);
   };
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleMessageClick = () => {
     setNumber(0);
-    setNumberMessage("0")
+    setNumberMessage("0");
     window.location.reload();
   };
 
@@ -410,8 +397,6 @@ const Requests = () => {
             value={phoneFilter}
             onChange={handlePhoneFilterChange}
           />
-
-
 
           <FormControl sx={{ minWidth: 120, ml: "10px" }}>
             <InputLabel>Status Filter</InputLabel>

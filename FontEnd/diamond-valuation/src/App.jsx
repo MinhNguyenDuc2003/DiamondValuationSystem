@@ -34,6 +34,7 @@ import NotFound from "./scenes/error/NotFound";
 import ValuationRoute from "./components/routes/ValuationRoute";
 import StaffRoute from "./components/routes/StaffRoute";
 import Overview from "./scenes/overview/Overview";
+import WorkAssignment from "./scenes/manager/WorkAssignment";
 
 const App = () => {
   return (
@@ -260,6 +261,18 @@ const MainContent = () => {
             element={
               <PrivateRoute>
                 <Overview />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Work Assignment */}
+          <Route
+            path="/workassignment"
+            element={
+              <PrivateRoute>
+                <ManagerRoute>
+                  <WorkAssignment />
+                </ManagerRoute>
               </PrivateRoute>
             }
           />

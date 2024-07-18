@@ -11,6 +11,7 @@ import RequestPageIcon from "@mui/icons-material/RequestPage";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
+import TodayIcon from "@mui/icons-material/Today";
 import { useAuth } from "../../components/auth/AuthProvider";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -196,6 +197,13 @@ const SideBar = () => {
                   title="Manage Reports"
                   to="/managereports"
                   icon={<ReportIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Work Assignment"
+                  to="/workassignment"
+                  icon={<TodayIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

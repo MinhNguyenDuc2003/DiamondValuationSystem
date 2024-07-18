@@ -17,13 +17,16 @@ import {
   FormControl,
   Alert,
 } from "@mui/material";
-import { saveReport } from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
+import {
+  saveReport,
+  getRequestById,
+} from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
 import { useNavigate, useParams } from "react-router-dom";
 
 const BlockDiamondHtml = `
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -237,7 +240,7 @@ const BlockDiamondHtml = `
 </html>
 `;
 
-export const Report = () => {
+const Report = () => {
   const { requestId } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -254,10 +257,11 @@ export const Report = () => {
       await getRequestById(requestId).then((response) => setRequest(response));
     };
     fetchRequest();
-  }, {});
+  });
 
   const handleSave = async () => {
     const htmlContent = BlockDiamondHtml(request);
+    console.log(htmlContent);
     const reportData = {
       header: title,
       content: htmlContent,
@@ -342,3 +346,5 @@ export const Report = () => {
     </Container>
   );
 };
+
+export default Report;

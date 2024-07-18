@@ -586,6 +586,65 @@ export async function getReportTracking(id) {
   }
 }
 
+// =================================== Work Assignment ===================================== //
+
+export async function getWorkAssignmentByDate(date) {
+  try {
+    const result = await api.get(`assignment/all/date?date=${date}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function updateWorkAssignment(id, status) {
+  try {
+    const result = await api.put(
+      `assignment/status/${id}?status=${status}`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function saveWorkAssignment(assignment) {
+  const data = {
+    date: assignment.date,
+    status: assignment.status,
+    user_id: assignment.user_id,
+  };
+
+  try {
+    const response = await api.post("assignment/save", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
+export async function deleteWorkAssignment(id) {
+  try {
+    const response = await api.delete(`assignment/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
