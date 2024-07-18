@@ -69,8 +69,8 @@ public class AttributeControllerTest {
 	}
 
 	@Test
-	public void testAddDiamondAttributeSuccess() {
-	    // Arrange
+	public void  () {
+	   
 	    DiamondAttribute diamondAttribute = new DiamondAttribute();
 	    diamondAttribute.setClarity(DiamondClarity.VS1);
 	    diamondAttribute.setColor(DiamondColor.D);
@@ -80,12 +80,8 @@ public class AttributeControllerTest {
 	    carat.setId(1);
 
 	    when(caratRepository.findById(1)).thenReturn(Optional.of(carat));
-//	    when(attributeService.addDiamondAttribute(any(DiamondAttribute.class), eq(1))).thenReturn(diamondAttribute);
-
-	    // Act
+	    
 	    ResponseEntity<String> response = attributeController.addDiamondAttribute(diamondAttribute, 1);
-
-	    // Assert
 	    assertEquals(HttpStatus.OK, response.getStatusCode());
 	    assertEquals("Added successfully", response.getBody());
 	    verify(attributeService).addDiamondAttribute(any(DiamondAttribute.class), eq(1));
