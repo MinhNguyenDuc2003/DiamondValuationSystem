@@ -69,7 +69,7 @@ public class AttributeControllerTest {
 	}
 
 	@Test
-	public void  () {
+	public void a () {
 	   
 	    DiamondAttribute diamondAttribute = new DiamondAttribute();
 	    diamondAttribute.setClarity(DiamondClarity.VS1);
