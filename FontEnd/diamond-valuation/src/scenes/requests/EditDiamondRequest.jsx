@@ -6,6 +6,8 @@ import {
   getRequestById,
   saveRequest,
   getSlotAvailable,
+  getValuationStaffAvailable,
+  setRequestToAssign,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -31,6 +33,7 @@ const EditDiamondRequest = () => {
   const [services, setServices] = useState([]);
   const [message, setMessage] = useState("");
   const [slots, setSlots] = useState([]);
+  const [staffs, setStaffs] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -44,6 +47,7 @@ const EditDiamondRequest = () => {
     paid: false,
     appointment_date: null,
     slotId: "",
+    assignment_id: "",
   });
 
   useEffect(() => {
@@ -67,6 +71,7 @@ const EditDiamondRequest = () => {
             paid: requestEdit.paid,
             appointment_date: requestEdit.appoinment_date || "",
             slotId: requestEdit.slot_id || "",
+            assignment_id: "",
           });
 
           // Fetch slots for the existing appointment date
@@ -74,7 +79,11 @@ const EditDiamondRequest = () => {
             const availableSlots = await getSlotAvailable(
               requestEdit.appoinment_date
             );
+            const availableValuationStaffs = await getValuationStaffAvailable(
+              requestEdit.appoinment_date
+            );
             setSlots(availableSlots);
+            setStaffs(availableValuationStaffs);
           }
         }
       } catch (error) {
@@ -100,6 +109,9 @@ const EditDiamondRequest = () => {
     try {
       console.log(values);
       const result = await saveRequest(values);
+      if (values.assignment_id) {
+        await setRequestToAssign(values);
+      }
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Request updated successfully");
         navigate("/requests");
@@ -120,7 +132,9 @@ const EditDiamondRequest = () => {
 
     try {
       const availableSlots = await getSlotAvailable(date);
+      const availableValuationStaffs = await getValuationStaffAvailable(date);
       setSlots(availableSlots);
+      setStaffs(availableValuationStaffs);
     } catch (error) {
       setError(error.message);
     }
@@ -325,6 +339,27 @@ const EditDiamondRequest = () => {
                     {touched.slotId && errors.slotId && (
                       <div style={{ color: "red" }}>{errors.slotId}</div>
                     )}
+                  </FormControl>
+                )}
+
+                {staffs.length > 0 && (
+                  <FormControl fullWidth sx={{ gridColumn: "span 4" }}>
+                    <InputLabel>Select Staff to assign</InputLabel>
+                    <Field
+                      as={Select}
+                      name="assignment_id"
+                      label="Select Staff to assign"
+                    >
+                      {staffs.map((staff) => (
+                        <MenuItem
+                          key={staff.assignmentid}
+                          value={staff.assignmentid}
+                        >
+                          {staff.name} (Processing{" "}
+                          {staff.number_request_processing} requests)
+                        </MenuItem>
+                      ))}
+                    </Field>
                   </FormControl>
                 )}
               </Box>

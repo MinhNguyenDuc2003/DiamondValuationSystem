@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.admin.Utility;
 import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.exception.SlotTimeIsAlreadyFull;
@@ -29,30 +30,27 @@ import com.diamondvaluation.admin.response.RequestPerDateResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
 import com.diamondvaluation.admin.service.SlotTimeService;
+import com.diamondvaluation.admin.service.UserService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
 import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.SlotTime;
+import com.diamondvaluation.common.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/diamond-requests/")
+@RequiredArgsConstructor
 public class DiamondRequestController {
 	private final DiamondCertificateService certificateService;
 	private final DiamondRequestService requestService;
 	private final SlotTimeService slotService;
 	private final ModelMapper modelMapper;
-
-	public DiamondRequestController(DiamondCertificateService certificateService, DiamondRequestService requestService,
-			SlotTimeService slotService, ModelMapper modelMapper) {
-		this.certificateService = certificateService;
-		this.requestService = requestService;
-		this.slotService = slotService;
-		this.modelMapper = modelMapper;
-	}
+	private final UserService userService;
 
 	@PostMapping("request/save")
 	public ResponseEntity<?> addNewRequest(@ModelAttribute @Valid DiamondRequestRequest appoinmentRequest,
@@ -207,5 +205,14 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
+	
+	@GetMapping("all-request-valuation-staff")
+	public ResponseEntity<?> getAllRequestByValuationStaff(HttpServletRequest request) {
+		User user = Utility.getIdOfAuthenticatedUser(request, userService);
+		List<DiamondRequest> list = requestService.findAllRequestNewByUser(user);
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+	}
+	
+	
+	
 }

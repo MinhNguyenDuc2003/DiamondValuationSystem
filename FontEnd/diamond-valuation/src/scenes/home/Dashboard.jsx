@@ -11,19 +11,33 @@ import {
   Card,
   CardContent,
   Alert,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
   getAllCertificates,
   getAllServices,
   getAllRequests,
+  getAllRequestPerDate,
 } from "../../components/utils/ApiFunctions";
-import BarChart from "../../components/common/BarChart";
+
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const Dashboard = () => {
   const [certificates, setCertificates] = useState([]);
   const [services, setServices] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [scheduleData, setScheduleData] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -37,6 +51,9 @@ const Dashboard = () => {
 
         const requestData = await getAllRequests();
         setRequests(requestData);
+
+        const schedule = await getAllRequestPerDate(getTodayDate());
+        setScheduleData(schedule);
       } catch (error) {
         setError(error.message);
       }
@@ -126,40 +143,45 @@ const Dashboard = () => {
       </Grid>
 
       <Box mt={4}>
-        <Typography variant="h5">Today's Appointments</Typography>
-        <List>
-          {todaysAppointments.length > 0 ? (
-            todaysAppointments.map((appointment) => (
-              <ListItem key={appointment.id}>
-                <ListItemText
-                  primary={`Request ID: ${appointment.id}`}
-                  secondary={`Appointment Date: ${new Date(
-                    appointment.appoinment_date
-                  ).toLocaleDateString()} ${
-                    appointment.appoinment_time
-                      ? `Time: ${appointment.appoinment_time}`
-                      : ""
-                  }`}
-                />
-              </ListItem>
-            ))
-          ) : (
-            <Typography>No appointments for today.</Typography>
-          )}
-        </List>
-      </Box>
-
-      <Box mt={4}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={10}>
             <Paper>
-              <Typography variant="h6" textAlign="center">
-                Increase of Requests per Month
-              </Typography>
-              <BarChart data={requestMonthlyIncrease} />
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {scheduleData.map((slotItem, index) => (
+                      <TableCell key={index} align="center">
+                        <Typography variant="h6">{slotItem.slot}</Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    {scheduleData.map((slotItem, index) => (
+                      <TableCell key={index}>
+                        {slotItem.list.length > 0 ? (
+                          <ul>
+                            {slotItem.list.map((request) => (
+                              <li key={request.id}>
+                                <Typography variant="subtitle1">
+                                  Request Id: {request.id} <br />
+                                  Status: {request.status}
+                                </Typography>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <Typography variant="body1">No requests</Typography>
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Paper>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={2}>
             <Paper>
               <Typography variant="h6" textAlign="center">
                 Total Income (Requests with Status Done)

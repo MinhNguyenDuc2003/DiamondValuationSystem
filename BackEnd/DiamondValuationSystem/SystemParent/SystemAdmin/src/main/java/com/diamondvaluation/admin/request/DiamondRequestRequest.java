@@ -37,7 +37,7 @@ public class DiamondRequestRequest {
 	private PaymentMethod payment_method;
 	
 	private String appointmentDate;
-	@NotNull @NotBlank     
+  
 	private String slotId;
 	
 }

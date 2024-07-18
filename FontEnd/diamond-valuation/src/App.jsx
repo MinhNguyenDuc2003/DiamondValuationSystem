@@ -35,6 +35,7 @@ import ValuationRoute from "./components/routes/ValuationRoute";
 import StaffRoute from "./components/routes/StaffRoute";
 import Overview from "./scenes/overview/Overview";
 import WorkAssignment from "./scenes/manager/WorkAssignment";
+import SlotTimeManagement from "./scenes/manager/ManageSlotTime";
 
 const App = () => {
   return (
@@ -272,6 +273,18 @@ const MainContent = () => {
               <PrivateRoute>
                 <ManagerRoute>
                   <WorkAssignment />
+                </ManagerRoute>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Slot Time */}
+          <Route
+            path="/slottime"
+            element={
+              <PrivateRoute>
+                <ManagerRoute>
+                  <SlotTimeManagement />
                 </ManagerRoute>
               </PrivateRoute>
             }

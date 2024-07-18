@@ -220,5 +220,14 @@ public class DiamondCertificateController {
                 .body(resource);
 
 	}
+	
+	@GetMapping("all/staff-valuation")
+	public ResponseEntity<?> getAllCertificateByStaff(HttpServletRequest request) {
+		User user = Utility.getIdOfAuthenticatedUser(request, userService);
+		List<DiamondCertificate> list = service.findAllCertificateByUser(user);
+		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+	}
+	
+	
 
 }

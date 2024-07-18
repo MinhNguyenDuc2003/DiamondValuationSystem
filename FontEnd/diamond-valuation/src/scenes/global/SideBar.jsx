@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -14,7 +14,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import TodayIcon from "@mui/icons-material/Today";
 import { useAuth } from "../../components/auth/AuthProvider";
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, icon, selected, setSelected, badgeContent }) => {
   return (
     <MenuItem
       active={selected === title}
@@ -31,7 +31,6 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
     </MenuItem>
   );
 };
-
 const SideBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
@@ -39,10 +38,13 @@ const SideBar = () => {
     full_name: "",
     roles_name: "",
   });
+  const [number, setNumber] = useState(0);
   // Authorized
   const auth = useAuth();
   const isAuthorized =
     auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
+
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
@@ -51,6 +53,36 @@ const SideBar = () => {
       full_name: userName,
       roles_name: roles,
     });
+    if (socketRef.current) {
+      // Close existing WebSocket if any
+      socketRef.current.close();
+    }
+
+    const socket = new WebSocket("ws://localhost:8081/DiamondShop/ws");
+    socketRef.current = socket;
+
+    socket.onopen = () => {
+      console.log("Connected to WebSocket server");
+    };
+
+    socket.onmessage = (event) => {
+      // When a new request notification is received, increment the count
+      setNumber((prevNumber) => prevNumber + 1);
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = (event) => {
+      console.log("WebSocket connection closed:", event);
+    };
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
   }, []);
 
   return (
@@ -164,7 +196,7 @@ const SideBar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Requests"
+              title={"Requests"}
               to="/requests"
               icon={<RequestPageIcon />}
               selected={selected}

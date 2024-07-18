@@ -30,6 +30,7 @@ const AddDiamondRequest = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
   const [slots, setSlots] = useState([]);
+  const [staffs, setStaffs] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -109,6 +110,7 @@ const AddDiamondRequest = () => {
 
     try {
       const availableSlots = await getSlotAvailable(date);
+
       setSlots(availableSlots);
     } catch (error) {
       setError(error.message);
@@ -309,6 +311,26 @@ const AddDiamondRequest = () => {
                     {touched.slotId && errors.slotId && (
                       <div style={{ color: "red" }}>{errors.slotId}</div>
                     )}
+                  </FormControl>
+                )}
+
+                {staffs.length > 0 && (
+                  <FormControl fullWidth sx={{ gridColumn: "span 4" }}>
+                    <InputLabel>Select Staff to assign</InputLabel>
+                    <Field
+                      as={Select}
+                      name="assignment_id"
+                      label="Select Staff to assign"
+                    >
+                      {staffs.map((staff) => (
+                        <MenuItem
+                          key={staff.assignmentid}
+                          value={staff.assignmentid}
+                        >
+                          {staff.name}
+                        </MenuItem>
+                      ))}
+                    </Field>
                   </FormControl>
                 )}
               </Box>

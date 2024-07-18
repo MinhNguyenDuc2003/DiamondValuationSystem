@@ -58,7 +58,6 @@ export async function getUsersPerPage(pageNum, keyword) {
 export async function getUserById(id) {
   try {
     const result = await api.get(`/api/users/user/${id}`);
-    F;
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching user with id ${id} : ${error.message}`);
@@ -122,6 +121,27 @@ export async function deleteUserById(id) {
     return result.data;
   } catch (error) {
     throw new Error(`Error delete user : ${error.message}`);
+  }
+}
+
+export async function searchUserByKeyword(keyword) {
+  try {
+    const result = await api.get(`/api/users/search/user?keyword=${keyword}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching users : ${error.message}`);
+  }
+}
+
+export async function getValuationStaffAvailable(date) {
+  try {
+    const result = await api.get(
+      `assignment/valuation-staff-available?date=${date}`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching requests : ${error.message}`);
   }
 }
 
@@ -335,6 +355,26 @@ export async function getSlotAvailable(date) {
     return result.data;
   } catch (error) {
     throw new Error(`Error fetching requests : ${error.message}`);
+  }
+}
+
+export async function setRequestToAssign(request) {
+  const data = {
+    request_id: request.id,
+    assignment_id: request.assignment_id,
+  };
+
+  try {
+    const response = await api.post("assignment/set-staff", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else return response.status;
+  } catch (error) {
+    console.log(error.data);
   }
 }
 
@@ -642,6 +682,28 @@ export async function deleteWorkAssignment(id) {
     } else return response.status;
   } catch (error) {
     console.log(error.data);
+  }
+}
+
+// ======================================== Slot Time ===================================== //
+export async function getAllSlotTime() {
+  try {
+    const result = await api.get(`slot-times/all`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
+export async function getAllRequestPerDate(data) {
+  try {
+    const result = await api.get(
+      `api/diamond-requests/request/date?date=${data}`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
   }
 }
 

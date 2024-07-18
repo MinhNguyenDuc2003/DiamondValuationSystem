@@ -22,12 +22,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Autocomplete,
+  FormControl,
 } from "@mui/material";
 import {
   getWorkAssignmentByDate,
   updateWorkAssignment,
   saveWorkAssignment,
   deleteWorkAssignment,
+  searchUserByKeyword,
 } from "../../components/utils/ApiFunctions"; // adjust the path to your API functions
 import { styled } from "@mui/material/styles";
 
@@ -54,6 +57,7 @@ const getTodayDate = () => {
 const WorkAssignment = () => {
   const [date, setDate] = useState(getTodayDate());
   const [assignments, setAssignments] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
@@ -184,6 +188,20 @@ const WorkAssignment = () => {
     };
   }
 
+  const fetchOptions = async (keyword) => {
+    try {
+      const users = await searchUserByKeyword(keyword); // Call your API function
+      setUsers(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const handleInputChange = (event, value) => {
+    fetchOptions(value);
+    debounceSearch();
+  };
+
   return (
     <Container>
       <Paper style={{ padding: "16px", marginTop: "16px" }}>
@@ -295,22 +313,37 @@ const WorkAssignment = () => {
         />
       </Box>
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>Add New Assignment</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please fill in the details for the new work assignment.
           </DialogContentText>
-          <TextField
-            margin="dense"
-            label="User ID"
-            type="text"
-            fullWidth
-            value={newAssignment.user_id}
-            onChange={(e) =>
-              setNewAssignment({ ...newAssignment, user_id: e.target.value })
-            }
-          />
+
+          <FormControl fullWidth>
+            <Autocomplete
+              options={users}
+              getOptionLabel={(option) =>
+                `${option.first_name} ${option.last_name} - ${option.email}`
+              }
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              onChange={(event, value) => {
+                setNewAssignment({
+                  ...newAssignment,
+                  user_id: value ? value.id : "",
+                });
+              }}
+              onInputChange={handleInputChange}
+              renderInput={(params) => (
+                <TextField {...params} label="User" variant="outlined" />
+              )}
+            />
+          </FormControl>
           <TextField
             margin="dense"
             label="Date"

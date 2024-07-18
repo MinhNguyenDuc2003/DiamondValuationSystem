@@ -82,7 +82,12 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
-const RequestActionsMenu = ({ request, navigate, services }) => {
+const RequestActionsMenu = ({
+  request,
+  navigate,
+  services,
+  handleOpenDialog,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -166,7 +171,7 @@ const Requests = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
   const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
-  const [numberMessage, setNumberMessage] = useState("0");
+  const [number, setNumber] = useState(0);
   const requestsPerPage = 6;
 
   const navigate = useNavigate();
@@ -216,11 +221,8 @@ const Requests = () => {
         };
 
         socket.onmessage = (event) => {
-          setNumber((prevNumber) => {
-            const newNumber = prevNumber + 1;
-            setNumberMessage(`You have ${newNumber} new requests!`);
-            return newNumber;
-          });
+          // When a new request notification is received, increment the count
+          setNumber((prevNumber) => prevNumber + 1);
         };
 
         socket.onerror = (error) => {
@@ -343,12 +345,6 @@ const Requests = () => {
     setLateRequestsDialogOpen(false);
   };
 
-  const handleMessageClick = () => {
-    setNumber(0);
-    setNumberMessage("0");
-    window.location.reload();
-  };
-
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -376,15 +372,6 @@ const Requests = () => {
           color="secondary"
           badgeContent={lateRequests.length}
           onClick={handleBadgeClick}
-          sx={{ cursor: "pointer" }}
-        >
-          <AssignmentLateIcon sx={{ fontSize: "25px" }} />
-        </Badge>
-
-        <Badge
-          color="secondary"
-          badgeContent={numberMessage}
-          onClick={handleMessageClick}
           sx={{ cursor: "pointer" }}
         >
           <AssignmentLateIcon sx={{ fontSize: "25px" }} />
@@ -423,6 +410,26 @@ const Requests = () => {
           <Alert severity="success">{message}</Alert>
         </Collapse>
       )}
+
+      {number > 0 && (
+        <Collapse in={Boolean(number)} sx={{ mt: 2, mb: 2 }}>
+          <Alert
+            severity="warning"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => window.location.reload()}
+              >
+                REFRESH
+              </Button>
+            }
+          >
+            {number} have been created
+          </Alert>
+        </Collapse>
+      )}
+
       {error && (
         <Collapse in={Boolean(error)} sx={{ mt: 2, mb: 2 }}>
           <Alert severity="error">{error}</Alert>
@@ -516,6 +523,7 @@ const Requests = () => {
                           request={request}
                           navigate={navigate}
                           services={services}
+                          handleOpenDialog={handleOpenDialog}
                         />
                       )}
                     </TableCell>

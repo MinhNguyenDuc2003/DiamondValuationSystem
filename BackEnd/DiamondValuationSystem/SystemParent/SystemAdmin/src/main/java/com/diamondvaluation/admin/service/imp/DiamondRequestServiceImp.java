@@ -170,4 +170,9 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		return repo.findById(requestId);
 	}
 
+	@Override
+	public List<DiamondRequest> findAllRequestNewByUser(User user) {
+		return repo.findAllRequestNewByUserId(user.getId());
+	}
+
 }

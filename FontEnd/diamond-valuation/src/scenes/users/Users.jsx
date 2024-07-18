@@ -256,9 +256,11 @@ export const Users = () => {
                   <IconButton onClick={() => handleOpenUserDetailDialog(user)}>
                     <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
                   </IconButton>
-                  <IconButton onClick={() => navigate(`/users/${user.id}`)}>
-                    <EditIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+                  {isAuthorized && (
+                    <IconButton onClick={() => navigate(`/users/${user.id}`)}>
+                      <EditIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  )}
                   {isAuthorized && (
                     <IconButton
                       data-testid={`delete-button-${user.id}`}
