@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -45,8 +45,6 @@ const SideBar = () => {
   const isAuthorized =
     auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
 
-  const socketRef = useRef(null);
-
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     const roles = localStorage.getItem("userRoles");
@@ -54,36 +52,6 @@ const SideBar = () => {
       full_name: userName,
       roles_name: roles,
     });
-    if (socketRef.current) {
-      // Close existing WebSocket if any
-      socketRef.current.close();
-    }
-
-    const socket = new WebSocket("ws://localhost:8081/DiamondShop/ws");
-    socketRef.current = socket;
-
-    socket.onopen = () => {
-      console.log("Connected to WebSocket server");
-    };
-
-    socket.onmessage = (event) => {
-      // When a new request notification is received, increment the count
-      setNumber((prevNumber) => prevNumber + 1);
-    };
-
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
-    };
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
   }, []);
 
   return (
