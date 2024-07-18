@@ -85,6 +85,68 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
+const RequestActionsMenu = ({ request, navigate }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton onClick={handleMenuOpen}>
+        <MoreVertIcon sx={{ color: "#C5A773" }} />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            navigate(`/requests/${request.id}`);
+            handleMenuClose();
+          }}
+        >
+          <EditIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleOpenDialog(request);
+            handleMenuClose();
+          }}
+        >
+          <DeleteIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Delete
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/report/${request.id}`);
+            handleMenuClose();
+          }}
+        >
+          <Flag sx={{ color: "#C5A773", mr: 1 }} />
+          Report
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            PrintPDF(request, services);
+            handleMenuClose();
+          }}
+        >
+          <ReceiptIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Receipt
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
 const Requests = () => {
   const [data, setData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -457,65 +519,17 @@ const Requests = () => {
                     </TableCell>
                     <TableCell align="center">
                       {isAuthorized && (
-                        <>
-                          <IconButton onClick={handleMenuOpen}>
-                            <MoreVertIcon sx={{ color: "#C5A773" }} />
-                          </IconButton>
-                          <Menu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleMenuClose}
-                          >
-                            <MenuItem
-                              onClick={() => {
-                                navigate(`/requests/${request.id}`);
-                                handleMenuClose();
-                              }}
-                            >
-                              <EditIcon sx={{ color: "#C5A773", mr: 1 }} />
-                              Edit
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                handleOpenDialog(request);
-                                handleMenuClose();
-                              }}
-                            >
-                              <DeleteIcon sx={{ color: "#C5A773", mr: 1 }} />
-                              Delete
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                navigate(`/report/${request.id}`);
-                                handleMenuClose();
-                              }}
-                            >
-                              <Flag sx={{ color: "#C5A773", mr: 1 }} />
-                              Report
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                PrintPDF(request, services);
-                                handleMenuClose();
-                              }}
-                            >
-                              <ReceiptIcon sx={{ color: "#C5A773", mr: 1 }} />
-                              Receipt
-                            </MenuItem>
-                          </Menu>
-                        </>
-                      )}
-                      {!isAuthorized && (
-                        <IconButton onClick={() => PrintPDF(request, services)}>
-                          <ReceiptIcon sx={{ color: "#C5A773" }} />
-                        </IconButton>
+                        <RequestActionsMenu
+                          request={request}
+                          navigate={navigate}
+                        />
                       )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell
                       style={{ paddingBottom: 0, paddingTop: 0 }}
-                      colSpan={13}
+                      colSpan={14}
                     >
                       <Collapse
                         in={expandedRow === request.id}
@@ -564,7 +578,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={isAuthorized ? 13 : 12} align="center">
+                <TableCell colSpan={isAuthorized ? 14 : 13} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>
