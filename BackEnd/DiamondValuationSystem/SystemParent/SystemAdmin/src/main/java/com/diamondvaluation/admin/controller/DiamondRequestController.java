@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -177,8 +178,7 @@ public class DiamondRequestController {
 		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-	}
-	
+	}	
 	@GetMapping("request/date")
 	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
 		try {
@@ -206,13 +206,59 @@ public class DiamondRequestController {
 		}
 	}
 	
+	//New method
+//	@GetMapping("requests/count/year")
+//	public ResponseEntity<?> getCountsByMonthWeekDayForYear(@RequestParam("year") int year) {
+//	    Map<String, Map<String, Object>> counts = requestService.countRequestsByMonthWeekDayForYear(year);
+//	    return new ResponseEntity<>(counts, HttpStatus.OK);
+//	}
+//
+//	@GetMapping("requests/revenue/years")
+//	public ResponseEntity<?> getRevenueByMonthWeekDayForYear(@RequestParam("year") int year) {
+//	    Map<String, Map<String, Object>> counts = requestService.countRevenuesByMonthWeekDayForYear(year);
+//	    return new ResponseEntity<>(counts, HttpStatus.OK);
+//	}
+	
+	
+	
+	@GetMapping("/requests/revenue/day")
+	public ResponseEntity<?> getRequestStatsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	    try {
+	    	List<Object> list = (List<Object>) requestService.countRequestsAndRevenueByDay(date);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/requests/revenues/year")
+    public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
+        try {
+            List<Object> list = requestService.countRevenuesByMonthWeekForYear(year);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
+	@GetMapping("/requests/revenue/daterange")
+    public ResponseEntity<?> getRequestStatsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        try {
+            List<Object> stats = requestService.countRequestsAndRevenueByDateRange(startDate, endDate);
+            return new ResponseEntity<>(stats, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 	@GetMapping("all-request-valuation-staff")
 	public ResponseEntity<?> getAllRequestByValuationStaff(HttpServletRequest request) {
 		User user = Utility.getIdOfAuthenticatedUser(request, userService);
 		List<DiamondRequest> list = requestService.findAllRequestNewByUser(user);
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
 	}
-	
 	
 	
 }

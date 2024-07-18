@@ -82,12 +82,7 @@ const statusIcons = {
   BLOCKED: <BlockIcon />,
 };
 
-const RequestActionsMenu = ({
-  request,
-  navigate,
-  services,
-  handleOpenDialog,
-}) => {
+const RequestActionsMenu = ({ request, navigate }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -133,16 +128,7 @@ const RequestActionsMenu = ({
           }}
         >
           <Flag sx={{ color: "#C5A773", mr: 1 }} />
-          Block Diamond Report
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            navigate(`/report/${request.id}`);
-            handleMenuClose();
-          }}
-        >
-          <Flag sx={{ color: "#C5A773", mr: 1 }} />
-          Return Diamond Report
+          Report
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -522,8 +508,6 @@ const Requests = () => {
                         <RequestActionsMenu
                           request={request}
                           navigate={navigate}
-                          services={services}
-                          handleOpenDialog={handleOpenDialog}
                         />
                       )}
                     </TableCell>
@@ -531,7 +515,7 @@ const Requests = () => {
                   <TableRow>
                     <TableCell
                       style={{ paddingBottom: 0, paddingTop: 0 }}
-                      colSpan={14}
+                      colSpan={13}
                     >
                       <Collapse
                         in={expandedRow === request.id}
@@ -580,7 +564,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={isAuthorized ? 14 : 13} align="center">
+                <TableCell colSpan={isAuthorized ? 13 : 12} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>

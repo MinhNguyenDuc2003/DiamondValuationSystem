@@ -1,11 +1,18 @@
 package com.diamondvaluation.admin.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -104,6 +111,15 @@ public class CustomerController {
 		customers.forEach(customer -> customerResponses.add(entity2Response(customer)));
 		return customerResponses;
 	}
+
+	//new
+		@GetMapping("customers/count/year")
+	    public ResponseEntity<Map<String, Integer>> getCountsByMonthForYear(@RequestParam("year") int year) {
+	        Map<String, Integer> counts = customerService.countCustomersByMonthForYear(year);
+	        return new ResponseEntity<>(counts, HttpStatus.OK);
+	    }
+
+
 	
 	@GetMapping("search/customer")
 	public ResponseEntity<?> findByKeyword(@RequestParam("keyword") String keyword){
@@ -111,4 +127,26 @@ public class CustomerController {
 		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
 		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
 	}
+	
+	//new
+	
+	@GetMapping("/customer/revenue/day")
+	public ResponseEntity<?> getRequestStatsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	    try {
+	    	List<Object> list = (List<Object>) customerService.countCustomerAndRevenueByDay(date);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/customer/revenues/year")
+    public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
+        try {
+            List<Object> list = customerService.countCustomerByMonthWeekForYear(year);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
