@@ -44,6 +44,7 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 			if(existAssignment.isPresent()) {
 				throw new AssignmentAlreadyExist("User with this assignment already exist");
 			}
+			
 		}
 		User user = userService.getUserById(assignment.getUser().getId());
 		assignment.setUser(user);
@@ -103,6 +104,10 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 		Optional<DiamondRequest> diamondRequest = requestService.findById(request.getRequestId());
 		if(!diamondRequest.isPresent()) {
 			throw new RequestNotFoundException("Cannot find any request with id");
+		}
+		Optional<WorkAssignment> existAssignmentInDB = repo.findBy(request.getAssignmentId());
+		if(existAssignment.isPresent()) {
+			throw new AssignmentAlreadyExist("User with this assignment already exist");
 		}
 		WorkAssignment a = existAssignment.get();
 		a.getRequests().add(diamondRequest.get());
