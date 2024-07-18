@@ -31,47 +31,42 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebMvcTest(CaratController.class)
 public class CaratControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private CaratService caratService;
+	@MockBean
+	private CaratService caratService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    private Carat carat;
+	private Carat carat;
 
-    @BeforeEach
-    void setUp() {
-        carat = new Carat();
-        carat.setBeginCarat(0.5f);
-        carat.setEndCarat(1.0f);
-    }
+	@BeforeEach
+	void setUp() {
+		carat = new Carat();
+		carat.setBeginCarat(0.5f);
+		carat.setEndCarat(1.0f);
+	}
 
-    @Test
-    public void addCarat_success() throws Exception {
-        doNothing().when(caratService).addCarat(any(Carat.class));
+	@Test
+	public void addCarat_success() throws Exception {
+		doNothing().when(caratService).addCarat(any(Carat.class));
 
-        mockMvc.perform(post("/api/carat/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(carat)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Carat added successfully"));
+		mockMvc.perform(post("/api/carat/add").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(carat))).andExpect(status().isOk())
+				.andExpect(content().string("Carat added successfully"));
 
-        verify(caratService).addCarat(any(Carat.class));
-    }
+		verify(caratService).addCarat(any(Carat.class));
+	}
 
-    @Test
-    public void addCarat_failure() throws Exception {
-        doThrow(new RuntimeException("Error adding carat")).when(caratService).addCarat(any(Carat.class));
+	@Test
+	public void addCarat_failure() throws Exception {
+		doThrow(new RuntimeException("Error adding carat")).when(caratService).addCarat(any(Carat.class));
 
-        mockMvc.perform(post("/api/carat/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(carat)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string("Error adding carat: Error adding carat"));
+		mockMvc.perform(post("/api/carat/add").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(carat))).andExpect(status().isInternalServerError())
+				.andExpect(content().string("Error adding carat: Error adding carat"));
 
-       
-    }
+	}
 }
