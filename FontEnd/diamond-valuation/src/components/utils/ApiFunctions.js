@@ -358,10 +358,10 @@ export async function getSlotAvailable(date) {
   }
 }
 
-export async function setRequestToAssign(request) {
+export async function setRequestToAssign(request, assignment_id) {
   const data = {
     request_id: request.id,
-    assignment_id: request.assignment_id,
+    assignment_id: assignment_id,
   };
 
   try {

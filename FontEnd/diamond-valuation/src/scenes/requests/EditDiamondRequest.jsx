@@ -27,6 +27,23 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
+// const getTodayDate = () => {
+//   const today = new Date();
+//   const year = today.getFullYear();
+//   const month = String(today.getMonth() + 1).padStart(2, "0");
+//   const day = String(today.getDate()).padStart(2, "0");
+//   return `${year}-${month}-${day}`;
+// };
+
+const formatAssignmentDate = (dateArray) => {
+  if (!dateArray || dateArray.length !== 3) return "";
+  const [year, month, day] = dateArray;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}`;
+};
+
 const EditDiamondRequest = () => {
   const { requestid } = useParams();
   const [customers, setCustomers] = useState([]);
@@ -35,6 +52,7 @@ const EditDiamondRequest = () => {
   const [slots, setSlots] = useState([]);
   const [staffs, setStaffs] = useState([]);
   const [error, setError] = useState(null);
+  const [date, setDate] = useState("");
   const navigate = useNavigate();
 
   const [initialValues, setInitialValues] = useState({
@@ -47,7 +65,8 @@ const EditDiamondRequest = () => {
     paid: false,
     appointment_date: null,
     slotId: "",
-    assignment_id: "",
+    assignment: [],
+    assignment_id: [],
   });
 
   useEffect(() => {
@@ -61,6 +80,10 @@ const EditDiamondRequest = () => {
 
         const requestEdit = await getRequestById(requestid);
         if (requestEdit) {
+          const formattedAssignmentDate =
+            requestEdit.assignment.length > 0
+              ? formatAssignmentDate(requestEdit.assignment[0].date)
+              : "";
           setInitialValues({
             id: requestEdit.id,
             customer_id: requestEdit.customer_id,
@@ -71,18 +94,29 @@ const EditDiamondRequest = () => {
             paid: requestEdit.paid,
             appointment_date: requestEdit.appoinment_date || "",
             slotId: requestEdit.slot_id || "",
-            assignment_id: "",
+            assignment: requestEdit.assignment,
+            assignment_id: requestEdit.assignment.map(
+              (assignment) => assignment.id
+            ),
           });
+
+          if (requestEdit.assignment.length > 0) {
+            setDate(formatAssignmentDate(requestEdit.assignment[0].date));
+          }
 
           // Fetch slots for the existing appointment date
           if (requestEdit.appoinment_date) {
             const availableSlots = await getSlotAvailable(
               requestEdit.appoinment_date
             );
-            const availableValuationStaffs = await getValuationStaffAvailable(
-              requestEdit.appoinment_date
-            );
             setSlots(availableSlots);
+          }
+
+          if (formattedAssignmentDate) {
+            setDate(formattedAssignmentDate);
+            const availableValuationStaffs = await getValuationStaffAvailable(
+              formattedAssignmentDate
+            );
             setStaffs(availableValuationStaffs);
           }
         }
@@ -92,6 +126,7 @@ const EditDiamondRequest = () => {
     };
 
     fetchData();
+    console.log(staffs);
   }, []);
 
   const validationSchema = Yup.object().shape({
@@ -109,8 +144,21 @@ const EditDiamondRequest = () => {
     try {
       console.log(values);
       const result = await saveRequest(values);
-      if (values.assignment_id) {
-        await setRequestToAssign(values);
+      // Extract existing assignment IDs from the original assignment data
+      const existingAssignmentIds = initialValues.assignment.map(
+        (assignment) => assignment.id
+      );
+
+      // Find new assignments that are not in the original assignment
+      const newAssignments = values.assignment_id.filter(
+        (id) => !existingAssignmentIds.includes(id)
+      );
+
+      // Call setRequestToAssign only for new assignments
+      if (newAssignments.length > 0) {
+        newAssignments.forEach(async (assignmentId) => {
+          await setRequestToAssign(values, assignmentId);
+        });
       }
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Request updated successfully");
@@ -132,8 +180,18 @@ const EditDiamondRequest = () => {
 
     try {
       const availableSlots = await getSlotAvailable(date);
-      const availableValuationStaffs = await getValuationStaffAvailable(date);
+
       setSlots(availableSlots);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleDateAssignChange = async (event) => {
+    const date = event.target.value;
+    setDate(date);
+    try {
+      const availableValuationStaffs = await getValuationStaffAvailable(date);
       setStaffs(availableValuationStaffs);
     } catch (error) {
       setError(error.message);
@@ -342,26 +400,46 @@ const EditDiamondRequest = () => {
                   </FormControl>
                 )}
 
-                {staffs.length > 0 && (
-                  <FormControl fullWidth sx={{ gridColumn: "span 4" }}>
-                    <InputLabel>Select Staff to assign</InputLabel>
-                    <Field
-                      as={Select}
-                      name="assignment_id"
-                      label="Select Staff to assign"
-                    >
-                      {staffs.map((staff) => (
-                        <MenuItem
-                          key={staff.assignmentid}
-                          value={staff.assignmentid}
-                        >
-                          {staff.name} (Processing{" "}
-                          {staff.number_request_processing} requests)
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </FormControl>
-                )}
+                <TextField
+                  type="date"
+                  margin="dense"
+                  label="Date"
+                  name="date"
+                  value={date}
+                  onChange={(event) => handleDateAssignChange(event)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ gridColumn: "span 1" }}
+                />
+
+                <FormControl fullWidth sx={{ gridColumn: "span 3" }}>
+                  <InputLabel>Select Staff to assign</InputLabel>
+                  <Field
+                    as={Select}
+                    name="assignment_id"
+                    multiple
+                    label="Select Staff to assign"
+                    value={values.assignment_id}
+                    onChange={(event) => {
+                      const {
+                        target: { value },
+                      } = event;
+                      setFieldValue(
+                        "assignment_id",
+                        typeof value === "string" ? value.split(",") : value
+                      );
+                    }}
+                  >
+                    {staffs.map((staff) => (
+                      <MenuItem
+                        key={staff.assignmentid}
+                        value={staff.assignmentid}
+                      >
+                        {staff.name} (Processing{" "}
+                        {staff.number_request_processing} requests)
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
               </Box>
               <Box display="flex" justifyContent="center" mt="20px" gap="10px">
                 <Button type="submit" variant="contained">
