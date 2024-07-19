@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,12 +64,12 @@ public class CustomerController {
 		customer.setPhoneNumber(request.getPhone_number());
 		return customer;
 	}
-	
+
 	private CustomerResponse entity2Response(Customer customer) {
 		CustomerResponse customerResponse = modelMapper.map(customer, CustomerResponse.class);
 		return customerResponse;
 	}
-	
+
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
 		try {
@@ -83,70 +81,80 @@ public class CustomerController {
 		} catch (UsernameNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
+
 	}
-	
+
 	@GetMapping("customer/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
 		try {
-			return new ResponseEntity<CustomerResponse>(entity2Response(customerService.getCustomerById(id)), HttpStatus.OK);
+			return new ResponseEntity<CustomerResponse>(entity2Response(customerService.getCustomerById(id)),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
+
 	}
-	
+
 	@GetMapping("page/{pageNum}")
-	public ResponseEntity<CustomerPageResponse> findUserByPage(@PathVariable("pageNum")  int pageNum,
-		@RequestParam(value = "keyword", required=false) String keyword){
+	public ResponseEntity<CustomerPageResponse> findUserByPage(@PathVariable("pageNum") int pageNum,
+			@RequestParam(value = "keyword", required = false) String keyword) {
 		Page<Customer> listCustomers = customerService.listCustomersByPage(pageNum, keyword);
 		int totalPage = listCustomers.getTotalPages();
 		List<CustomerResponse> list = listEntity2ListResposne(listCustomers.get().toList());
 		CustomerPageResponse response = new CustomerPageResponse(list, totalPage);
 		return new ResponseEntity<CustomerPageResponse>(response, HttpStatus.OK);
 	}
-	
-	private List<CustomerResponse> listEntity2ListResposne(List<Customer> customers){
+
+	private List<CustomerResponse> listEntity2ListResposne(List<Customer> customers) {
 		List<CustomerResponse> customerResponses = new ArrayList<>();
 		customers.forEach(customer -> customerResponses.add(entity2Response(customer)));
 		return customerResponses;
 	}
 
-	//new
-		@GetMapping("customers/count/year")
-	    public ResponseEntity<Map<String, Integer>> getCountsByMonthForYear(@RequestParam("year") int year) {
-	        Map<String, Integer> counts = customerService.countCustomersByMonthForYear(year);
-	        return new ResponseEntity<>(counts, HttpStatus.OK);
-	    }
+	// new
+//	@GetMapping("count/year")
+//	public ResponseEntity<Map<String, Integer>> getCountsByMonthForYear(@RequestParam("year") int year) {
+//		Map<String, Integer> counts = customerService.countCustomersByMonthForYear(year);
+//		return new ResponseEntity<>(counts, HttpStatus.OK);
+//	}
 
-
-	
-	@GetMapping("search/customer")
-	public ResponseEntity<?> findByKeyword(@RequestParam("keyword") String keyword){
-		List<Customer> listCustomers = customerService.listCustomerByKeyword(keyword);
-		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
-		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
-	}
-	
-	//new
-	
-	@GetMapping("/customer/revenue/day")
-	public ResponseEntity<?> getRequestStatsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-	    try {
-	    	List<Object> list = (List<Object>) customerService.countCustomerAndRevenueByDay(date);
-			return new ResponseEntity<>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
-	
-	@GetMapping("/customer/revenues/year")
-    public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
+	@GetMapping("count/year")
+    public ResponseEntity<?> getCountsByMonthForYear(@RequestParam("year") int year) {
         try {
-            List<Object> list = customerService.countCustomerByMonthWeekForYear(year);
+            List<Object> list = customerService.countCustomersByMonthForYear(year);
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+	@GetMapping("search/customer")
+	public ResponseEntity<?> findByKeyword(@RequestParam("keyword") String keyword) {
+		List<Customer> listCustomers = customerService.listCustomerByKeyword(keyword);
+		List<CustomerResponse> list = listEntity2ListResposne(listCustomers);
+		return new ResponseEntity<List<CustomerResponse>>(list, HttpStatus.OK);
+	}
+
+	// new
+
+	@GetMapping("/customer/day")
+	public ResponseEntity<?> getRequestStatsByDate(
+			@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		try {
+			List<Object> list = (List<Object>) customerService.countCustomerAndRevenueByDay(date);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	@GetMapping("/customer/week-month-year")
+	public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
+		try {
+			List<Object> list = customerService.countCustomerByMonthWeekForYear(year);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 }

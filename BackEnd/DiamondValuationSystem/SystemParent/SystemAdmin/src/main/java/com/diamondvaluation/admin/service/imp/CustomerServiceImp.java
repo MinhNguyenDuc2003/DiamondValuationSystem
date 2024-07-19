@@ -103,23 +103,37 @@ public class CustomerServiceImp implements CustomerService {
 
 
 	// new
+	public List<Object> countCustomersByMonthForYear(int year) {
+	    List<Object> monthlyStats = new ArrayList<>();
+	    int yearlyTotalCount = 0;
 
-	@Override
-	public Map<String, Integer> countCustomersByMonthForYear(int year) {
-		Map<String, Integer> monthlyCounts = new LinkedHashMap<>();
-		int totalRequests = 0;
+	    for (Month month : Month.values()) {
+	        List<Object> monthStats = new ArrayList<>();
+	        monthStats.add("Month " + month.getValue());
 
-		for (Month month : Month.values()) {
-			LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
-			LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth())
-					.with(LocalTime.MAX);
-			int count = customerRepo.countByCreatedTimeBetween(startOfMonth, endOfMonth);
-			monthlyCounts.put(month.name(), count);
-			totalRequests += count;
-		}
+	        LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+	        LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
 
-		monthlyCounts.put("Total", totalRequests);
-		return monthlyCounts;
+	        int monthlyTotalCount = customerRepo.countByCreatedTimeBetween(startOfMonth, endOfMonth);
+	       
+	        List<Object> totalStats = new ArrayList<>();
+	        totalStats.add("Number of Customer: " + monthlyTotalCount);
+	      
+	        monthStats.add(totalStats);
+	        monthlyStats.add(monthStats);
+
+	        yearlyTotalCount += monthlyTotalCount;
+	        
+	    }
+
+	    // Add total stats for the year
+	    List<Object> yearlyTotalStats = new ArrayList<>();
+	    yearlyTotalStats.add("Year Total");
+	    yearlyTotalStats.add("Number of Customer: " + yearlyTotalCount);
+	    
+	    monthlyStats.add(yearlyTotalStats);
+
+	    return monthlyStats;
 	}
 
 

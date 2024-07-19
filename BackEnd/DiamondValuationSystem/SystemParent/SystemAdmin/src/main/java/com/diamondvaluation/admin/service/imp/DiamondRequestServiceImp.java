@@ -256,69 +256,108 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 	}
 	
 	
+//	public List<Object> countRevenuesByMonthWeekForYear(int year) {
+//        List<Object> monthlyStats = new ArrayList<>();
+//        int yearlyTotalCount = 0;
+//        double yearlyTotalRevenue = 0.0;
+//
+//        for (Month month : Month.values()) {
+//            List<Object> monthStats = new ArrayList<>();
+//            monthStats.add("Month " + month.getValue());
+//
+//            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+//            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+//
+//            List<Object> weekStatsList = new ArrayList<>();
+//
+//            int monthlyTotalCount = 0;
+//            double monthlyTotalRevenue = 0.0;
+//
+//            int weekNumber = 1;
+//            LocalDateTime startOfWeek = startOfMonth;
+//            while (startOfWeek.isBefore(endOfMonth)) {
+//                LocalDateTime endOfWeek = startOfWeek.plusDays(6).with(LocalTime.MAX);
+//                if (endOfWeek.isAfter(endOfMonth)) {
+//                    endOfWeek = endOfMonth;
+//                }
+//                int weeklyCount = repo.countByCreatedDateBetween(startOfWeek, endOfWeek);
+//                Optional<Double> weeklyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfWeek, endOfWeek, Boolean.TRUE);
+//                double weeklyRevenue = weeklyRevenueOptional.orElse(0.0);
+//
+//                List<Object> weekStats = new ArrayList<>();
+//                weekStats.add("Week " + weekNumber);
+//                weekStats.add("Number of Request: " + weeklyCount);
+//                weekStats.add("Revenues in Week: " + weeklyRevenue);
+//                weekStatsList.add(weekStats);
+//
+//                monthlyTotalCount += weeklyCount;
+//                monthlyTotalRevenue += weeklyRevenue;
+//                weekNumber++;
+//                startOfWeek = endOfWeek.plusDays(1).with(LocalTime.MIN);
+//            }
+//
+//             Add total stats for the month
+//            List<Object> totalStats = new ArrayList<>();
+//            totalStats.add("Total");
+//            totalStats.add("Number of Request: " + monthlyTotalCount);
+//            totalStats.add("Revenues in Month: " + monthlyTotalRevenue);
+//            weekStatsList.add(totalStats);
+//
+//            monthStats.add(weekStatsList);
+//            monthlyStats.add(monthStats);
+//
+//            yearlyTotalCount += monthlyTotalCount;
+//            yearlyTotalRevenue += monthlyTotalRevenue;
+//        }
+//
+//        // Add total stats for the year
+//        List<Object> yearlyTotalStats = new ArrayList<>();
+//        yearlyTotalStats.add("Year Total");
+//        yearlyTotalStats.add("Number of Request: " + yearlyTotalCount);
+//        yearlyTotalStats.add("Revenues in Year: " +yearlyTotalRevenue);
+//        monthlyStats.add(yearlyTotalStats);
+//
+//        return monthlyStats;
+//    }
+	
 	public List<Object> countRevenuesByMonthWeekForYear(int year) {
-        List<Object> monthlyStats = new ArrayList<>();
-        int yearlyTotalCount = 0;
-        double yearlyTotalRevenue = 0.0;
+	    List<Object> monthlyStats = new ArrayList<>();
+	    int yearlyTotalCount = 0;
+	    double yearlyTotalRevenue = 0.0;
 
-        for (Month month : Month.values()) {
-            List<Object> monthStats = new ArrayList<>();
-            monthStats.add("Month " + month.getValue());
+	    for (Month month : Month.values()) {
+	        List<Object> monthStats = new ArrayList<>();
+	        monthStats.add("Month " + month.getValue());
 
-            LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
-            LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+	        LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+	        LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
 
-            List<Object> weekStatsList = new ArrayList<>();
+	        int monthlyTotalCount = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
+	        Optional<Double> monthlyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfMonth, endOfMonth, true);
+	        double monthlyTotalRevenue = monthlyRevenueOptional.orElse(0.0);
 
-            int monthlyTotalCount = 0;
-            double monthlyTotalRevenue = 0.0;
+	        List<Object> totalStats = new ArrayList<>();
+	        totalStats.add("Number of Request: " + monthlyTotalCount);
+	        totalStats.add("Revenues in Month is paid: " + monthlyTotalRevenue);
 
-            int weekNumber = 1;
-            LocalDateTime startOfWeek = startOfMonth;
-            while (startOfWeek.isBefore(endOfMonth)) {
-                LocalDateTime endOfWeek = startOfWeek.plusDays(6).with(LocalTime.MAX);
-                if (endOfWeek.isAfter(endOfMonth)) {
-                    endOfWeek = endOfMonth;
-                }
-                int weeklyCount = repo.countByCreatedDateBetween(startOfWeek, endOfWeek);
-                Optional<Double> weeklyRevenueOptional = repo.sumPaymentTotalByCreatedDateBetweenAndPaid(startOfWeek, endOfWeek, Boolean.TRUE);
-                double weeklyRevenue = weeklyRevenueOptional.orElse(0.0);
+	        monthStats.add(totalStats);
+	        monthlyStats.add(monthStats);
 
-                List<Object> weekStats = new ArrayList<>();
-                weekStats.add("Week " + weekNumber);
-                weekStats.add("Number of Request: " + weeklyCount);
-                weekStats.add("Revenues in Week: " + weeklyRevenue);
-                weekStatsList.add(weekStats);
+	        yearlyTotalCount += monthlyTotalCount;
+	        yearlyTotalRevenue += monthlyTotalRevenue;
+	    }
 
-                monthlyTotalCount += weeklyCount;
-                monthlyTotalRevenue += weeklyRevenue;
-                weekNumber++;
-                startOfWeek = endOfWeek.plusDays(1).with(LocalTime.MIN);
-            }
+	    // Add total stats for the year
+	    List<Object> yearlyTotalStats = new ArrayList<>();
+	    yearlyTotalStats.add("Year Total");
+	    yearlyTotalStats.add("Number of Request: " + yearlyTotalCount);
+	    yearlyTotalStats.add("Revenues in Year: " + yearlyTotalRevenue);
+	    monthlyStats.add(yearlyTotalStats);
 
-            // Add total stats for the month
-            List<Object> totalStats = new ArrayList<>();
-            totalStats.add("Total");
-            totalStats.add("Number of Request: " + monthlyTotalCount);
-            totalStats.add("Revenues in Month: " + monthlyTotalRevenue);
-            weekStatsList.add(totalStats);
+	    return monthlyStats;
+	}
 
-            monthStats.add(weekStatsList);
-            monthlyStats.add(monthStats);
 
-            yearlyTotalCount += monthlyTotalCount;
-            yearlyTotalRevenue += monthlyTotalRevenue;
-        }
-
-        // Add total stats for the year
-        List<Object> yearlyTotalStats = new ArrayList<>();
-        yearlyTotalStats.add("Year Total");
-        yearlyTotalStats.add("Number of Request: " + yearlyTotalCount);
-        yearlyTotalStats.add("Revenues in Year: " +yearlyTotalRevenue);
-        monthlyStats.add(yearlyTotalStats);
-
-        return monthlyStats;
-    }
 	
 	public List<Object> countRequestsAndRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
         // Create a list to store results

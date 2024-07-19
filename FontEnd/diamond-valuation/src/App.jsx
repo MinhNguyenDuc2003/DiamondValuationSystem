@@ -51,15 +51,9 @@ const MainContent = () => {
 
   return (
     <div className="app">
-<<<<<<< HEAD
-      {!isLoginPage && <PrivateRoute><SideBar /></PrivateRoute> }
-      <main className={"content"}>
-        {!isLoginPage && <PrivateRoute><Topbar /></PrivateRoute>}
-=======
       <PrivateRoute>{!isLoginPage && <SideBar />}</PrivateRoute>
       <main className={"content"}>
         <PrivateRoute>{!isLoginPage && <Topbar />}</PrivateRoute>
->>>>>>> fed9d1e4254cbbae98a61cd5ad98012a32bde99a
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route

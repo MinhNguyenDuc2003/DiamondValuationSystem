@@ -18,4 +18,6 @@ public interface DiamondCertificateService {
 
 	List<DiamondCertificate> findAllCertificateByUser(User user);
 
+	List<Object> countCertificatesByMonthForYear(int year);
+
 }
