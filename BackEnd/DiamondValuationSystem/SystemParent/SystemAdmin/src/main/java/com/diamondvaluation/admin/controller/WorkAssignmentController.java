@@ -111,4 +111,14 @@ public class WorkAssignmentController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@DeleteMapping("/remove-request")
+	public ResponseEntity<?> removeRequestFrom(@RequestBody @Valid ValuationStaffAssignmentRequest request){
+		try {
+			service.deleteRequestAndStaff(request);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 }

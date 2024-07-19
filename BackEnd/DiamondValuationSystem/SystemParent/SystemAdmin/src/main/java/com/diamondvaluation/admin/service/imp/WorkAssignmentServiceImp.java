@@ -161,4 +161,13 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 	public List<WorkAssignment> findByRequestId(Integer id) {
 		return repo.findByRequestId(id);
 	}
+
+	@Override
+	public void deleteRequestAndStaff(@Valid ValuationStaffAssignmentRequest request) {
+		Optional<WorkAssignment> assignment = repo.findByRequestIdAndAssignmentId(request.getRequestId(), request.getAssignmentId());
+		if(!assignment.isPresent()) {
+			throw new AssignmentNotFoundException("Assignment with this request not found!");
+		}
+		repo.deleteAssignmentwithRequest(request.getRequestId(), request.getAssignmentId());
+	}
 }
