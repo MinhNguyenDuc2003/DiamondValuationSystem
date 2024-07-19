@@ -38,4 +38,14 @@ public interface WorkAssignmentRepository extends CrudRepository<WorkAssignment,
 			+ "JOIN diamond_request dr ON ar.request_id = dr.id "
 			+ "WHERE ar.request_id=?1 AND a.id = ?2", nativeQuery = true)
 	Optional<WorkAssignment> findByRequestIdAndUserId(Integer requestId, Integer assignmentId);
+	
+	@Query(value = "SELECT a.* FROM assignments a JOIN assignment_request ar ON a.id = ar.assignment_id "
+			+ "JOIN diamond_request dr ON ar.request_id = dr.id "
+			+ "WHERE ar.request_id=?1 AND a.id=?2", nativeQuery = true)
+	Optional<WorkAssignment> findByRequestIdAndAssignmentId(Integer requestId, Integer assignmentId);
+	
+	@Modifying
+    @Transactional
+	@Query(value = "DELETE FROM assignment_request WHERE request_id=?1 AND assignment_id=?2", nativeQuery = true)
+	void deleteAssignmentwithRequest(Integer requestId, Integer assignmentId);
 }
