@@ -44,6 +44,7 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 			if(existAssignment.isPresent()) {
 				throw new AssignmentAlreadyExist("User with this assignment already exist");
 			}
+			
 		}
 		User user = userService.getUserById(assignment.getUser().getId());
 		assignment.setUser(user);
@@ -104,6 +105,10 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 		if(!diamondRequest.isPresent()) {
 			throw new RequestNotFoundException("Cannot find any request with id");
 		}
+		Optional<WorkAssignment> existAssignmentInDB = repo.findByRequestIdAndUserId(request.getRequestId(), request.getAssignmentId());
+		if(!existAssignmentInDB.isEmpty()) {
+			throw new AssignmentAlreadyExist("User with this assignment already exist");
+		}
 		WorkAssignment a = existAssignment.get();
 		a.getRequests().add(diamondRequest.get());
 		repo.save(a);
@@ -133,7 +138,7 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 		int count = 0;
 		List<DiamondRequest> list = existAssignment.get().getRequests();
 		for(DiamondRequest d : list) {
-			if(d.getStatus().equals(RequestStatus.PROCESSING)) {
+			if(d.getStatus().equals(RequestStatus.NEW)) {
 				count++;
 			}
 		}
@@ -150,5 +155,19 @@ public class WorkAssignmentServiceImp implements WorkAssignmentService{
 			}
 		}
 		return users;
+	}
+
+	@Override
+	public List<WorkAssignment> findByRequestId(Integer id) {
+		return repo.findByRequestId(id);
+	}
+
+	@Override
+	public void deleteRequestAndStaff(@Valid ValuationStaffAssignmentRequest request) {
+		Optional<WorkAssignment> assignment = repo.findByRequestIdAndAssignmentId(request.getRequestId(), request.getAssignmentId());
+		if(!assignment.isPresent()) {
+			throw new AssignmentNotFoundException("Assignment with this request not found!");
+		}
+		repo.deleteAssignmentwithRequest(request.getRequestId(), request.getAssignmentId());
 	}
 }

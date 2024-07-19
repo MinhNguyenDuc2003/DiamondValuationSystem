@@ -1,6 +1,10 @@
 package com.diamondvaluation.admin.service;
 
+
+import java.util.Map;
+import java.time.LocalDate;
 import java.util.List;
+
 
 import org.springframework.data.domain.Page;
 
@@ -16,11 +20,20 @@ public interface CustomerService {
 
 	Page<Customer> listCustomersByPage(int pageNum, String keyword);
 
+
+	//new
+		 Map<String, Integer> countCustomersByMonthForYear(int year);
+
+
 	List<Customer> listCustomerByKeyword(String keyword);
-
 	
+	//new
 
-	
+	List<Object> countCustomerAndRevenueByDay(LocalDate date);
 
+	List<Object> countCustomerByMonthWeekForYear(int year);
 
 }
+
+	
+

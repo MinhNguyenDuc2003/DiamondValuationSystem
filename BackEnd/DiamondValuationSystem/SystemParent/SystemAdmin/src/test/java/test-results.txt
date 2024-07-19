@@ -1,0 +1,31 @@
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testDeleteDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error deleting diamond attribute: Delete failed
+testAddDiamondAttribute_DuplicateId: 500 INTERNAL_SERVER_ERROR - Error adding diamond attribute: Duplicate ID
+testUpdateDiamondAttribute_Success: 200 OK - Updated successfully
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Success: 200 OK - Deleted successfully
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error deleting diamond attribute: Delete failed
+testUpdateDiamondAttribute_Success: 200 OK - Updated successfully
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Success: 200 OK - Deleted successfully
+testDeleteDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error deleting diamond attribute: Delete failed
+testAddDiamondAttribute_DuplicateId: 500 INTERNAL_SERVER_ERROR - Error adding diamond attribute: Duplicate ID
+testUpdateDiamondAttribute_Success: 200 OK - Updated successfully
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Success: 200 OK - Deleted successfully
+testDeleteDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error deleting diamond attribute: Delete failed
+testAddDiamondAttribute_DuplicateId: 500 INTERNAL_SERVER_ERROR - Error adding diamond attribute: Duplicate ID
+testUpdateDiamondAttribute_Success: 200 OK - Updated successfully
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Success: 200 OK - Deleted successfully
+testDeleteDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error deleting diamond attribute: Delete failed
+testAddDiamondAttribute_DuplicateId: 500 INTERNAL_SERVER_ERROR - Error adding diamond attribute: Duplicate ID
+testUpdateDiamondAttribute_Success: 200 OK - Updated successfully
+testUpdateDiamondAttribute_Failure: 500 INTERNAL_SERVER_ERROR - Error updating diamond attribute: Update failed
+testAddDiamondAttributeSuccess: 200 OK - Added successfully
+testDeleteDiamondAttribute_Success: 200 OK - Deleted successfully

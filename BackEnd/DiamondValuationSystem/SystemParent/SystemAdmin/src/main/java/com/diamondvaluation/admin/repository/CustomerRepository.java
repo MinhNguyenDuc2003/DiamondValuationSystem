@@ -1,6 +1,10 @@
 package com.diamondvaluation.admin.repository;
 
+
+import java.time.LocalDateTime;
+
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -21,8 +25,14 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 			+ " c.lastName, ' ', c.location, ' ', c.phoneNumber) LIKE %?1%")
 	Page<Customer> findAll(String keyword, Pageable pageable);
 	
+
+	//new
+	int countByCreatedTimeBetween(LocalDateTime start, LocalDateTime end);
+
+
 	@Query("SELECT c FROM Customer c WHERE CONCAT(c.email, ' ', c.firstName, ' ',"
 			+ " c.lastName, ' ', c.phoneNumber) LIKE %?1%")
 	List<Customer> findAllByKeyword(String keyword);
 	
+
 }

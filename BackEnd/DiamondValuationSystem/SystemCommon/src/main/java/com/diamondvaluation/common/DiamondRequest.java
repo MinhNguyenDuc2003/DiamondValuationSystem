@@ -86,7 +86,7 @@ public class DiamondRequest {
 	@JoinColumn(name = "slot_id", nullable = true)
 	private SlotTime slot;
 	
-
+	
 
 	public DiamondRequest(Integer id) {
 		this.id = id;
