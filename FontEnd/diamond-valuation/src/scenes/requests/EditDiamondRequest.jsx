@@ -8,6 +8,8 @@ import {
   getSlotAvailable,
   getValuationStaffAvailable,
   setRequestToAssign,
+  searchCustomerByKeyword,
+  deleteAssign,
 } from "../../components/utils/ApiFunctions";
 import {
   Box,
@@ -66,14 +68,14 @@ const EditDiamondRequest = () => {
     appointment_date: null,
     slotId: "",
     assignment: [],
-    assignment_id: [],
+    assignment_id: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const customersData = await getCustomersPerPage(1, "");
-        setCustomers(customersData.list_customers);
+        const customersData = await searchCustomerByKeyword("");
+        setCustomers(customersData);
 
         const servicesData = await getAllServices();
         setServices(servicesData);
@@ -144,21 +146,13 @@ const EditDiamondRequest = () => {
     try {
       console.log(values);
       const result = await saveRequest(values);
-      // Extract existing assignment IDs from the original assignment data
-      const existingAssignmentIds = initialValues.assignment.map(
-        (assignment) => assignment.id
-      );
-
-      // Find new assignments that are not in the original assignment
-      const newAssignments = values.assignment_id.filter(
-        (id) => !existingAssignmentIds.includes(id)
-      );
 
       // Call setRequestToAssign only for new assignments
-      if (newAssignments.length > 0) {
-        newAssignments.forEach(async (assignmentId) => {
-          await setRequestToAssign(values, assignmentId);
-        });
+      if (values.assignment.length === 0) {
+        await setRequestToAssign(values, values.assignment_id);
+      } else if (values.assignment[0].id !== values.assignment_id) {
+        await deleteAssign(values, values.assignment[0].id);
+        await setRequestToAssign(values, values.assignment_id);
       }
       if (result.message !== undefined) {
         localStorage.setItem("successMessage", "Request updated successfully");
@@ -416,18 +410,8 @@ const EditDiamondRequest = () => {
                   <Field
                     as={Select}
                     name="assignment_id"
-                    multiple
-                    label="Select Staff to assign"
+                    label="Assign Staff"
                     value={values.assignment_id}
-                    onChange={(event) => {
-                      const {
-                        target: { value },
-                      } = event;
-                      setFieldValue(
-                        "assignment_id",
-                        typeof value === "string" ? value.split(",") : value
-                      );
-                    }}
                   >
                     {staffs.map((staff) => (
                       <MenuItem

@@ -165,12 +165,10 @@ export async function getCustomersPerPage(pageNum, keyword) {
 
 export async function searchCustomerByKeyword(keyword) {
   try {
-    if (keyword.length > 0) {
-      const result = await api.get(
-        `/api/customers/search/customer?keyword=${keyword}`
-      );
-      return result.data;
-    }
+    const result = await api.get(
+      `/api/customers/search/customer?keyword=${keyword}`
+    );
+    return result.data;
   } catch (error) {
     throw new Error(`Error fetching users : ${error.message}`);
   }
@@ -375,6 +373,25 @@ export async function setRequestToAssign(request, assignment_id) {
     } else return response.status;
   } catch (error) {
     console.log(error.data);
+  }
+}
+
+export async function deleteAssign(values, assignment_id) {
+  const data = {
+    request_id: values.id,
+    assignment_id: assignment_id,
+  };
+
+  try {
+    const result = await api.delete(`assignment/remove-request`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data, // include data in the config object
+    });
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error deleting request: ${error.message}`);
   }
 }
 
