@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "antd";
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
@@ -14,6 +15,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getAllServices, getCustomerById } from "../../utils/ApiFunction";
 import EditIcon from '@mui/icons-material/Edit'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -125,21 +128,7 @@ const ServiceForm = () => {
   return (
     <Box className="wrapperrr" mt = {9}>
       <Typography variant="h4">Send Form For Us</Typography>
-      <Box display={'flex'} justifyContent={'center'} gap={2} mt = {2}>
-
-        <Typography color={'gray'}>*Your Information Must Be Same With Your Account
-
-        </Typography>
-        <Button
-          onClick={e => navigate('/account')}
-          variant="outlined"
-          size="small"
-          startIcon={<EditIcon />}
-          sx={{ fontSize: '11px', borderColor: '#56758d', color: '#56758d' }}
-        >
-          Edit
-        </Button>
-      </Box>
+      
 
       <Form
         {...formItemLayout}
@@ -160,7 +149,7 @@ const ServiceForm = () => {
 
           }}
         > 
-          <FormControl fullWidth>
+          {/* <FormControl fullWidth>
             <TextField
               label="Email"
               value={user.email }
@@ -169,9 +158,11 @@ const ServiceForm = () => {
               InputLabelProps={{
                 shrink: true,
               }}
+              disabled
             />
-          </FormControl>
-          <FormControl fullWidth>
+          </FormControl> */}
+          
+          {/* <FormControl fullWidth>
             <TextField
               label="First Name"
               value={user.first_name}
@@ -180,9 +171,11 @@ const ServiceForm = () => {
               InputLabelProps={{
                 shrink: true,
               }}
+              disabled
             />
-          </FormControl>
-          <FormControl fullWidth>
+          </FormControl> */}
+           
+          {/* <FormControl fullWidth>
             <TextField
               label="Last Name"
               value={user.last_name}
@@ -192,9 +185,9 @@ const ServiceForm = () => {
                 shrink: true,
               }}
             />
-          </FormControl>
-
-          <FormControl fullWidth>
+          </FormControl> */}
+             
+          {/* <FormControl fullWidth>
             <TextField
               label="Phone Number"
               value={user.phone_number}
@@ -204,9 +197,9 @@ const ServiceForm = () => {
                 shrink: true,
               }}
             />
-          </FormControl>
-
-          <FormControl fullWidth>
+          </FormControl> */}
+           
+          {/* <FormControl fullWidth>
             <TextField
               label="Address"
               value={user.location}
@@ -216,7 +209,47 @@ const ServiceForm = () => {
                 shrink: true,
               }}
             />
-          </FormControl>
+          </FormControl> */}
+          <Box display="flex" alignItems="center" mb={2}>
+              <Avatar sx={{ marginRight: 2 }}>
+                <AccountCircleIcon />
+              </Avatar>
+              <Box>
+                <Typography variant="h6" sx={{ color: '#56758d' }}>Customer Information</Typography>
+               
+              </Box>
+              
+            </Box>
+            <Box display={'flex'} justifyContent={'center'} gap={2} mt = {2}>
+
+        <Typography color={'gray'}>*Your Information Must Be Same With Your Account
+
+        </Typography>
+        <Button
+          onClick={e => navigate('/account')}
+          variant="outlined"
+          size="small"
+          startIcon={<EditIcon />}
+          sx={{ fontSize: '11px', borderColor: '#56758d', color: '#56758d' }}
+        >
+          Edit
+        </Button>
+      </Box>
+           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+           Email : {user.email }
+          </Typography>
+          <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+           First Name  : {user.first_name }
+          </Typography>
+          <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+             Last Name : {user.last_name }
+          </Typography>
+          <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+             Phone Number : {user.phone_number }
+          </Typography>
+           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+           Address : {user.location }
+          </Typography>
           <FormControl fullWidth>
             <TextField
               label="Preferred Appraisal Date"
