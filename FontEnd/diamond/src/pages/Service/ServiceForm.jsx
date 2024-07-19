@@ -65,7 +65,7 @@ const ServiceForm = () => {
         if (serviceResponse.status === 200) {
           setServices(serviceResponse.data);
         }
-  
+
         // // Sau khi lấy danh sách dịch vụ xong, lấy thông tin khách hàng
         const customerData = await getCustomerById();
         if (customerData !== null) {
@@ -82,7 +82,7 @@ const ServiceForm = () => {
         console.log(error);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -97,28 +97,33 @@ const ServiceForm = () => {
       setErrorMessage("Selected date cannot be in the past.");
       return;
     }
+    const day = String(selected.getDate());
+    const month = String(selected.getMonth() + 1).padStart(2, '0'); // +1 because month start with 0
+    const year = selected.getFullYear();
+
+    const formattedDate = `${day}/${month}/${year}`;
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
       return index === 0 ? service : value + "," + service;
     }, "");
-    localStorage.setItem("selectedDate", selectedDate);
+    localStorage.setItem("selectedDate", formattedDate);
     localStorage.setItem("serviceSelected", serviceSelect);
     // localStorage.setItem("paymentMethod", payMentSelected);
 
     navigate("/Payment-checkout");
   };
 
-  const handleDateChange = (e) => {
-    const chosenDate = new Date(e.target.value);
-    const today = new Date();
-    // Set hours to 0 to compare only the date part
-    today.setHours(0, 0, 0, 0);
+  // const handleDateChange = (e) => {
+  //   const chosenDate = new Date(e.target.value);
+  //   const today = new Date();
+  //   // Set hours to 0 to compare only the date part
+  //   today.setHours(0, 0, 0, 0);
 
-    if (chosenDate >= today) {
-      setSelectedDate(e.target.value);
-    } else {
-      alert('Please select a date that is today or in the future.');
-    }
-  };
+  //   if (chosenDate >= today) {
+  //     setSelectedDate(e.target.value);
+  //   } else {
+  //     alert('Please select a date that is today or in the future.');
+  //   }
+  // };
 
   const handleServiceChange = (event) => {
     const { value } = event.target;
@@ -126,9 +131,8 @@ const ServiceForm = () => {
   };
 
   return (
-    <Box className="wrapperrr" mt = {9}>
+    <Box className="wrapperrr" mt={9}>
       <Typography variant="h4">Send Form For Us</Typography>
-      
 
       <Form
         {...formItemLayout}
@@ -148,7 +152,7 @@ const ServiceForm = () => {
             mb: 5
 
           }}
-        > 
+        >
           {/* <FormControl fullWidth>
             <TextField
               label="Email"
@@ -161,7 +165,7 @@ const ServiceForm = () => {
               disabled
             />
           </FormControl> */}
-          
+
           {/* <FormControl fullWidth>
             <TextField
               label="First Name"
@@ -174,7 +178,7 @@ const ServiceForm = () => {
               disabled
             />
           </FormControl> */}
-           
+
           {/* <FormControl fullWidth>
             <TextField
               label="Last Name"
@@ -186,7 +190,7 @@ const ServiceForm = () => {
               }}
             />
           </FormControl> */}
-             
+
           {/* <FormControl fullWidth>
             <TextField
               label="Phone Number"
@@ -198,7 +202,7 @@ const ServiceForm = () => {
               }}
             />
           </FormControl> */}
-           
+
           {/* <FormControl fullWidth>
             <TextField
               label="Address"
@@ -211,44 +215,44 @@ const ServiceForm = () => {
             />
           </FormControl> */}
           <Box display="flex" alignItems="center" mb={2}>
-              <Avatar sx={{ marginRight: 2 }}>
-                <AccountCircleIcon />
-              </Avatar>
-              <Box>
-                <Typography variant="h6" sx={{ color: '#56758d' }}>Customer Information</Typography>
-               
-              </Box>
-              
+            <Avatar sx={{ marginRight: 2 }}>
+              <AccountCircleIcon />
+            </Avatar>
+            <Box>
+              <Typography variant="h6" sx={{ color: '#56758d' }}>Customer Information</Typography>
+
             </Box>
-            <Box display={'flex'} justifyContent={'center'} gap={2} mt = {2}>
 
-        <Typography color={'gray'}>*Your Information Must Be Same With Your Account
+          </Box>
+          <Box display={'flex'} justifyContent={'center'} gap={2} mt={2}>
 
-        </Typography>
-        <Button
-          onClick={e => navigate('/account')}
-          variant="outlined"
-          size="small"
-          startIcon={<EditIcon />}
-          sx={{ fontSize: '11px', borderColor: '#56758d', color: '#56758d' }}
-        >
-          Edit
-        </Button>
-      </Box>
-           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
-           Email : {user.email }
+            <Typography color={'gray'}>*Your Information Must Be Same With Your Account
+
+            </Typography>
+            <Button
+              onClick={e => navigate('/account')}
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
+              sx={{ fontSize: '11px', borderColor: '#56758d', color: '#56758d' }}
+            >
+              Edit
+            </Button>
+          </Box>
+          <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+            Email : {user.email}
           </Typography>
           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
-           First Name  : {user.first_name }
+            First Name  : {user.first_name}
           </Typography>
           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
-             Last Name : {user.last_name }
+            Last Name : {user.last_name}
           </Typography>
           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
-             Phone Number : {user.phone_number }
+            Phone Number : {user.phone_number}
           </Typography>
-           <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
-           Address : {user.location }
+          <Typography fontSize={'17px'} textAlign={'start'} ml={1}>
+            Address : {user.location}
           </Typography>
           <FormControl fullWidth>
             <TextField
@@ -294,7 +298,7 @@ const ServiceForm = () => {
               ))}
             </Select>
           </FormControl>
-        
+
           <Box
             marginTop={2}
 
