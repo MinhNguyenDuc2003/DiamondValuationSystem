@@ -1,6 +1,11 @@
 package com.diamondvaluation.admin.service.imp;
 
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -112,6 +117,41 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	@Override
 	public List<DiamondCertificate> findAllCertificateByUser(User user) {
 		return repo.findAllCertificateByValuationStaffId(user.getId());
+	}
+
+
+	@Override
+	public List<Object> countCertificatesByMonthForYear(int year) {
+		List<Object> monthlyStats = new ArrayList<>();
+	    int yearlyTotalCount = 0;
+	    
+	    for (Month month : Month.values()) {
+	        List<Object> monthStats = new ArrayList<>();
+	        monthStats.add("Month " + month.getValue());
+
+	        LocalDateTime startOfMonth = Year.of(year).atMonth(month).atDay(1).atStartOfDay();
+	        LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
+
+	        int monthlyTotalCount = repo.countByCreatedDateBetween(startOfMonth, endOfMonth);
+	       
+	        List<Object> totalStats = new ArrayList<>();
+	        totalStats.add("Number of Certificates: " + monthlyTotalCount);
+	      
+	        monthStats.add(totalStats);
+	        monthlyStats.add(monthStats);
+
+	        yearlyTotalCount += monthlyTotalCount;
+	        
+	    }
+
+	    // Add total stats for the year
+	    List<Object> yearlyTotalStats = new ArrayList<>();
+	    yearlyTotalStats.add("Year Total");
+	    yearlyTotalStats.add("Number of Certificates: " + yearlyTotalCount);
+	    
+	    monthlyStats.add(yearlyTotalStats);
+
+	    return monthlyStats;
 	}
 
 }

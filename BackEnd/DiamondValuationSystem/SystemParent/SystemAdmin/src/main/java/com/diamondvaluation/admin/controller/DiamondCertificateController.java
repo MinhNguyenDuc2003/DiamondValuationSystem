@@ -229,5 +229,15 @@ public class DiamondCertificateController {
 	}
 	
 	
+	@GetMapping("count/year")
+    public ResponseEntity<?> countCertificatesByMonthForYear(@RequestParam("year") int year) {
+        try {
+            List<Object> list = service.countCertificatesByMonthForYear(year);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+	
 
 }
