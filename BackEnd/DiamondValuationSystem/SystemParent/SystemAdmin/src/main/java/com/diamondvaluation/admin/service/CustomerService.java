@@ -22,8 +22,8 @@ public interface CustomerService {
 
 
 	//new
-		 Map<String, Integer> countCustomersByMonthForYear(int year);
-
+	
+	List<Object> countCustomersByMonthForYear(int year);
 
 	List<Customer> listCustomerByKeyword(String keyword);
 	
@@ -32,6 +32,10 @@ public interface CustomerService {
 	List<Object> countCustomerAndRevenueByDay(LocalDate date);
 
 	List<Object> countCustomerByMonthWeekForYear(int year);
+	
+	Map<Integer, Integer> countCustomerEachMonthByYear(int year);
+
+	int totalCustomerByYear(int year);
 
 }
 

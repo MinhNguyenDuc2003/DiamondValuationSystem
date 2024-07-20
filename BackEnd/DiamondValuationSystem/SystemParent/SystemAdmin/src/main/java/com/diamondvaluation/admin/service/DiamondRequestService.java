@@ -54,4 +54,12 @@ public interface DiamondRequestService {
 	Optional<DiamondRequest> findById(Integer requestId);
 
 	List<DiamondRequest> findAllRequestNewByUser(User user);
+	
+	Map<Integer, Integer> countRequestEachMonthByYear(int year);
+
+	int totalRequestByYear(int year);
+	
+	Map<Integer, Double> revenueRequestEachMonthByYear(int year);
+	
+	double revenueByYear(int year);
 }

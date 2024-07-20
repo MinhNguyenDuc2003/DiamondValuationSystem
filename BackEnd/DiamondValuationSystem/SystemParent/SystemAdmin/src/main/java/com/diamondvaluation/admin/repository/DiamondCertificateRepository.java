@@ -1,5 +1,6 @@
 package com.diamondvaluation.admin.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,11 @@ public interface DiamondCertificateRepository extends CrudRepository<DiamondCert
 			+ "JOIN users u ON ass.user_id = u.id\n"
 			+ "WHERE u.id = ?1 order by dc.created_date;", nativeQuery = true)
 	List<DiamondCertificate> findAllCertificateByValuationStaffId(Integer id);
+	
+	int countByCreatedDateBetween(LocalDateTime start, LocalDateTime end);
+	
+	@Query(value = "SELECT COUNT(id) FROM diamond_certificates  d WHERE MONTH(created_date) = ?1", nativeQuery = true)
+	int countCertificateByMonth(int i);
+	@Query(value = "SELECT COUNT(id) FROM diamond_certificates  d WHERE YEAR(created_date) = ?1", nativeQuery = true)
+	int countCertificateByYear(int i);
 }
