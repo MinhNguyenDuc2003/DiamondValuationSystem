@@ -13,6 +13,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import ReportIcon from "@mui/icons-material/Report";
 import TodayIcon from "@mui/icons-material/Today";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import { useAuth } from "../../components/auth/AuthProvider";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -59,7 +60,7 @@ const SideBar = () => {
       <Sidebar
         collapsed={isCollapsed}
         backgroundColor="#EEE5D6 !important"
-        style={{ height: "100vh" }}
+        style={{ overflow: "auto", height: "100vh" }}
       >
         <Menu iconShape="square">
           {/* Logo and menu icon */}
@@ -161,6 +162,13 @@ const SideBar = () => {
               title="Services"
               to="/services"
               icon={<DiamondIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Overview"
+              to="/overview"
+              icon={<PointOfSaleIcon />}
               selected={selected}
               setSelected={setSelected}
             />

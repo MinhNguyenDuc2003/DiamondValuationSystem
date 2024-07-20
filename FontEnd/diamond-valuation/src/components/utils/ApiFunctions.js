@@ -759,6 +759,17 @@ export async function deleteSlotTime(id) {
   }
 }
 
+// ==================================== DASHBOARD ========================================= //
+
+export async function DashBoard(year) {
+  try {
+    const result = await api.get(`dashboard?year=${year}`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");
