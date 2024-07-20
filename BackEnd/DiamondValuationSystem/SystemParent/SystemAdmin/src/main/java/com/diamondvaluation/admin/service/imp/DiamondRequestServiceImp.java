@@ -10,6 +10,7 @@ import java.time.Year;
 import java.util.ArrayList;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -400,5 +401,38 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 	@Override
 	public List<DiamondRequest> findAllRequestNewByUser(User user) {
 		return repo.findAllRequestNewByUserId(user.getId());
+	}
+
+	@Override
+	public Map<Integer, Integer> countRequestEachMonthByYear(int year) {
+		Map<Integer, Integer> maps = new HashMap<>();
+		for(int i=1 ; i<13 ; i++) {
+			int total = repo.countRequestByMonth(i);
+			maps.put(i, total);
+		}
+		return maps;
+	}
+
+	@Override
+	public int totalRequestByYear(int year) {
+		return repo.countRequestByYear(year);
+	}
+
+	@Override
+	public Map<Integer, Double> revenueRequestEachMonthByYear(int year) {
+		Map<Integer, Double> maps = new HashMap<>();
+		for(int i=1 ; i<13 ; i++) {
+			Double revenue = repo.getRevenueByMonth(i);
+			if(revenue == null) {
+				maps.put(i, 0.0);
+			}
+			maps.put(i, revenue);
+		}
+		return maps;
+	}
+
+	@Override
+	public double revenueByYear(int year) {
+		return repo.getRevenueByYear(year);
 	}
 }

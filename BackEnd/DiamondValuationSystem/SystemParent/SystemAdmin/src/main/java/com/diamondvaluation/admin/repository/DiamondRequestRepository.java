@@ -45,4 +45,15 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     		+ "JOIN users u ON ass.user_id = u.id\n"
     		+ "WHERE u.id = ?1 order by dr.created_date", nativeQuery = true)
 	List<DiamondRequest> findAllRequestNewByUserId(Integer id);
+    
+    @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE MONTH(created_date) = ?1", nativeQuery = true)
+	int countRequestByMonth(int i);
+    
+    @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE YEAR(created_date) = ?1", nativeQuery = true)
+	int countRequestByYear(int year);
+    
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND MONTH(created_date) = ?1", nativeQuery = true)
+	Double getRevenueByMonth(int i);
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND YEAR(created_date) = ?1", nativeQuery = true)
+    Double getRevenueByYear(int year);
 }

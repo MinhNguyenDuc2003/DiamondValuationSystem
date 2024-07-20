@@ -6,10 +6,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.Year;
-import java.util.LinkedHashMap;
-
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -115,7 +113,7 @@ public class CustomerServiceImp implements CustomerService {
 	        LocalDateTime endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.toLocalDate().lengthOfMonth()).with(LocalTime.MAX);
 
 	        int monthlyTotalCount = customerRepo.countByCreatedTimeBetween(startOfMonth, endOfMonth);
-	       
+	        
 	        List<Object> totalStats = new ArrayList<>();
 	        totalStats.add("Number of Customer: " + monthlyTotalCount);
 	      
@@ -238,6 +236,20 @@ public class CustomerServiceImp implements CustomerService {
 
         return yearlyStats;
     }
-	
+
+	@Override
+	public Map<Integer, Integer> countCustomerEachMonthByYear(int year) {
+		Map<Integer, Integer> maps = new HashMap<>();
+		for(int i=1 ; i<13 ; i++) {
+			int total = customerRepo.countCustomerByMonth(i);
+			maps.put(i, total);
+		}
+		return maps;
+	}
+
+	@Override
+	public int totalCustomerByYear(int year) {
+		return customerRepo.countCustomerByYear(year);
+	}
 
 }

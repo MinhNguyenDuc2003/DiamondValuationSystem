@@ -6,7 +6,9 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -152,6 +154,23 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	    monthlyStats.add(yearlyTotalStats);
 
 	    return monthlyStats;
+	}
+
+
+	@Override
+	public Map<Integer, Integer> countCertificateEachMonthByYear(int year) {
+		Map<Integer, Integer> maps = new HashMap<>();
+		for(int i=1 ; i<13 ; i++) {
+			int total = repo.countCertificateByMonth(i);
+			maps.put(i, total);
+		}
+		return maps;
+	}
+
+
+	@Override
+	public int totalByYear(int year) {
+		return repo.countCertificateByYear(year);
 	}
 
 }

@@ -34,5 +34,11 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, P
 			+ " c.lastName, ' ', c.phoneNumber) LIKE %?1%")
 	List<Customer> findAllByKeyword(String keyword);
 	
+	@Query(value = "SELECT COUNT(id) FROM customers c WHERE MONTH(created_time) = ?1", nativeQuery = true)
+	int countCustomerByMonth(int i);
+	
+	@Query(value = "SELECT COUNT(id) FROM customers c WHERE YEAR(created_time) = ?1", nativeQuery = true)
+	int countCustomerByYear(int year);
+	
 
 }
