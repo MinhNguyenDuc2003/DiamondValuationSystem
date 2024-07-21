@@ -59,7 +59,7 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND paid_date = ?1", nativeQuery = true)
 	Double getRevenueByDay(String string);
     @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND paid_date >= ?1 AND paid_date <= ?2", nativeQuery = true)
-	double getRevenueBetween2Day(String string, String string2);
+	Double getRevenueBetween2Day(String string, String string2);
     @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE Day(created_date) = ?1 AND MONTH(created_date) = ?2 AND YEAR(created_date) =?3", nativeQuery = true)
 	Integer getRequestByDay(String day, String month, String year);
     @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE d.created_date >= ?1 AND d.created_date <= ?2", nativeQuery = true)

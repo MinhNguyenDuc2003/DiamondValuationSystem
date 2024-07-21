@@ -345,7 +345,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 
 	@Override
 	public double revenueBetween2DAte(LocalDate dateBegin, LocalDate dateEnd) {
-		return repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString());
+		return repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString()) == null ? 0.0 : repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString());
 	}
 
 	@Override
