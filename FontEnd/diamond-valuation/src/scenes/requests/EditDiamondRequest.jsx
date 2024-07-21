@@ -129,7 +129,6 @@ const EditDiamondRequest = () => {
     payment_method: Yup.string().required("Payment method is required"),
     paid: Yup.boolean().required("Paid status is required"),
     appointment_date: Yup.string().required("Appointment date is required"),
-    slotId: Yup.string().required("Slot time is required"),
   });
 
   const handleSubmit = async (values) => {
@@ -183,7 +182,7 @@ const EditDiamondRequest = () => {
   };
 
   return (
-    <Box p="20px">
+    <Box p="0px 20px">
       <Typography variant="h4" textAlign="center" sx={{ mb: 2 }}>
         Edit Diamond Request
       </Typography>

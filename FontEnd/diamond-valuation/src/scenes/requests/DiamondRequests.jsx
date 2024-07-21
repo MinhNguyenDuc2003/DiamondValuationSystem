@@ -325,7 +325,8 @@ const Requests = () => {
   const lateRequests = data.filter(
     (request) =>
       isAppointmentLate(request.appoinment_date) &&
-      request.appoinment_date !== null
+      request.appoinment_date !== null &&
+      (request.status === "NEW" || request.status === "PROCESSED")
   );
 
   const handleBadgeClick = () => {

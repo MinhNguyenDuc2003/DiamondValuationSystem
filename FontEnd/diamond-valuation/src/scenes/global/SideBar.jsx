@@ -303,10 +303,6 @@ const navItems = [
     icon: <PointOfSaleIcon />,
   },
   {
-    text: "Daily",
-    icon: <TodayIcon />,
-  },
-  {
     text: "Management",
     icon: null,
   },

@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Box, useMediaQuery } from "@mui/material";
 import NavBar from "../global/NavBar";
 import { Outlet } from "react-router-dom";
-import { getUserById } from "../../components/utils/ApiFunctions";
 // import SideBar from "../global/SideBar";
 import Sidebar from "../global/SideBar";
 
 const Layout = () => {
   const [user, setUser] = useState({
-    photo: "",
     full_name: "",
     roles_name: "",
   });
@@ -18,18 +16,9 @@ const Layout = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-          // Handle case where userId is not found
-          console.error("UserId is not found in localStorage");
-          // Optionally redirect to login or show an error
-          return;
-        }
         const userName = localStorage.getItem("userName");
         const roles = localStorage.getItem("userRoles");
-        const useredit = await getUserById(userId);
         setUser({
-          photo: useredit.photo,
           full_name: userName,
           roles_name: roles,
         });

@@ -746,6 +746,7 @@ export async function getAllRequestPerDate(data) {
 
 export async function saveSlotTime(slottime) {
   const data = {
+    id: slottime.id,
     time: slottime.time,
     number: slottime.number,
   };

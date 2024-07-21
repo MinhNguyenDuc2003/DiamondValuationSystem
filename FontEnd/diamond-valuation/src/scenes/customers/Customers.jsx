@@ -210,44 +210,52 @@ export const Customers = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#EEE5D6" }}>
-            {data.list_customers.map((customer) => (
-              <TableRow key={customer.id}>
-                <TableCell align="center">{customer.id}</TableCell>
-                <TableCell align="center">
-                  {formatDate(customer.created_time)}
-                </TableCell>
-                <TableCell align="center">{customer.email}</TableCell>
-                <TableCell align="center">
-                  {customer.last_name} {customer.first_name}
-                </TableCell>
-                <TableCell align="center">{customer.phone_number}</TableCell>
-                <TableCell align="center">{customer.location}</TableCell>
-                <TableCell align="center">
-                  {customer.enabled ? (
-                    <CheckCircleIcon
-                      sx={{ color: "green", fontSize: "25px" }}
-                    />
-                  ) : (
-                    <CheckCircleOutlineIcon sx={{ fontSize: "25px" }} />
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    onClick={() => handleOpenCustomerDetailDialog(customer)}
-                  >
-                    <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => navigate(`/customers/${customer.id}`)}
-                  >
-                    <EditIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleOpenDialog(customer.id)}>
-                    <DeleteIcon sx={{ color: "#C5A773" }} />
-                  </IconButton>
+            {data.list_customers.length > 0 ? (
+              data.list_customers.map((customer) => (
+                <TableRow key={customer.id}>
+                  <TableCell align="center">{customer.id}</TableCell>
+                  <TableCell align="center">
+                    {formatDate(customer.created_time)}
+                  </TableCell>
+                  <TableCell align="center">{customer.email}</TableCell>
+                  <TableCell align="center">
+                    {customer.last_name} {customer.first_name}
+                  </TableCell>
+                  <TableCell align="center">{customer.phone_number}</TableCell>
+                  <TableCell align="center">{customer.location}</TableCell>
+                  <TableCell align="center">
+                    {customer.enabled ? (
+                      <CheckCircleIcon
+                        sx={{ color: "green", fontSize: "25px" }}
+                      />
+                    ) : (
+                      <CheckCircleOutlineIcon sx={{ fontSize: "25px" }} />
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      onClick={() => handleOpenCustomerDetailDialog(customer)}
+                    >
+                      <RemoveRedEyeIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => navigate(`/customers/${customer.id}`)}
+                    >
+                      <EditIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                    <IconButton onClick={() => handleOpenDialog(customer.id)}>
+                      <DeleteIcon sx={{ color: "#C5A773" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} align="center">
+                  No certificates available.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
