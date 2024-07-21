@@ -125,7 +125,7 @@ const Dashboard = () => {
           p="1rem"
           borderRadius="0.55rem"
         >
-          <OverviewChart view="revenue" isDashboard={true} />
+          <OverviewChart view="revenue" isDashboard={true} year={2024} />
         </Box>
         <StatBox
           title="Total Certificates"

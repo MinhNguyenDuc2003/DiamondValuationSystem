@@ -12,6 +12,7 @@ const OverviewChart = ({ isDashboard = false, view, year }) => {
     const fetchData = async () => {
       try {
         const responseData = await DashBoard(year);
+        console.log("Fetched Data:", responseData); // Add this line to debug
         const formattedData = formatData(responseData, view);
         setData(formattedData);
       } catch (error) {
@@ -22,6 +23,7 @@ const OverviewChart = ({ isDashboard = false, view, year }) => {
   }, [view, year]);
 
   const formatData = (data, view) => {
+    console.log("Formatting Data:", data, view); // Debug line
     const months = [
       "January",
       "February",

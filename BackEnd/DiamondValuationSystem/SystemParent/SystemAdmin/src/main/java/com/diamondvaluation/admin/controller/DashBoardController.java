@@ -1,5 +1,8 @@
 package com.diamondvaluation.admin.controller;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,9 +30,11 @@ public class DashBoardController {
 	}
 	
 	@GetMapping("/daily/dashboard")
-	public ResponseEntity<?> getDashBoardByYear(@RequestBody DailyRevenueRequest request){
+//	public ResponseEntity<?> getDashBoardByYear(@RequestBody DailyRevenueRequest request){
+		public ResponseEntity<?> getDashBoardByYear(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
 		try {
-			return ResponseEntity.ok(service.getDailyResponse(request.getBeginDate(), request.getEndDate()));
+			return ResponseEntity.ok(service.getDailyResponse(startDate, endDate));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().build();

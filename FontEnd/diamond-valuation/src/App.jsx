@@ -42,6 +42,7 @@ import SlotTimeManagement from "./scenes/manager/ManageSlotTime";
 import Layout from "./scenes/layout/Layout";
 import { ColorModeContext, useMode } from "./theme";
 import { ThemeProvider } from "@mui/material";
+import Daily from "./scenes/daily/Daily";
 
 const App = () => {
   return (
@@ -272,6 +273,14 @@ const MainContent = () => {
               element={
                 <PrivateRoute>
                   <Overview />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/daily"
+              element={
+                <PrivateRoute>
+                  <Daily />
                 </PrivateRoute>
               }
             />

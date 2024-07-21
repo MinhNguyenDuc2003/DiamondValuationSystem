@@ -793,6 +793,19 @@ export async function DashBoard(year) {
   }
 }
 
+export async function DailyDashBoard(begin_date, end_date) {
+  try {
+    const result = await api.get(
+      `daily/dashboard?startDate=${
+        begin_date.toISOString().split("T")[0]
+      }&endDate=${end_date.toISOString().split("T")[0]}`
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching daily dashboard : ${error.message}`);
+  }
+}
+
 // ======================================================================================== //
 export const validateToken = async () => {
   const token = localStorage.getItem("token");

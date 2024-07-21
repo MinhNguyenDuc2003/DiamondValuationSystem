@@ -300,7 +300,11 @@ const navItems = [
   },
   {
     text: "Overview",
-    icon: <PointOfSaleIcon />,
+    icon: <TodayIcon />,
+  },
+  {
+    text: "Daily",
+    icon: <TodayIcon />,
   },
   {
     text: "Management",
