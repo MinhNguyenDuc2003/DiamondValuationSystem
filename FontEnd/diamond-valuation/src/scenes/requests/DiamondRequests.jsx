@@ -345,11 +345,25 @@ const Requests = () => {
         sx={{ mt: 2, mb: 2 }}
       >
         {isAuthorized && (
-          <Link to={"/requests/new"}>
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>
-              Add New Request
+          <Box>
+            <Link to={"/requests/new"}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+              >
+                Add New Request
+              </Button>
+            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setShowLateRequests(!showLateRequests)}
+              sx={{ ml: 2 }}
+            >
+              {showLateRequests ? "Show All Requests" : "Show Late Requests"}
             </Button>
-          </Link>
+          </Box>
         )}
 
         <Box>
@@ -377,14 +391,6 @@ const Requests = () => {
               <MenuItem value="BLOCKED">BLOCKED</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => setShowLateRequests(!showLateRequests)}
-            sx={{ ml: 2 }}
-          >
-            {showLateRequests ? "Show All Requests" : "Show Late Requests"}
-          </Button>
         </Box>
       </Box>
 

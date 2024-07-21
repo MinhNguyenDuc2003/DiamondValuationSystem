@@ -604,44 +604,73 @@ const Certificates = () => {
         variant="contained"
       >
         <DialogTitle>Select Request</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Choose a request to create a certificate:
-          </DialogContentText>
-          <List>
-            {newRequests.map((request) => (
-              <ListItem
-                button
-                key={request.id}
-                onClick={() => handleRequestSelect(request)}
-                selected={selectedRequest && selectedRequest.id === request.id}
+        {newRequests.length > 0 ? (
+          <>
+            <DialogContent>
+              <DialogContentText>
+                Choose a request to create a certificate:
+              </DialogContentText>
+              <List>
+                {newRequests.map((request) => (
+                  <ListItem
+                    button
+                    key={request.id}
+                    onClick={() => handleRequestSelect(request)}
+                    selected={
+                      selectedRequest && selectedRequest.id === request.id
+                    }
+                  >
+                    <ListItemText
+                      primary={`Request ID: ${request.id}`}
+                      secondary={
+                        <div>
+                          <Typography variant="body2">
+                            Customer: {request.customer_name}
+                          </Typography>
+                          <Typography variant="body2">
+                            Assign:{" "}
+                            {formatAssignmentDate(request.assignment[0].date)}
+                          </Typography>
+                        </div>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setOpenRequestDialog(false)}
+                color="primary"
               >
-                <ListItemText
-                  primary={`Request ID: ${request.id}`}
-                  secondary={
-                    <div>
-                      <Typography variant="body2">
-                        Customer: {request.customer_name}
-                      </Typography>
-                      <Typography variant="body2">
-                        Assign:{" "}
-                        {formatAssignmentDate(request.assignment[0].date)}
-                      </Typography>
-                    </div>
-                  }
-                />
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenRequestDialog(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateCertificate} color="primary" autoFocus>
-            Create Certificate
-          </Button>
-        </DialogActions>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCreateCertificate}
+                color="primary"
+                autoFocus
+              >
+                Create Certificate
+              </Button>
+            </DialogActions>
+          </>
+        ) : (
+          <>
+            <DialogContent>
+              <Typography variant="subtitle1">
+                Not have any request for valuation
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setOpenRequestDialog(false)}
+                color="primary"
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </Box>
   );
