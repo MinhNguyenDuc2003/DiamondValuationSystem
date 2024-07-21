@@ -22,7 +22,7 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     
     //new
     int countByCreatedDateBetween(LocalDateTime start, LocalDateTime end);
-    @Query("SELECT SUM(dr.paymentTotal) FROM DiamondRequest dr WHERE dr.createdDate BETWEEN :start AND :end AND dr.isPaid = :isPaid")
+    @Query("SELECT SUM(dr.paymentTotal) FROM DiamondRequest dr WHERE dr.paidDate BETWEEN :start AND :end AND dr.isPaid = :isPaid")
     Optional<Double> sumPaymentTotalByCreatedDateBetweenAndPaid(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("isPaid") Boolean isPaid);
 
 
@@ -52,8 +52,16 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
     @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE YEAR(created_date) = ?1", nativeQuery = true)
 	int countRequestByYear(int year);
     
-    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND MONTH(created_date) = ?1", nativeQuery = true)
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND MONTH(paid_date) = ?1", nativeQuery = true)
 	Double getRevenueByMonth(int i);
-    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND YEAR(created_date) = ?1", nativeQuery = true)
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND YEAR(paid_date) = ?1", nativeQuery = true)
     Double getRevenueByYear(int year);
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND paid_date = ?1", nativeQuery = true)
+	Double getRevenueByDay(String string);
+    @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND paid_date >= ?1 AND paid_date <= ?2", nativeQuery = true)
+	double getRevenueBetween2Day(String string, String string2);
+    @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE Day(created_date) = ?1 AND MONTH(created_date) = ?2 AND YEAR(created_date) =?3", nativeQuery = true)
+	Integer getRequestByDay(String day, String month, String year);
+    @Query(value = "SELECT COUNT(id) FROM diamond_request d WHERE d.created_date >= ?1 AND d.created_date <= ?2", nativeQuery = true)
+	int getTotalRequestBetween2Date(LocalDateTime dateTimeBegin, LocalDateTime dateTimeEnd);
 }

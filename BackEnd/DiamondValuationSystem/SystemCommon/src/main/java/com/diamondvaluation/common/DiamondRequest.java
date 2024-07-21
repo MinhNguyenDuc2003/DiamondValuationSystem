@@ -65,6 +65,9 @@ public class DiamondRequest {
 	@Column(name = "is_paid",nullable = false, unique = false)
 	private boolean isPaid;
 	
+	@Column(name = "paid_date",nullable = true, unique = false)
+	private LocalDate paidDate;
+	
 	@Column(nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private RequestStatus status;

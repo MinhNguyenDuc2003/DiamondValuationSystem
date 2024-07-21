@@ -101,7 +101,7 @@ const ServiceForm = () => {
     const month = String(selected.getMonth() + 1).padStart(2, '0'); // +1 because month start with 0
     const year = selected.getFullYear();
 
-    const formattedDate = `${day}/${month}/${year}`;
+    const formattedDate = `${year}-${month}-${day}`;
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
       return index === 0 ? service : value + "," + service;
     }, "");

@@ -198,7 +198,7 @@ const Checkout = () => {
             <Typography>Email: {user.email}</Typography>
             <Typography>Phone Number: {user.phone_number}</Typography>
             <Typography>Address: {user.location}</Typography>
-            <Typography>Preferred Appraisal Date: {cart.selectedDate}</Typography>
+            <Typography>Preferred Appraisal Date(yyyy-MM-dd): {cart.selectedDate}</Typography>
             {/* <Link to={"/account"}>Change your information</Link> */}
           </Grid>
 
