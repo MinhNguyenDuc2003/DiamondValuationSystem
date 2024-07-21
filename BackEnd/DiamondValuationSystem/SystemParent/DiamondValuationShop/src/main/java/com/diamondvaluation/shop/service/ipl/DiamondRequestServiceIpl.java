@@ -59,6 +59,9 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 		}
 		diamondRequest.setServices(list);
 		diamondRequest.setPaymentTotal(total);
+		if(diamondRequest.isPaid()) {
+			diamondRequest.setPaidDate(LocalDate.now());
+		}
 		return repo.save(diamondRequest);
 		
 	}

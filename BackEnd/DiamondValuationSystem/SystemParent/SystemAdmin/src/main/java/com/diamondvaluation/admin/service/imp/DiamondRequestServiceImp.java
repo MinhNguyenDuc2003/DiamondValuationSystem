@@ -101,6 +101,9 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		if(numberRequestBySlotAndDate>= numberLimit) {
 			throw new SlotTimeIsAlreadyFull("Cannot add request in this time!");
 		}
+		if(diamondRequest.isPaid()) {
+			diamondRequest.setPaidDate(LocalDate.now());
+		}
 		trackingRepo.save(track);
 		repo.save(diamondRequest);
 	}
@@ -425,8 +428,8 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 			Double revenue = repo.getRevenueByMonth(i);
 			if(revenue == null) {
 				maps.put(i, 0.0);
-			}
-			maps.put(i, revenue);
+			}else
+				maps.put(i, revenue);
 		}
 		return maps;
 	}
@@ -435,4 +438,48 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 	public double revenueByYear(int year) {
 		return repo.getRevenueByYear(year);
 	}
+
+	@Override
+	public Map<String, Double> revenueRequestEachDay(LocalDate dateBegin, LocalDate dateEnd) {
+		Map<String, Double> map = new HashMap<>();
+		while(!dateBegin.isAfter(dateEnd)) {
+			Double x = repo.getRevenueByDay(dateBegin.toString());
+			if(x == null) {
+				map.put(dateBegin.toString(), 0.0);
+			}else
+				map.put(dateBegin.toString(), x);
+			
+			dateBegin = dateBegin.plusDays(1);
+		}
+		return map;
+	}
+
+	@Override
+	public double revenueBetween2DAte(LocalDate dateBegin, LocalDate dateEnd) {
+		return repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString());
+	}
+
+	@Override
+	public Map<String, Integer> countRequestEachDate(LocalDate dateBegin, LocalDate dateEnd) {
+		Map<String, Integer> map = new HashMap<>();
+		while(!dateBegin.isAfter(dateEnd)) {
+			String[] arr = dateBegin.toString().split("-");
+			Integer x = repo.getRequestByDay(arr[2], arr[1] , arr[0]);
+			if(x == null) {
+				map.put(dateBegin.toString(), 0);
+			}else
+				map.put(dateBegin.toString(), x);
+			
+			dateBegin = dateBegin.plusDays(1);
+		}
+		return map;
+	}
+
+	@Override
+	public int totalRequestBetweenDate(LocalDate dateBegin, LocalDate dateEnd) {
+		LocalDateTime dateTimeBegin = dateBegin.atStartOfDay();
+		LocalDateTime dateTimeEnd = dateEnd.plusDays(1).atStartOfDay();
+		return repo.getTotalRequestBetween2Date(dateTimeBegin, dateTimeEnd);
+	}
+
 }

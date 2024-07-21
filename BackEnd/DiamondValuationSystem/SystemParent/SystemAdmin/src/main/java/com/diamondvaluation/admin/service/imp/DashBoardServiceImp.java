@@ -1,9 +1,11 @@
 package com.diamondvaluation.admin.service.imp;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.diamondvaluation.admin.response.DailyRevenueResponse;
 import com.diamondvaluation.admin.response.DashByYearResponse;
 import com.diamondvaluation.admin.service.CustomerService;
 import com.diamondvaluation.admin.service.DashBoardService;
@@ -40,5 +42,13 @@ public class DashBoardServiceImp implements DashBoardService{
 		dash.setTotalCertificate(totalCertificate);
 		return dash;
 	}
-	
+
+	@Override
+	public DailyRevenueResponse getDailyResponse(LocalDate begin, LocalDate end) {
+		DailyRevenueResponse daily = new DailyRevenueResponse(requestService.revenueRequestEachDay(begin, end), 
+				requestService.countRequestEachDate(begin, end),
+				requestService.totalRequestBetweenDate(begin, end),
+				requestService.revenueBetween2DAte(begin, end));
+		return daily;
+	}
 }

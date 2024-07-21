@@ -62,4 +62,12 @@ public interface DiamondRequestService {
 	Map<Integer, Double> revenueRequestEachMonthByYear(int year);
 	
 	double revenueByYear(int year);
+	
+	Map<String, Double> revenueRequestEachDay(LocalDate dateBegin, LocalDate dateEnd);
+	
+	double revenueBetween2DAte(LocalDate dateBegin, LocalDate dateEnd);
+	
+	Map<String, Integer> countRequestEachDate(LocalDate dateBegin, LocalDate dateEnd);
+
+	int totalRequestBetweenDate(LocalDate dateBegin, LocalDate dateEnd);
 }
