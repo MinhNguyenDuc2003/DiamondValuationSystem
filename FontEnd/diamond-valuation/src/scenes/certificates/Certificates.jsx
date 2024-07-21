@@ -48,6 +48,15 @@ import CertificateHTML from "./CertificateHTML";
 import PrintPDF from "./PrintPDF";
 import { useAuth } from "../../components/auth/AuthProvider";
 
+const formatAssignmentDate = (dateArray) => {
+  if (!dateArray || dateArray.length !== 3) return "";
+  const [year, month, day] = dateArray;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}`;
+};
+
 const Certificates = () => {
   const [certificates, setCertificates] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -609,7 +618,17 @@ const Certificates = () => {
               >
                 <ListItemText
                   primary={`Request ID: ${request.id}`}
-                  secondary={`Customer: ${request.customer_name}`}
+                  secondary={
+                    <div>
+                      <Typography variant="body2">
+                        Customer: {request.customer_name}
+                      </Typography>
+                      <Typography variant="body2">
+                        Assign:{" "}
+                        {formatAssignmentDate(request.assignment[0].date)}
+                      </Typography>
+                    </div>
+                  }
                 />
               </ListItem>
             ))}

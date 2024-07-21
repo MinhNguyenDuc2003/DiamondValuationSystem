@@ -57,7 +57,7 @@ export const NavBar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             <MenuIcon />
           </IconButton>
-          <FlexBetween
+          {/* <FlexBetween
             backgroundColor={theme.palette.background.alt}
             borderRadius="9px"
             gap="3rem"
@@ -67,18 +67,18 @@ export const NavBar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
             <IconButton>
               <Search />
             </IconButton>
-          </FlexBetween>
+          </FlexBetween> */}
         </FlexBetween>
 
         {/* RIGHT SIDE */}
         <FlexBetween gap="1.5rem">
-          <IconButton onClick={colorMode.toggleColorMode}>
+          {/* <IconButton onClick={colorMode.toggleColorMode}>
             {theme.palette.mode === "dark" ? (
               <DarkModeOutlined sx={{ fontSize: "25px" }} />
             ) : (
               <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
-          </IconButton>
+          </IconButton> */}
           <IconButton>
             <SettingsOutlined sx={{ fontSize: "25px" }} />
           </IconButton>
@@ -94,25 +94,16 @@ export const NavBar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 gap: "1rem",
               }}
             >
-              <Box
-                component="img"
-                alt="profile"
-                src={user.photo}
-                height="32px"
-                width="32px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
-              />
               <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
-                  fontSize="0.85rem"
+                  fontSize="0.9rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
                   {user.full_name}
                 </Typography>
                 <Typography
-                  fontSize="0.75rem"
+                  fontSize="0.8rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
                   {user.roles_name}

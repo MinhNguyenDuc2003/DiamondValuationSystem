@@ -12,6 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Email, PointOfSale, PersonAdd, Traffic } from "@mui/icons-material";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import {
   getAllRequestPerDate,
   DashBoard,
@@ -129,7 +130,7 @@ const Dashboard = () => {
           title="Total Certificates"
           value={data ? data.total_certificate : 0}
           description={`In ${new Date().getFullYear()} `}
-          icon={<PersonAdd sx={{ fontSize: "26px" }} />}
+          icon={<ReceiptLongIcon sx={{ fontSize: "26px" }} />}
         />
         <StatBox
           title="Total Revenue"

@@ -49,6 +49,8 @@ const SlotTimeManagement = () => {
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState(null);
+  const [editRowIndex, setEditRowIndex] = useState(null);
+  const [editedNumber, setEditedNumber] = useState("");
 
   useEffect(() => {
     const fetchSlotTimes = async () => {
@@ -146,9 +148,46 @@ const SlotTimeManagement = () => {
     }
   };
 
+  const handleEditClick = (id, currentNumber) => {
+    setEditRowIndex(id);
+    setEditedNumber(currentNumber);
+  };
+
+  const handleSaveClick = async (id) => {
+    // Find the attribute to be edited
+    const editedSlotTime = slotTimes.find((slot) => slot.id === id);
+
+    if (editedSlotTime) {
+      // const currentAttr = updatedCaratData[tabIndex].list[currentAttrIndex];
+
+      // Update the number locally
+      editedSlotTime.number = editedNumber;
+
+      // Send the update request to the server
+      try {
+        const result = await saveSlotTime(editedSlotTime);
+        if (result !== undefined) {
+          setMessage(
+            `Update slot time with id ${editedSlotTime.id}  successfully!`
+          );
+          const updatedSlotTimes = await getAllSlotTime();
+          setSlotTimes(updatedSlotTimes);
+          setEditRowIndex(null);
+          setTimeout(() => {
+            setMessage("");
+          }, 3000);
+        } else {
+          setError("Failed to update slot time");
+        }
+      } catch (error) {
+        setError("Failed to update slot time");
+      }
+    }
+  };
+
   return (
-    <Box p={3}>
-      <Typography variant="h4" gutterBottom>
+    <Box p="0px 20px">
+      <Typography variant="h4" gutterBottom textAlign="center">
         Manage Slot Times
       </Typography>
 
@@ -243,12 +282,43 @@ const SlotTimeManagement = () => {
                   {slotTimes.map((slot) => (
                     <TableRow key={slot.id}>
                       <TableCell>{slot.time}</TableCell>
-                      <TableCell>{slot.number}</TableCell>
                       <TableCell>
+                        {editRowIndex === slot.id ? (
+                          <TextField
+                            value={editedNumber}
+                            onChange={(e) => setEditedNumber(e.target.value)}
+                            size="small"
+                            variant="outlined"
+                          />
+                        ) : (
+                          slot.number
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editRowIndex === slot.id ? (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleSaveClick(slot.id)}
+                          >
+                            Save
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleEditClick(slot.id, slot.number)
+                            }
+                          >
+                            Edit
+                          </Button>
+                        )}
                         <Button
                           variant="contained"
                           color="secondary"
                           onClick={() => handleOpenDialog(slot)}
+                          sx={{ ml: "10px" }}
                         >
                           Delete
                         </Button>
