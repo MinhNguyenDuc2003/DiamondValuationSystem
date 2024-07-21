@@ -150,6 +150,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		track.setRequest(diamondRequest);
 		track.setStatus(diamondRequest.getStatus());
 		diamondRequest.setStatus(status);
+		trackingRepo.save(track);
 		repo.save(diamondRequest);
 	}
 
