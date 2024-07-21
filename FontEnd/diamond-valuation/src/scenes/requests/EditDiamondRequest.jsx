@@ -57,7 +57,7 @@ const EditDiamondRequest = () => {
     payment_method: "CASH",
     paid: false,
     appointment_date: null,
-    slotId: "",
+    slotId: 0,
     assignment: [],
     assignment_id: [],
   });
@@ -86,7 +86,7 @@ const EditDiamondRequest = () => {
             payment_method: requestEdit.payment_method,
             paid: requestEdit.paid,
             appointment_date: requestEdit.appoinment_date || "",
-            slotId: requestEdit.slot_id || "",
+            slotId: requestEdit.slot_id || 0,
             assignment: requestEdit.assignment,
             assignment_id: requestEdit.assignment.map(
               (assignment) => assignment.id
