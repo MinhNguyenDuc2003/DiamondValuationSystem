@@ -6,9 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DailyDashBoard } from "../../components/utils/ApiFunctions";
 
 const Daily = () => {
+  const today = new Date();
+  const tenDaysAgo = new Date();
+  tenDaysAgo.setDate(today.getDate() - 10);
+
   const [data, setData] = useState([]);
-  const [startDate, setStartDate] = useState(new Date("2024-07-10"));
-  const [endDate, setEndDate] = useState(new Date("2024-07-20"));
+  const [startDate, setStartDate] = useState(tenDaysAgo);
+  const [endDate, setEndDate] = useState(today);
   const [error, setError] = useState(null); // Add state for error messages
   const theme = useTheme();
 
