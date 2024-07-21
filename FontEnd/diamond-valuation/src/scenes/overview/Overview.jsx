@@ -11,6 +11,7 @@ import OverviewChart from "../../components/common/OverviewChart";
 
 const Overview = () => {
   const [view, setView] = useState("revenue");
+  const [year, setYear] = useState(new Date().getFullYear());
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -32,7 +33,33 @@ const Overview = () => {
             <MenuItem value="certificates">Certificates</MenuItem>
           </Select>
         </FormControl>
-        <OverviewChart view={view} />
+
+        <FormControl sx={{ ml: 2 }}>
+          <InputLabel>Year</InputLabel>
+          <Select
+            value={year}
+            label="Year"
+            onChange={(e) => setYear(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: "200px",
+                },
+              },
+            }}
+          >
+            {/* Generate year options from a range */}
+            {Array.from(
+              { length: 100 },
+              (_, index) => new Date().getFullYear() - index
+            ).map((yearOption) => (
+              <MenuItem key={yearOption} value={yearOption}>
+                {yearOption}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <OverviewChart view={view} year={year} />
       </Box>
     </Box>
   );

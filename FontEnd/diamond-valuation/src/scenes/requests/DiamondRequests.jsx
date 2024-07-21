@@ -517,7 +517,7 @@ const Requests = () => {
                       )}
                     </TableCell>
                   </TableRow>
-                  <TableRow>
+                  <TableRow sx={{ overflow: "auto" }}>
                     <TableCell
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                       colSpan={14}
@@ -527,7 +527,13 @@ const Requests = () => {
                         timeout="auto"
                         unmountOnExit
                       >
-                        <Box margin={1}>
+                        <Box
+                          margin={1}
+                          sx={{
+                            maxHeight: "200px", // Adjust height as needed
+                            overflowY: "auto",
+                          }}
+                        >
                           <Typography variant="h6" gutterBottom component="div">
                             Request Tracking
                           </Typography>

@@ -338,6 +338,8 @@ const Sidebar = ({
   const isAuthorized =
     auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
 
+  const isValuationStaff = auth.isRoleAccept("valuationStaff");
+
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
@@ -388,6 +390,11 @@ const Sidebar = ({
                 ) {
                   return;
                 }
+
+                if (isValuationStaff && text === "Customers") {
+                  return;
+                }
+
                 if (!icon) {
                   return (
                     <Typography

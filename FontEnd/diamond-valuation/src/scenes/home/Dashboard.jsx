@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Email, PointOfSale, PersonAdd, Traffic } from "@mui/icons-material";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import RequestPageIcon from "@mui/icons-material/RequestPage";
 import {
   getAllRequestPerDate,
   DashBoard,
@@ -115,7 +116,7 @@ const Dashboard = () => {
           title="Total Requests"
           value={data ? data.total_request : 0}
           description={`In ${new Date().getFullYear()} `}
-          icon={<PointOfSale sx={{ fontSize: "26px" }} />}
+          icon={<RequestPageIcon sx={{ fontSize: "26px" }} />}
         />
         <Box
           gridColumn="span 8"
@@ -136,7 +137,7 @@ const Dashboard = () => {
           title="Total Revenue"
           value={data ? `${data.total_revenue}$` : 0}
           description={`In ${new Date().getFullYear()} `}
-          icon={<Traffic sx={{ fontSize: "26px" }} />}
+          icon={<PointOfSale sx={{ fontSize: "26px" }} />}
         />
 
         <Box gridColumn="span 12" gridRow="span 1">
