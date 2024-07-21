@@ -292,7 +292,9 @@ export async function saveRequest(request) {
   formData.append("service_ids", request.service_ids);
   formData.append("payment_method", request.payment_method);
   formData.append("appointmentDate", request.appointment_date);
-  formData.append("slotId", request.slotId);
+  if (request.slotId !== null && request.slotId > 0) {
+    formData.append("slotId", request.slotId);
+  }
   // formData.append("appointmentTime", request.appointment_time);
 
   formData.append("paid", request.paid);

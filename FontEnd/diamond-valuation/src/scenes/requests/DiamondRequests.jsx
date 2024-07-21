@@ -161,7 +161,7 @@ const Requests = () => {
   const [services, setServices] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [trackingData, setTrackingData] = useState({});
-  const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
+  const [showLateRequests, setShowLateRequests] = useState(false);
   const [number, setNumber] = useState(0);
   const requestsPerPage = 5;
 
@@ -277,19 +277,6 @@ const Requests = () => {
     setPhoneFilter(event.target.value);
   };
 
-  const filteredData = data.filter(
-    (request) =>
-      (statusFilter ? request.status === statusFilter : true) &&
-      (phoneFilter ? request.customer_phone.includes(phoneFilter) : true)
-  );
-
-  const indexOfLastRequest = currentPage * requestsPerPage;
-  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
-  const currentRequests = filteredData.slice(
-    indexOfFirstRequest,
-    indexOfLastRequest
-  );
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -329,13 +316,18 @@ const Requests = () => {
       (request.status === "NEW" || request.status === "PROCESSED")
   );
 
-  const handleBadgeClick = () => {
-    setLateRequestsDialogOpen(true);
-  };
+  const filteredData = (showLateRequests ? lateRequests : data).filter(
+    (request) =>
+      (statusFilter ? request.status === statusFilter : true) &&
+      (phoneFilter ? request.customer_phone.includes(phoneFilter) : true)
+  );
 
-  const handleCloseLateRequestsDialog = () => {
-    setLateRequestsDialogOpen(false);
-  };
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = filteredData.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
 
   return (
     <Box p="20px" overflow="auto">
@@ -359,15 +351,6 @@ const Requests = () => {
             </Button>
           </Link>
         )}
-
-        <Badge
-          color="secondary"
-          badgeContent={lateRequests.length}
-          onClick={handleBadgeClick}
-          sx={{ cursor: "pointer" }}
-        >
-          <AssignmentLateIcon sx={{ fontSize: "25px" }} />
-        </Badge>
 
         <Box>
           <TextField
@@ -394,6 +377,14 @@ const Requests = () => {
               <MenuItem value="BLOCKED">BLOCKED</MenuItem>
             </Select>
           </FormControl>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setShowLateRequests(!showLateRequests)}
+            sx={{ ml: 2 }}
+          >
+            {showLateRequests ? "Show All Requests" : "Show Late Requests"}
+          </Button>
         </Box>
       </Box>
 
@@ -607,45 +598,6 @@ const Requests = () => {
             Delete
           </Button>
           <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={lateRequestsDialogOpen}
-        onClose={handleCloseLateRequestsDialog}
-        variant="contained"
-      >
-        <DialogTitle>Select Request</DialogTitle>
-        <DialogContent>
-          <List>
-            {lateRequests.map((request) => (
-              <ListItem
-                button
-                key={request.id}
-                onClick={() => navigate(`/requests/${request.id}`)}
-              >
-                <Avatar sx={{ bgcolor: "#C5A773", mr: 2 }}>
-                  <CalendarTodayIcon />
-                </Avatar>
-                <ListItemText
-                  primary={`Request ID: ${request.id}`}
-                  secondary={`Customer: ${request.customer_name}`}
-                />
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ ml: 2 }}
-                >
-                  Appointment Date: {request.appoinment_date}
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseLateRequestsDialog} color="primary">
             Cancel
           </Button>
         </DialogActions>
