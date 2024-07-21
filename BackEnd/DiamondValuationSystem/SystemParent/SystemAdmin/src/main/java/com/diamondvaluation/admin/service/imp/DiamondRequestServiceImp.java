@@ -91,15 +91,17 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 			money += ds.get().getMoney();
 		}
 		diamondRequest.setPaymentTotal(money);
-		Optional<SlotTime> slot = slotRepo.findById(diamondRequest.getSlot().getId());
-		if(!slot.isPresent()) {
-			throw new SlotTimeNotFoundException("Cannot find any slottime with id!");
-		}
-		diamondRequest.setSlot(slot.get());
-		int numberRequestBySlotAndDate = repo.countRequestByDateAndSlot(diamondRequest.getAppointmentDate().toString(), diamondRequest.getSlot().getId());
-		int numberLimit = slotRepo.getNumberById(diamondRequest.getSlot().getId()).getNumber();
-		if(numberRequestBySlotAndDate>= numberLimit) {
-			throw new SlotTimeIsAlreadyFull("Cannot add request in this time!");
+		if(diamondRequest.getSlot()!=null) {
+			Optional<SlotTime> slot = slotRepo.findById(diamondRequest.getSlot().getId());
+			if(!slot.isPresent()) {
+				throw new SlotTimeNotFoundException("Cannot find any slottime with id!");
+			}
+			diamondRequest.setSlot(slot.get());
+			int numberRequestBySlotAndDate = repo.countRequestByDateAndSlot(diamondRequest.getAppointmentDate().toString(), diamondRequest.getSlot().getId());
+			int numberLimit = slotRepo.getNumberById(diamondRequest.getSlot().getId()).getNumber();
+			if(numberRequestBySlotAndDate>= numberLimit) {
+				throw new SlotTimeIsAlreadyFull("Cannot add request in this time!");
+			}
 		}
 		if(diamondRequest.isPaid()) {
 			diamondRequest.setPaidDate(LocalDate.now());

@@ -91,8 +91,10 @@ public class DiamondRequestController {
 			LocalDate date = LocalDate.parse(request.getAppointmentDate(), dateFormatter);
 			appoinment.setAppointmentDate(date);
 		}
-		SlotTime slotTime = new SlotTime(Integer.parseInt(request.getSlotId()));
-		appoinment.setSlot(slotTime);
+		if(request.getSlotId()!= null) {
+			SlotTime slotTime = new SlotTime(Integer.parseInt(request.getSlotId()));
+			appoinment.setSlot(slotTime);
+		}
 		return appoinment;
 	}
 
