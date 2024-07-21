@@ -395,6 +395,17 @@ export async function deleteAssign(values, assignment_id) {
   }
 }
 
+export async function getAllRequestNewByStaffValuation() {
+  try {
+    const result = await api.get(
+      `api/diamond-requests/all-request-valuation-staff`,
+      {}
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching requests : ${error.message}`);
+  }
+}
 // ================================== Certificates ============================================ //
 
 export async function getAllCertificates() {
@@ -451,6 +462,15 @@ export async function saveCertificate(certificate) {
     } else return response.status;
   } catch (error) {
     console.log(error.data);
+  }
+}
+
+export async function getAllCertificateByStaffValuation() {
+  try {
+    const result = await api.get(`api/certificates/all/staff-valuation`, {});
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error fetching services : ${error.message}`);
   }
 }
 // ====================================== RAPAPORT ========================================= //

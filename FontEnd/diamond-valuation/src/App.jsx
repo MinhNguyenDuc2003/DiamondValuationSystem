@@ -1,21 +1,24 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+  BrowserRouter,
+} from "react-router-dom";
 import "./App.css";
 import Login from "./components/auth/Login";
 import Users from "./scenes/users/Users";
-import { AuthProvider, useAuth } from "./components/auth/AuthProvider";
+import { AuthProvider } from "./components/auth/AuthProvider";
 import AddUser from "./scenes/users/AddUser";
 import EditUser from "./scenes/users/EditUser";
 import Customers from "./scenes/customers/Customers";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import AddCustomer from "./scenes/customers/AddCustomer";
 import EditCustomer from "./scenes/customers/EditCustomer";
-import SideBar from "./scenes/global/SideBar";
 import Services from "./scenes/services/Services";
-import Topbar from "./scenes/global/TopBar";
 import AddService from "./scenes/services/AddService";
 import EditService from "./scenes/services/EditService";
 import Requests from "./scenes/requests/DiamondRequests";
@@ -36,6 +39,9 @@ import StaffRoute from "./components/routes/StaffRoute";
 import Overview from "./scenes/overview/Overview";
 import WorkAssignment from "./scenes/manager/WorkAssignment";
 import SlotTimeManagement from "./scenes/manager/ManageSlotTime";
+import Layout from "./scenes/layout/Layout";
+import { ColorModeContext, useMode } from "./theme";
+import { ThemeProvider } from "@mui/material";
 
 const App = () => {
   return (
@@ -53,247 +59,248 @@ const MainContent = () => {
 
   return (
     <div className="app">
-      {!isLoginPage && <PrivateRoute><SideBar /></PrivateRoute> }
-      <main className={"content"}>
-        {!isLoginPage && <PrivateRoute><Topbar /></PrivateRoute>}
-        <Routes>
+      <Routes>
+        {isLoginPage ? (
           <Route path="/login" element={<Login />} />
+        ) : (
           <Route
-            path="/"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Layout />
               </PrivateRoute>
             }
-          />
+          >
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Users */}
+            {/* Users */}
+            <Route
+              path="/users"
+              element={
+                <PrivateRoute>
+                  <Users />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/users/new"
+              element={
+                <PrivateRoute>
+                  <ManagerRoute>
+                    <AddUser />
+                  </ManagerRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/users/:userid"
+              element={
+                <PrivateRoute>
+                  <EditUser />
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/users"
-            element={
-              <PrivateRoute>
-                <Users />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/users/new"
-            element={
-              <PrivateRoute>
-                <ManagerRoute>
-                  <AddUser />
-                </ManagerRoute>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/users/:userid"
-            element={
-              <PrivateRoute>
-                <EditUser />
-              </PrivateRoute>
-            }
-          />
+            {/* Customers */}
+            <Route
+              path="/customers"
+              element={
+                <PrivateRoute>
+                  <Customers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/customers/new"
+              element={
+                <PrivateRoute>
+                  <AddCustomer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/customers/:customerid"
+              element={
+                <PrivateRoute>
+                  <EditCustomer />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Customers */}
+            {/* Services */}
+            <Route
+              path="/services"
+              element={
+                <PrivateRoute>
+                  <Services />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/services/new"
+              element={
+                <PrivateRoute>
+                  <ManagerRoute>
+                    <AddService />
+                  </ManagerRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/services/:serviceid"
+              element={
+                <PrivateRoute>
+                  <ManagerRoute>
+                    <EditService />
+                  </ManagerRoute>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/customers"
-            element={
-              <PrivateRoute>
-                <Customers />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/customers/new"
-            element={
-              <PrivateRoute>
-                <AddCustomer />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/customers/:customerid"
-            element={
-              <PrivateRoute>
-                <EditCustomer />
-              </PrivateRoute>
-            }
-          />
+            {/* Requests */}
+            <Route
+              path="/requests"
+              element={
+                <PrivateRoute>
+                  <Requests />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/requests/new"
+              element={
+                <PrivateRoute>
+                  <StaffRoute>
+                    <AddDiamondRequest />
+                  </StaffRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/requests/:requestid"
+              element={
+                <PrivateRoute>
+                  <StaffRoute>
+                    <EditDiamondRequest />
+                  </StaffRoute>
+                </PrivateRoute>
+              }
+            />
 
-          {/* Services */}
+            {/* Certificates */}
+            <Route
+              path="/certificates/"
+              element={
+                <PrivateRoute>
+                  <Certificates />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/certificates/:certificateId"
+              element={
+                <PrivateRoute>
+                  <ValuationRoute>
+                    <EditCertificate />
+                  </ValuationRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/create-certificate/:requestId"
+              element={
+                <PrivateRoute>
+                  <ValuationRoute>
+                    <CreateCertificate />
+                  </ValuationRoute>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/services"
-            element={
-              <PrivateRoute>
-                <Services />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/services/new"
-            element={
-              <PrivateRoute>
-                <ManagerRoute>
-                  <AddService />
-                </ManagerRoute>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/services/:serviceid"
-            element={
-              <PrivateRoute>
-                <ManagerRoute>
-                  <EditService />
-                </ManagerRoute>
-              </PrivateRoute>
-            }
-          />
+            {/* Rapaport */}
+            <Route
+              path="/rapaport"
+              element={
+                <PrivateRoute>
+                  <Rapaport />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Requests */}
+            {/* Report */}
+            <Route
+              path="/report/:requestId"
+              element={
+                <PrivateRoute>
+                  <StaffRoute>
+                    <Report />
+                  </StaffRoute>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/requests"
-            element={
-              <PrivateRoute>
-                <Requests />
-              </PrivateRoute>
-            }
-          />
+            {/* Manager */}
+            <Route
+              path="/reports"
+              element={
+                <PrivateRoute>
+                  <ManageReports />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/account/information"
+              element={
+                <PrivateRoute>
+                  <UpdateAccount />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/overview"
+              element={
+                <PrivateRoute>
+                  <Overview />
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/requests/new"
-            element={
-              <PrivateRoute>
-                <StaffRoute>
-                  <AddDiamondRequest />
-                </StaffRoute>
-              </PrivateRoute>
-            }
-          />
+            {/* Work Assignment */}
+            <Route
+              path="/workassignment"
+              element={
+                <PrivateRoute>
+                  <ManagerRoute>
+                    <WorkAssignment />
+                  </ManagerRoute>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/requests/:requestid"
-            element={
-              <PrivateRoute>
-                <StaffRoute>
-                  <EditDiamondRequest />
-                </StaffRoute>
-              </PrivateRoute>
-            }
-          />
+            {/* Slot Time */}
+            <Route
+              path="/slottime"
+              element={
+                <PrivateRoute>
+                  <ManagerRoute>
+                    <SlotTimeManagement />
+                  </ManagerRoute>
+                </PrivateRoute>
+              }
+            />
 
-          {/* Certificates */}
-
-          <Route
-            path="/certificates/"
-            element={
-              <PrivateRoute>
-                <Certificates />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/certificates/:certificateId"
-            element={
-              <PrivateRoute>
-                <ValuationRoute>
-                  <EditCertificate />
-                </ValuationRoute>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/create-certificate/:requestId"
-            element={
-              <PrivateRoute>
-                <ValuationRoute>
-                  <CreateCertificate />
-                </ValuationRoute>
-              </PrivateRoute>
-            }
-          />
-
-          {/* Rapaport */}
-          <Route
-            path="/rapaport"
-            element={
-              <PrivateRoute>
-                <Rapaport />
-              </PrivateRoute>
-            }
-          />
-
-          {/* Report */}
-          <Route
-            path="/report/:requestId"
-            element={
-              <PrivateRoute>
-                <StaffRoute>
-                  <Report />
-                </StaffRoute>
-              </PrivateRoute>
-            }
-          />
-
-          {/* Manager */}
-          <Route
-            path="/managereports"
-            element={
-              <PrivateRoute>
-                <ManageReports />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/account/information"
-            element={
-              <PrivateRoute>
-                <UpdateAccount />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/overview"
-            element={
-              <PrivateRoute>
-                <Overview />
-              </PrivateRoute>
-            }
-          />
-
-          {/* Work Assignment */}
-          <Route
-            path="/workassignment"
-            element={
-              <PrivateRoute>
-                <ManagerRoute>
-                  <WorkAssignment />
-                </ManagerRoute>
-              </PrivateRoute>
-            }
-          />
-
-          {/* Slot Time */}
-          <Route
-            path="/slottime"
-            element={
-              <PrivateRoute>
-                <ManagerRoute>
-                  <SlotTimeManagement />
-                </ManagerRoute>
-              </PrivateRoute>
-            }
-          />
-
-          {/* Catch-all route for 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
+            {/* Catch-all route for 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        )}
+      </Routes>
     </div>
   );
 };

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   getAllCertificates,
   deleteCertificateById,
-  getAllRequestsStatus,
   updateRequestStatus,
+  getAllRequestNewByStaffValuation,
+  getAllCertificateByStaffValuation,
 } from "../../components/utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -58,15 +59,17 @@ const Certificates = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [openRow, setOpenRow] = useState(null);
-  const CertificatesPerPage = 6;
+  const [certificatesStaff, setCertificatesStaff] = useState([]);
+  const [viewAllCertificates, setViewAllCertificates] = useState(true);
+  const CertificatesPerPage = 5;
   const navigate = useNavigate();
 
   const auth = useAuth();
 
   // Check if the user is an admin or manager or valuation staff
   const isAuthorized =
-    auth.isRoleAccept("admin") ||
-    auth.isRoleAccept("manager") ||
+    // auth.isRoleAccept("admin") ||
+    // auth.isRoleAccept("manager") ||
     auth.isRoleAccept("valuationStaff");
 
   const [filters, setFilters] = useState({
@@ -164,13 +167,16 @@ const Certificates = () => {
       try {
         // Fetch certificates
         const certificates = await getAllCertificates();
-        if (certificates !== undefined) {
-          setCertificates(certificates);
-        }
+        setCertificates(certificates);
 
         // Fetch requests status
-        const requests = await getAllRequestsStatus("NEW");
-        setRequests(requests);
+        if (isAuthorized) {
+          const requests = await getAllRequestNewByStaffValuation();
+          setRequests(requests);
+
+          const certificatesStaff = await getAllCertificateByStaffValuation();
+          setCertificatesStaff(certificatesStaff);
+        }
 
         // Clear error after a timeout
         setTimeout(() => {
@@ -253,7 +259,13 @@ const Certificates = () => {
     }
   };
 
-  const filteredData = certificates.filter((certificate) => {
+  const handleToggleView = () => {
+    setViewAllCertificates((prev) => !prev);
+  };
+
+  const filteredData = (
+    viewAllCertificates ? certificates : certificatesStaff
+  ).filter((certificate) => {
     return (
       ((filters.carat[0] === 0 && filters.carat[1] === 10) ||
         (certificate.carat >= filters.carat[0] &&
@@ -305,14 +317,25 @@ const Certificates = () => {
         Manage Certificates
       </Typography>
       {isAuthorized && (
-        <Badge
-          color="secondary"
-          badgeContent={newRequests.length}
-          onClick={handleBadgeClick}
-          sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
-        >
-          <RequestPageIcon />
-        </Badge>
+        <Box display="flex" justifyContent="space-between">
+          <Badge
+            color="secondary"
+            badgeContent={newRequests.length}
+            onClick={handleBadgeClick}
+            sx={{ cursor: "pointer", fontSize: "40px", color: "black" }}
+          >
+            <RequestPageIcon />
+          </Badge>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleToggleView}
+          >
+            {viewAllCertificates
+              ? "View My Certificates"
+              : "View All Certificates"}
+          </Button>
+        </Box>
       )}
       {message && (
         <Alert severity="success" sx={{ mb: 2 }}>

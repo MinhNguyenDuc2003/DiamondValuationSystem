@@ -11,7 +11,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await DashBoard(2024);
+        const responseData = await DashBoard(new Date().getFullYear());
         const formattedData = formatData(responseData, view);
         setData(formattedData);
       } catch (error) {
@@ -37,29 +37,20 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       "December",
     ];
 
-    let chartData = [];
+    const dataKeyMap = {
+      customers: "number_customer_each_month",
+      requests: "number_request_each_month",
+      certificates: "number_certificate_each_month",
+      revenue: "revenue_each_month",
+    };
 
-    if (view === "customers") {
-      chartData = months.map((month, index) => ({
-        x: month,
-        y: data.number_customer_each_month[index + 1] || 0,
-      }));
-    } else if (view === "requests") {
-      chartData = months.map((month, index) => ({
-        x: month,
-        y: data.number_request_each_month[index + 1] || 0,
-      }));
-    } else if (view === "certificates") {
-      chartData = months.map((month, index) => ({
-        x: month,
-        y: data.number_certificate_each_month[index + 1] || 0,
-      }));
-    } else if (view === "revenue") {
-      chartData = months.map((month, index) => ({
-        x: month,
-        y: data.revenue_each_month[index + 1] || 0,
-      }));
-    }
+    const selectedKey = dataKeyMap[view];
+    if (!data[selectedKey]) return [];
+
+    const chartData = months.map((month, index) => ({
+      x: month,
+      y: data[selectedKey][index + 1] || 0,
+    }));
 
     return [{ id: view, data: chartData }];
   };
@@ -123,10 +114,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        format: (v) => {
-          if (isDashboard) return v.slice(0, 3);
-          return v;
-        },
+        format: (v) => (isDashboard ? v.slice(0, 3) : v),
         orient: "bottom",
         tickSize: 5,
         tickPadding: 5,
@@ -143,11 +131,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
         tickRotation: 0,
         legend: isDashboard
           ? ""
-          : `Total ${
-              view === "sales"
-                ? "Revenue"
-                : view.charAt(0).toUpperCase() + view.slice(1)
-            } for Year`,
+          : `Total ${view.charAt(0).toUpperCase() + view.slice(1)} for Year`,
         legendOffset: -60,
         legendPosition: "middle",
       }}
@@ -160,36 +144,34 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       pointLabelYOffset={-12}
       useMesh={true}
       legends={
-        !isDashboard ? (
-          [
-            {
-              anchor: "bottom-right",
-              direction: "column",
-              justify: false,
-              translateX: 30,
-              translateY: -40,
-              itemsSpacing: 0,
-              itemDirection: "left-to-right",
-              itemWidth: 80,
-              itemHeight: 20,
-              itemOpacity: 0.75,
-              symbolSize: 12,
-              symbolShape: "circle",
-              symbolBorderColor: "rgba(0, 0, 0, .5)",
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemBackground: "rgba(0, 0, 0, .03)",
-                    itemOpacity: 1,
+        !isDashboard
+          ? [
+              {
+                anchor: "bottom-right",
+                direction: "column",
+                justify: false,
+                translateX: 30,
+                translateY: -40,
+                itemsSpacing: 0,
+                itemDirection: "left-to-right",
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: "circle",
+                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemBackground: "rgba(0, 0, 0, .03)",
+                      itemOpacity: 1,
+                    },
                   },
-                },
-              ],
-            },
-          ]
-        ) : (
-          <CircularProgress />
-        )
+                ],
+              },
+            ]
+          : []
       }
     />
   );

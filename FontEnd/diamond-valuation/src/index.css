@@ -2,8 +2,10 @@
 
 html,
 body,
-.app,
-.content {
+#root,
+.app {
+  margin: 0;
+  padding: 0;
   height: 100%;
   width: 100%;
   font-family: 'Source Sans 3', sans-serif;

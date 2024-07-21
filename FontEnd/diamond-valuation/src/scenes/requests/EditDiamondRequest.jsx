@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  getCustomersPerPage,
   getAllServices,
   getRequestById,
   saveRequest,
@@ -28,14 +27,6 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
-// const getTodayDate = () => {
-//   const today = new Date();
-//   const year = today.getFullYear();
-//   const month = String(today.getMonth() + 1).padStart(2, "0");
-//   const day = String(today.getDate()).padStart(2, "0");
-//   return `${year}-${month}-${day}`;
-// };
 
 const formatAssignmentDate = (dateArray) => {
   if (!dateArray || dateArray.length !== 3) return "";
@@ -68,7 +59,7 @@ const EditDiamondRequest = () => {
     appointment_date: null,
     slotId: "",
     assignment: [],
-    assignment_id: "",
+    assignment_id: [],
   });
 
   useEffect(() => {
@@ -128,7 +119,6 @@ const EditDiamondRequest = () => {
     };
 
     fetchData();
-    console.log(staffs);
   }, []);
 
   const validationSchema = Yup.object().shape({
@@ -150,7 +140,7 @@ const EditDiamondRequest = () => {
       // Call setRequestToAssign only for new assignments
       if (values.assignment.length === 0) {
         await setRequestToAssign(values, values.assignment_id);
-      } else if (values.assignment[0].id !== values.assignment_id) {
+      } else if (values.assignment[0].id !== values.assignment_id[0]) {
         await deleteAssign(values, values.assignment[0].id);
         await setRequestToAssign(values, values.assignment_id);
       }

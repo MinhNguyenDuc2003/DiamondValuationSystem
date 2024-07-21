@@ -163,7 +163,7 @@ const Requests = () => {
   const [trackingData, setTrackingData] = useState({});
   const [lateRequestsDialogOpen, setLateRequestsDialogOpen] = useState(false);
   const [number, setNumber] = useState(0);
-  const requestsPerPage = 6;
+  const requestsPerPage = 5;
 
   const navigate = useNavigate();
 

@@ -1,140 +1,143 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import Logout from "../../components/auth/Logout";
+import React, { useState, useContext } from "react";
+import FlexBetween from "../../components/common/FlexBetween";
+import {
+  LightModeOutlined,
+  DarkModeOutlined,
+  Menu as MenuIcon,
+  Search,
+  SettingsOutlined,
+  ArrowDropDownOutlined,
+} from "@mui/icons-material";
+import {
+  AppBar,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  InputBase,
+  Toolbar,
+  Menu,
+  MenuItem,
+  useTheme,
+  Divider,
+} from "@mui/material";
+import { useAuth } from "../../components/auth/AuthProvider";
+import { ColorModeContext } from "../../theme";
 
-export const NavBar = () => {
-  const [user, setUser] = useState({
-    full_name: "",
-    roles_name: "",
-  });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export const NavBar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+  const auth = useAuth();
+  const theme = useTheme();
+  const colorMode = useContext(ColorModeContext);
 
-  const [showAccount, setShowAccount] = useState(false);
+  const navigate = useNavigate();
 
-  const handleAccountClick = () => {
-    setShowAccount(!showAccount);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isOpen = Boolean(anchorEl);
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+
+  const handleLogout = async () => {
+    auth.handleLogout();
+    navigate("/login", { replace: true });
   };
-  useEffect(() => {
-    const userName = localStorage.getItem("userName");
-    const roles = localStorage.getItem("userRoles");
-    const token = localStorage.getItem("token") ? true : false;
-    if (token) {
-      setIsLoggedIn(true);
-    }
-    setUser({
-      full_name: userName,
-      roles_name: roles,
-    });
-  }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
-      <Link to={"/"} className="navbar-brand">
-        <span className="text-white ms-5">Diamond Valuation Admin</span>
-      </Link>
+    <AppBar
+      sx={{
+        position: "static",
+        background: "none",
+        boxShadow: "none",
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        {/* LEFT SIDE */}
+        <FlexBetween>
+          <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            <MenuIcon />
+          </IconButton>
+          <FlexBetween
+            backgroundColor={theme.palette.background.alt}
+            borderRadius="9px"
+            gap="3rem"
+            p="0.1rem 1.5rem"
+          >
+            <InputBase placeholder="Search..." />
+            <IconButton>
+              <Search />
+            </IconButton>
+          </FlexBetween>
+        </FlexBetween>
 
-      <button
-        className="navbar-toggler text-white"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarScroll"
-        aria-controls="navbarScroll"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
-
-      <div className="collapse navbar-collapse ms-5" id="navbarScroll">
-        <ul className="navbar-nav me-auto my-2 my-lg-2 navbar-nav-scroll">
-          <li className="nav-item">
-            <NavLink
-              className="nav-link text-white"
-              aria-current="page"
-              to={"/users"}
-            >
-              Users
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink
-              className="nav-link text-white"
-              aria-current="page"
-              to={"/customers"}
-            >
-              Customers
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink
-              className="nav-link text-white"
-              aria-current="page"
-              to={"/services"}
-            >
-              Services
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink
-              className="nav-link text-white"
-              aria-current="page"
-              to={"/settings"}
-            >
-              Settings
-            </NavLink>
-          </li>
-        </ul>
-
-        <ul className="d-flex navbar-nav">
-          <li className="nav-item dropdown">
-            {user.full_name ? (
-              <a
-                className={`nav-link dropdown-toggle ${
-                  showAccount ? "show" : ""
-                } text-white`}
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                onClick={handleAccountClick}
-              >
-                {user.full_name}&nbsp; &nbsp;{"(" + user.roles_name + ")"}
-              </a>
+        {/* RIGHT SIDE */}
+        <FlexBetween gap="1.5rem">
+          <IconButton onClick={colorMode.toggleColorMode}>
+            {theme.palette.mode === "dark" ? (
+              <DarkModeOutlined sx={{ fontSize: "25px" }} />
             ) : (
-              <a
-                className={`nav-link dropdown-toggle ${
-                  showAccount ? "show" : ""
-                } text-white bi bi-person-lines-fill ms-8`}
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style={{ marginLeft: "125px" }}
-                onClick={handleAccountClick}
-              ></a>
+              <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
+          </IconButton>
+          <IconButton>
+            <SettingsOutlined sx={{ fontSize: "25px" }} />
+          </IconButton>
 
-            <ul
-              className={`dropdown-menu ${showAccount ? "show" : ""} `}
-              aria-labelledby="navbarDropdown"
+          <FlexBetween>
+            <Button
+              onClick={handleClick}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                textTransform: "none",
+                gap: "1rem",
+              }}
             >
-              {isLoggedIn ? (
-                <Logout />
-              ) : (
-                <li>
-                  <Link className="dropdown-item" to={"/login"}>
-                    Login
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </nav>
+              <Box
+                component="img"
+                alt="profile"
+                src={user.photo}
+                height="32px"
+                width="32px"
+                borderRadius="50%"
+                sx={{ objectFit: "cover" }}
+              />
+              <Box textAlign="left">
+                <Typography
+                  fontWeight="bold"
+                  fontSize="0.85rem"
+                  sx={{ color: theme.palette.secondary[100] }}
+                >
+                  {user.full_name}
+                </Typography>
+                <Typography
+                  fontSize="0.75rem"
+                  sx={{ color: theme.palette.secondary[200] }}
+                >
+                  {user.roles_name}
+                </Typography>
+              </Box>
+              <ArrowDropDownOutlined
+                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
+              />
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={isOpen}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <MenuItem onClick={() => navigate(`/account/information`)}>
+                Your Account
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </Menu>
+          </FlexBetween>
+        </FlexBetween>
+      </Toolbar>
+    </AppBar>
   );
 };
 
