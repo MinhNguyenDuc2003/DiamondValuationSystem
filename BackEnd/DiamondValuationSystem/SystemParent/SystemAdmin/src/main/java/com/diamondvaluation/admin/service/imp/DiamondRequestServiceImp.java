@@ -148,7 +148,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 		track.setUpdatedBy(user);
 		track.setNote(diamondRequest.getNote());
 		track.setRequest(diamondRequest);
-		track.setStatus(diamondRequest.getStatus());
+		track.setStatus(status);
 		diamondRequest.setStatus(status);
 		trackingRepo.save(track);
 		repo.save(diamondRequest);
@@ -345,7 +345,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 
 	@Override
 	public double revenueBetween2DAte(LocalDate dateBegin, LocalDate dateEnd) {
-		return repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString());
+		return repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString()) == null ? 0.0 : repo.getRevenueBetween2Day(dateBegin.toString(), dateEnd.toString());
 	}
 
 	@Override
