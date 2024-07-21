@@ -173,6 +173,8 @@ const Requests = () => {
     auth.isRoleAccept("manager") ||
     auth.isRoleAccept("staff");
 
+  const isManager = auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
+
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -429,7 +431,7 @@ const Requests = () => {
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: "#C5A773" }}>
             <TableRow>
-              {isAuthorized && <TableCell />}
+              {isManager && <TableCell />}
               <TableCell align="center">ID</TableCell>
               <TableCell align="center">Customer Name</TableCell>
               <TableCell align="center">Customer Phone</TableCell>
@@ -450,7 +452,7 @@ const Requests = () => {
               currentRequests.map((request) => (
                 <React.Fragment key={request.id}>
                   <TableRow>
-                    {isAuthorized && (
+                    {isManager && (
                       <TableCell>
                         <IconButton
                           aria-label="expand row"
@@ -575,7 +577,7 @@ const Requests = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={isAuthorized ? 14 : 13} align="center">
+                <TableCell colSpan={isManager ? 14 : 13} align="center">
                   No requests available.
                 </TableCell>
               </TableRow>

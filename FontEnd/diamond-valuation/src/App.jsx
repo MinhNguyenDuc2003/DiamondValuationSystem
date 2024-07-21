@@ -113,7 +113,9 @@ const MainContent = () => {
               path="/customers"
               element={
                 <PrivateRoute>
-                  <Customers />
+                  <StaffRoute>
+                    <Customers />
+                  </StaffRoute>
                 </PrivateRoute>
               }
             />
@@ -251,7 +253,9 @@ const MainContent = () => {
               path="/reports"
               element={
                 <PrivateRoute>
-                  <ManageReports />
+                  <ManagerRoute>
+                    <ManageReports />
+                  </ManagerRoute>
                 </PrivateRoute>
               }
             />

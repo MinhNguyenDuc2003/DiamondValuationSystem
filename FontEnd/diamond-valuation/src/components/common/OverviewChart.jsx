@@ -3,7 +3,7 @@ import { ResponsiveLine } from "@nivo/line";
 import { DashBoard } from "../utils/ApiFunctions";
 import { CircularProgress, useTheme } from "@mui/material";
 
-const OverviewChart = ({ isDashboard = false, view }) => {
+const OverviewChart = ({ isDashboard = false, view, year }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState();
   const theme = useTheme();
@@ -11,7 +11,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await DashBoard(new Date().getFullYear());
+        const responseData = await DashBoard(year);
         const formattedData = formatData(responseData, view);
         setData(formattedData);
       } catch (error) {
@@ -19,7 +19,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       }
     };
     fetchData();
-  }, [view]);
+  }, [view, year]);
 
   const formatData = (data, view) => {
     const months = [
