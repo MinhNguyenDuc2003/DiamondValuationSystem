@@ -241,7 +241,7 @@ public class CustomerServiceImp implements CustomerService {
 	public Map<Integer, Integer> countCustomerEachMonthByYear(int year) {
 		Map<Integer, Integer> maps = new HashMap<>();
 		for(int i=1 ; i<13 ; i++) {
-			int total = customerRepo.countCustomerByMonth(i);
+			int total = customerRepo.countCustomerByMonth(i, year);
 			maps.put(i, total);
 		}
 		return maps;

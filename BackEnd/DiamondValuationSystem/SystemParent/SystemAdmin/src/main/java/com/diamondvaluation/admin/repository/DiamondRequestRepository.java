@@ -53,7 +53,7 @@ public interface DiamondRequestRepository extends CrudRepository<DiamondRequest,
 	int countRequestByYear(int year);
     
     @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND MONTH(paid_date) = ?1 AND YEAR(paid_date) = ?2", nativeQuery = true)
-	Double getRevenueByMonth(int i,int year);
+	Double getRevenueByMonth(int i ,int year);
     @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND YEAR(paid_date) = ?1", nativeQuery = true)
     Double getRevenueByYear(int year);
     @Query(value = "SELECT SUM(payment_total) FROM diamond_request d WHERE d.is_paid = true AND paid_date = ?1", nativeQuery = true)
