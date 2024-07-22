@@ -18,7 +18,7 @@ public class DiamondServiceIpl implements DiamondServiceService{
 
 	@Override
 	public List<DiamondService> getAllService() {
-		return (List<DiamondService>) serviceRepo.findAll();
+		return serviceRepo.findAllServiceAvailable();
 	}
 
 }
