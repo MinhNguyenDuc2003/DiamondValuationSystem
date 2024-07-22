@@ -249,7 +249,6 @@ export const processPayment = async (paymentId, PayerID, cart) => {
       service_name: cart.serviceSelected,
       date: cart.selectedDate,
     };
-    console.log(cart.selectedDate);
     const response = await api.post(
       `api/pay/validate?paymentId=${paymentId}&PayerID=${PayerID}`,
       checkOutRequest
