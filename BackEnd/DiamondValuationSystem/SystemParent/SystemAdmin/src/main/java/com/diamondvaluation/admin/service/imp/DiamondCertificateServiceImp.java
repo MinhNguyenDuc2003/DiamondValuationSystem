@@ -98,7 +98,7 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 
 	@Override
 	public List<DiamondCertificate> findAllCertificate() {
-		return  (List<DiamondCertificate>) repo.findAll();
+		return repo.findAllCertificates();
 	}
 	
 	public static void main(String[] args) {
