@@ -211,8 +211,6 @@ const AddDiamondRequest = () => {
                     <MenuItem value="PROCESSING">PROCESSING</MenuItem>
                     <MenuItem value="PROCESSED">PROCESSED</MenuItem>
                     <MenuItem value="DONE">DONE</MenuItem>
-                    <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
-                    <MenuItem value="BLOCKED">BLOCKED</MenuItem>
                   </Field>
                 </FormControl>
 

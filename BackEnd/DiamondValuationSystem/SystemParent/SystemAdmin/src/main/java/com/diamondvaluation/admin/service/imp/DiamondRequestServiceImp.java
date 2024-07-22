@@ -299,7 +299,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 	public Map<Integer, Integer> countRequestEachMonthByYear(int year) {
 		Map<Integer, Integer> maps = new HashMap<>();
 		for(int i=1 ; i<13 ; i++) {
-			int total = repo.countRequestByMonth(i);
+			int total = repo.countRequestByMonth(i, year);
 			maps.put(i, total);
 		}
 		return maps;
@@ -314,7 +314,7 @@ public class DiamondRequestServiceImp implements DiamondRequestService {
 	public Map<Integer, Double> revenueRequestEachMonthByYear(int year) {
 		Map<Integer, Double> maps = new HashMap<>();
 		for(int i=1 ; i<13 ; i++) {
-			Double revenue = repo.getRevenueByMonth(i);
+			Double revenue = repo.getRevenueByMonth(i, year);
 			if(revenue == null) {
 				maps.put(i, 0.0);
 			}else
