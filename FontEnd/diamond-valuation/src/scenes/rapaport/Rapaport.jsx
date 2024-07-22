@@ -48,7 +48,7 @@ const Rapaport = () => {
   const [editRowIndex, setEditRowIndex] = useState(null);
   const [editedNumber, setEditedNumber] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [caratDialogOpen, setCaratDialogOpen] = useState(false);
+  // const [caratDialogOpen, setCaratDialogOpen] = useState(false);
   const [attributeToDelete, setAttributeToDelete] = useState(null);
   const [message, setMessage] = useState();
   const [newClarity, setNewClarity] = useState("");
@@ -275,7 +275,7 @@ const Rapaport = () => {
             ))}
           </Tabs>
         </Box>
-        <Box>
+        {/* <Box>
           <Button
             variant="contained"
             color="primary"
@@ -283,7 +283,7 @@ const Rapaport = () => {
           >
             Manage Carat Ranges
           </Button>
-        </Box>
+        </Box> */}
         <Box>
           <FormControl
             variant="outlined"
@@ -480,13 +480,13 @@ const Rapaport = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      {/* 
       <CaratRangeDialog
         open={caratDialogOpen}
         onClose={() => setCaratDialogOpen(false)}
         caratData={caratData}
         onSaveCaratRange={handleSaveCaratRange}
-      />
+      /> */}
     </Box>
   );
 };
