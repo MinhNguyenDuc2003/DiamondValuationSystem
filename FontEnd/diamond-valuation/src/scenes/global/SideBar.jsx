@@ -295,7 +295,7 @@ const navItems = [
     icon: <DescriptionIcon />,
   },
   {
-    text: "Sales",
+    text: "Statistics",
     icon: null,
   },
   {
@@ -390,7 +390,10 @@ const Sidebar = ({
                     text === "Users" ||
                     text === "Reports" ||
                     text === "WorkAssignment" ||
-                    text === "SlotTime")
+                    text === "SlotTime" ||
+                    text === "Statistics" ||
+                    text === "Overview" ||
+                    text === "Daily")
                 ) {
                   return;
                 }

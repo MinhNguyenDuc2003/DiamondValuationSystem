@@ -327,7 +327,9 @@ const MainContent = () => {
               path="/overview"
               element={
                 <PrivateRoute>
-                  <Overview />
+                  <ManagerRoute>
+                    <Overview />
+                  </ManagerRoute>
                 </PrivateRoute>
               }
             />
@@ -335,7 +337,9 @@ const MainContent = () => {
               path="/daily"
               element={
                 <PrivateRoute>
-                  <Daily />
+                  <ManagerRoute>
+                    <Daily />
+                  </ManagerRoute>
                 </PrivateRoute>
               }
             />
