@@ -386,7 +386,7 @@ const EditDiamondRequest = () => {
                 <TextField
                   type="date"
                   margin="dense"
-                  label="Date"
+                  label="Date to Assign"
                   name="date"
                   value={date}
                   onChange={(event) => handleDateAssignChange(event)}

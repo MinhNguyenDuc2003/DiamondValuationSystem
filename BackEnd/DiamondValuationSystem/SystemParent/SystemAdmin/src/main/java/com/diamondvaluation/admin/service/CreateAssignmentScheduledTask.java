@@ -22,7 +22,8 @@ public class CreateAssignmentScheduledTask {
 	private final WorkAssignmentService service;
 	private final UserService userService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(CreateAssignmentScheduledTask.class);
-	@Scheduled(cron = "0 0 12 * * SUN")
+//	@Scheduled(cron = "0 0 12 * * SUN")
+	@Scheduled(initialDelay = 5000)
 	public void createWeekAssignmentOfUserOnSunday() {
 		List<User> users = userService.getAllUserEnabled();
 		LocalDate now = LocalDate.now();

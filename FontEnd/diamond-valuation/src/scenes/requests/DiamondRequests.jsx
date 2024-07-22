@@ -5,6 +5,8 @@ import {
   deleteRequestById,
   getAllServices,
   getRequestTracking,
+  getCertificateById,
+  updateRequestStatus,
 } from "../../components/utils/ApiFunctions";
 import {
   Avatar,
@@ -58,9 +60,14 @@ import {
   AssignmentLate as AssignmentLateIcon,
   CalendarToday as CalendarTodayIcon,
   MoreVert as MoreVertIcon,
+  Visibility as VisibilityIcon,
+  Description as DescriptionIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../../components/auth/AuthProvider";
 import PrintPDF from "./PrintPDF";
+import CertificateHTML from "../certificates/CertificateHTML";
+import PrintReturnPDF from "./PrintCommitPDF";
+import PrintBlockPDF from "./PrintBlockPDF";
 
 const statusColors = {
   WAIT: "warning",
@@ -87,6 +94,7 @@ const RequestActionsMenu = ({
   navigate,
   services,
   handleOpenDialog,
+  openCertificateInNewTab,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -108,6 +116,17 @@ const RequestActionsMenu = ({
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
+        {request.certificate_id !== null && (
+          <MenuItem
+            onClick={() => {
+              openCertificateInNewTab(request.certificate_id);
+              handleMenuClose();
+            }}
+          >
+            <VisibilityIcon sx={{ color: "#C5A773", mr: 1 }} />
+            View Certificate
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             navigate(`/requests/${request.id}`);
@@ -127,9 +146,10 @@ const RequestActionsMenu = ({
           Delete
         </MenuItem>
         <MenuItem
-          onClick={() => {
+          onClick={async () => {
             navigate(`/report/${request.id}`);
             handleMenuClose();
+            await updateRequestStatus(request.id, "BLOCKREQUEST");
           }}
         >
           <Flag sx={{ color: "#C5A773", mr: 1 }} />
@@ -143,6 +163,24 @@ const RequestActionsMenu = ({
         >
           <ReceiptIcon sx={{ color: "#C5A773", mr: 1 }} />
           Receipt
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            PrintBlockPDF();
+            handleMenuClose();
+          }}
+        >
+          <DescriptionIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Block Paper
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            PrintReturnPDF();
+            handleMenuClose();
+          }}
+        >
+          <DescriptionIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Retun Paper
         </MenuItem>
       </Menu>
     </>
@@ -331,6 +369,23 @@ const Requests = () => {
     indexOfLastRequest
   );
 
+  const openCertificateInNewTab = async (certificateId) => {
+    try {
+      const certificate = await getCertificateById(certificateId);
+      const htmlContent = CertificateHTML(certificate);
+      const newWindow = window.open("", "_blank");
+      newWindow.document.open();
+      newWindow.document.write(htmlContent);
+      newWindow.document.close();
+    } catch (error) {
+      console.error("Error in fetchData:", error);
+      setError(error.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
+    }
+  };
+
   return (
     <Box p="20px" overflow="auto">
       <Typography variant="h4" textAlign="center">
@@ -389,8 +444,6 @@ const Requests = () => {
               <MenuItem value="PROCESSING">PROCESSING</MenuItem>
               <MenuItem value="PROCESSED">PROCESSED</MenuItem>
               <MenuItem value="DONE">DONE</MenuItem>
-              <MenuItem value="BLOCKREQUEST">BLOCKREQUEST</MenuItem>
-              <MenuItem value="BLOCKED">BLOCKED</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -440,7 +493,6 @@ const Requests = () => {
               <TableCell align="center">Appointment Date</TableCell>
               <TableCell align="center">Appointment Time</TableCell>
               <TableCell align="center">Service</TableCell>
-              <TableCell align="center">Note</TableCell>
               <TableCell align="center">Total</TableCell>
               <TableCell align="center">Paid</TableCell>
               <TableCell align="center">Status</TableCell>
@@ -490,7 +542,6 @@ const Requests = () => {
                         "$1, $2"
                       )}
                     </TableCell>
-                    <TableCell align="center">{request.note}</TableCell>
                     <TableCell align="center">
                       ${request.total.toFixed(2)}
                     </TableCell>
@@ -515,6 +566,7 @@ const Requests = () => {
                           navigate={navigate}
                           services={services}
                           handleOpenDialog={handleOpenDialog}
+                          openCertificateInNewTab={openCertificateInNewTab}
                         />
                       )}
                     </TableCell>

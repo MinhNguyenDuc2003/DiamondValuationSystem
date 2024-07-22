@@ -188,12 +188,6 @@ const CertificateHTML = (certificate) => {
                     <p>Additional pinpoints are not shown</p>
                 </div>
             </div>
-            <div class="S-prop">
-                <p>ORIGIN RESULT</p>
-                <div class="detail">
-                    <p>Country of Origin: <span>South Africa</span></p>
-                </div>
-            </div>
         </div>
 
         <div class="middle-report">

@@ -31,7 +31,8 @@ public class DashBoardController {
 	
 	@GetMapping("/daily/dashboard")
 //	public ResponseEntity<?> getDashBoardByYear(@RequestBody DailyRevenueRequest request){
-		public ResponseEntity<?> getDashBoardByYear(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+		public ResponseEntity<?> getDashBoardByYear(
+				@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 	            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
 		try {
 			return ResponseEntity.ok(service.getDailyResponse(startDate, endDate));

@@ -40,9 +40,63 @@ import Overview from "./scenes/overview/Overview";
 import WorkAssignment from "./scenes/manager/WorkAssignment";
 import SlotTimeManagement from "./scenes/manager/ManageSlotTime";
 import Layout from "./scenes/layout/Layout";
-import { ColorModeContext, useMode } from "./theme";
-import { ThemeProvider } from "@mui/material";
 import Daily from "./scenes/daily/Daily";
+// import React, { Suspense, lazy } from "react";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap-icons/font/bootstrap-icons.css";
+// import {
+//   Routes,
+//   Route,
+//   useLocation,
+//   Navigate,
+//   BrowserRouter,
+// } from "react-router-dom";
+// import { CircularProgress } from "@mui/material";
+// import "./App.css";
+// import Login from "./components/auth/Login";
+// import PrivateRoute from "./components/routes/PrivateRoute";
+// import ManagerRoute from "./components/routes/ManagerRoute";
+// import ValuationRoute from "./components/routes/ValuationRoute";
+// import StaffRoute from "./components/routes/StaffRoute";
+// import Layout from "./scenes/layout/Layout";
+// import NotFound from "./scenes/error/NotFound";
+// import { AuthProvider } from "./components/auth/AuthProvider";
+
+// // Lazy-loaded components
+// const Users = lazy(() => import("./scenes/users/Users"));
+// const AddUser = lazy(() => import("./scenes/users/AddUser"));
+// const EditUser = lazy(() => import("./scenes/users/EditUser"));
+// const Customers = lazy(() => import("./scenes/customers/Customers"));
+// const AddCustomer = lazy(() => import("./scenes/customers/AddCustomer"));
+// const EditCustomer = lazy(() => import("./scenes/customers/EditCustomer"));
+// const Services = lazy(() => import("./scenes/services/Services"));
+// const AddService = lazy(() => import("./scenes/services/AddService"));
+// const EditService = lazy(() => import("./scenes/services/EditService"));
+// const Requests = lazy(() => import("./scenes/requests/DiamondRequests"));
+// const AddDiamondRequest = lazy(() =>
+//   import("./scenes/requests/AddDiamondRequest")
+// );
+// const EditDiamondRequest = lazy(() =>
+//   import("./scenes/requests/EditDiamondRequest")
+// );
+// const Certificates = lazy(() => import("./scenes/certificates/Certificates"));
+// const CreateCertificate = lazy(() =>
+//   import("./scenes/certificates/CreateCertificate")
+// );
+// const EditCertificate = lazy(() =>
+//   import("./scenes/certificates/EditCertificate")
+// );
+// const Dashboard = lazy(() => import("./scenes/home/Dashboard"));
+// const Rapaport = lazy(() => import("./scenes/rapaport/Rapaport"));
+// const Report = lazy(() => import("./scenes/report/Report"));
+// const ManageReports = lazy(() => import("./scenes/manager/ManageReports"));
+// const UpdateAccount = lazy(() => import("./scenes/users/UpdateAccount"));
+// const Overview = lazy(() => import("./scenes/overview/Overview"));
+// const WorkAssignment = lazy(() => import("./scenes/manager/WorkAssignment"));
+// const SlotTimeManagement = lazy(() =>
+//   import("./scenes/manager/ManageSlotTime")
+// );
+// const Daily = lazy(() => import("./scenes/daily/Daily"));
 
 const App = () => {
   return (
@@ -60,6 +114,7 @@ const MainContent = () => {
 
   return (
     <div className="app">
+      {/* <Suspense fallback={<CircularProgress />}> */}
       <Routes>
         {isLoginPage ? (
           <Route path="/login" element={<Login />} />
@@ -314,6 +369,7 @@ const MainContent = () => {
           </Route>
         )}
       </Routes>
+      {/* </Suspense> */}
     </div>
   );
 };

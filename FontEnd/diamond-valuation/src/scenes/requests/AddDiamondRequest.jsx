@@ -18,6 +18,7 @@ import {
   MenuItem,
   TextField,
   Autocomplete,
+  Switch,
   InputLabel,
 } from "@mui/material";
 
@@ -267,7 +268,7 @@ const AddDiamondRequest = () => {
                   )}
                 </FormControl>
 
-                <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                {/* <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
                   <InputLabel>Paid</InputLabel>
                   <Field as={Select} name="paid" label="Paid">
                     <MenuItem value={true}>Yes</MenuItem>
@@ -276,7 +277,16 @@ const AddDiamondRequest = () => {
                   {touched.paid && errors.paid && (
                     <div style={{ color: "red" }}>{errors.paid}</div>
                   )}
-                </FormControl>
+                </FormControl> */}
+                <Box>
+                  Paid:
+                  <Switch
+                    label="Paid"
+                    checked={values.paid}
+                    name="paid"
+                    onChange={handleChange}
+                  />
+                </Box>
 
                 <TextField
                   fullWidth

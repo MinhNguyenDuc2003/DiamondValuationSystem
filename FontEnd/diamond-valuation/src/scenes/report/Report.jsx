@@ -384,11 +384,11 @@ const Report = () => {
               value={content}
               onChange={setContent}
               placeholder="Write your report here..."
-              style={{ height: "300px" }}
+              style={{ height: "200px" }}
             />
           </Grid>
         </Grid>
-        <Grid container spacing={2} style={{ marginTop: "1rem" }}>
+        <Grid container spacing={2} style={{ marginTop: "3rem" }}>
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleSave}>
               Submit
