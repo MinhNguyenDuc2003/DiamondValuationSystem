@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getAllServices } from '../../utils/ApiFunction';
-import servicesData from './services.json'; // Import the JSON data
 
 const ServiceList = () => {
     const [services, setServices] = useState([]);

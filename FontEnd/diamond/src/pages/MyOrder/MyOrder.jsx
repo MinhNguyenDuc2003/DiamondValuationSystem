@@ -258,7 +258,7 @@ const MyOrder = () => {
                     {request.paid ? "Paid" : "Pending"}
                   </TableCell>
                   <TableCell sx={{ color: "gray" }} align="center">
-                    {request.total.toFixed(2)}
+                    {'$ ' + request.total.toFixed(2)}
                   </TableCell>
                   <TableCell align="center">
                     <Typography
