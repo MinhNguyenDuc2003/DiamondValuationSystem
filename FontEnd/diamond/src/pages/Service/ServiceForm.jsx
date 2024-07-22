@@ -97,16 +97,18 @@ const ServiceForm = () => {
       setErrorMessage("Selected date cannot be in the past.");
       return;
     }
-    const day = String(selected.getDate());
+    const day = String(selected.getDate()).padStart(2, '0');
     const month = String(selected.getMonth() + 1).padStart(2, '0'); // +1 because month start with 0
     const year = selected.getFullYear();
-
+    console.log(selected)
     const formattedDate = `${year}-${month}-${day}`;
     const serviceSelect = serviceSelected.reduce((value, service, index) => {
       return index === 0 ? service : value + "," + service;
     }, "");
-    localStorage.setItem("selectedDate", formattedDate);
+    console.log(formattedDate);
+    
     localStorage.setItem("serviceSelected", serviceSelect);
+    localStorage.setItem("selectedDate", formattedDate);
     // localStorage.setItem("paymentMethod", payMentSelected);
 
     navigate("/Payment-checkout");

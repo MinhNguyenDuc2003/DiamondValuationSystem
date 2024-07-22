@@ -43,9 +43,7 @@ public class DiamondRequestServiceIpl implements DiamondRequestService{
 		diamondRequest.setNote(request.getNote());
 		diamondRequest.setPaid(isPaid);
 		diamondRequest.setStatus(RequestStatus.WAIT);
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(request.getDate(), dateFormatter);
-        diamondRequest.setAppointmentDate(date);
+        diamondRequest.setAppointmentDate(request.getDate());
 		List<DiamondService> list = new ArrayList<>();
 		double total = 0;
 		for(String name : request.getServiceName()) {

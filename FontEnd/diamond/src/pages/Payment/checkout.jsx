@@ -158,7 +158,7 @@ const Checkout = () => {
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
-    // localStorage.setItem("paymentMethod", event.target.value);
+    localStorage.setItem("paymentMethod", event.target.value);
   };
 
   if (loading) {
