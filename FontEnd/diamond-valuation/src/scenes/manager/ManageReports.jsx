@@ -102,6 +102,9 @@ const ManageReports = () => {
         if (report.type === "BLOCKDIAMOND") {
           await updateRequestStatus(report.request_id, "BLOCKED");
         }
+        if (report.type === "RETURNDIAMOND") {
+          await updateRequestStatus(report.request_id, "DONE");
+        }
         setMessage(`Accept Report ${report.id} successfully`);
         fetchReports();
         setOpenDialog(false);
@@ -120,9 +123,7 @@ const ManageReports = () => {
     try {
       const result = await saveReport({ ...report, status: "REJECT" });
       if (result.message !== undefined) {
-        if (report.type === "BLOCKDIAMOND") {
-          await updateRequestStatus(report.request_id, "PROCESSED");
-        }
+        await updateRequestStatus(report.request_id, "PROCESSED");
         setMessage(`Reject Report ${report.id} successfully`);
         fetchReports();
         setOpenDialog(false);

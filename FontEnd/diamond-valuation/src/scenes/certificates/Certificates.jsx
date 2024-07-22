@@ -30,6 +30,7 @@ import {
   FormControl,
   Select,
   InputLabel,
+  Menu,
   MenuItem,
   Slider,
   Pagination,
@@ -42,8 +43,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import PrintIcon from "@mui/icons-material/Print";
-import { PiCertificate } from "react-icons/pi";
 import CertificateHTML from "./CertificateHTML";
 import PrintPDF from "./PrintPDF";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -55,6 +57,79 @@ const formatAssignmentDate = (dateArray) => {
     2,
     "0"
   )}`;
+};
+
+const CertificateActionsMenu = ({
+  certificate,
+  navigate,
+  handleOpenDialog,
+  isManager,
+  isValuationStaff,
+  openCertificateInNewTab,
+}) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton onClick={handleMenuOpen}>
+        <MoreVertIcon sx={{ color: "#C5A773" }} />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            openCertificateInNewTab(certificate);
+            handleMenuClose();
+          }}
+        >
+          <VisibilityIcon sx={{ color: "#C5A773", mr: 1 }} />
+          View Certificate
+        </MenuItem>
+        {(isManager || isValuationStaff) && (
+          <MenuItem
+            onClick={() => {
+              navigate(`/certificates/${certificate.id}`);
+              handleMenuClose();
+            }}
+          >
+            <EditIcon sx={{ color: "#C5A773", mr: 1 }} />
+            Edit
+          </MenuItem>
+        )}
+        {(isManager || isValuationStaff) && (
+          <MenuItem
+            onClick={() => {
+              handleOpenDialog(certificate);
+              handleMenuClose();
+            }}
+          >
+            <DeleteIcon sx={{ color: "#C5A773", mr: 1 }} />
+            Delete
+          </MenuItem>
+        )}
+        <MenuItem
+          onClick={() => {
+            PrintPDF(certificate);
+            handleMenuClose();
+          }}
+        >
+          <PrintIcon sx={{ color: "#C5A773", mr: 1 }} />
+          Print Certificate
+        </MenuItem>
+      </Menu>
+    </>
+  );
 };
 
 const Certificates = () => {
@@ -76,10 +151,9 @@ const Certificates = () => {
   const auth = useAuth();
 
   // Check if the user is an admin or manager or valuation staff
-  const isAuthorized =
-    // auth.isRoleAccept("admin") ||
-    // auth.isRoleAccept("manager") ||
-    auth.isRoleAccept("valuationStaff");
+  const isManager = auth.isRoleAccept("admin") || auth.isRoleAccept("manager");
+
+  const isValuationStaff = auth.isRoleAccept("valuationStaff");
 
   const [filters, setFilters] = useState({
     carat: [0, 10],
@@ -179,7 +253,7 @@ const Certificates = () => {
         setCertificates(certificates);
 
         // Fetch requests status
-        if (isAuthorized) {
+        if (isValuationStaff) {
           const requests = await getAllRequestNewByStaffValuation();
           setRequests(requests);
 
@@ -325,7 +399,7 @@ const Certificates = () => {
       <Typography variant="h4" textAlign="center">
         Manage Certificates
       </Typography>
-      {isAuthorized && (
+      {isValuationStaff && (
         <Box display="flex" justifyContent="space-between">
           <Badge
             color="secondary"
@@ -407,6 +481,7 @@ const Certificates = () => {
             <TableRow>
               <TableCell />
               <TableCell align="center">Code</TableCell>
+              <TableCell align="center">RequestId</TableCell>
               <TableCell align="center">Carat</TableCell>
               <TableCell align="center">Clarity</TableCell>
               <TableCell align="center">Color</TableCell>
@@ -439,6 +514,9 @@ const Certificates = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell align="center">{certificate.code}</TableCell>
+                    <TableCell align="center">
+                      {certificate.request_id}
+                    </TableCell>
                     <TableCell align="center">{certificate.carat}</TableCell>
                     <TableCell align="center">{certificate.clarity}</TableCell>
                     <TableCell align="center">{certificate.color}</TableCell>
@@ -464,12 +542,12 @@ const Certificates = () => {
                     <TableCell align="center">{certificate.name}</TableCell>
 
                     <TableCell align="center">
-                      <IconButton
+                      {/* <IconButton
                         onClick={() => openCertificateInNewTab(certificate)}
                       >
                         <PiCertificate color="#C5A773" />
                       </IconButton>
-                      {isAuthorized && (
+                      {(isManager || isValuationStaff) && (
                         <IconButton
                           onClick={() =>
                             navigate(`/certificates/${certificate.id}`)
@@ -478,7 +556,7 @@ const Certificates = () => {
                           <EditIcon sx={{ color: "#C5A773" }} />
                         </IconButton>
                       )}
-                      {isAuthorized && (
+                      {(isManager || isValuationStaff) && (
                         <IconButton
                           onClick={() => handleOpenDialog(certificate)}
                         >
@@ -487,7 +565,15 @@ const Certificates = () => {
                       )}
                       <IconButton onClick={() => PrintPDF(certificate)}>
                         <PrintIcon sx={{ color: "#C5A773" }} />
-                      </IconButton>
+                      </IconButton> */}
+                      <CertificateActionsMenu
+                        certificate={certificate}
+                        handleOpenDialog={handleOpenDialog}
+                        isManager={isManager}
+                        isValuationStaff={isValuationStaff}
+                        navigate={navigate}
+                        openCertificateInNewTab={openCertificateInNewTab}
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow>

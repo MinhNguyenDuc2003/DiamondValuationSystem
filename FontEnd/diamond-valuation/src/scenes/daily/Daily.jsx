@@ -60,8 +60,6 @@ const Daily = () => {
     ];
   };
 
-  console.log(data); // Debug data
-
   return (
     <Box m="1.5rem 2.5rem">
       <Typography variant="h4" textAlign="center" sx={{ mb: 2 }}>
