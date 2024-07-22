@@ -577,7 +577,7 @@ const Certificates = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell colSpan={13} sx={{ padding: 0 }}>
+                    <TableCell colSpan={14} sx={{ padding: 0 }}>
                       <Collapse
                         in={openRow === certificate.id}
                         timeout="auto"
