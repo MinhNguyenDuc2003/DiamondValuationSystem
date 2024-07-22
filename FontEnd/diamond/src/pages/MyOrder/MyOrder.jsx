@@ -123,7 +123,7 @@ const MyOrder = () => {
   const openCertificateInNewTab = (certificate) => {
     const newWindow = window.open("", "_blank");
     console.log(certificate)
-    newWindow.document.write(CertificateHTML(certificate.data));
+    newWindow.document.write(CertificateHTML(certificate));
     newWindow.document.close();
   };
 
@@ -364,23 +364,23 @@ const MyOrder = () => {
                     <TableBody>
                       <TableRow>
                         <TableCell sx={{ fontWeight: 'bold', color: ' #a51442' }}>
-                          ${valuation.data.min_price.toLocaleString()}
+                          ${valuation.min_price.toLocaleString()}
                         </TableCell>
                         <TableCell sx={{ fontWeight: 'bold', color: ' #009688' }}>
-                          ${valuation.data.max_price.toLocaleString()}
+                          ${valuation.max_price.toLocaleString()}
                         </TableCell>
                         <TableCell sx={{ fontWeight: 'bold', color: '#673ab7' }}>
-                          ${valuation.data.rap_price.toLocaleString()}
+                          ${valuation.rap_price.toLocaleString()}
                         </TableCell>
                         <TableCell sx={{ fontWeight: 'bold', color:
-                          valuation.data.rap_percent > 1 
+                          valuation.rap_percent > 1 
                           ? 'green' :
                           '#f44336'
                          }}>
-                          {valuation.data.rap_percent.toFixed(2)} %
+                          {valuation.rap_percent.toFixed(2)} %
                         </TableCell>
                         <TableCell sx={{ fontWeight: 'bold', color: '#11375e' }}>
-                          ${valuation.data.real_price.toLocaleString()}
+                          ${valuation.real_price.toLocaleString()}
                         </TableCell>
                       </TableRow>
                     </TableBody>

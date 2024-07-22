@@ -206,7 +206,7 @@ const CertificateHTML = (certificate) => {
             <div class="S-prop">
                 <p>CLARITY CHARACTERISTICS</p>
                 <div class="characters">
-                    <img class="alt-diamond" src=${diamond} alt="">
+                    <img class="alt-diamond" src="${certificate.photo}">
                 </div>
             </div>
 

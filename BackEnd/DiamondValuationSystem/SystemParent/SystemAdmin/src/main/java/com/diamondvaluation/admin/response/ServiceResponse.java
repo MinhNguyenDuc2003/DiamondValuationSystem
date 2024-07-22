@@ -23,4 +23,6 @@ public class ServiceResponse {
 	private String content;
 	
 	private String photo;
+	
+	private boolean status;
 }
