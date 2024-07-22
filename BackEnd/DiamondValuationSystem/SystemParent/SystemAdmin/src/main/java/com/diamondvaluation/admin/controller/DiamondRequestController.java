@@ -1,9 +1,12 @@
 package com.diamondvaluation.admin.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,9 +27,13 @@ import com.diamondvaluation.admin.exception.CustomerNotFoundException;
 import com.diamondvaluation.admin.exception.RequestNotFoundException;
 import com.diamondvaluation.admin.exception.SlotTimeIsAlreadyFull;
 import com.diamondvaluation.admin.exception.SlotTimeNotFoundException;
+import com.diamondvaluation.admin.request.CustomerRequest;
 import com.diamondvaluation.admin.request.DiamondRequestRequest;
+import com.diamondvaluation.admin.response.CustomerResponse;
+
 import com.diamondvaluation.admin.response.DiamondRequestResponse;
 import com.diamondvaluation.admin.response.MessageResponse;
+import com.diamondvaluation.admin.response.ReportResponse;
 import com.diamondvaluation.admin.response.RequestPerDateResponse;
 import com.diamondvaluation.admin.service.DiamondCertificateService;
 import com.diamondvaluation.admin.service.DiamondRequestService;
@@ -36,6 +43,7 @@ import com.diamondvaluation.admin.service.WorkAssignmentService;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.common.DiamondRequest;
 import com.diamondvaluation.common.DiamondService;
+import com.diamondvaluation.common.Report;
 import com.diamondvaluation.common.RequestStatus;
 import com.diamondvaluation.common.SlotTime;
 import com.diamondvaluation.common.User;
@@ -113,7 +121,7 @@ public class DiamondRequestController {
 		}
 		appoinmentResponse.setCertificate_id(certificateService.findByRequestId(appoinment.getId()));
 		appoinmentResponse.setCustomer_email(appoinment.getCustomer().getEmail());
-		if(appoinment.getSlot()!=null) {
+		if (appoinment.getSlot() != null) {
 			appoinmentResponse.setSlot(appoinment.getSlot().getTime());
 			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
 		}
@@ -155,11 +163,12 @@ public class DiamondRequestController {
 	}
 
 	@GetMapping("requests/status/{status}")
-    public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate(@PathVariable("status") String status) {
+	public ResponseEntity<?> getRequestsWithStatusNewSortedByCreatedDate(@PathVariable("status") String status) {
 
-        List<DiamondRequest> list = requestService.findRequestsByStatusSortedByCreatedDate(RequestStatus.valueOf(status.toUpperCase()));
-        return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
-    }
+		List<DiamondRequest> list = requestService
+				.findRequestsByStatusSortedByCreatedDate(RequestStatus.valueOf(status.toUpperCase()));
+		return new ResponseEntity<>(listEntity2Response(list), HttpStatus.OK);
+	}
 
 	@PutMapping("request/update-status/{id}/{status}")
 	public ResponseEntity<?> updateRequestStatus(@PathVariable("id") Integer id,
@@ -181,13 +190,14 @@ public class DiamondRequestController {
 		} catch (CustomerNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-	}	
+	}
+
 	@GetMapping("request/date")
-	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date){
+	public ResponseEntity<?> getRequestByDate(@RequestParam("date") String date) {
 		try {
 			List<SlotTime> slotTime = slotService.getAllSlot();
 			List<RequestPerDateResponse> list = new ArrayList<>();
-			for(SlotTime s : slotTime) {
+			for (SlotTime s : slotTime) {
 				RequestPerDateResponse response = new RequestPerDateResponse();
 				response.setSlot(s.getTime());
 				response.setList(listEntity2Response(requestService.getRequestByDateAndSlot(date, s.getId())));
@@ -198,9 +208,9 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@GetMapping("request/slot-available")
-	public ResponseEntity<?> getSlotAvailableByDate(@RequestParam("date") String date){
+	public ResponseEntity<?> getSlotAvailableByDate(@RequestParam("date") String date) {
 		try {
 			List<SlotTime> list = requestService.getSlotAvailableByDate(date);
 			return new ResponseEntity<>(list, HttpStatus.OK);
@@ -208,60 +218,15 @@ public class DiamondRequestController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
-	//New method
-//	@GetMapping("requests/count/year")
-//	public ResponseEntity<?> getCountsByMonthWeekDayForYear(@RequestParam("year") int year) {
-//	    Map<String, Map<String, Object>> counts = requestService.countRequestsByMonthWeekDayForYear(year);
-//	    return new ResponseEntity<>(counts, HttpStatus.OK);
-//	}
-//
-//	@GetMapping("requests/revenue/years")
-//	public ResponseEntity<?> getRevenueByMonthWeekDayForYear(@RequestParam("year") int year) {
-//	    Map<String, Map<String, Object>> counts = requestService.countRevenuesByMonthWeekDayForYear(year);
-//	    return new ResponseEntity<>(counts, HttpStatus.OK);
-//	}
-	
-	
-	
-	@GetMapping("/requests/revenue/day")
-	public ResponseEntity<?> getRequestStatsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-	    try {
-	    	List<Object> list = (List<Object>) requestService.countRequestsAndRevenueByDay(date);
-			return new ResponseEntity<>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
-	
-	@GetMapping("/requests/revenues/year")
-    public ResponseEntity<?> getRevenuesByMonthWeekForYear(@RequestParam("year") int year) {
-        try {
-            List<Object> list = requestService.countRevenuesByMonthWeekForYear(year);
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-	
-	@GetMapping("/requests/revenue/daterange")
-    public ResponseEntity<?> getRequestStatsByDateRange(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        try {
-            List<Object> stats = requestService.countRequestsAndRevenueByDateRange(startDate, endDate);
-            return new ResponseEntity<>(stats, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
+
+
+	
 	@GetMapping("all-request-valuation-staff")
 	public ResponseEntity<?> getAllRequestByValuationStaff(HttpServletRequest request) {
 		User user = Utility.getIdOfAuthenticatedUser(request, userService);
 		List<DiamondRequest> list = requestService.findAllRequestNewByUser(user);
 		return new ResponseEntity(listEntity2Response(list), HttpStatus.OK);
+
 	}
-	
-	
 }
