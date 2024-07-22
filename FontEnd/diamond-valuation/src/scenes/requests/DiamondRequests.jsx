@@ -62,6 +62,7 @@ import {
   MoreVert as MoreVertIcon,
   Visibility as VisibilityIcon,
   Description as DescriptionIcon,
+  Reply as ReplyIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../../components/auth/AuthProvider";
 import PrintPDF from "./PrintPDF";
@@ -77,6 +78,7 @@ const statusColors = {
   DONE: "success",
   BLOCKREQUEST: "error",
   BLOCKED: "error",
+  RETURNREQUEST: "default",
 };
 
 const statusIcons = {
@@ -87,6 +89,7 @@ const statusIcons = {
   DONE: <DoneIcon />,
   BLOCKREQUEST: <BlockIcon />,
   BLOCKED: <BlockIcon />,
+  RETURNREQUEST: <ReplyIcon />,
 };
 
 const RequestActionsMenu = ({
@@ -149,7 +152,6 @@ const RequestActionsMenu = ({
           onClick={async () => {
             navigate(`/report/${request.id}`);
             handleMenuClose();
-            await updateRequestStatus(request.id, "BLOCKREQUEST");
           }}
         >
           <Flag sx={{ color: "#C5A773", mr: 1 }} />

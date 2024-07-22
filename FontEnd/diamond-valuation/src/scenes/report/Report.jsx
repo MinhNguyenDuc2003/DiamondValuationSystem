@@ -20,6 +20,7 @@ import {
 import {
   saveReport,
   getRequestById,
+  updateRequestStatus,
 } from "../../components/utils/ApiFunctions"; // Adjust the import path as needed
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
@@ -301,6 +302,12 @@ const Report = () => {
     };
     try {
       const result = await saveReport(reportData);
+      if (reportData.type === "BLOCKDIAMOND") {
+        await updateRequestStatus(requestId, "BLOCKREQUEST");
+      }
+      if (reportData.type === "RETURNDIAMOND") {
+        await updateRequestStatus(requestId, "RETURNREQUEST");
+      }
       if (result.message !== undefined) {
         localStorage.setItem(
           "successMessage",
@@ -317,13 +324,13 @@ const Report = () => {
     }
   };
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
+  // const handleOpenDialog = () => {
+  //   setOpenDialog(true);
+  // };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  // const handleCloseDialog = () => {
+  //   setOpenDialog(false);
+  // };
 
   const handleClear = () => {
     setTitle("");
