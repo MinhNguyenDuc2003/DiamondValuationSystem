@@ -108,12 +108,23 @@ const AddDiamondRequest = () => {
     const date = event.target.value;
     setFieldValue("appointment_date", date);
 
-    try {
-      const availableSlots = await getSlotAvailable(date);
+    const today = new Date();
+    const selectedDate = new Date(date);
 
-      setSlots(availableSlots);
-    } catch (error) {
-      setError(error.message);
+    if (selectedDate.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
+      setError("Appointment date cannot be in the past");
+      setFieldValue("appointment_date", "");
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
+    } else {
+      try {
+        const availableSlots = await getSlotAvailable(date);
+
+        setSlots(availableSlots);
+      } catch (error) {
+        setError(error.message);
+      }
     }
   };
 
@@ -305,7 +316,7 @@ const AddDiamondRequest = () => {
                   InputLabelProps={{ shrink: true }}
                 />
 
-                {slots.length > 0 && (
+                {slots.length > 0 && values.appointment_date && (
                   <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
                     <InputLabel>Slot Time</InputLabel>
                     <Field as={Select} name="slotId" label="Slot Time">

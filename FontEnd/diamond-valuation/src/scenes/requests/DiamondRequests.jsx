@@ -346,9 +346,9 @@ const Requests = () => {
   const isAppointmentLate = (appointmentDate) => {
     const today = new Date();
     const appointment = new Date(appointmentDate);
-    const diffTime = Math.abs(today - appointment);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 7;
+    return (
+      appointment < today && (today - appointment) / (1000 * 60 * 60 * 24) > 7
+    );
   };
 
   const lateRequests = data.filter(
