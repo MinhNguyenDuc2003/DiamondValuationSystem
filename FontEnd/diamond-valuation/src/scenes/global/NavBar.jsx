@@ -39,8 +39,12 @@ export const NavBar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const handleClose = () => setAnchorEl(null);
 
   const handleLogout = async () => {
-    auth.handleLogout();
-    navigate("/login", { replace: true });
+    try {
+      await auth.handleLogout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
