@@ -44,6 +44,8 @@ public class DiamondRequestResponse {
 	
 	private String appoinment_date;
 	
+	private String last_modified_date;
+	
 	private String slot;
 	
 	private Integer slotId;
@@ -53,4 +55,6 @@ public class DiamondRequestResponse {
 	private String customer_email;
 	
 	private List<WorkAssignment> assignment;
+	
+	
 }
