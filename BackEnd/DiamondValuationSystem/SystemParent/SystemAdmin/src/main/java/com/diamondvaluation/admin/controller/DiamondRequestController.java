@@ -120,6 +120,7 @@ public class DiamondRequestController {
 			appoinmentResponse.setSlotId(appoinment.getSlot().getId());
 		}
 		appoinmentResponse.setAssignment(assignmentService.findByRequestId(appoinment.getId()));
+		appoinmentResponse.setLast_modified_date(appoinment.getLastModifiedDate().toString());
 		return appoinmentResponse;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -40,6 +41,8 @@ public class PayPalService {
 	private SettingService settingService;
 	@Autowired
     private PayPalConfig payPalConfig;
+	
+	private static final AtomicLong counter = new AtomicLong();
 
 	public boolean validateOrder(String orderId) throws PayPalApiException {
 		PayPalOrderResponse orderResponse = getOrderDetails(orderId);
@@ -133,18 +136,37 @@ public class PayPalService {
 	}
 	
 
-    public Payment executePayment(String paymentId, String payerId, HttpHeaders headers) throws PayPalRESTException {
+	public Payment executePayment(String paymentId, String payerId, HttpHeaders headers) throws PayPalRESTException {
+		 // Generate a new unique request ID for each transaction
         String requestId = UUID.randomUUID().toString();
+        System.out.println("Generated PayPal-Request-Id: " + requestId);
 
-        apiContext.addHTTPHeader("PayPal-Request-Id", requestId);
-        
+        // Create a temporary API context with the unique request ID
+        APIContext tempApiContext = new APIContext(apiContext.getClientID(), apiContext.getClientSecret(), payPalConfig.getMode());
+        tempApiContext.addHTTPHeader("PayPal-Request-Id", requestId);
+
+        // Additional logging for debugging
+        System.out.println("Payment ID: " + paymentId);
+        System.out.println("Payer ID: " + payerId);
+
+        // Set up the payment and payment execution
         Payment payment = new Payment();
         payment.setId(paymentId);
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
-        return payment.execute(apiContext, paymentExecute);
-    }
-	
-	
+
+        try {
+            // Execute the payment
+            Payment executedPayment = payment.execute(tempApiContext, paymentExecute);
+            System.out.println("Payment executed successfully: " + executedPayment.getId());
+            return executedPayment;
+        } catch (PayPalRESTException e) {
+            // Log error details for debugging
+            System.err.println("Error executing PayPal payment: " + e.getMessage());
+            System.err.println("Response code: " + e.getResponsecode());
+            System.err.println("Error response: " + e.getDetails());
+            throw e;
+        }
+	}
 
 }

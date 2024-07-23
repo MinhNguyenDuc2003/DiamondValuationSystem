@@ -17,7 +17,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 123456
+    password: minh01672527656
     url: jdbc:mysql://localhost:3306/diamond_db
     username: root
     hikari:      
@@ -48,7 +48,7 @@ spring:
           google:
             client-id: 155958575041-16pfns53l27ivvsenid2g0qea4fs64lt.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://localhost:3000/login/oauth2/code/google
+            redirect-uri: https://home-page-sigma-sage.vercel.app/login/oauth2/code/google
             scope: openid, profile, email
           facebook:
             client-id: 1731600987247737
@@ -61,7 +61,7 @@ paypal:
     id: Ab4kREeSpjk8R738YwCYUPBMnNUDl0N2XlByUFnL8peEhUkpYLjqLkoyXTXlNyj-fp3z3c5bb3LAtSEW
     secret: EHigX7VbvIswP2ToWPJiPg-A0ZVni0AXe_UDPnfjxgUXMHQt86Xdjl2oYHumwSdoYzKW012o4NbOQYT-   
   mode: sandbox
-baseUrl: http://localhost:3000/
+baseUrl: https://home-page-sigma-sage.vercel.app/
 
 logging:
   level:

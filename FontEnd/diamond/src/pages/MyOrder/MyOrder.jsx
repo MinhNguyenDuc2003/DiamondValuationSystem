@@ -51,6 +51,7 @@ const MyOrder = () => {
   useEffect(() => {
     const fetchData = async () => {
      await getAllRequest().then((data) => {
+      if(data!==null){
         setOrders(data);
         setFilteredOrders(data);
         setTotalRequest(data.length);
@@ -60,6 +61,7 @@ const MyOrder = () => {
           (order) => order.status === "PROCESSED"
         );
         setTotalCompletedSteps(completedSteps.length);
+      }
       });
     }
     fetchData()
@@ -129,10 +131,13 @@ const MyOrder = () => {
 
   const indexOfLastOrder = currentPage * itemsPerPage;
   const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
-  const currentOrders = filteredOrders.slice(
-    indexOfFirstOrder,
-    indexOfLastOrder
-  );
+  let currentOrders = null;
+  if(filteredOrders != null){
+      currentOrders = filteredOrders.slice(
+      indexOfFirstOrder,
+      indexOfLastOrder
+    );
+  }
 
   return (
     <Box sx={{ backgroundColor: "#dcdcdc66" }}>
@@ -228,7 +233,7 @@ const MyOrder = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentOrders.map((request, index) => (
+              {currentOrders && currentOrders.map((request, index) => (
                 <TableRow key={request.id}>
                   <TableCell sx={{ color: "gray" }} align="center">
                     {index + 1}
@@ -419,13 +424,12 @@ const MyOrder = () => {
             ) : null}
           </Box>
         </Modal>
-
-        <Pagination
+            {filteredOrders && (<Pagination
           count={Math.ceil(filteredOrders.length / itemsPerPage)}
           page={currentPage}
           onChange={handlePageChange}
           sx={{ display: "flex", justifyContent: "center", mt: 2 }}
-        />
+        />)}
       </Box>
     </Box>
   );

@@ -98,7 +98,7 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 
 	@Override
 	public List<DiamondCertificate> findAllCertificate() {
-		return  (List<DiamondCertificate>) repo.findAll();
+		return repo.findAllCertificates();
 	}
 	
 	public static void main(String[] args) {
@@ -161,12 +161,11 @@ public class DiamondCertificateServiceImp implements DiamondCertificateService {
 	public Map<Integer, Integer> countCertificateEachMonthByYear(int year) {
 		Map<Integer, Integer> maps = new HashMap<>();
 		for(int i=1 ; i<13 ; i++) {
-			int total = repo.countCertificateByMonth(i);
+			int total = repo.countCertificateByMonth(i, year);
 			maps.put(i, total);
 		}
 		return maps;
 	}
-
 
 	@Override
 	public int totalByYear(int year) {

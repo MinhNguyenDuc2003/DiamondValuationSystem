@@ -31,7 +31,11 @@ public interface DiamondCertificateRepository extends CrudRepository<DiamondCert
 	int countByCreatedDateBetween(LocalDateTime start, LocalDateTime end);
 	
 	@Query(value = "SELECT COUNT(id) FROM diamond_certificates  d WHERE MONTH(created_date) = ?1", nativeQuery = true)
-	int countCertificateByMonth(int i);
+	int countCertificateByMonth(int i, int year);
+	
 	@Query(value = "SELECT COUNT(id) FROM diamond_certificates  d WHERE YEAR(created_date) = ?1", nativeQuery = true)
 	int countCertificateByYear(int i);
+	
+	@Query(value = "SELECT * FROM diamond_certificates d order by d.created_date desc;", nativeQuery = true)
+	List<DiamondCertificate> findAllCertificates();
 }
