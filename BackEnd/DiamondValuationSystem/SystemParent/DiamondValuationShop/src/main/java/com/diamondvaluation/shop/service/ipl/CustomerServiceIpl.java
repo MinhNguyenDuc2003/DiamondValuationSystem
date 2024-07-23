@@ -32,10 +32,10 @@ public class CustomerServiceIpl implements CustomerService{
 	}
 
 	@Override
-	public void addNewCustomerUponOAuthLogin(String name, String email,String location, AuthenticationType type) {
+	public Customer addNewCustomerUponOAuthLogin(String name, String email,String location, AuthenticationType type) {
 		Customer customer = new Customer(name, email,location, type);
 		customer.setEnabled(true);
-		repo.save(customer);
+		return repo.save(customer);
 	}
 
 	@Override

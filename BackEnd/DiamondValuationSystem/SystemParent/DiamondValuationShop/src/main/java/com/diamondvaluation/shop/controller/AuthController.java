@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diamondvaluation.common.AuthenticationType;
 import com.diamondvaluation.common.Customer;
 import com.diamondvaluation.shop.EmailSettingBag;
 import com.diamondvaluation.shop.Utility;
-import com.diamondvaluation.shop .exception.CustomerIsAlreadyExistException;
+import com.diamondvaluation.shop.exception.CustomerIsAlreadyExistException;
 import com.diamondvaluation.shop.exception.CustomerNotFoundException;
 import com.diamondvaluation.shop.exception.RefreshTokenExpiredException;
 import com.diamondvaluation.shop.exception.RefreshTokenNotFoundException;
@@ -62,8 +63,8 @@ public class AuthController {
 
 	@Autowired
 	public AuthController(AuthService authService, TokenService tokenService, JwtUtils jwtUtils,
-			ModelMapper modelMapper, SettingService settingService, GoogleOAuth2Service googleOAuth2Service
-			,CustomerService customerService) {
+			ModelMapper modelMapper, SettingService settingService, GoogleOAuth2Service googleOAuth2Service,
+			CustomerService customerService) {
 		this.authService = authService;
 		this.tokenService = tokenService;
 		this.jwtUtils = jwtUtils;
@@ -94,7 +95,7 @@ public class AuthController {
 			HttpServletResponse response, HttpServletRequest request, @RequestParam("id") String id) {
 		try {
 			if (refreshToken == null) {
-			    return ResponseEntity.status(403).body("Refresh token is required");
+				return ResponseEntity.status(403).body("Refresh token is required");
 			}
 			TokenResponse responseToken = tokenService.refreshTokens(new RefreshTokenRequest(id, refreshToken));
 			System.out.println(responseToken.getToken());
@@ -118,7 +119,7 @@ public class AuthController {
 
 	@PostMapping("/token")
 	public ResponseEntity<?> accessToken() {
-			return ResponseEntity.ok().build();
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/signup")
@@ -143,29 +144,42 @@ public class AuthController {
 		}
 	}
 
-	private void setRefreshToken4Cookies(HttpServletResponse response, HttpServletRequest request,
-			String refreshToken) {
+	public void setRefreshToken4Cookies(HttpServletResponse response, HttpServletRequest request, String refreshToken) {
 		Cookie[] cookies = request.getCookies();
+		boolean cookieExists = false;
+
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals("shopRefreshToken")) {
-					// Update the existing refreshTokenCookie
+// Update the existing refreshTokenCookie
 					cookie.setValue(refreshToken);
 					cookie.setPath("/");
 					cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
-					response.addCookie(cookie);
-					return;
+
+// Add SameSite=None and Secure attributes
+					String cookieHeader = String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; SameSite=None; Secure",
+							cookie.getName(), cookie.getValue(), cookie.getPath(), cookie.getMaxAge());
+					response.addHeader("Set-Cookie", cookieHeader);
+
+					cookieExists = true;
+					break;
 				}
 			}
 		}
 
-		// If the cookie doesn't exist, create a new one
-		Cookie refreshTokenCookie = new Cookie("shopRefreshToken", refreshToken);
-		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
-		response.addCookie(refreshTokenCookie);
+		if (!cookieExists) {
+// If the cookie doesn't exist, create a new one
+			Cookie refreshTokenCookie = new Cookie("shopRefreshToken", refreshToken);
+			refreshTokenCookie.setHttpOnly(true);
+			refreshTokenCookie.setPath("/");
+			refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+// Add SameSite=None and Secure attributes
+			String cookieHeader = String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; SameSite=None; Secure",
+					refreshTokenCookie.getName(), refreshTokenCookie.getValue(), refreshTokenCookie.getPath(),
+					refreshTokenCookie.getMaxAge());
+			response.addHeader("Set-Cookie", cookieHeader);
+		}
 	}
 
 	@PostMapping("/forgot-password")
@@ -193,8 +207,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/google/token")
-	public ResponseEntity<?> handleGoogleCallback(@RequestParam("code") String code,
-			HttpServletResponse response,
+	public ResponseEntity<?> handleGoogleCallback(@RequestParam("code") String code, HttpServletResponse response,
 			HttpServletRequest request) {
 		try {
 
@@ -202,7 +215,14 @@ public class AuthController {
 			Map<String, Object> oauth = googleOAuth2Service.getUserInfo(accessToken);
 			String email = oauth.get("email").toString();
 			Customer customer = customerService.getCustomerByEmail(email);
-			TokenResponse token = tokenService.generateTokens(customer);
+			TokenResponse token = null;
+			if (customer != null) {
+				token = tokenService.generateTokens(customer);
+			} else {
+				customer = customerService.addNewCustomerUponOAuthLogin(oauth.get("name").toString(), email, null,
+						AuthenticationType.GOOGLE);
+				token = tokenService.generateTokens(customer);
+			}
 			if (token != null) {
 				setRefreshToken4Cookies(response, request, token.getRefreshToken());
 			} else {
@@ -214,6 +234,7 @@ public class AuthController {
 			authResponse.setId(customer.getId() + "");
 			return ResponseEntity.ok().body(authResponse);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -272,9 +293,9 @@ public class AuthController {
 		helper.setText(content, true);
 		mailSender.send(message);
 	}
-	
+
 	@GetMapping("logout/{id}")
-	public ResponseEntity<?> logout(@PathVariable("id") String id){
+	public ResponseEntity<?> logout(@PathVariable("id") String id) {
 		tokenService.deleteAllRefreshTokenById(Integer.parseInt(id));
 		return ResponseEntity.ok().build();
 	}

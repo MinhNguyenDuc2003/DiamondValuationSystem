@@ -40,7 +40,6 @@ public class WebSecurityConfig {
 	@Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
 	
-	@Autowired
 	public WebSecurityConfig(CustomOAuth2UserService oAuth2UserService, OAuth2LoginSuccessHandler oauthLoginHandler,
 			@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, ClientRegistrationRepository clientRegistrationRepository) {
 		super();
@@ -89,10 +88,11 @@ public class WebSecurityConfig {
 	            .requestMatchers("/diamond-request/**").authenticated()
 	            .requestMatchers("/api/**").authenticated()
 	            .anyRequest().permitAll())
-	        .oauth2Login(form -> form
+	        .oauth2Login(oauth2 -> oauth2
 	                .userInfoEndpoint()
 	                    .userService(oAuth2UserService)
-	                .and().successHandler(oauthLoginHandler))
+	                .and()
+	                    .successHandler(oauthLoginHandler))
 	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	        .csrf(AbstractHttpConfigurer::disable)
 	        .exceptionHandling(exh -> exh.authenticationEntryPoint((request, response, exception) -> {

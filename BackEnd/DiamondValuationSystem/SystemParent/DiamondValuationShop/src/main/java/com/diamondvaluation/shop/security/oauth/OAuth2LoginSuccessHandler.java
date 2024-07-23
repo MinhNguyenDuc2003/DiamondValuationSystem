@@ -1,6 +1,8 @@
 package com.diamondvaluation.shop.security.oauth;
 
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -19,8 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 	@Lazy
 	private final CustomerService cusService;
-	
-	
+	private static final Logger logger = LoggerFactory.getLogger(OAuth2LoginSuccessHandler.class);
 	@Autowired
 	public OAuth2LoginSuccessHandler(CustomerService cusService) {
 		super();
@@ -35,8 +36,10 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 		String email = oauth2User.getEmail();
 		String countryCode = request.getLocale().getCountry();
 		String clientName = oauth2User.getClientName();
-		
 		Customer customer = cusService.getCustomerByEmail(email);
+		
+		logger.info("OAuth2 login successful for user: " + email);
+		
 		if(customer==null) {
 			cusService.addNewCustomerUponOAuthLogin(name, email, countryCode, getAuthenticationType(clientName));
 		}else {

@@ -95,28 +95,42 @@ public class AuthController {
 		return ResponseEntity.ok().build();
 	}
 	
-	private void setRefreshToken4Cookies(HttpServletResponse response, HttpServletRequest request, String refreshToken) {
+	public void setRefreshToken4Cookies(HttpServletResponse response, HttpServletRequest request, String refreshToken) {
 		Cookie[] cookies = request.getCookies();
+		boolean cookieExists = false;
+
 		if (cookies != null) {
-		    for (Cookie cookie : cookies) {
-		        if (cookie.getName().equals("adminRefreshToken")) {
-		            // Update the existing refreshTokenCookie
-		            cookie.setValue(refreshToken);
-		            cookie.setPath("/");
-		            cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
-		            response.addCookie(cookie);
-		            return;
-		        }
-		    }
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("shopRefreshToken")) {
+// Update the existing refreshTokenCookie
+					cookie.setValue(refreshToken);
+					cookie.setPath("/");
+					cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+// Add SameSite=None and Secure attributes
+					String cookieHeader = String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; SameSite=None; Secure",
+							cookie.getName(), cookie.getValue(), cookie.getPath(), cookie.getMaxAge());
+					response.addHeader("Set-Cookie", cookieHeader);
+
+					cookieExists = true;
+					break;
+				}
+			}
 		}
 
-		// If the cookie doesn't exist, create a new one
-		Cookie refreshTokenCookie = new Cookie("adminRefreshToken", refreshToken);
-		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setPath("/");
-		refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
-		response.addCookie(refreshTokenCookie);
+		if (!cookieExists) {
+// If the cookie doesn't exist, create a new one
+			Cookie refreshTokenCookie = new Cookie("shopRefreshToken", refreshToken);
+			refreshTokenCookie.setHttpOnly(true);
+			refreshTokenCookie.setPath("/");
+			refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+// Add SameSite=None and Secure attributes
+			String cookieHeader = String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; SameSite=None; Secure",
+					refreshTokenCookie.getName(), refreshTokenCookie.getValue(), refreshTokenCookie.getPath(),
+					refreshTokenCookie.getMaxAge());
+			response.addHeader("Set-Cookie", cookieHeader);
+		}
 	}
 	
 	@GetMapping("logout/{id}")

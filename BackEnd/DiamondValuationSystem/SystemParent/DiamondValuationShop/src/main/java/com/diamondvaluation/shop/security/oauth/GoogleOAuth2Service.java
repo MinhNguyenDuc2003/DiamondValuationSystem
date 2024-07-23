@@ -37,7 +37,7 @@ public class GoogleOAuth2Service {
 
         // Make the request
         Map<String, String> response = restTemplate.postForObject(TOKEN_URL, requestBody, Map.class);
-
+        System.out.println(response.get("access_token"));
         if (response != null && response.containsKey("access_token")) {
             return response.get("access_token");
         }

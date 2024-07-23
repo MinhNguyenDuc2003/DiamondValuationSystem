@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogin = (response) => {
     try {
-      localStorage.setItem("userId", response.id)
+      localStorage.setItem("userId", response.id);
       localStorage.setItem("email", response.email);
       localStorage.setItem("token", response.token);
     } catch (error) {

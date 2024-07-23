@@ -44,7 +44,7 @@ public class Customer {
 	private String lastName;
 
 	private String location;
-	@Column(length = 64, nullable = false)
+	@Column(length = 64, nullable = true)
 	private String password;
 	
 	@Column(name = "verification_code", length = 64)
