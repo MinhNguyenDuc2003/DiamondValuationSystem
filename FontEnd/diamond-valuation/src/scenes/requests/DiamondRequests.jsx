@@ -343,18 +343,17 @@ const Requests = () => {
     }
   };
 
-  const isAppointmentLate = (appointmentDate) => {
+  const isAppointmentLate = (lastModifiedDate) => {
     const today = new Date();
-    const appointment = new Date(appointmentDate);
+    const lastModified = new Date(lastModifiedDate);
     return (
-      appointment < today && (today - appointment) / (1000 * 60 * 60 * 24) > 7
+      lastModified < today && (today - lastModified) / (1000 * 60 * 60 * 24) > 7
     );
   };
 
   const lateRequests = data.filter(
     (request) =>
-      isAppointmentLate(request.appoinment_date) &&
-      request.appoinment_date !== null &&
+      isAppointmentLate(new Date(request.last_modified_date)) &&
       (request.status === "NEW" || request.status === "PROCESSED")
   );
 
